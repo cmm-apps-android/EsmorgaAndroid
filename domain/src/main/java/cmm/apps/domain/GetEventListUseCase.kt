@@ -1,5 +1,7 @@
 package cmm.apps.domain
 
+import cmm.apps.data.EventDataModel
+import cmm.apps.data.EventsRepositoryImpl
 import kotlinx.coroutines.delay
 import java.util.Date
 
@@ -12,13 +14,8 @@ class GetEventListUseCaseImpl : GetEventListUseCase {
 
         delay(5000)
 
-        return listOf(
-            Event("Event01", Date(System.currentTimeMillis() + 24 * 3_600_000)),
-            Event("Event02", Date(System.currentTimeMillis() + 48 * 3_600_000)),
-            Event("Event03", Date(System.currentTimeMillis() + 72 * 3_600_000)),
-            Event("Event04", Date(System.currentTimeMillis() + 96 * 3_600_000)),
-            Event("Event05", Date(System.currentTimeMillis() + 120 * 3_600_000)),
-            Event("Event06", Date(System.currentTimeMillis() + 144 * 3_600_000)),
-        )
+        val result = EventsRepositoryImpl().getEvents()
+
+        return result.map { edm -> Event(name = edm.dataName, date = edm.dataDate)}
     }
 }

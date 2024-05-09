@@ -22,3 +22,4 @@ dependencyResolutionManagement {
 rootProject.name = "Esmorga"
 include(":app")
 include(":domain")
+include(":data")
