@@ -1,23 +1,17 @@
 plugins {
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
 }
 
 android {
-    namespace = "cmm.apps.esmorga"
+    namespace = "cmm.apps.esmorga.datasource_remote"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "cmm.apps.esmorga"
         minSdk = 28
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -36,18 +30,20 @@ android {
 }
 
 dependencies {
-    implementation(project(":view"))
-    implementation(project(":datasource-remote"))
+    api(project(":data"))
 
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.gson)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.retrofit.converter.scalars)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging.interceptor)
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.android)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
 }

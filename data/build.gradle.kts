@@ -9,5 +9,8 @@ java {
 }
 
 dependencies {
+    api(project(":domain"))
 
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.core)
 }

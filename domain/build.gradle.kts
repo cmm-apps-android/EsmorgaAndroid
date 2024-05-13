@@ -9,9 +9,9 @@ java {
 }
 
 dependencies {
-    implementation(project(":data")) //TODO remove this and invert dependencies
-
     implementation(libs.kotlinx.coroutines)
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.core)
 
     testImplementation(libs.junit)
 }

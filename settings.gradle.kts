@@ -23,3 +23,5 @@ rootProject.name = "Esmorga"
 include(":app")
 include(":domain")
 include(":data")
+include(":datasource-remote")
+include(":view")
