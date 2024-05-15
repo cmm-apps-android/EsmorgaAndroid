@@ -1,9 +1,9 @@
 package cmm.apps.esmorga.data
 
-import java.util.Date
+import java.time.ZonedDateTime
 
 
 data class EventDataModel(
     val dataName: String,
-    val dataDate: Date
+    val dataDate: ZonedDateTime
 )

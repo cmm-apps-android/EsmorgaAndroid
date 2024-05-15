@@ -10,7 +10,7 @@ interface GetEventListUseCase {
 class GetEventListUseCaseImpl(private val repo: EventRepository) : GetEventListUseCase {
     override suspend fun invoke(): List<Event> {
 
-        delay(5000)
+        delay(1000)
 
         val result = repo.getEvents()
 

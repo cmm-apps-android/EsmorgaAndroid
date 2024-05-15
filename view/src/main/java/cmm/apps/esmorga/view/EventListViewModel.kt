@@ -11,6 +11,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+import java.util.TimeZone
 
 data class EventListUiState(
     val loading: Boolean = false,
@@ -39,7 +42,9 @@ class EventListViewModel(app: Application, private val useCase: GetEventListUseC
         viewModelScope.launch {
             val list = useCase.invoke()
 
-            _uiState.value = EventListUiState(eventList = list.map { ev -> ev.name }) //TODO add mappers
+            _uiState.value = EventListUiState(eventList = list.map {
+                ev -> "${ev.name} - ${ev.date.format(DateTimeFormatter.ofPattern("dd' de 'MMMM' a las 'HH:mm").withZone(TimeZone.getDefault().toZoneId()))}"
+            }) //TODO add mappers
             Log.d("THREAD", "loadEvents finished")
         }
     }

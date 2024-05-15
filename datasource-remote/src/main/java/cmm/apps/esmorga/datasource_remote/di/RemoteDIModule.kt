@@ -8,7 +8,7 @@ import org.koin.dsl.module
 object RemoteDIModule {
 
     val module = module {
-        factory<EventDatasource> { EventRemoteDatasourceImpl() }
+        factory<EventDatasource> { EventRemoteDatasourceImpl(get()) }
     }
 
 }

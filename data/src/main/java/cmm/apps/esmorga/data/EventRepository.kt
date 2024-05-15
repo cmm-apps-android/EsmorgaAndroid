@@ -6,7 +6,7 @@ import cmm.apps.esmorga.domain.repository.EventRepository
 
 class EventRepositoryImpl(private val ds: EventDatasource) : EventRepository {
 
-    override fun getEvents(): List<Event> {
+    override suspend fun getEvents(): List<Event> {
         val list = ds.getEvents()
 
         return list.map { edm -> Event(name = edm.dataName, date = edm.dataDate) } //TODO create mapper

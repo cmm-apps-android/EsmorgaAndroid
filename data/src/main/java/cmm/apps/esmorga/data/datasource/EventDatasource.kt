@@ -4,5 +4,5 @@ import cmm.apps.esmorga.data.EventDataModel
 
 
 interface EventDatasource {
-    fun getEvents(): List<EventDataModel>
+    suspend fun getEvents(): List<EventDataModel>
 }

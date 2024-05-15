@@ -13,7 +13,7 @@ interface EventApi {
         fun baseUrl(): String = "https://run.mocky.io/v3/"
     }
 
-    @GET("94b88828-63ac-4a41-9872-073cdffa23ee")
+    @GET("001f8cdc-39c5-4c6d-9402-da0451d5c5c8")
     suspend fun getEvents(): EventListWrapperRemoteModel
 
 }

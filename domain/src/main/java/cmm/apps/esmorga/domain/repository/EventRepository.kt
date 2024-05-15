@@ -4,5 +4,5 @@ import cmm.apps.esmorga.domain.Event
 
 
 interface EventRepository {
-    fun getEvents(): List<Event>
+    suspend fun getEvents(): List<Event>
 }
