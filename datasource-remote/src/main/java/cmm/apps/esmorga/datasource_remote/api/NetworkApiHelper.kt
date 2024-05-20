@@ -48,9 +48,9 @@ class NetworkApiHelper(private val context: Context) {
                 addInterceptor(CurlLogInterceptor)
                 addInterceptor(LogInterceptor)
 
-                connectTimeout(60, TimeUnit.SECONDS)
-                readTimeout(60, TimeUnit.SECONDS)
-                writeTimeout(60, TimeUnit.SECONDS)
+                connectTimeout(30, TimeUnit.SECONDS)
+                readTimeout(30, TimeUnit.SECONDS)
+                writeTimeout(30, TimeUnit.SECONDS)
             }.build()
         } catch (e: Exception) {
             throw RuntimeException(e)

@@ -4,16 +4,19 @@ import cmm.apps.esmorga.domain.repository.EventRepository
 import kotlinx.coroutines.delay
 
 interface GetEventListUseCase {
-    suspend operator fun invoke(): List<Event>
+    suspend operator fun invoke(): Result<List<Event>>
 }
 
 class GetEventListUseCaseImpl(private val repo: EventRepository) : GetEventListUseCase {
-    override suspend fun invoke(): List<Event> {
+    override suspend fun invoke(): Result<List<Event>> {
 
         delay(1000)
 
-        val result = repo.getEvents()
-
-        return result
+        try {
+            val result = repo.getEvents()
+            return Result.success(result)
+        } catch (e: Exception){
+            return Result.failure(e)
+        }
     }
 }

@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -64,9 +65,13 @@ fun EventListView(uiState: EventListUiState) {
                 color = MaterialTheme.colorScheme.surfaceVariant
             )
         } else {
-            LazyColumn {
-                items(uiState.eventList.size) { pos ->
-                    Text(text = uiState.eventList[pos])
+            if (uiState.error.isNullOrBlank().not()) {
+                Text(color = Color.Red, text = uiState.error.orEmpty())
+            } else {
+                LazyColumn {
+                    items(uiState.eventList.size) { pos ->
+                        Text(text = uiState.eventList[pos])
+                    }
                 }
             }
         }
