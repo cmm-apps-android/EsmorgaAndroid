@@ -1,5 +1,6 @@
-package cmm.apps.esmorga.domain
+package cmm.apps.esmorga.domain.event
 
+import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.domain.repository.EventRepository
 import kotlinx.coroutines.delay
 

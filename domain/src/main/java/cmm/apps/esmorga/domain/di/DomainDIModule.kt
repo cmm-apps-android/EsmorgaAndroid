@@ -1,7 +1,7 @@
 package cmm.apps.esmorga.domain.di
 
-import cmm.apps.esmorga.domain.GetEventListUseCase
-import cmm.apps.esmorga.domain.GetEventListUseCaseImpl
+import cmm.apps.esmorga.domain.event.GetEventListUseCase
+import cmm.apps.esmorga.domain.event.GetEventListUseCaseImpl
 import org.koin.dsl.module
 
 

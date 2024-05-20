@@ -1,4 +1,4 @@
-package cmm.apps.esmorga.datasource_remote
+package cmm.apps.esmorga.datasource_remote.event.model
 
 import com.google.gson.annotations.SerializedName
 

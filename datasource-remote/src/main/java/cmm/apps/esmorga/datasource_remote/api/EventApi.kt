@@ -1,10 +1,7 @@
 package cmm.apps.esmorga.datasource_remote.api
 
-import cmm.apps.esmorga.datasource_remote.EventListWrapperRemoteModel
+import cmm.apps.esmorga.datasource_remote.event.model.EventListWrapperRemoteModel
 import retrofit2.http.GET
-import retrofit2.http.HeaderMap
-import retrofit2.http.Path
-import retrofit2.http.QueryMap
 
 
 interface EventApi {

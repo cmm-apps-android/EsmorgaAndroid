@@ -1,4 +1,4 @@
-package cmm.apps.esmorga.data
+package cmm.apps.esmorga.data.event.model
 
 import java.time.ZonedDateTime
 

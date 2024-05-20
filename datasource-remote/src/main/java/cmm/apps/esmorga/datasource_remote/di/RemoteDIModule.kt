@@ -1,7 +1,7 @@
 package cmm.apps.esmorga.datasource_remote.di
 
 import cmm.apps.esmorga.data.datasource.EventDatasource
-import cmm.apps.esmorga.datasource_remote.EventRemoteDatasourceImpl
+import cmm.apps.esmorga.datasource_remote.event.EventRemoteDatasourceImpl
 import cmm.apps.esmorga.datasource_remote.api.EventApi
 import cmm.apps.esmorga.datasource_remote.api.NetworkApiHelper
 import org.koin.android.ext.koin.androidApplication

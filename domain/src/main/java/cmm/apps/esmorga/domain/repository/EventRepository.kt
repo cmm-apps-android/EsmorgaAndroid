@@ -1,6 +1,6 @@
 package cmm.apps.esmorga.domain.repository
 
-import cmm.apps.esmorga.domain.Event
+import cmm.apps.esmorga.domain.event.model.Event
 
 
 interface EventRepository {

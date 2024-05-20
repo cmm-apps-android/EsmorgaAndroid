@@ -1,4 +1,4 @@
-package cmm.apps.esmorga.view
+package cmm.apps.esmorga.view.eventList
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

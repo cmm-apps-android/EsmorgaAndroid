@@ -1,11 +1,11 @@
-package cmm.apps.esmorga.view
+package cmm.apps.esmorga.view.eventList
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
-import cmm.apps.esmorga.domain.GetEventListUseCase
+import cmm.apps.esmorga.domain.event.GetEventListUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -42,7 +42,7 @@ class EventListViewModel(app: Application, private val useCase: GetEventListUseC
                 val list = result.getOrDefault(listOf())
                 _uiState.value = EventListUiState(eventList = list.map { ev ->
                     "${ev.name} - ${ev.date.format(DateTimeFormatter.ofPattern("dd' de 'MMMM' a las 'HH:mm").withZone(TimeZone.getDefault().toZoneId()))}"
-                }) //TODO add mappers
+                })
             } else {
                 _uiState.value = EventListUiState(eventList = listOf(), error = result.exceptionOrNull()?.message)
             }
