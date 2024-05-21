@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
+import cmm.apps.esmorga.domain.error.EsmorgaException
 import cmm.apps.esmorga.domain.event.GetEventListUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -44,7 +45,12 @@ class EventListViewModel(app: Application, private val useCase: GetEventListUseC
                     "${ev.name} - ${ev.date.format(DateTimeFormatter.ofPattern("dd' de 'MMMM' a las 'HH:mm").withZone(TimeZone.getDefault().toZoneId()))}"
                 })
             } else {
-                _uiState.value = EventListUiState(eventList = listOf(), error = result.exceptionOrNull()?.message)
+                val error = result.exceptionOrNull()
+                if (error is EsmorgaException) {
+                    _uiState.value = EventListUiState(error = "${error.source} error: ${error.message}")
+                } else {
+                    _uiState.value = EventListUiState(error = "Unknown error: ${error?.message}")
+                }
             }
         }
     }
