@@ -31,15 +31,15 @@ android {
 }
 
 dependencies {
+    ksp(libs.room.compiler)
+
     api(project(":data"))
 
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.android)
     implementation(libs.room)
-    implementation(libs.room.compiler)
-    ksp(libs.room.compiler)
+    implementation(libs.room.ktx)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

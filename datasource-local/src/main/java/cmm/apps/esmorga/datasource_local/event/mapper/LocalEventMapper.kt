@@ -9,3 +9,9 @@ fun EventLocalModel.toEventDataModel(): EventDataModel {
 }
 
 fun List<EventLocalModel>.toEventDataModelList(): List<EventDataModel> = this.map { erm -> erm.toEventDataModel() }
+
+fun EventDataModel.toEventLocalModel(): EventLocalModel {
+    return EventLocalModel(localName = this.dataName, localDate = this.dataDate, creationTime = System.currentTimeMillis())
+}
+
+fun List<EventDataModel>.toEventLocalModelList(): List<EventLocalModel> = this.map { elm -> elm.toEventLocalModel() }

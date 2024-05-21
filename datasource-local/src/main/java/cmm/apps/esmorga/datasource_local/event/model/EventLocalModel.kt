@@ -6,7 +6,8 @@ import java.time.ZonedDateTime
 
 @Entity
 data class EventLocalModel(
-    @PrimaryKey val localId: Long = 0,
+    @PrimaryKey(autoGenerate = true) val localId: Long = 0,
     val localName: String,
-    val localDate: ZonedDateTime
+    val localDate: ZonedDateTime,
+    val creationTime: Long
 )

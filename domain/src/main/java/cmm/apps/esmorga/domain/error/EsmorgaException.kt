@@ -2,7 +2,8 @@ package cmm.apps.esmorga.domain.error
 
 enum class Source {
     REMOTE,
-    LOCAL
+    LOCAL,
+    UNSUPPORTED
 }
 
 class EsmorgaException(
