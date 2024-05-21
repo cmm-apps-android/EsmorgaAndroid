@@ -7,6 +7,9 @@ import org.koin.dsl.module
 
 object DataDIModule {
 
+    const val EVENT_LOCAL_DATASOURCE_INSTANCE_NAME = "eventLocalDatasourceInstance"
+    const val EVENT_REMOTE_DATASOURCE_INSTANCE_NAME = "eventRemoteDatasourceInstance"
+
     val module = module {
         factory<EventRepository> { EventRepositoryImpl(get()) }
     }

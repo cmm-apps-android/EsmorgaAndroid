@@ -5,5 +5,6 @@ import java.time.ZonedDateTime
 
 data class EventDataModel(
     val dataName: String,
-    val dataDate: ZonedDateTime
+    val dataDate: ZonedDateTime,
+    val creationTime: Long = System.currentTimeMillis()
 )

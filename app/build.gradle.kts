@@ -38,6 +38,7 @@ android {
 dependencies {
     implementation(project(":view"))
     implementation(project(":datasource-remote"))
+    implementation(project(":datasource-local"))
 
     implementation(libs.androidx.core.ktx)
     implementation(platform(libs.koin.bom))

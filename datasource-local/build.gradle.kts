@@ -1,10 +1,11 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.devtools.ksp)
 }
 
 android {
-    namespace = "cmm.apps.esmorga.datasource_remote"
+    namespace = "cmm.apps.datasource_local"
     compileSdk = 34
 
     defaultConfig {
@@ -33,14 +34,12 @@ dependencies {
     api(project(":data"))
 
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.android)
-    implementation(libs.gson)
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.converter.gson)
-    implementation(libs.retrofit.converter.scalars)
-    implementation(libs.okhttp)
-    implementation(libs.okhttp.logging.interceptor)
+    implementation(libs.room)
+    implementation(libs.room.compiler)
+    ksp(libs.room.compiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
