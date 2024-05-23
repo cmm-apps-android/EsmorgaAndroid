@@ -1,7 +1,7 @@
 package cmm.apps.esmorga.data.di
 
 import cmm.apps.esmorga.data.event.EventRepositoryImpl
-import cmm.apps.esmorga.domain.repository.EventRepository
+import cmm.apps.esmorga.domain.event.repository.EventRepository
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 

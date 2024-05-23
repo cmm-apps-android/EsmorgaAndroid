@@ -1,4 +1,4 @@
-package cmm.apps.esmorga.data.datasource
+package cmm.apps.esmorga.data.event.datasource
 
 import cmm.apps.esmorga.data.event.model.EventDataModel
 import cmm.apps.esmorga.domain.error.EsmorgaException

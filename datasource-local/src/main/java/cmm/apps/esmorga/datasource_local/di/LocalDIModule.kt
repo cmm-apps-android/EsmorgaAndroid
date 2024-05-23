@@ -1,7 +1,7 @@
 package cmm.apps.esmorga.datasource_local.di
 
 import android.content.Context
-import cmm.apps.esmorga.data.datasource.EventDatasource
+import cmm.apps.esmorga.data.event.datasource.EventDatasource
 import cmm.apps.esmorga.data.di.DataDIModule
 import cmm.apps.esmorga.datasource_local.database.EsmorgaDatabaseHelper
 import cmm.apps.esmorga.datasource_local.event.EventLocalDatasourceImpl

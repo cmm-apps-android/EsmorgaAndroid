@@ -1,7 +1,7 @@
 package cmm.apps.esmorga.domain.event
 
 import cmm.apps.esmorga.domain.event.model.Event
-import cmm.apps.esmorga.domain.repository.EventRepository
+import cmm.apps.esmorga.domain.event.repository.EventRepository
 
 interface GetEventListUseCase {
     suspend operator fun invoke(): Result<List<Event>>

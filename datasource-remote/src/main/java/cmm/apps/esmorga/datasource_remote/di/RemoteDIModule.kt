@@ -1,6 +1,6 @@
 package cmm.apps.esmorga.datasource_remote.di
 
-import cmm.apps.esmorga.data.datasource.EventDatasource
+import cmm.apps.esmorga.data.event.datasource.EventDatasource
 import cmm.apps.esmorga.data.di.DataDIModule
 import cmm.apps.esmorga.datasource_remote.event.EventRemoteDatasourceImpl
 import cmm.apps.esmorga.datasource_remote.api.EventApi

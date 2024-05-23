@@ -1,7 +1,7 @@
 package cmm.apps.esmorga.datasource_remote.event
 
 import cmm.apps.esmorga.data.event.model.EventDataModel
-import cmm.apps.esmorga.data.datasource.EventDatasource
+import cmm.apps.esmorga.data.event.datasource.EventDatasource
 import cmm.apps.esmorga.datasource_remote.api.EventApi
 import cmm.apps.esmorga.datasource_remote.event.mapper.toEventDataModelList
 import cmm.apps.esmorga.domain.error.EsmorgaException
