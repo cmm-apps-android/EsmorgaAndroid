@@ -4,7 +4,7 @@ import cmm.apps.esmorga.data.event.model.EventDataModel
 import java.time.ZonedDateTime
 
 
-object EventMock {
+object EventDataMock {
 
     fun provideEventDataModelList(nameList: List<String>): List<EventDataModel> = nameList.map { name -> provideEventDataModel(name) }
 

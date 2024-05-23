@@ -1,0 +1,26 @@
+package cmm.apps.esmorga.domain.event
+
+import cmm.apps.esmorga.domain.event.mock.EventDomainMock
+import cmm.apps.esmorga.domain.event.repository.EventRepository
+import io.mockk.coEvery
+import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert
+import org.junit.Test
+
+class GetEventListUseCaseImplTest {
+
+    @Test
+    fun `given a successful repository when events requested then events returned`() = runTest {
+        val repoEventName = "RepoEvent"
+
+        val repo = mockk<EventRepository>(relaxed = true)
+        coEvery { repo.getEvents() } returns EventDomainMock.provideEventList(listOf(repoEventName))
+
+        val sut = GetEventListUseCaseImpl(repo)
+        val result = sut.invoke()
+
+        Assert.assertEquals(result.isSuccess, true)
+        Assert.assertEquals(result.getOrThrow()[0].name, repoEventName)
+    }
+}

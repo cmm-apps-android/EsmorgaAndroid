@@ -9,5 +9,5 @@ data class EventLocalModel(
     @PrimaryKey(autoGenerate = true) val localId: Long = 0,
     val localName: String,
     val localDate: ZonedDateTime,
-    val creationTime: Long
+    val localCreationTime: Long
 )
