@@ -25,14 +25,11 @@ class EventListViewModel(app: Application, private val useCase: GetEventListUseC
     private val _uiState = MutableStateFlow(EventListUiState())
     val uiState: StateFlow<EventListUiState> = _uiState.asStateFlow()
 
-    init {
-        loadEvents()
-    }
-
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
 
         _uiState.value = EventListUiState(loading = true)
+        loadEvents()
     }
 
     private fun loadEvents() {

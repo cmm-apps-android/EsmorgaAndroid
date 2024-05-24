@@ -1,4 +1,4 @@
-package cmm.apps.esmorga.datasource_remote.event.mock
+package cmm.apps.esmorga.datasource_remote.mock
 
 import cmm.apps.esmorga.datasource_remote.event.model.EventListWrapperRemoteModel
 import cmm.apps.esmorga.datasource_remote.event.model.EventRemoteModel

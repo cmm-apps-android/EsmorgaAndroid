@@ -2,7 +2,7 @@ package cmm.apps.esmorga.datasource_local.event
 
 import cmm.apps.esmorga.data.event.model.EventDataModel
 import cmm.apps.esmorga.datasource_local.database.dao.EventDao
-import cmm.apps.esmorga.datasource_local.event.mock.EventLocalMock
+import cmm.apps.esmorga.datasource_local.mock.EventLocalMock
 import cmm.apps.esmorga.datasource_local.event.model.EventLocalModel
 import io.mockk.coEvery
 import io.mockk.mockk

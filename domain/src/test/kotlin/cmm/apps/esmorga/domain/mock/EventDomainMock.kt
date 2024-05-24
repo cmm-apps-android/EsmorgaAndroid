@@ -1,4 +1,4 @@
-package cmm.apps.esmorga.domain.event.mock
+package cmm.apps.esmorga.domain.mock
 
 import cmm.apps.esmorga.domain.event.model.Event
 import java.time.ZonedDateTime

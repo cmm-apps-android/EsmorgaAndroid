@@ -1,7 +1,7 @@
 package cmm.apps.esmorga.data.event
 
 import cmm.apps.esmorga.data.event.datasource.EventDatasource
-import cmm.apps.esmorga.data.event.mock.EventDataMock
+import cmm.apps.esmorga.data.mock.EventDataMock
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest

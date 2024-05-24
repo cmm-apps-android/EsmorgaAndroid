@@ -1,7 +1,7 @@
 package cmm.apps.esmorga.datasource_remote.event
 
 import cmm.apps.esmorga.datasource_remote.api.EventApi
-import cmm.apps.esmorga.datasource_remote.event.mock.EventRemoteMock
+import cmm.apps.esmorga.datasource_remote.mock.EventRemoteMock
 import cmm.apps.esmorga.domain.error.EsmorgaException
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -34,7 +34,7 @@ class EventRemoteDatasourceImplTest {
         val errorCode = 500
 
         val api = mockk<EventApi>(relaxed = true)
-        coEvery { api.getEvents() } throws HttpException(Response.error<ResponseBody>(errorCode, "raw response body as string".toResponseBody("plain/text".toMediaTypeOrNull())))
+        coEvery { api.getEvents() } throws HttpException(Response.error<ResponseBody>(errorCode, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
 
         val sut = EventRemoteDatasourceImpl(api)
 

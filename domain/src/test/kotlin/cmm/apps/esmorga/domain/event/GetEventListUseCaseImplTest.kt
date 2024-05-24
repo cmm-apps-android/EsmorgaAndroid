@@ -1,7 +1,7 @@
 package cmm.apps.esmorga.domain.event
 
-import cmm.apps.esmorga.domain.event.mock.EventDomainMock
 import cmm.apps.esmorga.domain.event.repository.EventRepository
+import cmm.apps.esmorga.domain.mock.EventDomainMock
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
