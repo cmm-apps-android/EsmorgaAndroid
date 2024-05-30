@@ -36,7 +36,7 @@ class EventListViewModel(app: Application, private val useCase: GetEventListUseC
         viewModelScope.launch {
             val result = useCase.invoke()
 
-            if (result.isSuccess) {
+            if (result.isSuccess) { //TODO use onSuccess and onFailure
                 val list = result.getOrDefault(listOf())
                 _uiState.value = EventListUiState(eventList = list.map { ev ->
                     "${ev.name} - ${ev.date.format(DateTimeFormatter.ofPattern("dd' de 'MMMM' a las 'HH:mm").withZone(TimeZone.getDefault().toZoneId()))}"

@@ -15,13 +15,12 @@ class EventRemoteDatasourceImpl(private val eventApi: EventApi) : EventDatasourc
     override suspend fun getEvents(): List<EventDataModel> {
         try {
             val eventList = eventApi.getEvents()
-
             return eventList.remoteEventList.toEventDataModelList()
         } catch (httpEx: HttpException) {
             throw EsmorgaException(message = httpEx.response()?.message().orEmpty(), source = Source.REMOTE, code = httpEx.code())
-        } catch (parseEx: DateTimeParseException){
+        } catch (parseEx: DateTimeParseException) {
             throw EsmorgaException(message = "Date parse error: ${parseEx.message.orEmpty()}", source = Source.REMOTE, code = -1)
-        } catch (e: Exception){
+        } catch (e: Exception) {
             throw EsmorgaException(message = "Unexpected error: ${e.message.orEmpty()}", source = Source.REMOTE, code = -1)
         }
     }

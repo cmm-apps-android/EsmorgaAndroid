@@ -8,7 +8,7 @@ import cmm.apps.esmorga.datasource_remote.api.NetworkApiHelper
 import org.koin.android.ext.koin.androidApplication
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-
+import java.util.concurrent.Executor
 
 object RemoteDIModule {
 
@@ -16,7 +16,7 @@ object RemoteDIModule {
         factory<EventDatasource>(named(DataDIModule.EVENT_REMOTE_DATASOURCE_INSTANCE_NAME)) { EventRemoteDatasourceImpl(get()) }
 
         single {
-            NetworkApiHelper(androidApplication()).provideApi(
+            NetworkApiHelper().provideApi(
                 baseUrl = EventApi.baseUrl(),
                 clazz = EventApi::class.java
             )

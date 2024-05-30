@@ -21,6 +21,7 @@ class EsmorgaApp : Application(), LifecycleObserver {
         super.onCreate()
 
         startKoin {
+            allowOverride(false)
             androidLogger()
             androidContext(this@EsmorgaApp)
             modules(AppDIModules.modules)

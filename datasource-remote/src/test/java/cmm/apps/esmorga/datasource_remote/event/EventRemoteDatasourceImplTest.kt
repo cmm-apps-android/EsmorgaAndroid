@@ -26,7 +26,7 @@ class EventRemoteDatasourceImplTest {
         val sut = EventRemoteDatasourceImpl(api)
         val result = sut.getEvents()
 
-        Assert.assertEquals(result[0].dataName, remoteEventName)
+        Assert.assertEquals(remoteEventName, result[0].dataName)
     }
 
     @Test
@@ -46,6 +46,6 @@ class EventRemoteDatasourceImplTest {
         }
 
         Assert.assertTrue(exception is EsmorgaException)
-        Assert.assertEquals((exception as EsmorgaException).code, errorCode)
+        Assert.assertEquals(errorCode, (exception as EsmorgaException).code)
     }
 }

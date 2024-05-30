@@ -23,7 +23,7 @@ class EventRepositoryImplTest {
         val sut = EventRepositoryImpl(localDS, remoteDS)
         val result = sut.getEvents()
 
-        assertEquals(result[0].name, remoteName)
+        assertEquals(remoteName, result[0].name)
     }
 
 }

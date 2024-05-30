@@ -20,7 +20,7 @@ class GetEventListUseCaseImplTest {
         val sut = GetEventListUseCaseImpl(repo)
         val result = sut.invoke()
 
-        Assert.assertEquals(result.isSuccess, true)
-        Assert.assertEquals(result.getOrThrow()[0].name, repoEventName)
+        Assert.assertTrue(result.isSuccess)
+        Assert.assertEquals(repoEventName, result.getOrThrow()[0].name)
     }
 }

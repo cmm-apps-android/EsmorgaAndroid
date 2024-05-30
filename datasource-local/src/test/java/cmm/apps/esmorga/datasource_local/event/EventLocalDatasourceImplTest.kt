@@ -32,7 +32,7 @@ class EventLocalDatasourceImplTest {
         val sut = EventLocalDatasourceImpl(dao)
         val result = sut.getEvents()
 
-        Assert.assertEquals(result[0].dataName, localEventName)
+        Assert.assertEquals(localEventName, result[0].dataName)
     }
 
     @Test
@@ -43,8 +43,8 @@ class EventLocalDatasourceImplTest {
         sut.cacheEvents(listOf(EventDataModel(localEventName, ZonedDateTime.now())))
         val result = sut.getEvents()
 
-        Assert.assertEquals(result.size, 1)
-        Assert.assertEquals(result[0].dataName, localEventName)
+        Assert.assertEquals(1, result.size)
+        Assert.assertEquals(localEventName, result[0].dataName)
     }
 
     @Test
@@ -56,8 +56,8 @@ class EventLocalDatasourceImplTest {
         sut.cacheEvents(listOf(EventDataModel(localEventName, ZonedDateTime.now())))
         val result = sut.getEvents()
 
-        Assert.assertEquals(result.size, 1)
-        Assert.assertEquals(result[0].dataName, localEventName)
+        Assert.assertEquals(1, result.size)
+        Assert.assertEquals(localEventName, result[0].dataName)
     }
 
     private fun provideFakeDao(): EventDao {

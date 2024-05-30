@@ -1,0 +1,38 @@
+{
+  "totalEvents": 2,
+  "events": [
+    {
+      "eventId": 1,
+      "eventName": "MobgenFest",
+      "eventDate": "2030-12-31T23:59:59.000Z",
+      "description": "Chipmunk",
+      "eventType": "Party",
+      "imageUrl": "https://i.ytimg.com/vi/lTDBT-w4hnE/sddefault.jpg",
+      "location": {
+        "lat": 43.35525182148881,
+        "long": -8.41937931298951,
+        "name": "A Coruña"
+      },
+      "tags": [
+        "Food",
+        "Music"
+      ]
+    },
+    {
+      "eventId": 2,
+      "eventName": "Paintball",
+      "eventDate": "2030-07-08T12:00:00.000Z",
+      "description": "Party Panda",
+      "eventType": "Sport",
+      "imageUrl": "https://i.pinimg.com/736x/ed/1c/f9/ed1cf9e75189d2fdb542e80dfd30e5d1.jpg",
+      "location": {
+        "lat": 35.35525182148881,
+        "long": -8.41937931298951,
+        "name": "Vigo"
+      },
+      "tags": [
+        "Sports"
+      ]
+    }
+  ]
+}
