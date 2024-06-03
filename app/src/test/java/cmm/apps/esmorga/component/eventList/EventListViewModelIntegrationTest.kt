@@ -1,4 +1,4 @@
-package cmm.apps.esmorga.integration.eventList
+package cmm.apps.esmorga.component.eventList
 
 import android.app.Application
 import android.content.Context
@@ -10,7 +10,7 @@ import cmm.apps.esmorga.data.event.datasource.EventDatasource
 import cmm.apps.esmorga.datasource_local.database.EsmorgaDatabase
 import cmm.apps.esmorga.di.AppDIModules
 import cmm.apps.esmorga.domain.event.GetEventListUseCase
-import cmm.apps.esmorga.integration.mock.EventDataMock
+import cmm.apps.esmorga.component.mock.EventDataMock
 import cmm.apps.esmorga.view.eventList.EventListViewModel
 import io.mockk.coEvery
 import io.mockk.mockk

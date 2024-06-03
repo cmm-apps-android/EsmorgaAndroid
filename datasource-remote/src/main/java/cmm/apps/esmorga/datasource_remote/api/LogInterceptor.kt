@@ -15,18 +15,18 @@ object LogInterceptor : Interceptor {
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         var request = chain.request()
-        request = interceptRequest(request, chain.connection())
+        request = interceptRequest(request)
         var response = chain.proceed(request)
-        response = interceptResponse(request, response)
+        response = interceptResponse(response)
         return response
     }
 
-    private fun interceptRequest(request: Request, connection: Connection?): Request {
+    private fun interceptRequest(request: Request): Request {
         Log.v("Interceptor", String.format("Request %s: %s \n%s", request.method, request.url, request.headers.toString()))
         return request
     }
 
-    private fun interceptResponse(request: Request, response: Response): Response {
+    private fun interceptResponse(response: Response): Response {
         return try {
             response.body?.let {
                 val responseBodyString = it.string()
