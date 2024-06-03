@@ -6,7 +6,7 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
+import org.junit.Assert
 import org.junit.Test
 
 class EventRepositoryImplTest {
@@ -24,7 +24,7 @@ class EventRepositoryImplTest {
         val sut = EventRepositoryImpl(localDS, remoteDS)
         val result = sut.getEvents()
 
-        assertEquals(remoteName, result[0].name)
+        Assert.assertEquals(remoteName, result[0].name)
     }
 
     @Test

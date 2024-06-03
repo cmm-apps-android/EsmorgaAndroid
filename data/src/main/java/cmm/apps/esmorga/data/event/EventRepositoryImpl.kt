@@ -11,7 +11,7 @@ class EventRepositoryImpl(private val localDs: EventDatasource, private val remo
     override suspend fun getEvents(forceRefresh: Boolean): List<Event> {
         val localList = localDs.getEvents()
 
-        if(forceRefresh.not() && localList.isNotEmpty() && CacheHelper.shouldReturnCache(localList[0].creationTime)){
+        if(forceRefresh.not() && localList.isNotEmpty() && CacheHelper.shouldReturnCache(localList[0].dataCreationTime)){
             return localList.toEventList()
         }
 

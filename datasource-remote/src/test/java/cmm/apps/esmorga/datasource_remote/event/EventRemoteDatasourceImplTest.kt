@@ -1,8 +1,10 @@
 package cmm.apps.esmorga.datasource_remote.event
 
 import cmm.apps.esmorga.datasource_remote.api.EventApi
+import cmm.apps.esmorga.datasource_remote.event.model.EventListWrapperRemoteModel
 import cmm.apps.esmorga.datasource_remote.mock.EventRemoteMock
 import cmm.apps.esmorga.domain.error.EsmorgaException
+import cmm.apps.esmorga.domain.event.model.EventType
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
@@ -47,5 +49,46 @@ class EventRemoteDatasourceImplTest {
 
         Assert.assertTrue(exception is EsmorgaException)
         Assert.assertEquals(errorCode, (exception as EsmorgaException).code)
+    }
+
+    @Test
+    fun `given an api with an event with wrong type when events requested then Exception is thrown`() = runTest {
+        val remoteEventName = "RemoteEvent"
+        val wrongTypeEvent = EventRemoteMock.provideEvent(remoteEventName).copy(remoteType = "ERROR")
+
+        val api = mockk<EventApi>(relaxed = true)
+        coEvery { api.getEvents() } returns EventListWrapperRemoteModel(1, listOf(wrongTypeEvent))
+
+        val sut = EventRemoteDatasourceImpl(api)
+
+        val exception = try {
+            sut.getEvents()
+            null
+        } catch (exception: RuntimeException){
+            exception
+        }
+
+        Assert.assertTrue(exception is EsmorgaException)
+        Assert.assertEquals(-1, (exception as EsmorgaException).code)
+    }
+
+    @Test
+    fun `given an api with an event with wrong formatted date when events requested then Exception is thrown`() = runTest {
+        val remoteEventName = "RemoteEvent"
+        val wrongTypeEvent = EventRemoteMock.provideEvent(remoteEventName).copy(remoteDate = "ERROR")
+
+        val api = mockk<EventApi>(relaxed = true)
+        coEvery { api.getEvents() } returns EventListWrapperRemoteModel(1, listOf(wrongTypeEvent))
+
+        val sut = EventRemoteDatasourceImpl(api)
+        val exception = try {
+            sut.getEvents()
+            null
+        } catch (exception: RuntimeException){
+            exception
+        }
+
+        Assert.assertTrue(exception is EsmorgaException)
+        Assert.assertEquals(-1, (exception as EsmorgaException).code)
     }
 }

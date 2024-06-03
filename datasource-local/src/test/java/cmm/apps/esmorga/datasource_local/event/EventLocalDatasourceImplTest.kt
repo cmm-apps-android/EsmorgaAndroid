@@ -2,6 +2,7 @@ package cmm.apps.esmorga.datasource_local.event
 
 import cmm.apps.esmorga.data.event.model.EventDataModel
 import cmm.apps.esmorga.datasource_local.database.dao.EventDao
+import cmm.apps.esmorga.datasource_local.event.mapper.toEventDataModelList
 import cmm.apps.esmorga.datasource_local.mock.EventLocalMock
 import cmm.apps.esmorga.datasource_local.event.model.EventLocalModel
 import io.mockk.coEvery
@@ -40,7 +41,7 @@ class EventLocalDatasourceImplTest {
         val localEventName = "LocalEvent"
 
         val sut = EventLocalDatasourceImpl(provideFakeDao())
-        sut.cacheEvents(listOf(EventDataModel(localEventName, ZonedDateTime.now())))
+        sut.cacheEvents(EventLocalMock.provideEventList(listOf(localEventName)).toEventDataModelList())
         val result = sut.getEvents()
 
         Assert.assertEquals(1, result.size)
@@ -53,7 +54,7 @@ class EventLocalDatasourceImplTest {
         fakeStorage.add("ShouldBeRemoved")
 
         val sut = EventLocalDatasourceImpl(provideFakeDao())
-        sut.cacheEvents(listOf(EventDataModel(localEventName, ZonedDateTime.now())))
+        sut.cacheEvents(EventLocalMock.provideEventList(listOf(localEventName)).toEventDataModelList())
         val result = sut.getEvents()
 
         Assert.assertEquals(1, result.size)
@@ -65,7 +66,7 @@ class EventLocalDatasourceImplTest {
         val dao = mockk<EventDao>()
         coEvery { dao.getEvents() } coAnswers {
             fakeStorage.map { name ->
-                EventLocalModel(0, name, ZonedDateTime.now(), System.currentTimeMillis())
+                EventLocalMock.provideEvent(name)
             }
         }
         coEvery { dao.insertEvent(capture(slot)) } coAnswers {

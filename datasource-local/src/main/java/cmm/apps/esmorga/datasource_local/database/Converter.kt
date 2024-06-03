@@ -10,6 +10,7 @@ class ZonedDateTimeConverter {
 
     companion object {
         const val DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSVV"
+        const val CSV_SEPARATOR = ";//;"
     }
 
     @TypeConverter
@@ -22,4 +23,13 @@ class ZonedDateTimeConverter {
         return date.format(DateTimeFormatter.ofPattern(DATE_FORMAT).withZone(TimeZone.getDefault().toZoneId()))
     }
 
+    @TypeConverter
+    fun toString(list: List<String>): String {
+        return list.joinToString(separator = CSV_SEPARATOR)
+    }
+
+    @TypeConverter
+    fun fromString(csv: String): List<String> {
+        return csv.split(CSV_SEPARATOR)
+    }
 }

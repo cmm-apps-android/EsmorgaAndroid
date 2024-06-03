@@ -1,7 +1,12 @@
 package cmm.apps.esmorga.datasource_remote.event.mapper
 
 import cmm.apps.esmorga.data.event.model.EventDataModel
+import cmm.apps.esmorga.data.event.model.EventLocationDataModel
+import cmm.apps.esmorga.datasource_remote.event.model.EventLocationRemoteModel
 import cmm.apps.esmorga.datasource_remote.event.model.EventRemoteModel
+import cmm.apps.esmorga.domain.error.EsmorgaException
+import cmm.apps.esmorga.domain.error.Source
+import cmm.apps.esmorga.domain.event.model.EventType
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
@@ -13,7 +18,29 @@ fun EventRemoteModel.toEventDataModel(): EventDataModel {
     } catch (e: Exception) {
         throw DateTimeParseException("Error parsing date in EventRemoteModel", this.remoteDate, 0, e)
     }
-    return EventDataModel(dataName = this.remoteName, dataDate = parsedDate)
+
+    val parsedType = try {
+        EventType.valueOf(this.remoteType.uppercase())
+    } catch (e: Exception) {
+        throw EsmorgaException(message = "Error parsing type [${this.remoteType.uppercase()}] in EventRemoteModel", source = Source.REMOTE, code = -1)
+    }
+
+    return EventDataModel(
+        dataId = this.remoteId,
+        dataName = this.remoteName,
+        dataDate = parsedDate,
+        dataDescription = this.remoteDescription,
+        dataType = parsedType,
+        dataImageUrl = this.remoteImageUrl,
+        dataLocation = this.remoteLocation.toEventLocationDataModel(),
+        dataTags = this.remoteTags ?: listOf()
+    )
 }
 
 fun List<EventRemoteModel>.toEventDataModelList(): List<EventDataModel> = this.map { erm -> erm.toEventDataModel() }
+
+fun EventLocationRemoteModel.toEventLocationDataModel(): EventLocationDataModel = EventLocationDataModel(
+    name = this.remoteLocationName,
+    lat = this.remoteLat,
+    long = this.remoteLong
+)

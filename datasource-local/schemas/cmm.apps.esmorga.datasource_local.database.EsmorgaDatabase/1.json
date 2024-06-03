@@ -2,16 +2,16 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "7c6d0087060ac8cc37be0cb5474e55ab",
+    "identityHash": "5682612f84b0579537b45c7dc162bd6f",
     "entities": [
       {
         "tableName": "EventLocalModel",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`localId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `localName` TEXT NOT NULL, `localDate` TEXT NOT NULL, `localCreationTime` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`localId` TEXT NOT NULL, `localName` TEXT NOT NULL, `localDate` TEXT NOT NULL, `localDescription` TEXT NOT NULL, `localType` TEXT NOT NULL, `localImageUrl` TEXT, `localLocationName` TEXT NOT NULL, `localLocationLat` REAL, `localLocationLong` REAL, `localTags` TEXT NOT NULL, `localCreationTime` INTEGER NOT NULL, PRIMARY KEY(`localId`))",
         "fields": [
           {
             "fieldPath": "localId",
             "columnName": "localId",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -27,6 +27,48 @@
             "notNull": true
           },
           {
+            "fieldPath": "localDescription",
+            "columnName": "localDescription",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localType",
+            "columnName": "localType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localImageUrl",
+            "columnName": "localImageUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "localLocationName",
+            "columnName": "localLocationName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localLocationLat",
+            "columnName": "localLocationLat",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "localLocationLong",
+            "columnName": "localLocationLong",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "localTags",
+            "columnName": "localTags",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
             "fieldPath": "localCreationTime",
             "columnName": "localCreationTime",
             "affinity": "INTEGER",
@@ -34,7 +76,7 @@
           }
         ],
         "primaryKey": {
-          "autoGenerate": true,
+          "autoGenerate": false,
           "columnNames": [
             "localId"
           ]
@@ -46,7 +88,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7c6d0087060ac8cc37be0cb5474e55ab')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5682612f84b0579537b45c7dc162bd6f')"
     ]
   }
 }
