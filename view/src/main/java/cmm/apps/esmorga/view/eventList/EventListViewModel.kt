@@ -5,48 +5,53 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
-import cmm.apps.esmorga.domain.error.EsmorgaException
 import cmm.apps.esmorga.domain.event.GetEventListUseCase
+import cmm.apps.esmorga.domain.result.ErrorCodes
+import cmm.apps.esmorga.domain.result.EsmorgaException
+import cmm.apps.esmorga.view.eventList.mapper.toEventUiList
+import cmm.apps.esmorga.view.eventList.model.EventListEffect
+import cmm.apps.esmorga.view.eventList.model.EventListUiState
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.time.format.DateTimeFormatter
-import java.util.TimeZone
 
-data class EventListUiState(
-    val loading: Boolean = false,
-    val eventList: List<String> = emptyList(),
-    val error: String? = null
-)
-
-class EventListViewModel(app: Application, private val useCase: GetEventListUseCase) : AndroidViewModel(app), DefaultLifecycleObserver {
+class EventListViewModel(app: Application, private val getEventListUseCase: GetEventListUseCase) : AndroidViewModel(app), DefaultLifecycleObserver {
 
     private val _uiState = MutableStateFlow(EventListUiState())
     val uiState: StateFlow<EventListUiState> = _uiState.asStateFlow()
 
+    private val _effect: MutableSharedFlow<EventListEffect> = MutableSharedFlow(extraBufferCapacity = 2, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    val effect: SharedFlow<EventListEffect> = _effect.asSharedFlow()
+
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
 
-        _uiState.value = EventListUiState(loading = true)
         loadEvents()
     }
 
-    private fun loadEvents() {
+    fun loadEvents() {
+        _uiState.value = EventListUiState(loading = true)
         viewModelScope.launch {
-            val result = useCase.invoke()
+            val result = getEventListUseCase()
 
-            if (result.isSuccess) { //TODO use onSuccess and onFailure
-                val list = result.getOrDefault(listOf())
-                _uiState.value = EventListUiState(eventList = list.map { ev ->
-                    "${ev.name} - ${ev.date.format(DateTimeFormatter.ofPattern("dd' de 'MMMM' a las 'HH:mm").withZone(TimeZone.getDefault().toZoneId()))}"
-                })
-            } else {
-                val error = result.exceptionOrNull()
+            result.onSuccess { success ->
+                if (success.hasError() && success.nonBlockingError == ErrorCodes.NO_CONNECTION) {
+                    _effect.tryEmit(EventListEffect.ShowNoNetworkPrompt)
+                }
+                _uiState.value = EventListUiState(
+                    eventList = success.data.toEventUiList(),
+                    error = if (success.hasError() && success.nonBlockingError == ErrorCodes.NO_CONNECTION && success.data.isEmpty()) "No Connection" else null
+                )
+            }.onFailure { error ->
                 if (error is EsmorgaException) {
                     _uiState.value = EventListUiState(error = "${error.source} error: ${error.message}")
                 } else {
-                    _uiState.value = EventListUiState(error = "Unknown error: ${error?.message}")
+                    _uiState.value = EventListUiState(error = "Unknown error: ${error.message}")
                 }
             }
         }

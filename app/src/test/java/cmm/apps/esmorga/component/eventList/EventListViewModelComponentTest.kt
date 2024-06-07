@@ -5,12 +5,12 @@ import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
+import cmm.apps.esmorga.component.mock.EventDataMock
 import cmm.apps.esmorga.data.di.DataDIModule.EVENT_REMOTE_DATASOURCE_INSTANCE_NAME
 import cmm.apps.esmorga.data.event.datasource.EventDatasource
 import cmm.apps.esmorga.datasource_local.database.EsmorgaDatabase
 import cmm.apps.esmorga.di.AppDIModules
 import cmm.apps.esmorga.domain.event.GetEventListUseCase
-import cmm.apps.esmorga.component.mock.EventDataMock
 import cmm.apps.esmorga.view.eventList.EventListViewModel
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -34,7 +34,7 @@ import org.robolectric.RobolectricTestRunner
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
-class EventListViewModelIntegrationTest : KoinTest {
+class EventListViewModelComponentTest : KoinTest {
 
     private lateinit var mockContext: Context
     private lateinit var mockDatabase: EsmorgaDatabase
@@ -60,25 +60,7 @@ class EventListViewModelIntegrationTest : KoinTest {
         stopKoin()
     }
 
-    @Test
-    fun `given a successful API and an empty DB when screen is shown then UI state with events is returned`() = runTest {
-        val remoteEventName = "RemoteEvent"
-        remoteDatasource = mockk<EventDatasource>()
-        coEvery { remoteDatasource.getEvents() } returns EventDataMock.provideEventDataModelList(listOf(remoteEventName))
-        startKoin()
-
-        val app = mockk<Application>(relaxed = true)
-        val useCase: GetEventListUseCase by inject()
-
-        val sut = EventListViewModel(app, useCase)
-
-        sut.onStart(mockk<LifecycleOwner>(relaxed = true))
-
-        val uiState = sut.uiState.value
-        Assert.assertTrue(uiState.eventList[0].contains(remoteEventName))
-    }
-
-    private fun startKoin() {
+    private fun startDI() {
         startKoin {
             androidContext(mockContext)
             modules(
@@ -89,5 +71,23 @@ class EventListViewModelIntegrationTest : KoinTest {
                 }
             )
         }
+    }
+
+    @Test
+    fun `given a successful API and an empty DB when screen is shown then UI state with events is returned`() = runTest {
+        val remoteEventName = "RemoteEvent"
+        remoteDatasource = mockk<EventDatasource>()
+        coEvery { remoteDatasource.getEvents() } returns EventDataMock.provideEventDataModelList(listOf(remoteEventName))
+        startDI()
+
+        val app = mockk<Application>(relaxed = true)
+        val useCase: GetEventListUseCase by inject()
+
+        val sut = EventListViewModel(app, useCase)
+
+        sut.onStart(mockk<LifecycleOwner>(relaxed = true))
+
+        val uiState = sut.uiState.value
+        Assert.assertTrue(uiState.eventList[0].cardTitle.contains(remoteEventName))
     }
 }

@@ -1,14 +1,12 @@
 package cmm.apps.esmorga.datasource_remote.di
 
-import cmm.apps.esmorga.data.event.datasource.EventDatasource
 import cmm.apps.esmorga.data.di.DataDIModule
-import cmm.apps.esmorga.datasource_remote.event.EventRemoteDatasourceImpl
+import cmm.apps.esmorga.data.event.datasource.EventDatasource
 import cmm.apps.esmorga.datasource_remote.api.EventApi
 import cmm.apps.esmorga.datasource_remote.api.NetworkApiHelper
-import org.koin.android.ext.koin.androidApplication
+import cmm.apps.esmorga.datasource_remote.event.EventRemoteDatasourceImpl
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import java.util.concurrent.Executor
 
 object RemoteDIModule {
 

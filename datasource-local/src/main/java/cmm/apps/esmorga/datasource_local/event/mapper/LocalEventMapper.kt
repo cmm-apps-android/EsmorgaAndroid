@@ -3,16 +3,17 @@ package cmm.apps.esmorga.datasource_local.event.mapper
 import cmm.apps.esmorga.data.event.model.EventDataModel
 import cmm.apps.esmorga.data.event.model.EventLocationDataModel
 import cmm.apps.esmorga.datasource_local.event.model.EventLocalModel
-import cmm.apps.esmorga.domain.error.EsmorgaException
-import cmm.apps.esmorga.domain.error.Source
 import cmm.apps.esmorga.domain.event.model.EventType
+import cmm.apps.esmorga.domain.result.ErrorCodes
+import cmm.apps.esmorga.domain.result.EsmorgaException
+import cmm.apps.esmorga.domain.result.Source
 
 
 fun EventLocalModel.toEventDataModel(): EventDataModel {
     val parsedType = try {
         EventType.valueOf(this.localType)
     } catch (e: Exception) {
-        throw EsmorgaException(message = "Error parsing type [${this.localType.uppercase()}] in EventRemoteModel", source = Source.LOCAL, code = -1)
+        throw EsmorgaException(message = "Error parsing type [${this.localType.uppercase()}] in EventRemoteModel", source = Source.LOCAL, code = ErrorCodes.PARSE_ERROR)
     }
 
     return EventDataModel(

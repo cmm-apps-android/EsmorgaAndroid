@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="homescreen_title">¡Hola!</string>
+    <string name="event_list_title">Listado de eventos</string>
+    <string name="event_list_loading">Cargando eventos…</string>
+    <string name="event_list_empty_text">No hay eventos disponibles. Por favor vuelve más tarde.</string>
+    <string name="event_list_error_title">¡Algo ha ido mal!</string>
+    <string name="event_list_error_subtitle">Inténtalo de nuevo más tarde</string>
+    <string name="event_list_error_button">Reintentar</string>
+    <string name="event_list_date_formatter">dd\' de \'MMMM\' a las \'HH:mm</string>
+    <string name="event_image_content_description">Imagen del evento %s</string>
+    <string name="no_internet_snackbar">No hay conexión a internet.</string>
+</resources>

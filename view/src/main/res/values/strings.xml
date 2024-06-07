@@ -1,3 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="other">other</string>
+    <string name="homescreen_title">Hello!</string>
+    <string name="event_list_title">Event list</string>
+    <string name="event_list_loading">Loading events…</string>
+    <string name="event_list_empty_text">No events available now. Please come back later.</string>
+    <string name="event_list_error_title">Something went wrong!</string>
+    <string name="event_list_error_subtitle">Please retry later</string>
+    <string name="event_list_error_button">Retry</string>
+    <string name="event_list_date_formatter">dd\' of \'MMMM\' at \'HH:mm</string>
+    <string name="event_image_content_description">Event %s image</string>
+    <string name="no_internet_snackbar">No internet connection.</string>
 </resources>

@@ -1,15 +1,14 @@
 [versions]
 agp = "8.4.1"
-ksp = "1.9.0-1.0.13"
-kotlin = "1.9.0" #1.9.23 is incompatible with Compose 1.6.1
+ksp = "1.9.24-1.0.20"
+kotlin = "1.9.24"
 kotlinxCoroutines = "1.8.1"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 testExtJunit = "1.1.5"
-testCore = "1.5.0"
 espressoCore = "3.5.1"
 mockk = "1.13.11"
-lifecycleRuntime = "2.7.0" #2.8.0 is incompatible with Compose 1.6.1
+lifecycleRuntime = "2.7.0" #2.8.1 is not compatible with compose 1.9.0
 activityCompose = "1.9.0"
 composeBom = "2024.05.00"
 jetbrainsKotlinJvm = "1.9.0"
@@ -20,6 +19,9 @@ koinBom = "3.5.6"
 room = "2.6.1"
 robolectric = "4.12.2"
 kover = "0.8.0"
+appcompat = "1.7.0"
+material = "1.12.0"
+coil = "2.6.0"
 
 [libraries]
 #Kotlin Core
@@ -28,21 +30,24 @@ kotlinx-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutin
 #Android Core
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntime" }
-androidx-lifecycle-viewmodel = { group= "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycleRuntime"  }
+androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycleRuntime" }
 androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycleRuntime" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+
+#UI
+coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
-androidx-ui = { group = "androidx.compose.ui", name = "ui" }
-androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
-androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
-androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
-androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+compose-ui = { group = "androidx.compose.ui", name = "ui" }
+compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 
 #DI
 koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koinBom" }
 koin-core = { group = "io.insert-koin", name = "koin-core" }
-koin-android = { group = "io.insert-koin", name = "koin-android"}
-koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose"}
+koin-android = { group = "io.insert-koin", name = "koin-android" }
+koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose" }
 
 #Network
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
@@ -62,13 +67,15 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "testExtJunit" }
 androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "testExtJunit" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
-androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
-androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
-koin-test = { group = "io.insert-koin", name = "koin-test"}
+koin-test = { group = "io.insert-koin", name = "koin-test" }
 mockwebserver = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref = "okhttp" }
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [plugins]
 java-library = { id = "java-library" }
