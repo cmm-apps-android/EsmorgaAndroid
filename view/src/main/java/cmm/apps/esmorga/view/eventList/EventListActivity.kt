@@ -4,24 +4,19 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import cmm.apps.esmorga.view.R
+import cmm.apps.esmorga.view.eventList.model.EventListEffect
+import cmm.apps.esmorga.view.eventList.model.EventListUiState
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -43,45 +38,23 @@ class EventListActivity : ComponentActivity() {
 fun EventListScreen(elvm: EventListViewModel = koinViewModel()) {
     val uiState: EventListUiState by elvm.uiState.collectAsStateWithLifecycle()
 
-    EsmorgaTheme {
-        Surface(
-            modifier = Modifier
-                .padding(32.dp)
-                .fillMaxSize()
-        ) {
-            EventListView(uiState)
-        }
-    }
-}
-
-@Composable
-fun EventListView(uiState: EventListUiState) {
-    Box(modifier = Modifier.fillMaxSize()) {
-        if (uiState.loading) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .size(64.dp),
-                color = MaterialTheme.colorScheme.surfaceVariant
-            )
-        } else {
-            if (uiState.error.isNullOrBlank().not()) {
-                Text(color = Color.Red, text = uiState.error.orEmpty())
-            } else {
-                LazyColumn {
-                    items(uiState.eventList.size) { pos ->
-                        Text(text = uiState.eventList[pos])
+    val message = stringResource(R.string.no_internet_snackbar)
+    val snackbarHostState = remember { SnackbarHostState() }
+    val localCoroutineScope = rememberCoroutineScope()
+    LaunchedEffect(Unit) {
+        elvm.effect.collect { eff ->
+            when (eff) {
+                is EventListEffect.ShowNoNetworkPrompt -> {
+                    localCoroutineScope.launch {
+                        snackbarHostState.showSnackbar(message = message)
                     }
                 }
             }
         }
     }
-}
 
-@Preview(showBackground = true)
-@Composable
-fun EventListPreview() {
     EsmorgaTheme {
-        EventListView(EventListUiState(false, listOf("Android")))
+        EventListView(uiState = uiState, snackbarHostState = snackbarHostState, onRetryClick = { elvm.loadEvents() })
     }
 }
+

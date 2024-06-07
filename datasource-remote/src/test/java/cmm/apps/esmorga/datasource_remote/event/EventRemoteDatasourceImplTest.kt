@@ -3,8 +3,8 @@ package cmm.apps.esmorga.datasource_remote.event
 import cmm.apps.esmorga.datasource_remote.api.EventApi
 import cmm.apps.esmorga.datasource_remote.event.model.EventListWrapperRemoteModel
 import cmm.apps.esmorga.datasource_remote.mock.EventRemoteMock
-import cmm.apps.esmorga.domain.error.EsmorgaException
-import cmm.apps.esmorga.domain.event.model.EventType
+import cmm.apps.esmorga.domain.result.ErrorCodes
+import cmm.apps.esmorga.domain.result.EsmorgaException
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
@@ -69,7 +69,7 @@ class EventRemoteDatasourceImplTest {
         }
 
         Assert.assertTrue(exception is EsmorgaException)
-        Assert.assertEquals(-1, (exception as EsmorgaException).code)
+        Assert.assertEquals(ErrorCodes.PARSE_ERROR, (exception as EsmorgaException).code)
     }
 
     @Test
@@ -89,6 +89,6 @@ class EventRemoteDatasourceImplTest {
         }
 
         Assert.assertTrue(exception is EsmorgaException)
-        Assert.assertEquals(-1, (exception as EsmorgaException).code)
+        Assert.assertEquals(ErrorCodes.PARSE_ERROR, (exception as EsmorgaException).code)
     }
 }

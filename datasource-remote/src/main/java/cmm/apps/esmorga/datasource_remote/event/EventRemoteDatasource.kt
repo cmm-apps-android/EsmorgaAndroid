@@ -1,12 +1,15 @@
 package cmm.apps.esmorga.datasource_remote.event
 
-import cmm.apps.esmorga.data.event.model.EventDataModel
 import cmm.apps.esmorga.data.event.datasource.EventDatasource
+import cmm.apps.esmorga.data.event.model.EventDataModel
 import cmm.apps.esmorga.datasource_remote.api.EventApi
 import cmm.apps.esmorga.datasource_remote.event.mapper.toEventDataModelList
-import cmm.apps.esmorga.domain.error.EsmorgaException
-import cmm.apps.esmorga.domain.error.Source
+import cmm.apps.esmorga.domain.result.ErrorCodes
+import cmm.apps.esmorga.domain.result.EsmorgaException
+import cmm.apps.esmorga.domain.result.Source
 import retrofit2.HttpException
+import java.net.ConnectException
+import java.net.UnknownHostException
 import java.time.format.DateTimeParseException
 
 
@@ -16,12 +19,15 @@ class EventRemoteDatasourceImpl(private val eventApi: EventApi) : EventDatasourc
         try {
             val eventList = eventApi.getEvents()
             return eventList.remoteEventList.toEventDataModelList()
-        } catch (httpEx: HttpException) {
-            throw EsmorgaException(message = httpEx.response()?.message().orEmpty(), source = Source.REMOTE, code = httpEx.code())
-        } catch (parseEx: DateTimeParseException) {
-            throw EsmorgaException(message = "Date parse error: ${parseEx.message.orEmpty()}", source = Source.REMOTE, code = -1)
         } catch (e: Exception) {
-            throw EsmorgaException(message = "Unexpected error: ${e.message.orEmpty()}", source = Source.REMOTE, code = -1)
+            when (e) {
+                is HttpException -> throw EsmorgaException(message = e.response()?.message().orEmpty(), source = Source.REMOTE, code = e.code())
+                is DateTimeParseException -> throw EsmorgaException(message = "Date parse error: ${e.message.orEmpty()}", source = Source.REMOTE, code = ErrorCodes.PARSE_ERROR)
+                is ConnectException,
+                is UnknownHostException -> throw EsmorgaException(message = "No connection error: ${e.message.orEmpty()}", source = Source.REMOTE, code = ErrorCodes.NO_CONNECTION)
+                is EsmorgaException -> throw e
+                else -> throw EsmorgaException(message = "Unexpected error: ${e.message.orEmpty()}", source = Source.REMOTE, code = ErrorCodes.UNKNOWN_ERROR)
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ package cmm.apps.esmorga.view.eventList
 import android.app.Application
 import androidx.lifecycle.LifecycleOwner
 import cmm.apps.esmorga.domain.event.GetEventListUseCase
+import cmm.apps.esmorga.domain.result.Success
 import cmm.apps.esmorga.view.mock.EventViewMock
 import cmm.apps.esmorga.view.util.MainDispatcherRule
 import io.mockk.coEvery
@@ -23,12 +24,12 @@ class EventListViewModelTest {
 
         val app = mockk<Application>(relaxed = true)
         val useCase = mockk<GetEventListUseCase>(relaxed = true)
-        coEvery { useCase.invoke() } returns Result.success(EventViewMock.provideEventList(listOf(domainEventName)))
+        coEvery { useCase() } returns Result.success(Success(EventViewMock.provideEventList(listOf(domainEventName))))
 
         val sut = EventListViewModel(app, useCase)
         sut.onStart(mockk<LifecycleOwner>(relaxed = true))
 
         val uiState = sut.uiState.value
-        Assert.assertTrue(uiState.eventList[0].contains(domainEventName))
+        Assert.assertTrue(uiState.eventList[0].cardTitle.contains(domainEventName))
     }
 }

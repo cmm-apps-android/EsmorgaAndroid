@@ -18,6 +18,24 @@ class EventLocalDatasourceImplTest {
 
     private val fakeStorage = mutableListOf<String>()
 
+    private fun provideFakeDao(): EventDao {
+        val slot = slot<List<EventLocalModel>>()
+        val dao = mockk<EventDao>()
+        coEvery { dao.getEvents() } coAnswers {
+            fakeStorage.map { name ->
+                EventLocalMock.provideEvent(name)
+            }
+        }
+        coEvery { dao.insertEvent(capture(slot)) } coAnswers {
+            fakeStorage.addAll(slot.captured.map { event -> event.localName })
+        }
+        coEvery { dao.deleteAll() } coAnswers {
+            fakeStorage.clear()
+        }
+
+        return dao
+    }
+
     @After
     fun shutDown(){
         fakeStorage.clear()
@@ -61,21 +79,4 @@ class EventLocalDatasourceImplTest {
         Assert.assertEquals(localEventName, result[0].dataName)
     }
 
-    private fun provideFakeDao(): EventDao {
-        val slot = slot<List<EventLocalModel>>()
-        val dao = mockk<EventDao>()
-        coEvery { dao.getEvents() } coAnswers {
-            fakeStorage.map { name ->
-                EventLocalMock.provideEvent(name)
-            }
-        }
-        coEvery { dao.insertEvent(capture(slot)) } coAnswers {
-            fakeStorage.addAll(slot.captured.map { event -> event.localName })
-        }
-        coEvery { dao.deleteAll() } coAnswers {
-            fakeStorage.clear()
-        }
-
-        return dao
-    }
 }

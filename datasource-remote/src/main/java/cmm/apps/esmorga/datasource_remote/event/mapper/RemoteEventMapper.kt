@@ -4,8 +4,9 @@ import cmm.apps.esmorga.data.event.model.EventDataModel
 import cmm.apps.esmorga.data.event.model.EventLocationDataModel
 import cmm.apps.esmorga.datasource_remote.event.model.EventLocationRemoteModel
 import cmm.apps.esmorga.datasource_remote.event.model.EventRemoteModel
-import cmm.apps.esmorga.domain.error.EsmorgaException
-import cmm.apps.esmorga.domain.error.Source
+import cmm.apps.esmorga.domain.result.ErrorCodes
+import cmm.apps.esmorga.domain.result.EsmorgaException
+import cmm.apps.esmorga.domain.result.Source
 import cmm.apps.esmorga.domain.event.model.EventType
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -22,7 +23,7 @@ fun EventRemoteModel.toEventDataModel(): EventDataModel {
     val parsedType = try {
         EventType.valueOf(this.remoteType.uppercase())
     } catch (e: Exception) {
-        throw EsmorgaException(message = "Error parsing type [${this.remoteType.uppercase()}] in EventRemoteModel", source = Source.REMOTE, code = -1)
+        throw EsmorgaException(message = "Error parsing type [${this.remoteType.uppercase()}] in EventRemoteModel", source = Source.REMOTE, code = ErrorCodes.PARSE_ERROR)
     }
 
     return EventDataModel(
