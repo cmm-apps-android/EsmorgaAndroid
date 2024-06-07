@@ -43,7 +43,7 @@ class EventRemoteDatasourceImplTest {
         val exception = try {
             sut.getEvents()
             null
-        } catch (exception: RuntimeException){
+        } catch (exception: RuntimeException) {
             exception
         }
 
@@ -64,7 +64,7 @@ class EventRemoteDatasourceImplTest {
         val exception = try {
             sut.getEvents()
             null
-        } catch (exception: RuntimeException){
+        } catch (exception: RuntimeException) {
             exception
         }
 
@@ -84,7 +84,7 @@ class EventRemoteDatasourceImplTest {
         val exception = try {
             sut.getEvents()
             null
-        } catch (exception: RuntimeException){
+        } catch (exception: RuntimeException) {
             exception
         }
 

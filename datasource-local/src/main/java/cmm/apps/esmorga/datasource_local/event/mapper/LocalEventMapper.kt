@@ -3,10 +3,10 @@ package cmm.apps.esmorga.datasource_local.event.mapper
 import cmm.apps.esmorga.data.event.model.EventDataModel
 import cmm.apps.esmorga.data.event.model.EventLocationDataModel
 import cmm.apps.esmorga.datasource_local.event.model.EventLocalModel
+import cmm.apps.esmorga.domain.event.model.EventType
 import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.Source
-import cmm.apps.esmorga.domain.event.model.EventType
 
 
 fun EventLocalModel.toEventDataModel(): EventDataModel {

@@ -2,13 +2,12 @@ package cmm.apps.esmorga.datasource_local.event
 
 import cmm.apps.esmorga.data.event.datasource.EventDatasource
 import cmm.apps.esmorga.data.event.model.EventDataModel
-import cmm.apps.esmorga.datasource_local.database.EsmorgaDatabase
 import cmm.apps.esmorga.datasource_local.database.dao.EventDao
 import cmm.apps.esmorga.datasource_local.event.mapper.toEventDataModelList
 import cmm.apps.esmorga.datasource_local.event.mapper.toEventLocalModelList
 
 
-class EventLocalDatasourceImpl(private val eventDao: EventDao): EventDatasource {
+class EventLocalDatasourceImpl(private val eventDao: EventDao) : EventDatasource {
 
     override suspend fun getEvents(): List<EventDataModel> {
         return eventDao.getEvents().toEventDataModelList()

@@ -12,15 +12,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun EsmorgaButton(text: String,  primary: Boolean = true, onClick: () -> Unit) {
+fun EsmorgaButton(text: String, primary: Boolean = true, onClick: () -> Unit) {
     Button(
         modifier = Modifier
             .clip(RoundedCornerShape(8.dp))
-            .background(if(primary) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary)
+            .background(if (primary) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary)
             .fillMaxWidth(),
         onClick = { onClick() }) {
-        Text(text = text,
-            style = MaterialTheme.typography.labelLarge)
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelLarge
+        )
     }
 
 }

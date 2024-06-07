@@ -1,5 +1,6 @@
 package cmm.apps.esmorga.data.event
 
+import cmm.apps.esmorga.data.CacheHelper
 import cmm.apps.esmorga.data.event.datasource.EventDatasource
 import cmm.apps.esmorga.data.mock.EventDataMock
 import cmm.apps.esmorga.domain.result.ErrorCodes
@@ -63,9 +64,9 @@ class EventRepositoryImplTest {
     }
 
     @Test
-    fun `given no connection and old local when events requested then local events are returned and a non blocking error is returned`() = runTest {
+    fun `given no connection and expired local when events requested then local events are returned and a non blocking error is returned`() = runTest {
         val localName = "LocalEvent"
-        val oldDate = System.currentTimeMillis() - (24*60*60*1000)
+        val oldDate = System.currentTimeMillis() - (CacheHelper.DEFAULT_CACHE_TTL + 1000)
 
         val localDS = mockk<EventDatasource>(relaxed = true)
         coEvery { localDS.getEvents() } returns listOf(EventDataMock.provideEventDataModel(localName).copy(dataCreationTime = oldDate))

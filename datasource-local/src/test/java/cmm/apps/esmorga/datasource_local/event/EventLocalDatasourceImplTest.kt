@@ -1,10 +1,9 @@
 package cmm.apps.esmorga.datasource_local.event
 
-import cmm.apps.esmorga.data.event.model.EventDataModel
 import cmm.apps.esmorga.datasource_local.database.dao.EventDao
 import cmm.apps.esmorga.datasource_local.event.mapper.toEventDataModelList
-import cmm.apps.esmorga.datasource_local.mock.EventLocalMock
 import cmm.apps.esmorga.datasource_local.event.model.EventLocalModel
+import cmm.apps.esmorga.datasource_local.mock.EventLocalMock
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.slot
@@ -12,7 +11,6 @@ import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert
 import org.junit.Test
-import java.time.ZonedDateTime
 
 class EventLocalDatasourceImplTest {
 
@@ -37,7 +35,7 @@ class EventLocalDatasourceImplTest {
     }
 
     @After
-    fun shutDown(){
+    fun shutDown() {
         fakeStorage.clear()
     }
 

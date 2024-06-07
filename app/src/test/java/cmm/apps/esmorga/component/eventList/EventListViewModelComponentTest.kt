@@ -5,12 +5,12 @@ import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
+import cmm.apps.esmorga.component.mock.EventDataMock
 import cmm.apps.esmorga.data.di.DataDIModule.EVENT_REMOTE_DATASOURCE_INSTANCE_NAME
 import cmm.apps.esmorga.data.event.datasource.EventDatasource
 import cmm.apps.esmorga.datasource_local.database.EsmorgaDatabase
 import cmm.apps.esmorga.di.AppDIModules
 import cmm.apps.esmorga.domain.event.GetEventListUseCase
-import cmm.apps.esmorga.component.mock.EventDataMock
 import cmm.apps.esmorga.view.eventList.EventListViewModel
 import io.mockk.coEvery
 import io.mockk.mockk

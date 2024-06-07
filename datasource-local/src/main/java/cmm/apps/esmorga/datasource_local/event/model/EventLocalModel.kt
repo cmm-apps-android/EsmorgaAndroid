@@ -2,8 +2,6 @@ package cmm.apps.esmorga.datasource_local.event.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import cmm.apps.esmorga.data.event.model.EventLocationDataModel
-import cmm.apps.esmorga.domain.event.model.EventType
 import java.time.ZonedDateTime
 
 @Entity

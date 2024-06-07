@@ -2,7 +2,6 @@ package cmm.apps.esmorga.datasource_local.database
 
 import android.content.Context
 import androidx.room.Room
-import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 
 
 object EsmorgaDatabaseHelper {
