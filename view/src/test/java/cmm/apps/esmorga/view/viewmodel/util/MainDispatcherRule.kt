@@ -1,4 +1,4 @@
-package cmm.apps.esmorga.view.util
+package cmm.apps.esmorga.view.viewmodel.util
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
