@@ -32,8 +32,8 @@ jobs:
           buildHash=$(md5sum $fileQA | awk '{print $4}')
           changelog=""
           project_id=2793
-          api_key=noj1h4g7wtyb
-          api_key_build=5tcbfAcJZAuec5thy0g7eo7biawjd3
+          api_key=inml59pangaa
+          api_key_build=rqFyHkwuA12sUrq9mvxa2be84t2fyu
           visibleClient=true
           buildType="QA"
           name="Esmorga [QA]"
