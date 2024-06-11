@@ -47,6 +47,6 @@ jobs:
               -F "buiHash=${buildHash}" \
               -F "buiVisibleClient=${visibleClient}" \
               -F "buiChangeLog=${changelog}" \
-              -F "buiUser=${{ secret.BUIUSER }}" -F "buiPassword=${{ secret.BUIPASSWORD }}" \
+              -F "buiUser=${{ secrets.BUIUSER }}" -F "buiPassword=${{ secrets.BUIPASSWORD }}" \
               "https://otashare-api.mobgen.com/v1/builds/registernewbuild/${project_id}/${api_key}/${api_key_build}"
     
