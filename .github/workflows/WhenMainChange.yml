@@ -22,13 +22,14 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew :app:assembleRelease
       - run: |
+          sudo apt-get install md5
           rootDir="./" 
           GRADLE_FILE=$rootDir"app/build.gradle.kts"
           export fileQA=$rootDir"app/build/outputs/apk/release/app-release-unsigned.apk"
           versionName=$(grep "versionName" $GRADLE_FILE | awk '{print $3}')
           versionCode=$(grep "versionCode" $GRADLE_FILE | awk '{print $3}')
           buildNumber=""
-          buildHash=$(md5 $fileQA | awk '{print $4}')
+          buildHash=$(md5sum $fileQA | awk '{print $4}')
           changelog=""
           project_id=2793
           api_key=noj1h4g7wtyb
