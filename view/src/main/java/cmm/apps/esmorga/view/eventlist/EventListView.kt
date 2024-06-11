@@ -1,4 +1,4 @@
-package cmm.apps.esmorga.view.eventList
+package cmm.apps.esmorga.view.eventlist
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -30,8 +30,8 @@ import androidx.compose.ui.unit.dp
 import cmm.apps.designsystem.EsmorgaButton
 import cmm.apps.designsystem.EsmorgaLinearLoader
 import cmm.apps.esmorga.view.R
-import cmm.apps.esmorga.view.eventList.model.EventListUiState
-import cmm.apps.esmorga.view.eventList.model.EventUiModel
+import cmm.apps.esmorga.view.eventlist.model.EventListUiState
+import cmm.apps.esmorga.view.eventlist.model.EventUiModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 

@@ -1,4 +1,4 @@
-package cmm.apps.esmorga.view.eventList
+package cmm.apps.esmorga.view.eventlist
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -8,9 +8,9 @@ import androidx.lifecycle.viewModelScope
 import cmm.apps.esmorga.domain.event.GetEventListUseCase
 import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
-import cmm.apps.esmorga.view.eventList.mapper.toEventUiList
-import cmm.apps.esmorga.view.eventList.model.EventListEffect
-import cmm.apps.esmorga.view.eventList.model.EventListUiState
+import cmm.apps.esmorga.view.eventlist.mapper.toEventUiList
+import cmm.apps.esmorga.view.eventlist.model.EventListEffect
+import cmm.apps.esmorga.view.eventlist.model.EventListUiState
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

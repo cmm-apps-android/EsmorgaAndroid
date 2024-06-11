@@ -1,14 +1,12 @@
 package cmm.apps.esmorga.view.screenshot.eventList
 
 import androidx.compose.material3.SnackbarHostState
-import cmm.apps.esmorga.view.eventList.EventListView
-import cmm.apps.esmorga.view.eventList.model.EventListUiState
-import cmm.apps.esmorga.view.eventList.model.EventUiModel
+import cmm.apps.esmorga.view.eventlist.EventListView
+import cmm.apps.esmorga.view.eventlist.model.EventListUiState
+import cmm.apps.esmorga.view.eventlist.model.EventUiModel
 import cmm.apps.esmorga.view.screenshot.BaseScreenshotTest
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.Parameterized
 
 class EventListViewScreenshotTest: BaseScreenshotTest() {
 

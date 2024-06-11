@@ -1,4 +1,4 @@
-package cmm.apps.esmorga.view.eventList.model
+package cmm.apps.esmorga.view.eventlist.model
 
 
 data class EventListUiState(

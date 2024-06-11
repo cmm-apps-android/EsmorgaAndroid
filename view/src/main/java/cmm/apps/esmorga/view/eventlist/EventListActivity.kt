@@ -1,4 +1,4 @@
-package cmm.apps.esmorga.view.eventList
+package cmm.apps.esmorga.view.eventlist
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -13,8 +13,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmm.apps.esmorga.view.R
-import cmm.apps.esmorga.view.eventList.model.EventListEffect
-import cmm.apps.esmorga.view.eventList.model.EventListUiState
+import cmm.apps.esmorga.view.eventlist.model.EventListEffect
+import cmm.apps.esmorga.view.eventlist.model.EventListUiState
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel

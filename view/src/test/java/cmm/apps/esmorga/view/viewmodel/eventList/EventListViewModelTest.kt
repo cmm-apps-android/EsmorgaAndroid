@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.LifecycleOwner
 import cmm.apps.esmorga.domain.event.GetEventListUseCase
 import cmm.apps.esmorga.domain.result.Success
-import cmm.apps.esmorga.view.eventList.EventListViewModel
+import cmm.apps.esmorga.view.eventlist.EventListViewModel
 import cmm.apps.esmorga.view.viewmodel.mock.EventViewMock
 import cmm.apps.esmorga.view.viewmodel.util.MainDispatcherRule
 import io.mockk.coEvery

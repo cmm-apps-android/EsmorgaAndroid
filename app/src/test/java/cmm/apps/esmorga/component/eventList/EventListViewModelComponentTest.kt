@@ -11,7 +11,7 @@ import cmm.apps.esmorga.data.event.datasource.EventDatasource
 import cmm.apps.esmorga.datasource_local.database.EsmorgaDatabase
 import cmm.apps.esmorga.di.AppDIModules
 import cmm.apps.esmorga.domain.event.GetEventListUseCase
-import cmm.apps.esmorga.view.eventList.EventListViewModel
+import cmm.apps.esmorga.view.eventlist.EventListViewModel
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi

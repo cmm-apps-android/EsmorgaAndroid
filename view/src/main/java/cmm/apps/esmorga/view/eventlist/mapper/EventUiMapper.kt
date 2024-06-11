@@ -1,7 +1,7 @@
-package cmm.apps.esmorga.view.eventList.mapper
+package cmm.apps.esmorga.view.eventlist.mapper
 
 import cmm.apps.esmorga.domain.event.model.Event
-import cmm.apps.esmorga.view.eventList.model.EventUiModel
+import cmm.apps.esmorga.view.eventlist.model.EventUiModel
 import java.time.format.DateTimeFormatter
 import java.util.TimeZone
 
