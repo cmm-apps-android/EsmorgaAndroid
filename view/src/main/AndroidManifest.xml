@@ -11,6 +11,7 @@
         <activity
             android:name="cmm.apps.esmorga.view.eventList.EventListActivity"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.EsmorgaView">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
