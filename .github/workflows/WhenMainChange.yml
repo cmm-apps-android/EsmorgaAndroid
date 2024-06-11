@@ -21,4 +21,32 @@ jobs:
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew :app:assembleRelease
-      - run: find ./ -name '*.apk'
+      - run: |
+          rootDir="./" 
+          GRADLE_FILE=$rootDir"app/build.gradle.kts"
+          export fileQA=$rootDir"app/build/outputs/apk/release/app-release-unsigned.apk"
+          versionName=$(grep "versionName" $GRADLE_FILE | awk '{print $3}')
+          versionCode=$(grep "versionCode" $GRADLE_FILE | awk '{print $3}')
+          buildNumber=""
+          buildHash=$(md5 $fileQA | awk '{print $4}')
+          changelog=""
+          project_id=2793
+          api_key=noj1h4g7wtyb
+          api_key_build=5tcbfAcJZAuec5thy0g7eo7biawjd3
+          visibleClient=true
+          buildType="QA"
+          name="Esmorga [QA]"
+          visibleClient="GitHub Actions"
+          
+          echo curl -vvv -F 'buiFile=@${fileQA}' \
+              -F "buiName=${versionName}" \
+              -F "buiVersion=${versionCode}" \
+              -F "buiBuildNum=${buildNumber}" \
+              -F "buiBuildType=${buildType}" \
+              -F "buiTemplate=0" \
+              -F "buiHash=${buildHash}" \
+              -F "buiVisibleClient=${visibleClient}" \
+              -F "buiChangeLog=${changelog}" \
+              -F "buiUser=${{ secret.BUIUSER }}" -F "buiPassword=${{ secret.BUIPASSWORD }}" \
+              "https://otashare-api.mobgen.com/v1/builds/registernewbuild/${project_id}/${api_key}/${api_key_build}"
+    
