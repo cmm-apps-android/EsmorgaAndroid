@@ -26,6 +26,7 @@ jobs:
           rootDir="./" 
           GRADLE_FILE=$rootDir"app/build.gradle.kts"
           fileQA=$rootDir"app/build/outputs/apk/release/app-release-unsigned.apk"
+          name=Esmorga
           versionName=$(grep "versionName" $GRADLE_FILE | awk '{print $3}')
           versionCode=$(grep "versionCode" $GRADLE_FILE | awk '{print $3}')
           buildNumber=""
@@ -40,9 +41,9 @@ jobs:
           visibleClient="GitHub Actions"
           
           curl -vvv -F "buiFile=@${fileQA}" \
-              -F "buiName=${versionName}" \
-              -F "buiVersion=${versionCode}" \
-              -F "buiBuildNum=${buildNumber}" \
+              -F "buiName=${name}" \
+              -F "buiVersion=${versionName}" \
+              -F "buiBuildNum=${versionCode}" \
               -F "buiBuildType=${buildType}" \
               -F "buiTemplate=0" \
               -F "buiHash=${buildHash}" \
