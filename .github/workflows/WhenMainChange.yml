@@ -39,7 +39,7 @@ jobs:
           name="Esmorga [QA]"
           visibleClient="GitHub Actions"
           
-          echo curl -vvv -F "buiFile=@${fileQA}" \
+          curl -vvv -F "buiFile=@${fileQA}" \
               -F "buiName=${versionName}" \
               -F "buiVersion=${versionCode}" \
               -F "buiBuildNum=${buildNumber}" \
