@@ -4,6 +4,7 @@ on:
   push:
     branches: [ "test" ]
   workflow_dispatch:
+    
 jobs:
   build:
 
@@ -38,7 +39,7 @@ jobs:
           visibleClient=true
           buildType="QA"
           name="Esmorga [QA]"
-          visibleClient="GitHub Actions"
+      
           
           curl -vvv -F "buiFile=@${fileQA}" \
               -F "buiName=${name}" \
