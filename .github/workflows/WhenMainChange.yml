@@ -22,7 +22,7 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew :app:assembleRelease
       - run: |
-          sudo apt-get install md5
+          
           rootDir="./" 
           GRADLE_FILE=$rootDir"app/build.gradle.kts"
           export fileQA=$rootDir"app/build/outputs/apk/release/app-release-unsigned.apk"
