@@ -37,7 +37,7 @@ jobs:
           filename: /home/runner/work/EsmorgaAndroid/EsmorgaAndroid/app/build/reports/kover/report.xml
           badge: true
           fail_below_min: true
-          format: markdown
+          format: text
           hide_branch_rate: false
           hide_complexity: true
           indicators: true
