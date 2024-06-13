@@ -9,8 +9,9 @@ jobs:
   Test:
 
     runs-on: ubuntu-latest
-
-    
+    permissions:
+      pull-requests: write
+      
     steps:
       - name: Fail if draft PR
         if: ${{ github.event.pull_request.draft }}
