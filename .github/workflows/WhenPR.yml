@@ -11,7 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
-      
+      contents: write
+      issues: write
+
     steps:
       - name: Fail if draft PR
         if: ${{ github.event.pull_request.draft }}
