@@ -1,5 +1,6 @@
 package cmm.apps.esmorga.view.eventList
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -26,7 +27,7 @@ class EventListActivity : ComponentActivity() {
 
         val viewModel by viewModel<EventListViewModel>()
         lifecycle.addObserver(viewModel)
-
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         enableEdgeToEdge()
         setContent {
             EventListScreen()

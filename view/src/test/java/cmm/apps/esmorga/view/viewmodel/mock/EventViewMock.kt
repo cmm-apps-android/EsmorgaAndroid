@@ -1,4 +1,4 @@
-package cmm.apps.esmorga.view.mock
+package cmm.apps.esmorga.view.viewmodel.mock
 
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.domain.event.model.EventLocation
