@@ -31,6 +31,8 @@ jobs:
         run: ./gradlew koverXmlReport
       - name: List coverage report files
         run: ls -R $GITHUB_WORKSPACE/app/build/reports/kover/
+      - name: Take a look inside coverage report files
+        run: cat /home/runner/work/EsmorgaAndroid/EsmorgaAndroid/app/build/reports/kover/report.xml
       - name: Code Coverage Report
         uses: irongut/CodeCoverageSummary@v1.3.0
         with:
