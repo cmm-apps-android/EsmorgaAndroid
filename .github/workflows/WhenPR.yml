@@ -36,7 +36,7 @@ jobs:
         uses: mi-kas/kover-report@v1
         with:
           path: |
-            $GITHUB_WORKSPACE/app/build/reports/kover/report.xml
+            /home/runner/work/EsmorgaAndroid/EsmorgaAndroid/app/build/reports/kover/report.xml
           title: Code Coverage
           update-comment: true
           min-coverage-overall: 75
