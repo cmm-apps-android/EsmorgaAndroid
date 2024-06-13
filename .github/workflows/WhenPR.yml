@@ -29,14 +29,16 @@ jobs:
         run: chmod +x gradlew
       - name: Test with Gradle
         run: ./gradlew koverXmlReport
-      - name: Check coverage
-        run: |
-          coverage=$(grep '<counter type="LINE"' $GITHUB_WORKSPACE/app/build/reports/kover/report.xml | sed 's/.*covered="\([0-9]*\)".*/\1/')
-          total=$(grep '<counter type="LINE"' $GITHUB_WORKSPACE/app/build/reports/kover/report.xml | sed 's/.*missed="\([0-9]*\)".*/\1/' | awk '{sum+=$1} END {print sum}')
-          percent=$((100 * coverage / (coverage + total)))
-          echo "Coverage: $percent%"
-          if [ "$percent" -lt 70 ]; then
-            echo "Code coverage is below 70%"
-            exit 1
-          fi
+      - name: Code Coverage Report
+        uses: irongut/CodeCoverageSummary@v1.3.0
+        with:
+          filename: $GITHUB_WORKSPACE/app/build/reports/kover/report.xml
+          badge: true
+          fail_below_min: true
+          format: markdown
+          hide_branch_rate: false
+          hide_complexity: true
+          indicators: true
+          output: both
+          thresholds: '60 80'
   
