@@ -10,4 +10,7 @@
     <string name="event_list_date_formatter">dd\' de \'MMMM\' a las \'HH:mm</string>
     <string name="event_image_content_description">Imagen del evento %s</string>
     <string name="no_internet_snackbar">No hay conexión a internet.</string>
+    <string name="event_details_description">Detalles del evento</string>
+    <string name="event_details_location">Localización</string>
+    <string name="navigate">Navegar</string>
 </resources>

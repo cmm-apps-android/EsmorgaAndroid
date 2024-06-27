@@ -58,6 +58,13 @@ val JackartaFontFamily =
 
 // Set of Material typography styles to start with
 val EsmorgaTypography = Typography(
+    displayLarge = TextStyle(
+        fontFamily = EpilogueFontFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 32.sp,
+        lineHeight = 64.sp,
+        letterSpacing = (-0.8).sp
+    ),
     titleLarge = TextStyle(
         fontFamily = JackartaFontFamily,
         fontWeight = FontWeight.Bold,
@@ -74,20 +81,20 @@ val EsmorgaTypography = Typography(
     ),
     bodyLarge = TextStyle(
         fontFamily = JackartaFontFamily,
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.Normal,
         fontSize = 18.sp,
         lineHeight = 23.sp,
         letterSpacing = (-0.25).sp
     ),
     bodyMedium = TextStyle(
         fontFamily = JackartaFontFamily,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Thin,
         fontSize = 16.sp,
         lineHeight = 24.sp
     ),
     bodySmall = TextStyle(
         fontFamily = JackartaFontFamily,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Thin,
         fontSize = 14.sp,
         lineHeight = 21.sp
     ),

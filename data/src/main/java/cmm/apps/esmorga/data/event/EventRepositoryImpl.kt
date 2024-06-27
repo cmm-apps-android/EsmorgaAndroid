@@ -2,6 +2,7 @@ package cmm.apps.esmorga.data.event
 
 import cmm.apps.esmorga.data.CacheHelper
 import cmm.apps.esmorga.data.event.datasource.EventDatasource
+import cmm.apps.esmorga.data.event.mapper.toEvent
 import cmm.apps.esmorga.data.event.mapper.toEventList
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.domain.event.repository.EventRepository
@@ -30,6 +31,10 @@ class EventRepositoryImpl(private val localDs: EventDatasource, private val remo
                 throw esmorgaEx
             }
         }
+    }
+
+    override suspend fun getEventDetails(eventId: String): Success<Event> {
+        return Success(localDs.getEventById(eventId).toEvent())
     }
 
 }

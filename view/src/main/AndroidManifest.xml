@@ -3,13 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <queries>
+        <package android:name="com.google.android.apps.maps" />
+    </queries>
     <application
         android:allowBackup="true"
         android:theme="@style/Theme.EsmorgaView"
         tools:targetApi="31">
         <activity
-            android:name="cmm.apps.esmorga.view.eventList.EventListActivity"
+            android:name="cmm.apps.esmorga.view.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.EsmorgaView">
