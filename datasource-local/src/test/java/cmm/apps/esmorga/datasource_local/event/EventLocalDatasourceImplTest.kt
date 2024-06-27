@@ -17,18 +17,23 @@ class EventLocalDatasourceImplTest {
     private val fakeStorage = mutableListOf<String>()
 
     private fun provideFakeDao(): EventDao {
-        val slot = slot<List<EventLocalModel>>()
+        val eventListSlot = slot<List<EventLocalModel>>()
+        val singleEventSlot = slot<String>()
         val dao = mockk<EventDao>()
         coEvery { dao.getEvents() } coAnswers {
             fakeStorage.map { name ->
                 EventLocalMock.provideEvent(name)
             }
         }
-        coEvery { dao.insertEvent(capture(slot)) } coAnswers {
-            fakeStorage.addAll(slot.captured.map { event -> event.localName })
+        coEvery { dao.insertEvent(capture(eventListSlot)) } coAnswers {
+            fakeStorage.addAll(eventListSlot.captured.map { event -> event.localName })
         }
         coEvery { dao.deleteAll() } coAnswers {
             fakeStorage.clear()
+        }
+
+        coEvery { dao.getEventById(capture(singleEventSlot)) } coAnswers {
+            EventLocalMock.provideEvent(fakeStorage.find { it == singleEventSlot.captured}!!)
         }
 
         return dao
@@ -75,6 +80,17 @@ class EventLocalDatasourceImplTest {
 
         Assert.assertEquals(1, result.size)
         Assert.assertEquals(localEventName, result[0].dataName)
+    }
+
+    @Test
+    fun `given a storage with events when single event is requested then is returned successfully`() = runTest {
+        val localEventName = "LocalEvent"
+        fakeStorage.add(localEventName)
+
+        val sut = EventLocalDatasourceImpl(provideFakeDao())
+        val result = sut.getEventById(localEventName)
+
+        Assert.assertEquals(localEventName, result.dataName)
     }
 
 }

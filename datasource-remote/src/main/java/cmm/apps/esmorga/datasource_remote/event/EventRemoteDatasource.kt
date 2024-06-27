@@ -30,4 +30,8 @@ class EventRemoteDatasourceImpl(private val eventApi: EventApi) : EventDatasourc
             }
         }
     }
+
+    override suspend fun getEventById(eventId: String): EventDataModel {
+        throw EsmorgaException(message = "Unsupported operation", source = Source.UNSUPPORTED, code = ErrorCodes.UNSUPPORTED_OPERATION)
+    }
 }

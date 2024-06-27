@@ -18,4 +18,7 @@ interface EventDao {
 
     @Query("DELETE FROM EventLocalModel")
     suspend fun deleteAll()
+
+    @Query( "SELECT * FROM EventLocalModel WHERE localId = :eventId")
+    fun getEventById(eventId: String): EventLocalModel
 }
