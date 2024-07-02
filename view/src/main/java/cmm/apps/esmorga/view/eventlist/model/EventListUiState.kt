@@ -1,8 +1,5 @@
 package cmm.apps.esmorga.view.eventlist.model
 
-import java.io.Serializable
-
-
 data class EventListUiState(
     val loading: Boolean = false,
     val eventList: List<EventListUiModel> = emptyList(),
@@ -15,7 +12,7 @@ data class EventListUiModel(
     val cardTitle: String,
     val cardSubtitle1: String,
     val cardSubtitle2: String
-) : Serializable
+)
 
 sealed class EventListEffect {
     data object ShowNoNetworkPrompt : EventListEffect()

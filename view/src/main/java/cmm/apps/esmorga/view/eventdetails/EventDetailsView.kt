@@ -143,7 +143,7 @@ fun EventDetailsView(uiState: EventDetailsUiState, onNavigateClicked: () -> Unit
                 EsmorgaButton(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 32.dp),
                     text = stringResource(id = R.string.navigate),
-                    primary = false,
+                    primary = false
                 ) {
                     onNavigateClicked()
                 }

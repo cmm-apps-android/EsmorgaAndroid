@@ -13,5 +13,7 @@ interface EventDatasource {
         throw EsmorgaException(message = "Unsupported operation", source = Source.UNSUPPORTED, code = ErrorCodes.UNSUPPORTED_OPERATION)
     }
 
-    suspend fun getEventById(eventId: String): EventDataModel
+    suspend fun getEventById(eventId: String): EventDataModel {
+        throw EsmorgaException(message = "Unsupported operation", source = Source.UNSUPPORTED, code = ErrorCodes.UNSUPPORTED_OPERATION)
+    }
 }
