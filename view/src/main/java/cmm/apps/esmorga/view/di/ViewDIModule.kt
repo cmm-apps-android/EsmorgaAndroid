@@ -12,8 +12,8 @@ object ViewDIModule {
         viewModel {
             EventListViewModel(get(), get())
         }
-        viewModel {
-            EventDetailsViewModel(get(), get())
+        viewModel { (eventId: String) ->
+            EventDetailsViewModel(get(), get(), eventId)
         }
     }
 }

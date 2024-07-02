@@ -16,14 +16,18 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class EventDetailsViewModel(app: Application, private val getEventDetailsUseCase: GetEventDetailsUseCase) : AndroidViewModel(app) {
+class EventDetailsViewModel(
+    app: Application,
+    private val getEventDetailsUseCase: GetEventDetailsUseCase,
+    private val eventId: String
+) : AndroidViewModel(app) {
     private val _uiState = MutableStateFlow(EventDetailsUiState())
     val uiState: StateFlow<EventDetailsUiState> = _uiState.asStateFlow()
 
     private val _effect: MutableSharedFlow<EventDetailsEffect> = MutableSharedFlow(extraBufferCapacity = 2, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val effect: SharedFlow<EventDetailsEffect> = _effect.asSharedFlow()
 
-    fun loadEventDetails(eventId: String) {
+    init {
         viewModelScope.launch {
             val result = getEventDetailsUseCase(eventId)
             result.onSuccess {

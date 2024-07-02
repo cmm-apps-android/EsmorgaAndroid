@@ -34,12 +34,12 @@ import cmm.apps.esmorga.view.theme.Sepia
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 
 @Composable
-fun EventDetailsScreen(eventId: String, onBackPressed: () -> Unit, edvm: EventDetailsViewModel = koinViewModel()) {
+fun EventDetailsScreen(eventId: String, onBackPressed: () -> Unit, edvm: EventDetailsViewModel = koinViewModel(parameters = { parametersOf(eventId) })) {
     val uiState: EventDetailsUiState by edvm.uiState.collectAsStateWithLifecycle()
-    edvm.loadEventDetails(eventId)
     val context = LocalContext.current
     LaunchedEffect(Unit) {
         edvm.effect.collect { eff ->

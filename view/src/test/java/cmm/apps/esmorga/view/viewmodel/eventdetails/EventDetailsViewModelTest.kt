@@ -26,8 +26,7 @@ class EventDetailsViewModelTest {
         val useCase = mockk<GetEventDetailsUseCase>(relaxed = true)
         coEvery { useCase(any()) } returns Result.success(Success(EventViewMock.provideEvent(domainEventName)))
 
-        val sut = EventDetailsViewModel(app, useCase)
-        sut.loadEventDetails("1")
+        val sut = EventDetailsViewModel(app, useCase, "eventId")
 
         val uiState = sut.uiState.value
         Assert.assertEquals(domainEventName, uiState.title)

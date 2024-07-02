@@ -26,6 +26,10 @@ class EventListViewModel(app: Application, private val getEventListUseCase: GetE
     private val _effect: MutableSharedFlow<EventListEffect> = MutableSharedFlow(extraBufferCapacity = 2, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val effect: SharedFlow<EventListEffect> = _effect.asSharedFlow()
 
+    init {
+        loadEvents()
+    }
+
     fun loadEvents() {
         _uiState.value = EventListUiState(loading = true)
         viewModelScope.launch {

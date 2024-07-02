@@ -47,9 +47,6 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun EventListScreen(elvm: EventListViewModel = koinViewModel(), onEventClick: (eventId: String) -> Unit) {
-    LaunchedEffect(Unit) {
-        elvm.loadEvents()
-    }
     val uiState: EventListUiState by elvm.uiState.collectAsStateWithLifecycle()
 
     val message = stringResource(R.string.no_internet_snackbar)
