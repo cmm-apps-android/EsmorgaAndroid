@@ -17,7 +17,7 @@ fun EsmorgaButton(text: String, modifier: Modifier = Modifier, primary: Boolean 
         modifier = modifier
             .fillMaxWidth(),
         colors = ButtonDefaults.buttonColors().copy(
-            contentColor = if (primary) MaterialTheme.colorScheme.surfaceContainerLowest else MaterialTheme.colorScheme.onSecondary,
+            contentColor = if (primary) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondary,
             containerColor = if (primary) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
         ),
         onClick = { onClick() }) {
