@@ -2,7 +2,6 @@ package cmm.apps.esmorga.component.eventList
 
 import android.app.Application
 import android.content.Context
-import androidx.lifecycle.LifecycleOwner
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import cmm.apps.esmorga.component.mock.EventDataMock
@@ -11,7 +10,7 @@ import cmm.apps.esmorga.data.event.datasource.EventDatasource
 import cmm.apps.esmorga.datasource_local.database.EsmorgaDatabase
 import cmm.apps.esmorga.di.AppDIModules
 import cmm.apps.esmorga.domain.event.GetEventListUseCase
-import cmm.apps.esmorga.view.eventList.EventListViewModel
+import cmm.apps.esmorga.view.eventlist.EventListViewModel
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -85,7 +84,7 @@ class EventListViewModelComponentTest : KoinTest {
 
         val sut = EventListViewModel(app, useCase)
 
-        sut.onStart(mockk<LifecycleOwner>(relaxed = true))
+        sut.loadEvents()
 
         val uiState = sut.uiState.value
         Assert.assertTrue(uiState.eventList[0].cardTitle.contains(remoteEventName))

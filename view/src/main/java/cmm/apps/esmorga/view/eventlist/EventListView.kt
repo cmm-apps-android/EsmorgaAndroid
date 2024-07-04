@@ -1,7 +1,8 @@
-package cmm.apps.esmorga.view.eventList
+package cmm.apps.esmorga.view.eventlist
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,6 +19,10 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,17 +32,49 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmm.apps.designsystem.EsmorgaButton
 import cmm.apps.designsystem.EsmorgaLinearLoader
 import cmm.apps.esmorga.view.R
-import cmm.apps.esmorga.view.eventList.model.EventListUiState
-import cmm.apps.esmorga.view.eventList.model.EventUiModel
+import cmm.apps.esmorga.view.eventlist.model.EventListEffect
+import cmm.apps.esmorga.view.eventlist.model.EventListUiState
+import cmm.apps.esmorga.view.eventlist.model.EventListUiModel
+import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-
+import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun EventListView(uiState: EventListUiState, snackbarHostState: SnackbarHostState, onRetryClick: () -> Unit) {
+fun EventListScreen(elvm: EventListViewModel = koinViewModel(), onEventClick: (eventId: String) -> Unit) {
+    val uiState: EventListUiState by elvm.uiState.collectAsStateWithLifecycle()
+
+    val message = stringResource(R.string.no_internet_snackbar)
+    val snackbarHostState = remember { SnackbarHostState() }
+    val localCoroutineScope = rememberCoroutineScope()
+    LaunchedEffect(Unit) {
+        elvm.effect.collect { eff ->
+            when (eff) {
+                is EventListEffect.ShowNoNetworkPrompt -> {
+                    localCoroutineScope.launch {
+                        snackbarHostState.showSnackbar(message = message)
+                    }
+                }
+
+                is EventListEffect.NavigateToEventDetail -> onEventClick(eff.eventId)
+            }
+        }
+    }
+
+    EsmorgaTheme {
+        EventListView(uiState = uiState, snackbarHostState = snackbarHostState, onRetryClick = { elvm.loadEvents() }, onEventClick = {
+            elvm.onEventClick(it)
+        })
+    }
+}
+
+@Composable
+fun EventListView(uiState: EventListUiState, snackbarHostState: SnackbarHostState, onRetryClick: () -> Unit, onEventClick: (eventId: String) -> Unit) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         snackbarHost = { SnackbarHost(snackbarHostState) }
@@ -72,7 +109,7 @@ fun EventListView(uiState: EventListUiState, snackbarHostState: SnackbarHostStat
                 } else if (uiState.eventList.isEmpty()) {
                     EventListEmpty()
                 } else {
-                    EventList(uiState.eventList)
+                    EventList(uiState.eventList, onEventClick)
                 }
             }
         }
@@ -160,12 +197,16 @@ fun EventListError(onRetryClick: () -> Unit) {
 }
 
 @Composable
-fun EventList(events: List<EventUiModel>) {
+fun EventList(events: List<EventListUiModel>, onEventClick: (eventId: String) -> Unit) {
     LazyColumn {
         items(events.size) { pos ->
             val event = events[pos]
 
-            Column(modifier = Modifier.padding(bottom = 32.dp)) {
+            Column(modifier = Modifier
+                .padding(bottom = 32.dp)
+                .clickable {
+                    onEventClick(event.id)
+                }) {
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(event.imageUrl)

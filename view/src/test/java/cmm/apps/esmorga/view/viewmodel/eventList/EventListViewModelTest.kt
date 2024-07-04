@@ -1,10 +1,9 @@
 package cmm.apps.esmorga.view.viewmodel.eventList
 
 import android.app.Application
-import androidx.lifecycle.LifecycleOwner
 import cmm.apps.esmorga.domain.event.GetEventListUseCase
 import cmm.apps.esmorga.domain.result.Success
-import cmm.apps.esmorga.view.eventList.EventListViewModel
+import cmm.apps.esmorga.view.eventlist.EventListViewModel
 import cmm.apps.esmorga.view.viewmodel.mock.EventViewMock
 import cmm.apps.esmorga.view.viewmodel.util.MainDispatcherRule
 import io.mockk.coEvery
@@ -20,7 +19,7 @@ class EventListViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     @Test
-    fun `given a successful usecase when screen sent to foreground then usecase executed and UI state containing events is emitted`() = runTest {
+    fun `given a successful usecase when load mehtod is called usecase executed and UI state containing events is emitted`() = runTest {
         val domainEventName = "DomainEvent"
 
         val app = mockk<Application>(relaxed = true)
@@ -28,9 +27,9 @@ class EventListViewModelTest {
         coEvery { useCase() } returns Result.success(Success(EventViewMock.provideEventList(listOf(domainEventName))))
 
         val sut = EventListViewModel(app, useCase)
-        sut.onStart(mockk<LifecycleOwner>(relaxed = true))
+        sut.loadEvents()
 
         val uiState = sut.uiState.value
-        Assert.assertTrue(uiState.eventList[0].cardTitle.contains(domainEventName))
+        Assert.assertEquals(domainEventName, uiState.eventList[0].cardTitle)
     }
 }
