@@ -26,7 +26,7 @@ jobs:
           
           rootDir="./" 
           GRADLE_FILE=$rootDir"app/build.gradle.kts"
-          fileQA=$rootDir"app/build/outputs/apk/release/app-release-unsigned.apk"
+          fileQA=$rootDir"app/build/outputs/apk/release/app-release.apk"
           name=Esmorga
           versionName=$(grep "versionName" $GRADLE_FILE | awk '{print $3}')
           versionCode=$(grep "versionCode" $GRADLE_FILE | awk '{print $3}')
