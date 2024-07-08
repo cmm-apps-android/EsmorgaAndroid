@@ -21,12 +21,12 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
-        run: ./gradlew :app:assembleRelease
+        run: ./gradlew :app:assembleEsmorgaRelease
       - run: |
           
           rootDir="./" 
           GRADLE_FILE=$rootDir"app/build.gradle.kts"
-          fileQA=$rootDir"app/build/outputs/apk/release/app-release.apk"
+          fileQA=$rootDir"app/build/outputs/apk/esmorgaRelease/app-esmorgaRelease.apk"
           name=Esmorga
           versionName=$(grep "versionName" $GRADLE_FILE | awk '{print $3}')
           versionCode=$(grep "versionCode" $GRADLE_FILE | awk '{print $3}')
