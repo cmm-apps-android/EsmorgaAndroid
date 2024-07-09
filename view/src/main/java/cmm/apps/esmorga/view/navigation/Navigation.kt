@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 
 sealed class Navigation(val route: String) {
+    data object WelcomeScreen : Navigation("welcomeScreen")
     data object EventListScreen : Navigation("eventListScreen")
     data object EventDetailScreen : Navigation("eventDetailScreen/{eventId}") {
         fun createRoute(eventId: String) = "eventDetailScreen/$eventId"

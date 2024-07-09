@@ -120,7 +120,7 @@ fun EventDetailsView(uiState: EventDetailsUiState, onNavigateClicked: () -> Unit
             )
             Text(
                 text = uiState.subtitle,
-                color = Sepia,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
             Text(

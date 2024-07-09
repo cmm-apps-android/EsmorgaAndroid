@@ -6,10 +6,10 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 
-//TODO create a proper dark theme
-private val DarkColorScheme = darkColorScheme(
+
+private val LightColorScheme = lightColorScheme(
     primary = Claret,
-    onPrimary = VeryLigthGrey,
+    onPrimary = VeryLightGrey,
     secondary = Pink,
     onSecondary = DarkGrey,
     background = Lavender,
@@ -20,17 +20,17 @@ private val DarkColorScheme = darkColorScheme(
     onSurface = Sepia
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = Claret,
-    onPrimary = VeryLigthGrey,
-    secondary = Pink,
-    onSecondary = DarkGrey,
-    background = Lavender,
-    surface = Lavender,
-    surfaceVariant = Pearl,
-    surfaceContainerLow = WhiteSmoke,
-    surfaceContainerLowest = White,
-    onSurface = Sepia
+private val DarkColorScheme = darkColorScheme(
+    primary = DarkClaret,
+    onPrimary = VeryLightGrey,
+    secondary = DarkPink,
+    onSecondary = SoftDarkGrey,
+    background = DarkLavender,
+    surface = DarkLavender,
+    surfaceVariant = DarkPearl,
+    surfaceContainerLow = DarkWhiteSmoke,
+    surfaceContainerLowest = DarkestWhite,
+    onSurface = LightSepia
 )
 
 @Composable
