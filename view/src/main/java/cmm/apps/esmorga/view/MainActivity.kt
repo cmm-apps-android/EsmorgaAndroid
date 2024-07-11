@@ -12,6 +12,7 @@ import androidx.navigation.navArgument
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreen
 import cmm.apps.esmorga.view.eventlist.EventListScreen
 import cmm.apps.esmorga.view.navigation.Navigation
+import cmm.apps.esmorga.view.welcome.WelcomeScreen
 
 class MainActivity : ComponentActivity() {
 
@@ -20,7 +21,16 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val navigationController = rememberNavController()
-            NavHost(navController = navigationController, startDestination = Navigation.EventListScreen.route) {
+            NavHost(navController = navigationController, startDestination = Navigation.WelcomeScreen.route) {
+                composable(Navigation.WelcomeScreen.route) {
+                    WelcomeScreen(onEnterAsGuestClicked = {
+                        navigationController.navigate(Navigation.EventListScreen.route){
+                            popUpTo(Navigation.WelcomeScreen.route) {
+                                inclusive = true
+                            }
+                        }
+                    }, onLoginRegisterClicked = {})
+                }
                 composable(Navigation.EventListScreen.route) {
                     EventListScreen(onEventClick = { eventId ->
                         navigationController.navigate(Navigation.EventDetailScreen.createRoute(eventId))

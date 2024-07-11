@@ -13,4 +13,6 @@
     <string name="event_details_description">Detalles del evento</string>
     <string name="event_details_location">Localización</string>
     <string name="navigate">Navegar</string>
+    <string name="welcome_login_register">Login / Registro</string>
+    <string name="welcome_guest">Entrar como invitado</string>
 </resources>

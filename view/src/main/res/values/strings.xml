@@ -13,4 +13,6 @@
     <string name="event_details_description">Event details</string>
     <string name="event_details_location">Location</string>
     <string name="navigate">Navigate</string>
+    <string name="welcome_login_register">Login / Register</string>
+    <string name="welcome_guest">Enter as guest</string>
 </resources>
