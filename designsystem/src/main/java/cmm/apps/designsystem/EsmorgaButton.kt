@@ -5,7 +5,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -21,10 +20,7 @@ fun EsmorgaButton(text: String, modifier: Modifier = Modifier, primary: Boolean 
             containerColor = if (primary) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
         ),
         onClick = { onClick() }) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.labelLarge
-        )
+        EsmorgaText(text = text, style = if(primary) EsmorgaTextStyle.BUTTON_PRIMARY else EsmorgaTextStyle.BUTTON_SECONDARY)
     }
 
 }

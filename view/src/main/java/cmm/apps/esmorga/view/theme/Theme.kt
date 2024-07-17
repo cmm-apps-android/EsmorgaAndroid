@@ -17,7 +17,8 @@ private val LightColorScheme = lightColorScheme(
     surfaceVariant = Pearl,
     surfaceContainerLow = WhiteSmoke,
     surfaceContainerLowest = White,
-    onSurface = Sepia
+    onSurface = DarkGrey,
+    onSurfaceVariant = Sepia
 )
 
 private val DarkColorScheme = darkColorScheme(
@@ -30,7 +31,8 @@ private val DarkColorScheme = darkColorScheme(
     surfaceVariant = DarkPearl,
     surfaceContainerLow = DarkWhiteSmoke,
     surfaceContainerLowest = DarkestWhite,
-    onSurface = LightSepia
+    onSurfaceVariant = LightSepia,
+    onSurface = VeryLightGrey
 )
 
 @Composable
@@ -45,7 +47,7 @@ fun EsmorgaTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = EsmorgaTypography,
+        typography = getEsmorgaTypography(colorScheme),
         content = content
     )
 }

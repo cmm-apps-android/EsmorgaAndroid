@@ -12,9 +12,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,12 +25,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmm.apps.designsystem.EsmorgaButton
+import cmm.apps.designsystem.EsmorgaText
+import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsEffect
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiState
 import cmm.apps.esmorga.view.navigation.openNavigationApp
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
-import cmm.apps.esmorga.view.theme.Sepia
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.koin.androidx.compose.koinViewModel
@@ -112,36 +111,26 @@ fun EventDetailsView(uiState: EventDetailsUiState, onNavigateClicked: () -> Unit
                     .fillMaxWidth()
                     .aspectRatio(16 / 9f)
             )
-            Text(
-                text = uiState.title,
-                style = MaterialTheme.typography.displayLarge,
-                modifier = Modifier
+            EsmorgaText(
+                text = uiState.title, style = EsmorgaTextStyle.TITLE, modifier = Modifier
                     .padding(top = 32.dp, start = 16.dp, bottom = 16.dp, end = 16.dp)
             )
-            Text(
-                text = uiState.subtitle,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
-            Text(
+            EsmorgaText(text = uiState.subtitle, style = EsmorgaTextStyle.BODY_1_ACCENT, modifier = Modifier.padding(horizontal = 16.dp))
+            EsmorgaText(
                 text = stringResource(id = R.string.event_details_description),
-                style = MaterialTheme.typography.titleMedium,
+                style = EsmorgaTextStyle.HEADING_1,
                 modifier = Modifier.padding(start = 16.dp, top = 32.dp, end = 16.dp)
             )
-            Text(
-                text = uiState.description,
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)
+            EsmorgaText(
+                text = uiState.description, style = EsmorgaTextStyle.BODY_1, modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)
             )
-            Text(
+            EsmorgaText(
                 text = stringResource(id = R.string.event_details_location),
-                style = MaterialTheme.typography.titleMedium,
+                style = EsmorgaTextStyle.HEADING_1,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)
             )
-            Text(
-                text = uiState.locationName,
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(horizontal = 16.dp)
+            EsmorgaText(
+                text = uiState.locationName, style = EsmorgaTextStyle.BODY_1, modifier = Modifier.padding(horizontal = 16.dp)
             )
             if (uiState.navigateButton) {
                 EsmorgaButton(
