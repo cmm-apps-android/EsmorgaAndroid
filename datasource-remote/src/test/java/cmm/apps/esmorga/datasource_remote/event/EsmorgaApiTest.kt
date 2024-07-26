@@ -1,6 +1,6 @@
 package cmm.apps.esmorga.datasource_remote.event
 
-import cmm.apps.esmorga.datasource_remote.api.EventApi
+import cmm.apps.esmorga.datasource_remote.api.EsmorgaApi
 import cmm.apps.esmorga.datasource_remote.api.NetworkApiHelper
 import cmm.apps.esmorga.datasource_remote.mock.MockServer
 import cmm.apps.esmorga.datasource_remote.mock.json.ServerFiles
@@ -13,7 +13,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
-class EventApiTest {
+class EsmorgaApiTest {
 
     private lateinit var mockServer: MockServer
 
@@ -31,7 +31,7 @@ class EventApiTest {
     fun `given a successful mock server when events are requested then a correct eventWrapper is returned`() = runTest {
         mockServer.enqueueFile(200, ServerFiles.GET_EVENTS)
 
-        val sut = NetworkApiHelper().provideApi(mockServer.start(), EventApi::class.java)
+        val sut = NetworkApiHelper().provideApi(mockServer.start(), EsmorgaApi::class.java)
 
         val eventWrapper = sut.getEvents()
 

@@ -30,7 +30,7 @@ fun WelcomeScreen(wvm: WelcomeViewModel = koinViewModel(), onLoginRegisterClicke
         wvm.effect.collect { eff ->
             when (eff) {
                 is WelcomeEffect.NavigateToEventList -> onEnterAsGuestClicked()
-
+                is WelcomeEffect.NavigateToLogin -> onLoginRegisterClicked()
             }
         }
     }

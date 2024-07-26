@@ -1,9 +1,9 @@
-package cmm.apps.esmorga.datasource_remote.event
+package cmm.apps.esmorga.datasource_remote.user
 
-import cmm.apps.esmorga.data.event.datasource.EventDatasource
-import cmm.apps.esmorga.data.event.model.EventDataModel
+import cmm.apps.esmorga.data.user.datasource.UserDatasource
+import cmm.apps.esmorga.data.user.model.UserDataModel
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaApi
-import cmm.apps.esmorga.datasource_remote.event.mapper.toEventDataModelList
+import cmm.apps.esmorga.datasource_remote.user.mapper.toUserDataModel
 import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.Source
@@ -12,13 +12,12 @@ import java.net.ConnectException
 import java.net.UnknownHostException
 import java.time.format.DateTimeParseException
 
-
-class EventRemoteDatasourceImpl(private val eventApi: EsmorgaApi) : EventDatasource {
-
-    override suspend fun getEvents(): List<EventDataModel> {
+class UserRemoteDatasourceImpl(private val api: EsmorgaApi) : UserDatasource {
+    override suspend fun login(email: String, password: String): Result<UserDataModel> {
         try {
-            val eventList = eventApi.getEvents()
-            return eventList.remoteEventList.toEventDataModelList()
+            val loginBody = mapOf("email" to email, "password" to password)
+            val user = api.login(loginBody)
+            return Result.success(user.toUserDataModel())
         } catch (e: Exception) {
             when (e) {
                 is HttpException -> throw EsmorgaException(message = e.response()?.message().orEmpty(), source = Source.REMOTE, code = e.code())
@@ -30,5 +29,4 @@ class EventRemoteDatasourceImpl(private val eventApi: EsmorgaApi) : EventDatasou
             }
         }
     }
-
 }

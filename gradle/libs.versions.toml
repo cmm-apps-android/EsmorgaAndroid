@@ -23,7 +23,8 @@ appcompat = "1.7.0"
 material = "1.12.0"
 coil = "2.6.0"
 paparazzi = "1.3.4"
-navigationCompose = "2.7.7"
+navigationCompose = "2.8.0-beta05"
+kotlinxSerializationJson = "1.6.3"
 
 [libraries]
 #Kotlin Core
@@ -37,6 +38,7 @@ androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lif
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 androidx-navigation-kt = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigationCompose"}
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 
 #UI
 coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
@@ -91,3 +93,5 @@ jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrai
 devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 paparazzi = { id = "app.cash.paparazzi", version.ref = "paparazzi" }
+jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize",  version.ref = "kotlin"  }

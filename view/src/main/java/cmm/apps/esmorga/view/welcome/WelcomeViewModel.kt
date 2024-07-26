@@ -23,7 +23,7 @@ class WelcomeViewModel(
     val effect: SharedFlow<WelcomeEffect> = _effect.asSharedFlow()
 
     fun onPrimaryButtonClicked() {
-        //TO BE Implemented
+        _effect.tryEmit(WelcomeEffect.NavigateToLogin)
     }
 
     fun onSecondaryButtonClicked() {

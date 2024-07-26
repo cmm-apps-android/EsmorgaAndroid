@@ -1,6 +1,6 @@
 package cmm.apps.esmorga.datasource_remote.event
 
-import cmm.apps.esmorga.datasource_remote.api.EventApi
+import cmm.apps.esmorga.datasource_remote.api.EsmorgaApi
 import cmm.apps.esmorga.datasource_remote.event.model.EventListWrapperRemoteModel
 import cmm.apps.esmorga.datasource_remote.mock.EventRemoteMock
 import cmm.apps.esmorga.domain.result.ErrorCodes
@@ -22,7 +22,7 @@ class EventRemoteDatasourceImplTest {
     fun `given a working api when events requested then event list is successfully returned`() = runTest {
         val remoteEventName = "RemoteEvent"
 
-        val api = mockk<EventApi>(relaxed = true)
+        val api = mockk<EsmorgaApi>(relaxed = true)
         coEvery { api.getEvents() } returns EventRemoteMock.provideEventListWrapper(listOf(remoteEventName))
 
         val sut = EventRemoteDatasourceImpl(api)
@@ -35,7 +35,7 @@ class EventRemoteDatasourceImplTest {
     fun `given an api returning 500 when events requested then EsmorgaException is thrown`() = runTest {
         val errorCode = 500
 
-        val api = mockk<EventApi>(relaxed = true)
+        val api = mockk<EsmorgaApi>(relaxed = true)
         coEvery { api.getEvents() } throws HttpException(Response.error<ResponseBody>(errorCode, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
 
         val sut = EventRemoteDatasourceImpl(api)
@@ -56,7 +56,7 @@ class EventRemoteDatasourceImplTest {
         val remoteEventName = "RemoteEvent"
         val wrongTypeEvent = EventRemoteMock.provideEvent(remoteEventName).copy(remoteType = "ERROR")
 
-        val api = mockk<EventApi>(relaxed = true)
+        val api = mockk<EsmorgaApi>(relaxed = true)
         coEvery { api.getEvents() } returns EventListWrapperRemoteModel(1, listOf(wrongTypeEvent))
 
         val sut = EventRemoteDatasourceImpl(api)
@@ -77,7 +77,7 @@ class EventRemoteDatasourceImplTest {
         val remoteEventName = "RemoteEvent"
         val wrongTypeEvent = EventRemoteMock.provideEvent(remoteEventName).copy(remoteDate = "ERROR")
 
-        val api = mockk<EventApi>(relaxed = true)
+        val api = mockk<EsmorgaApi>(relaxed = true)
         coEvery { api.getEvents() } returns EventListWrapperRemoteModel(1, listOf(wrongTypeEvent))
 
         val sut = EventRemoteDatasourceImpl(api)
