@@ -1,6 +1,8 @@
 package cmm.apps.esmorga.view.theme
 
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.Typography
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -57,58 +59,57 @@ val JackartaFontFamily =
     )
 
 // Set of Material typography styles to start with
-val EsmorgaTypography = Typography(
-    displayLarge = TextStyle(
-        fontFamily = EpilogueFontFamily,
-        fontWeight = FontWeight.Bold,
-        fontSize = 32.sp,
-        lineHeight = 64.sp,
-        letterSpacing = (-0.8).sp
-    ),
-    titleLarge = TextStyle(
-        fontFamily = JackartaFontFamily,
-        fontWeight = FontWeight.Bold,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
-        letterSpacing = (-0.33).sp
-    ),
-    titleMedium = TextStyle(
-        fontFamily = JackartaFontFamily,
-        fontWeight = FontWeight.Bold,
-        fontSize = 18.sp,
-        lineHeight = 22.sp,
-        letterSpacing = (-0.25).sp
-    ),
-    bodyLarge = TextStyle(
-        fontFamily = JackartaFontFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 18.sp,
-        lineHeight = 23.sp,
-        letterSpacing = (-0.25).sp
-    ),
-    bodyMedium = TextStyle(
-        fontFamily = JackartaFontFamily,
-        fontWeight = FontWeight.Thin,
-        fontSize = 16.sp,
-        lineHeight = 24.sp
-    ),
-    bodySmall = TextStyle(
-        fontFamily = JackartaFontFamily,
-        fontWeight = FontWeight.Thin,
-        fontSize = 14.sp,
-        lineHeight = 21.sp
-    ),
-    labelLarge = TextStyle(
-        fontFamily = EpilogueFontFamily,
-        fontWeight = FontWeight.Bold,
-        fontSize = 14.sp,
-        lineHeight = 21.sp,
-        letterSpacing = 0.20.sp
-    ),
-    labelMedium = TextStyle(
-        fontFamily = JackartaFontFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 14.sp,
-        lineHeight = 21.sp
+/*
+    If you use ThemeMaterial.colorScheme.XXXX it doesn't work.
+ */
+@Composable
+fun getEsmorgaTypography(colorScheme: ColorScheme): Typography {
+    return Typography(
+        titleLarge = TextStyle(
+            fontFamily = JackartaFontFamily,
+            fontWeight = FontWeight.Bold,
+            fontSize = 32.sp,
+            lineHeight = 40.sp,
+            letterSpacing = (-0.33).sp,
+            color = colorScheme.onSurface
+        ),
+        headlineLarge = TextStyle(
+            fontFamily = JackartaFontFamily,
+            fontWeight = FontWeight.Bold,
+            fontSize = 22.sp,
+            lineHeight = 27.5.sp,
+            letterSpacing = (-0.33).sp,
+            color = colorScheme.onSurface
+        ),
+        headlineMedium = TextStyle(
+            fontFamily = JackartaFontFamily,
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp,
+            lineHeight = 22.5.sp,
+            letterSpacing = (-0.27).sp,
+            color = colorScheme.onSurface
+        ),
+        bodyMedium = TextStyle(
+            fontFamily = JackartaFontFamily,
+            fontWeight = FontWeight.Normal,
+            fontSize = 16.sp,
+            lineHeight = 24.sp,
+            color = colorScheme.onSurface
+        ),
+        labelLarge = TextStyle(
+            fontFamily = EpilogueFontFamily,
+            fontWeight = FontWeight.Bold,
+            fontSize = 14.sp,
+            lineHeight = 21.sp,
+            letterSpacing = 0.20.sp,
+            color = colorScheme.onSurface
+        ),
+        labelSmall = TextStyle(
+            fontFamily = EpilogueFontFamily,
+            fontWeight = FontWeight.Normal,
+            fontSize = 14.sp,
+            lineHeight = 21.sp,
+            color = colorScheme.onSurfaceVariant
+        )
     )
-)
+}

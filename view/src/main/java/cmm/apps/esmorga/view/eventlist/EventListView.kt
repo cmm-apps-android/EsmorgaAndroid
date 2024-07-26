@@ -35,10 +35,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmm.apps.designsystem.EsmorgaButton
 import cmm.apps.designsystem.EsmorgaLinearLoader
+import cmm.apps.designsystem.EsmorgaText
+import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.eventlist.model.EventListEffect
-import cmm.apps.esmorga.view.eventlist.model.EventListUiState
 import cmm.apps.esmorga.view.eventlist.model.EventListUiModel
+import cmm.apps.esmorga.view.eventlist.model.EventListUiState
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -87,20 +89,7 @@ fun EventListView(uiState: EventListUiState, snackbarHostState: SnackbarHostStat
                 end = 16.dp
             )
         ) {
-            Text(
-                text = stringResource(R.string.homescreen_title),
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(vertical = 16.dp)
-            )
-
-            Text(
-                text = stringResource(R.string.event_list_title),
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(vertical = 32.dp)
-            )
-
+            EsmorgaText(text = stringResource(R.string.event_list_title), style = EsmorgaTextStyle.HEADING_1, modifier = Modifier.padding(vertical = 32.dp))
             if (uiState.loading) {
                 EventListLoading()
             } else {
@@ -119,12 +108,7 @@ fun EventListView(uiState: EventListUiState, snackbarHostState: SnackbarHostStat
 @Composable
 fun EventListLoading() {
     Column(modifier = Modifier.fillMaxSize()) {
-        Text(
-            text = stringResource(R.string.event_list_loading),
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(vertical = 16.dp)
-        )
-
+        EsmorgaText(text = stringResource(R.string.event_list_loading), style = EsmorgaTextStyle.HEADING_1, modifier = Modifier.padding(vertical = 16.dp))
         EsmorgaLinearLoader(modifier = Modifier.fillMaxWidth())
     }
 }
@@ -142,10 +126,10 @@ fun EventListEmpty() {
                 .clip(RoundedCornerShape(16.dp))
         )
 
-        Text(
+        EsmorgaText(
             text = stringResource(R.string.event_list_empty_text),
+            style = EsmorgaTextStyle.HEADING_2,
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(vertical = 32.dp, horizontal = 16.dp)
         )
     }
@@ -176,15 +160,8 @@ fun EventListError(onRetryClick: () -> Unit) {
                 )
             }
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                Text(
-                    text = stringResource(R.string.event_list_error_title),
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(vertical = 4.dp)
-                )
-                Text(
-                    text = stringResource(R.string.event_list_error_subtitle),
-                    style = MaterialTheme.typography.bodySmall
-                )
+                EsmorgaText(text = stringResource(R.string.event_list_error_title), style = EsmorgaTextStyle.HEADING_2, modifier = Modifier.padding(vertical = 4.dp))
+                EsmorgaText(text = stringResource(R.string.event_list_error_subtitle), style = EsmorgaTextStyle.BODY_1)
             }
         }
 
@@ -222,25 +199,9 @@ fun EventList(events: List<EventListUiModel>, onEventClick: (eventId: String) ->
                         .clip(RoundedCornerShape(16.dp))
                 )
 
-                Text(
-                    text = event.cardTitle,
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(vertical = 4.dp)
-                )
-
-                Text(
-                    text = event.cardSubtitle1,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.padding(vertical = 4.dp)
-                )
-
-                Text(
-                    text = event.cardSubtitle2,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.padding(vertical = 4.dp)
-                )
+                EsmorgaText(text = event.cardTitle, style = EsmorgaTextStyle.HEADING_2, modifier = Modifier.padding(vertical = 4.dp))
+                EsmorgaText(text = event.cardSubtitle1, style = EsmorgaTextStyle.BODY_1_ACCENT, modifier = Modifier.padding(vertical = 4.dp))
+                EsmorgaText(text = event.cardSubtitle2, style = EsmorgaTextStyle.BODY_1_ACCENT, modifier = Modifier.padding(vertical = 4.dp))
             }
         }
     }
