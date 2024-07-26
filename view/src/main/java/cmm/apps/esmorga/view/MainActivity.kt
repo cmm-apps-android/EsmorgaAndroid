@@ -16,7 +16,9 @@ import cmm.apps.esmorga.view.eventdetails.EventDetailsScreen
 import cmm.apps.esmorga.view.eventlist.EventListScreen
 import cmm.apps.esmorga.view.login.LoginScreen
 import cmm.apps.esmorga.view.navigation.Navigation
+import cmm.apps.esmorga.view.navigation.serializableType
 import cmm.apps.esmorga.view.welcome.WelcomeScreen
+import kotlin.reflect.typeOf
 
 class MainActivity : ComponentActivity() {
 
@@ -29,7 +31,7 @@ class MainActivity : ComponentActivity() {
                 eventFlow(navigationController)
                 loginFlow(navigationController)
                 composable<Navigation.FullScreenError>(
-                    typeMap = EsmorgaErrorScreenArguments.typeMap
+                    typeMap = mapOf(typeOf<EsmorgaErrorScreenArguments>() to serializableType<EsmorgaErrorScreenArguments>())
                 ) { backStackEntry ->
                     val esmorgaErrorScreenArguments = backStackEntry.toRoute<Navigation.FullScreenError>().esmorgaErrorScreenArguments
                     EsmorgaErrorScreen(
