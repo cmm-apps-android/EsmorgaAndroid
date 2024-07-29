@@ -1,13 +1,15 @@
 package cmm.apps.esmorga.datasource_remote.user.model
 
+import com.google.gson.annotations.SerializedName
+
 data class UserRemoteModel(
-    val accessToken: String,
-    val refreshToken: String,
-    val profile: ProfileRemoteModel
+    @SerializedName("accessToken") val remoteAccessToken: String,
+    @SerializedName("refreshToken") val remoteRefreshToken: String,
+    @SerializedName("profile") val remoteProfile: ProfileRemoteModel
 )
 
 data class ProfileRemoteModel(
-    val name: String,
-    val lastName: String,
-    val email: String
+    @SerializedName("name") val remoteName: String,
+    @SerializedName("lastName") val remoteLastName: String,
+    @SerializedName("email") val remoteEmail: String
 )

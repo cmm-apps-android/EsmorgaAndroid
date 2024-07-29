@@ -5,8 +5,8 @@ import cmm.apps.esmorga.datasource_remote.user.model.UserRemoteModel
 
 fun UserRemoteModel.toUserDataModel(): UserDataModel {
     return UserDataModel(
-        nameData = profile.name,
-        lastNameData = profile.lastName,
-        emailData = profile.email
+        dataName = remoteProfile.remoteName,
+        dataLastName = remoteProfile.remoteLastName,
+        dataEmail = remoteProfile.remoteEmail
     )
 }

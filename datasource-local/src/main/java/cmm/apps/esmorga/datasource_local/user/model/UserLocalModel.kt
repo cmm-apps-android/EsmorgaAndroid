@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class UserLocalModel(
-    @PrimaryKey val emailLocal: String,
-    val nameLocal: String,
-    val lastNameLocal: String,
+    @PrimaryKey val localEmail: String,
+    val localName: String,
+    val localLastName: String,
 )
