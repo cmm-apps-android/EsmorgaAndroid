@@ -23,7 +23,7 @@ class LoginViewModel(app: Application, private val performLoginUseCase: PerformL
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
-    private val _effect: MutableSharedFlow<LoginEffect> = MutableSharedFlow(extraBufferCapacity = 2, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    private val _effect: MutableSharedFlow<LoginEffect> = MutableSharedFlow(extraBufferCapacity = 1, replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val effect: SharedFlow<LoginEffect> = _effect.asSharedFlow()
 
     companion object {

@@ -19,7 +19,7 @@ class EventListViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     @Test
-    fun `given a successful usecase when load mehtod is called usecase executed and UI state containing events is emitted`() = runTest {
+    fun `given a successful usecase when load method is called usecase executed and UI state containing events is emitted`() = runTest {
         val domainEventName = "DomainEvent"
 
         val app = mockk<Application>(relaxed = true)

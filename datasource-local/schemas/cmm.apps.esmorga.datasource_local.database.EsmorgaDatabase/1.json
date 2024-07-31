@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "dc4479d3da03366d90cfd61155b6480f",
+    "identityHash": "1518e4cf37f4d6cd959cc889b5337f75",
     "entities": [
       {
         "tableName": "EventLocalModel",
@@ -86,37 +86,31 @@
       },
       {
         "tableName": "UserLocalModel",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `email` TEXT NOT NULL, `name` TEXT NOT NULL, `lastName` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`localEmail` TEXT NOT NULL, `localName` TEXT NOT NULL, `localLastName` TEXT NOT NULL, PRIMARY KEY(`localEmail`))",
         "fields": [
           {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "email",
-            "columnName": "email",
+            "fieldPath": "localEmail",
+            "columnName": "localEmail",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "name",
-            "columnName": "name",
+            "fieldPath": "localName",
+            "columnName": "localName",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "lastName",
-            "columnName": "lastName",
+            "fieldPath": "localLastName",
+            "columnName": "localLastName",
             "affinity": "TEXT",
             "notNull": true
           }
         ],
         "primaryKey": {
-          "autoGenerate": true,
+          "autoGenerate": false,
           "columnNames": [
-            "id"
+            "localEmail"
           ]
         },
         "indices": [],
@@ -126,7 +120,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'dc4479d3da03366d90cfd61155b6480f')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1518e4cf37f4d6cd959cc889b5337f75')"
     ]
   }
 }

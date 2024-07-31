@@ -1,4 +1,4 @@
-package cmm.apps.esmorga.datasource_remote.event
+package cmm.apps.esmorga.datasource_remote
 
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaApi
 import cmm.apps.esmorga.datasource_remote.api.NetworkApiHelper
@@ -37,6 +37,17 @@ class EsmorgaApiTest {
 
         Assert.assertEquals(2, eventWrapper.remoteEventList.size)
         Assert.assertTrue(eventWrapper.remoteEventList[0].remoteName.contains("MobgenFest"))
+    }
+
+    @Test
+    fun `given a successful mock server when login is requested then a correct user is returned`() = runTest {
+        mockServer.enqueueFile(200, ServerFiles.LOGIN)
+
+        val sut = NetworkApiHelper().provideApi(mockServer.start(), EsmorgaApi::class.java)
+
+        val user = sut.login(body = mapOf("email" to "email", "password" to "password"))
+
+        Assert.assertEquals("Albus", user.remoteProfile.remoteName)
     }
 
 }
