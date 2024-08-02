@@ -22,4 +22,5 @@ data class WelcomeUiState(
 
 sealed class WelcomeEffect {
     data object NavigateToEventList : WelcomeEffect()
+    data object NavigateToLogin : WelcomeEffect()
 }

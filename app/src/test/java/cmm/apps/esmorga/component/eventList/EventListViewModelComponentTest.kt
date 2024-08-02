@@ -5,7 +5,7 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import cmm.apps.esmorga.component.mock.EventDataMock
-import cmm.apps.esmorga.data.di.DataDIModule.EVENT_REMOTE_DATASOURCE_INSTANCE_NAME
+import cmm.apps.esmorga.data.di.DataDIModule.REMOTE_DATASOURCE_INSTANCE_NAME
 import cmm.apps.esmorga.data.event.datasource.EventDatasource
 import cmm.apps.esmorga.datasource_local.database.EsmorgaDatabase
 import cmm.apps.esmorga.di.AppDIModules
@@ -66,7 +66,7 @@ class EventListViewModelComponentTest : KoinTest {
                 AppDIModules.modules,
                 module {
                     single<EsmorgaDatabase> { mockDatabase }
-                    factory<EventDatasource>(named(EVENT_REMOTE_DATASOURCE_INSTANCE_NAME)) { remoteDatasource }
+                    factory<EventDatasource>(named(REMOTE_DATASOURCE_INSTANCE_NAME)) { remoteDatasource }
                 }
             )
         }

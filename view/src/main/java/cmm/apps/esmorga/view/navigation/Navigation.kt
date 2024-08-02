@@ -4,14 +4,25 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
+import kotlinx.serialization.Serializable
 
-sealed class Navigation(val route: String) {
-    data object WelcomeScreen : Navigation("welcomeScreen")
-    data object EventListScreen : Navigation("eventListScreen")
-    data object EventDetailScreen : Navigation("eventDetailScreen/{eventId}") {
-        fun createRoute(eventId: String) = "eventDetailScreen/$eventId"
-    }
+sealed class Navigation {
 
+    @Serializable
+    data object WelcomeScreen : Navigation()
+
+    @Serializable
+    data object EventListScreen : Navigation()
+
+    @Serializable
+    data class EventDetailScreen(val eventId: String) : Navigation()
+
+    @Serializable
+    data object LoginScreen : Navigation()
+
+    @Serializable
+    data class FullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments) : Navigation()
 }
 
 const val GOOGLE_MAPS_PACKAGE = "com.google.android.apps.maps"

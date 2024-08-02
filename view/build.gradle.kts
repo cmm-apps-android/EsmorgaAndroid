@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.kover)
     alias(libs.plugins.paparazzi)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
+    alias(libs.plugins.kotlin.parcelize)
 }
 
 android {
@@ -68,6 +70,8 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
     implementation(libs.coil)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.gson)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockk)

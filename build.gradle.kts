@@ -5,14 +5,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android) apply false
     alias(libs.plugins.jetbrains.kotlin.jvm) apply false
     alias(libs.plugins.kover)
-}
-
-rootProject.ext {
-    val minSdkVersion = 28
-    val compileSdkVersion = 34
-    val targetSdkVersion = 34
-    val versionCode = 1
-    val versionName = "0.1"
+    alias(libs.plugins.kotlin.parcelize) apply false
 }
 
 dependencies {

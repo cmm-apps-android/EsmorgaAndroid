@@ -2,7 +2,7 @@ package cmm.apps.esmorga.datasource_remote.event
 
 import cmm.apps.esmorga.data.event.datasource.EventDatasource
 import cmm.apps.esmorga.data.event.model.EventDataModel
-import cmm.apps.esmorga.datasource_remote.api.EventApi
+import cmm.apps.esmorga.datasource_remote.api.EsmorgaApi
 import cmm.apps.esmorga.datasource_remote.event.mapper.toEventDataModelList
 import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
@@ -13,7 +13,7 @@ import java.net.UnknownHostException
 import java.time.format.DateTimeParseException
 
 
-class EventRemoteDatasourceImpl(private val eventApi: EventApi) : EventDatasource {
+class EventRemoteDatasourceImpl(private val eventApi: EsmorgaApi) : EventDatasource {
 
     override suspend fun getEvents(): List<EventDataModel> {
         try {

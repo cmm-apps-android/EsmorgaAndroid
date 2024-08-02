@@ -15,4 +15,13 @@
     <string name="navigate">Navegar</string>
     <string name="welcome_login_register">Login / Registro</string>
     <string name="welcome_guest">Entrar como invitado</string>
+    <string name="login_screen_email">Email</string>
+    <string name="login_screen_password">Password</string>
+    <string name="login_button">Iniciar sesión</string>
+    <string name="login_screen_create_account_button">Regístrate</string>
+    <string name="login_screen_title">Hola de nuevo!</string>
+    <string name="default_error_title">Algo ha fallado, inténtalo de nuevo</string>
+    <string name="default_error_button">Reintentar</string>
+    <string name="login_email_invalid">Email inválido</string>
+    <string name="login_password_invalid">Contraseña inválida</string>
 </resources>
