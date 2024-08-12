@@ -19,4 +19,7 @@ interface EsmorgaApi {
     @POST("account/login")
     suspend fun login(@Body body: Map<String, String>): UserRemoteModel
 
+    @POST("account/register")
+    suspend fun register(@Body body: Map<String, String>): UserRemoteModel
+
 }

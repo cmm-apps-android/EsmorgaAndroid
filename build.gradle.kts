@@ -18,6 +18,7 @@ dependencies {
 }
 
 kover {
+    // Execute all tests with ./gradlew koverHtmlReport
     reports {
         // filters for all report types of all build variants
         filters {

@@ -5,6 +5,7 @@ import cmm.apps.esmorga.data.user.datasource.UserDatasource
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.Source
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
@@ -30,30 +31,63 @@ class UserRepositoryImplTest {
         val name = "Ron"
         val localDS = mockk<UserDatasource>(relaxed = true)
         val remoteDS = mockk<UserDatasource>(relaxed = true)
-        coEvery { remoteDS.login(any(), any()) } returns Result.success(UserDataMock.provideUserDataModel(name = name))
+        coEvery { remoteDS.login(any(), any()) } returns UserDataMock.provideUserDataModel(name = name)
         val sut = UserRepositoryImpl(localDS, remoteDS)
         val result = sut.login("email", "password")
 
         Assert.assertEquals(name, result.data.name)
     }
 
-    @Test(expected = Exception::class)
+    @Test
     fun `given invalid credentials when login fails then exception is thrown`() = runTest {
+        val errorCode = 401
         val localDS = mockk<UserDatasource>(relaxed = true)
         val remoteDS = mockk<UserDatasource>(relaxed = true)
-        coEvery { remoteDS.login("validEmail", "validPassword") } returns Result.success(UserDataMock.provideUserDataModel(name = "Hermione"))
+        coEvery { remoteDS.login(any(), any()) } throws EsmorgaException("error", Source.REMOTE, errorCode)
         val sut = UserRepositoryImpl(localDS, remoteDS)
 
-        sut.login("invalidEmail", "invalidPassword")
+        val exception = try {
+            sut.login("invalidEmail", "invalidPassword")
+        } catch (exception: RuntimeException) {
+            exception
+        }
+
+        Assert.assertTrue(exception is EsmorgaException)
+        Assert.assertEquals(errorCode, (exception as EsmorgaException).code)
     }
 
     @Test(expected = EsmorgaException::class)
     fun `given valid credentials when login fails then exception is thrown`() = runTest {
         val localDS = mockk<UserDatasource>(relaxed = true)
         val remoteDS = mockk<UserDatasource>(relaxed = true)
-        coEvery { remoteDS.login("validEmail", "validPassword") } returns Result.failure(EsmorgaException("error", Source.REMOTE, 500))
+        coEvery { remoteDS.login(any(), any()) } throws EsmorgaException("error", Source.REMOTE, 500)
         val sut = UserRepositoryImpl(localDS, remoteDS)
 
         sut.login("validEmail", "validPassword")
+    }
+
+    @Test
+    fun `given valid data when registration succeeds then user is returned`() = runTest {
+        val name = "Mezcal"
+        val localDS = mockk<UserDatasource>(relaxed = true)
+        val remoteDS = mockk<UserDatasource>(relaxed = true)
+        coEvery { remoteDS.register(any(), any(), any(), any()) } returns UserDataMock.provideUserDataModel(name = name)
+        val sut = UserRepositoryImpl(localDS, remoteDS)
+        val result = sut.register(name, "lastName", "email", "password")
+
+        Assert.assertEquals(name, result.data.name)
+    }
+
+    @Test
+    fun `given valid data when registration succeeds then user is stored in local`() = runTest {
+        val user = UserDataMock.provideUserDataModel(name = "Dirty Harry")
+
+        val localDS = mockk<UserDatasource>(relaxed = true)
+        val remoteDS = mockk<UserDatasource>(relaxed = true)
+        coEvery { remoteDS.register(any(), any(), any(), any()) } returns user
+        val sut = UserRepositoryImpl(localDS, remoteDS)
+        sut.register("name", "lastName", "email", "password")
+
+        coVerify { localDS.saveUser(user) }
     }
 }
