@@ -2,6 +2,7 @@ package cmm.apps.esmorga.datasource_remote.user
 
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaApi
 import cmm.apps.esmorga.datasource_remote.mock.UserRemoteMock
+import cmm.apps.esmorga.domain.result.EsmorgaException
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
@@ -16,7 +17,7 @@ import retrofit2.Response
 class UserRemoteDatasourceImplTest {
 
     @Test
-    fun `given valid credentials when login succeed then user is returned`() = runTest {
+    fun `given valid credentials when login succeeds then user is returned`() = runTest {
         val remoteUserName = "Albus"
 
         val api = mockk<EsmorgaApi>(relaxed = true)
@@ -25,8 +26,7 @@ class UserRemoteDatasourceImplTest {
         val sut = UserRemoteDatasourceImpl(api)
         val result = sut.login("email", "password")
 
-        Assert.assertTrue(result.isSuccess)
-        Assert.assertEquals(remoteUserName, result.getOrThrow().dataName)
+        Assert.assertEquals(remoteUserName, result.dataName)
     }
 
     @Test(expected = Exception::class)
@@ -36,6 +36,39 @@ class UserRemoteDatasourceImplTest {
 
         val sut = UserRemoteDatasourceImpl(api)
         sut.login("email", "password")
+    }
+
+    @Test
+    fun `given valid data when registration succeeds then user is returned`() = runTest {
+        val remoteUserName = "Barbus"
+
+        val api = mockk<EsmorgaApi>(relaxed = true)
+        coEvery { api.register(any()) } returns UserRemoteMock.provideUser(remoteUserName)
+
+        val sut = UserRemoteDatasourceImpl(api)
+        val result = sut.register(remoteUserName, "lastName", "email", "password")
+
+        Assert.assertEquals(remoteUserName, result.dataName)
+    }
+
+    @Test
+    fun `given invalid data when registration fails then exception is thrown`() = runTest {
+        val errorCode = 400
+
+        val api = mockk<EsmorgaApi>(relaxed = true)
+        coEvery { api.register(any()) } throws HttpException(Response.error<ResponseBody>(errorCode, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
+
+        val sut = UserRemoteDatasourceImpl(api)
+
+        val exception = try {
+            sut.register("name", "lastName", "email", "password")
+            null
+        } catch (exception: RuntimeException) {
+            exception
+        }
+
+        Assert.assertTrue(exception is EsmorgaException)
+        Assert.assertEquals(errorCode, (exception as EsmorgaException).code)
     }
 
 }

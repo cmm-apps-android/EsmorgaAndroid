@@ -13,20 +13,38 @@ import java.net.UnknownHostException
 import java.time.format.DateTimeParseException
 
 class UserRemoteDatasourceImpl(private val api: EsmorgaApi) : UserDatasource {
-    override suspend fun login(email: String, password: String): Result<UserDataModel> {
+    override suspend fun login(email: String, password: String): UserDataModel {
         try {
             val loginBody = mapOf("email" to email, "password" to password)
             val user = api.login(loginBody)
-            return Result.success(user.toUserDataModel())
+            return user.toUserDataModel()
         } catch (e: Exception) {
-            when (e) {
-                is HttpException -> throw EsmorgaException(message = e.response()?.message().orEmpty(), source = Source.REMOTE, code = e.code())
-                is DateTimeParseException -> throw EsmorgaException(message = "Date parse error: ${e.message.orEmpty()}", source = Source.REMOTE, code = ErrorCodes.PARSE_ERROR)
-                is ConnectException,
-                is UnknownHostException -> throw EsmorgaException(message = "No connection error: ${e.message.orEmpty()}", source = Source.REMOTE, code = ErrorCodes.NO_CONNECTION)
-                is EsmorgaException -> throw e
-                else -> throw EsmorgaException(message = "Unexpected error: ${e.message.orEmpty()}", source = Source.REMOTE, code = ErrorCodes.UNKNOWN_ERROR)
-            }
+            throw manageApiException(e)
         }
     }
+
+    override suspend fun register(name: String, lastName: String, email: String, password: String): UserDataModel {
+        try {
+            val registerBody = mapOf(
+                "name" to name,
+                "lastName" to lastName,
+                "email" to email,
+                "password" to password
+            )
+            val user = api.register(registerBody)
+            return user.toUserDataModel()
+        } catch (e: Exception) {
+            throw manageApiException(e)
+        }
+    }
+
+    private fun manageApiException(e: Exception): EsmorgaException = when (e) {
+        is HttpException -> EsmorgaException(message = e.response()?.message().orEmpty(), source = Source.REMOTE, code = e.code())
+        is DateTimeParseException -> EsmorgaException(message = "Date parse error: ${e.message.orEmpty()}", source = Source.REMOTE, code = ErrorCodes.PARSE_ERROR)
+        is ConnectException,
+        is UnknownHostException -> EsmorgaException(message = "No connection error: ${e.message.orEmpty()}", source = Source.REMOTE, code = ErrorCodes.NO_CONNECTION)
+        is EsmorgaException -> e
+        else -> EsmorgaException(message = "Unexpected error: ${e.message.orEmpty()}", source = Source.REMOTE, code = ErrorCodes.UNKNOWN_ERROR)
+    }
+
 }
