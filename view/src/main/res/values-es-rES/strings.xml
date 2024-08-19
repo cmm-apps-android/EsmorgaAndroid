@@ -24,4 +24,17 @@
     <string name="default_error_button">Reintentar</string>
     <string name="login_email_invalid">Email inválido</string>
     <string name="login_password_invalid">Contraseña inválida</string>
+    <string name="registration_screen_title">Regístrate</string>
+    <string name="registration_submit_button">Registrarme</string>
+    <string name="registration_name_placeholder">Ingresa tu nombre</string>
+    <string name="registration_last_name_placeholder">Ingresa tu apellido</string>
+    <string name="registration_email_placeholder">Ingresa tu email, ej: ejemplo@dominio.com</string>
+    <string name="registration_password_placeholder">Ingresa tu contraseña</string>
+    <string name="registration_confirm_password_placeholder">Confirma tu contraseña</string>
+    <string name="registration_empty_field">Campo requerido</string>
+    <string name="registration_name_last_name_invalid">Sólo letras, espacios y \' -  están disponibles</string>
+    <string name="registration_email_invalid">Formato no válido, sólo letras, números y _ - están disponibles</string>
+    <string name="registration_email_already_used">Email ya ha sido usado</string>
+    <string name="registration_password_invalid">Mínimo 8 caracteres, debe incluir al menos 1 dígito, 1 letra y 1 símbolo</string>
+    <string name="registration_password_mismatch_error">¡Las contraseñas no coinciden, inténtalo de nuevo!</string>
 </resources>

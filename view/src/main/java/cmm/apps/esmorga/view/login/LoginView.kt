@@ -39,7 +39,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun LoginScreen(lvm: LoginViewModel = koinViewModel(), onLoginSuccess: () -> Unit, onLoginError: (EsmorgaErrorScreenArguments) -> Unit) {
+fun LoginScreen(lvm: LoginViewModel = koinViewModel(), onRegisterClicked: () -> Unit, onLoginSuccess: () -> Unit, onLoginError: (EsmorgaErrorScreenArguments) -> Unit) {
     val uiState: LoginUiState by lvm.uiState.collectAsStateWithLifecycle()
     val message = stringResource(R.string.no_internet_snackbar)
     val snackbarHostState = remember { SnackbarHostState() }
@@ -47,12 +47,8 @@ fun LoginScreen(lvm: LoginViewModel = koinViewModel(), onLoginSuccess: () -> Uni
     LaunchedEffect(Unit) {
         lvm.effect.collect { eff ->
             when (eff) {
-                is LoginEffect.ShowNoNetworkSnackbar -> {
-                    localCoroutineScope.launch {
-                        snackbarHostState.showSnackbar(message = message)
-                    }
-                }
-
+                is LoginEffect.ShowNoNetworkSnackbar -> localCoroutineScope.launch { snackbarHostState.showSnackbar(message = message) }
+                is LoginEffect.NavigateToRegistration -> onRegisterClicked()
                 is LoginEffect.ShowFullScreenError -> onLoginError(eff.esmorgaErrorScreenArguments)
                 is LoginEffect.NavigateToEventList -> onLoginSuccess()
             }
@@ -60,7 +56,14 @@ fun LoginScreen(lvm: LoginViewModel = koinViewModel(), onLoginSuccess: () -> Uni
     }
 
     EsmorgaTheme {
-        LoginView(uiState, snackbarHostState, lvm.onLoginClicked(), { email -> lvm.validateEmail(email) }, { password -> lvm.validatePass(password) })
+        LoginView(
+            uiState = uiState,
+            snackbarHostState = snackbarHostState,
+            onLoginClicked = { email, password -> lvm.onLoginClicked(email, password) },
+            onRegisterClicked = { lvm.onRegisterClicked() },
+            validateEmail = { email -> lvm.validateEmail(email) },
+            validatePass = { password -> lvm.validatePass(password) }
+        )
     }
 }
 
@@ -69,6 +72,7 @@ fun LoginView(
     uiState: LoginUiState,
     snackbarHostState: SnackbarHostState,
     onLoginClicked: (String, String) -> Unit,
+    onRegisterClicked: () -> Unit,
     validateEmail: (String) -> Unit,
     validatePass: (String) -> Unit
 ) {
@@ -83,7 +87,7 @@ fun LoginView(
                 .padding(top = innerPadding.calculateTopPadding())
         ) {
             Image(
-                painter = painterResource(id = R.drawable.login),
+                painter = painterResource(id = R.drawable.img_login_header),
                 contentDescription = "Login header",
                 modifier = Modifier.fillMaxWidth(),
                 contentScale = ContentScale.FillWidth
@@ -130,7 +134,7 @@ fun LoginView(
                     },
                     imeAction = ImeAction.Done,
                     onDonePressed = {
-                        validatePass(password)
+                        onLoginClicked(email, password)
                     }
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -138,7 +142,7 @@ fun LoginView(
                     onLoginClicked(email, password)
                 }
                 EsmorgaButton(text = stringResource(id = R.string.login_screen_create_account_button), isEnabled = !uiState.loading, primary = false) {
-
+                    onRegisterClicked()
                 }
             }
         }

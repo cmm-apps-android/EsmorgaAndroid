@@ -14,6 +14,7 @@ import org.junit.Rule
 
 
 open class BaseScreenshotTest {
+    //execute tests with: ./gradlew view:recordPaparazziDebug
 
     @get:Rule
     val paparazzi = Paparazzi(

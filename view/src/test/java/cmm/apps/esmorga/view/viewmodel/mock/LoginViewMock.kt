@@ -4,5 +4,5 @@ import cmm.apps.esmorga.domain.user.model.User
 
 object LoginViewMock {
 
-    fun provideUser(name: String = "Minerva", surname: String = "McGonagall", email: String = "mi_mcgonagall@hogwarts.edu"): User = User(name, surname, email)
+    fun provideUser(name: String = "Minerva", lastname: String = "McGonagall", email: String = "mi_mcgonagall@hogwarts.edu"): User = User(name, lastname, email)
 }

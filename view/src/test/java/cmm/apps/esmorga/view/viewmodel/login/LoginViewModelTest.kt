@@ -1,6 +1,7 @@
 package cmm.apps.esmorga.view.viewmodel.login
 
 import android.app.Application
+import app.cash.turbine.test
 import cmm.apps.esmorga.domain.result.Success
 import cmm.apps.esmorga.domain.user.PerformLoginUseCase
 import cmm.apps.esmorga.view.login.LoginViewModel
@@ -9,6 +10,7 @@ import cmm.apps.esmorga.view.viewmodel.mock.LoginViewMock
 import cmm.apps.esmorga.view.viewmodel.util.MainDispatcherRule
 import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Rule
@@ -27,10 +29,12 @@ class LoginViewModelTest {
         coEvery { useCase(any(), any()) } returns Result.success(Success(user))
 
         val sut = LoginViewModel(app, useCase)
-        val onLoginClicked = sut.onLoginClicked()
-        onLoginClicked(user.email, "Test@123")
 
-        val effect = sut.effect.replayCache.last()
-        Assert.assertTrue(effect is LoginEffect.NavigateToEventList)
+        sut.effect.test{
+            sut.onLoginClicked(user.email, "Test@123")
+
+            val effect = awaitItem()
+            Assert.assertTrue(effect is LoginEffect.NavigateToEventList)
+        }
     }
 }
