@@ -9,14 +9,6 @@ import org.koin.core.context.GlobalContext.startKoin
 
 class EsmorgaApp : Application(), LifecycleObserver {
 
-    companion object {
-        private var mInstance: EsmorgaApp? = null
-
-        fun instance(): EsmorgaApp? {
-            return mInstance
-        }
-    }
-
     override fun onCreate() {
         super.onCreate()
 

@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import cmm.apps.esmorga.component.mock.EventDataMock
+import cmm.apps.esmorga.component.mock.MockApplication
 import cmm.apps.esmorga.data.di.DataDIModule.REMOTE_DATASOURCE_INSTANCE_NAME
 import cmm.apps.esmorga.data.event.datasource.EventDatasource
 import cmm.apps.esmorga.datasource_local.database.EsmorgaDatabase
@@ -30,9 +31,11 @@ import org.koin.dsl.module
 import org.koin.test.KoinTest
 import org.koin.test.inject
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
+@Config(application = MockApplication::class)
 class EventListViewModelComponentTest : KoinTest {
 
     private lateinit var mockContext: Context
