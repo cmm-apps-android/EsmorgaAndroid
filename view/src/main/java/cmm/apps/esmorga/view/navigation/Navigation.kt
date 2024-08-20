@@ -22,6 +22,9 @@ sealed class Navigation {
     data object LoginScreen : Navigation()
 
     @Serializable
+    data object RegistrationScreen : Navigation()
+
+    @Serializable
     data class FullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments) : Navigation()
 }
 

@@ -17,6 +17,7 @@ import cmm.apps.esmorga.view.eventlist.EventListScreen
 import cmm.apps.esmorga.view.login.LoginScreen
 import cmm.apps.esmorga.view.navigation.Navigation
 import cmm.apps.esmorga.view.navigation.serializableType
+import cmm.apps.esmorga.view.registration.RegistrationScreen
 import cmm.apps.esmorga.view.welcome.WelcomeScreen
 import kotlin.reflect.typeOf
 
@@ -60,12 +61,36 @@ class MainActivity : ComponentActivity() {
         }
         composable<Navigation.LoginScreen> {
             LoginScreen(
+                onRegisterClicked = {
+                    navigationController.navigate(Navigation.RegistrationScreen)
+                },
                 onLoginSuccess = {
-                    navigationController.navigate(Navigation.EventListScreen)
+                    navigationController.navigate(Navigation.EventListScreen) {
+                        popUpTo(Navigation.WelcomeScreen) {
+                            inclusive = true
+                        }
+                    }
                 },
                 onLoginError = { esmorgaFullScreenArguments ->
                     navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = esmorgaFullScreenArguments))
                 })
+        }
+        composable<Navigation.RegistrationScreen> {
+            RegistrationScreen(
+                onRegistrationSuccess = {
+                    navigationController.navigate(Navigation.EventListScreen) {
+                        popUpTo(Navigation.WelcomeScreen) {
+                            inclusive = true
+                        }
+                    }
+                },
+                onRegistrationError = { esmorgaFullScreenArguments ->
+                    navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = esmorgaFullScreenArguments))
+                },
+                onBackClicked = {
+                    navigationController.popBackStack()
+                }
+            )
         }
     }
 

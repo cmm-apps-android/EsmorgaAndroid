@@ -11,9 +11,12 @@ data class LoginUiState(
     val loading: Boolean = false,
     val emailError: String? = null,
     val passwordError: String? = null
-)
+) {
+    fun hasAnyError() = emailError != null || passwordError != null
+}
 
 sealed class LoginEffect {
+    data object NavigateToRegistration : LoginEffect()
     data object ShowNoNetworkSnackbar : LoginEffect()
     data object NavigateToEventList : LoginEffect()
     data class ShowFullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments = getEsmorgaErrorScreenArguments()) : LoginEffect()

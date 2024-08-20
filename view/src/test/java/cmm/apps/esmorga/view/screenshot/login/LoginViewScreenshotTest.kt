@@ -26,19 +26,20 @@ class LoginViewScreenshotTest : BaseScreenshotTest() {
 
     private fun snapshotWithState(emailError: String?, passwordError: String?) {
         paparazzi.snapshot {
-             EsmorgaTheme(darkTheme = false) {
-                 LoginView(
-                     uiState = LoginUiState(
-                            loading = false,
-                            emailError = emailError,
-                            passwordError = passwordError
-                     ),
-                     snackbarHostState = SnackbarHostState(),
-                     onLoginClicked = { _, _ -> },
-                     validateEmail = { },
-                     validatePass = { }
-                 )
-             }
+            EsmorgaTheme(darkTheme = false) {
+                LoginView(
+                    uiState = LoginUiState(
+                        loading = false,
+                        emailError = emailError,
+                        passwordError = passwordError
+                    ),
+                    snackbarHostState = SnackbarHostState(),
+                    onLoginClicked = { _, _ -> },
+                    onRegisterClicked = { },
+                    validateEmail = { },
+                    validatePass = { }
+                )
+            }
         }
     }
 }

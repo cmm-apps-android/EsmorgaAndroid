@@ -1,17 +1,19 @@
-package cmm.apps.esmorga.component.eventList
+package cmm.apps.esmorga.component.registration
 
 import android.app.Application
 import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
-import cmm.apps.esmorga.component.mock.EventDataMock
+import app.cash.turbine.test
 import cmm.apps.esmorga.component.mock.MockApplication
+import cmm.apps.esmorga.component.mock.UserDataMock
 import cmm.apps.esmorga.data.di.DataDIModule.REMOTE_DATASOURCE_INSTANCE_NAME
-import cmm.apps.esmorga.data.event.datasource.EventDatasource
+import cmm.apps.esmorga.data.user.datasource.UserDatasource
 import cmm.apps.esmorga.datasource_local.database.EsmorgaDatabase
 import cmm.apps.esmorga.di.AppDIModules
-import cmm.apps.esmorga.domain.event.GetEventListUseCase
-import cmm.apps.esmorga.view.eventlist.EventListViewModel
+import cmm.apps.esmorga.domain.user.PerformRegistrationUserCase
+import cmm.apps.esmorga.view.registration.RegistrationViewModel
+import cmm.apps.esmorga.view.registration.model.RegistrationEffect
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -35,12 +37,12 @@ import org.robolectric.annotation.Config
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
-@Config(application = MockApplication::class)
-class EventListViewModelComponentTest : KoinTest {
+@Config (application = MockApplication::class)
+class RegistrationViewModelComponentTest : KoinTest {
 
     private lateinit var mockContext: Context
     private lateinit var mockDatabase: EsmorgaDatabase
-    private lateinit var remoteDatasource: EventDatasource
+    private lateinit var remoteDatasource: UserDatasource
 
     private val testDispatcher = UnconfinedTestDispatcher()
 
@@ -69,27 +71,28 @@ class EventListViewModelComponentTest : KoinTest {
                 AppDIModules.modules,
                 module {
                     single<EsmorgaDatabase> { mockDatabase }
-                    factory<EventDatasource>(named(REMOTE_DATASOURCE_INSTANCE_NAME)) { remoteDatasource }
+                    factory<UserDatasource>(named(REMOTE_DATASOURCE_INSTANCE_NAME)) { remoteDatasource }
                 }
             )
         }
     }
 
     @Test
-    fun `given a successful API and an empty DB when screen is shown then UI state with events is returned`() = runTest {
-        val remoteEventName = "RemoteEvent"
-        remoteDatasource = mockk<EventDatasource>()
-        coEvery { remoteDatasource.getEvents() } returns EventDataMock.provideEventDataModelList(listOf(remoteEventName))
+    fun `given a successful API when user clicks on register then UI navigates to event list`() = runTest {
+        remoteDatasource = mockk<UserDatasource>()
+        coEvery { remoteDatasource.register(any(), any(), any(), any()) } returns UserDataMock.provideUserDataModel()
         startDI()
 
         val app = mockk<Application>(relaxed = true)
-        val useCase: GetEventListUseCase by inject()
+        val useCase: PerformRegistrationUserCase by inject()
 
-        val sut = EventListViewModel(app, useCase)
+        val sut = RegistrationViewModel(app, useCase)
 
-        sut.loadEvents()
+        sut.effect.test {
+            sut.onRegisterClicked("User", "test", "test@test.com", "Test@123", "Test@123")
 
-        val uiState = sut.uiState.value
-        Assert.assertTrue(uiState.eventList[0].cardTitle.contains(remoteEventName))
+            val effect = awaitItem()
+            Assert.assertTrue(effect is RegistrationEffect.NavigateToEventList)
+        }
     }
 }

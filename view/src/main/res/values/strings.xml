@@ -24,4 +24,17 @@
     <string name="default_error_button">Retry</string>
     <string name="login_email_invalid">Invalid email</string>
     <string name="login_password_invalid">Invalid password</string>
+    <string name="registration_screen_title">Register</string>
+    <string name="registration_submit_button">Register</string>
+    <string name="registration_name_placeholder">Input your name</string>
+    <string name="registration_last_name_placeholder">Input your last name</string>
+    <string name="registration_email_placeholder">Input your email, e.g. example@domain.com</string>
+    <string name="registration_password_placeholder">Input your password</string>
+    <string name="registration_confirm_password_placeholder">Confirm your password</string>
+    <string name="registration_empty_field">Required field</string>
+    <string name="registration_name_last_name_invalid">Only letters, spaces and \' - are accepted</string>
+    <string name="registration_email_invalid">Invalid format, only letters, numbers, and _ - are accepted</string>
+    <string name="registration_email_already_used">Email already in use</string>
+    <string name="registration_password_invalid">Min 8 chars, must include at least 1 digit, 1 letter and 1 symbol</string>
+    <string name="registration_password_mismatch_error">passwords do not match, try again!</string>
 </resources>

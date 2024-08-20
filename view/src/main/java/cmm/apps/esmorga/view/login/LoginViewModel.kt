@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.user.PerformLoginUseCase
+import cmm.apps.esmorga.domain.user.model.User.Companion.EMAIL_REGEX
+import cmm.apps.esmorga.domain.user.model.User.Companion.PASSWORD_REGEX
 import cmm.apps.esmorga.view.login.model.LoginEffect
 import cmm.apps.esmorga.view.login.model.LoginUiState
 import cmm.apps.esmorga.view.login.model.LoginViewHelper.getEmailErrorText
@@ -23,37 +25,32 @@ class LoginViewModel(app: Application, private val performLoginUseCase: PerformL
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
-    private val _effect: MutableSharedFlow<LoginEffect> = MutableSharedFlow(extraBufferCapacity = 1, replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    private val _effect: MutableSharedFlow<LoginEffect> = MutableSharedFlow(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val effect: SharedFlow<LoginEffect> = _effect.asSharedFlow()
 
-    companion object {
-        private const val EMAIL_REGEX = "^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
-        private const val PASSWORD_REGEX = "(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#\$%^&*()_+']).+"
-    }
-
-    fun onLoginClicked(): (String, String) -> Unit {
-        return { email, password ->
-            validateEmail(email)
-            validatePass(password)
-            if (_uiState.value.emailError == null && _uiState.value.passwordError == null) {
-                viewModelScope.launch {
-                    _uiState.value = LoginUiState(loading = true)
-                    val result = performLoginUseCase(email, password)
-                    result.onSuccess {
-                        _effect.tryEmit(LoginEffect.NavigateToEventList)
-                    }.onFailure { error ->
-                        if (error is EsmorgaException) {
-                            _uiState.value = _uiState.value.copy(loading = false)
-                            if (error.code == ErrorCodes.NO_CONNECTION) {
-                                _effect.tryEmit(LoginEffect.ShowNoNetworkSnackbar)
-                            } else {
-                                _effect.tryEmit(LoginEffect.ShowFullScreenError())
-                            }
-                        }
+    fun onLoginClicked(email: String, password: String) {
+        validateEmail(email)
+        validatePass(password)
+        if (!_uiState.value.hasAnyError()) {
+            viewModelScope.launch {
+                _uiState.value = LoginUiState(loading = true)
+                val result = performLoginUseCase(email, password)
+                result.onSuccess {
+                    _effect.tryEmit(LoginEffect.NavigateToEventList)
+                }.onFailure { error ->
+                    _uiState.value = _uiState.value.copy(loading = false)
+                    if (error is EsmorgaException && error.code == ErrorCodes.NO_CONNECTION) {
+                        _effect.tryEmit(LoginEffect.ShowNoNetworkSnackbar)
+                    } else {
+                        _effect.tryEmit(LoginEffect.ShowFullScreenError())
                     }
                 }
             }
         }
+    }
+
+    fun onRegisterClicked() {
+        _effect.tryEmit(LoginEffect.NavigateToRegistration)
     }
 
     fun validateEmail(email: String) {
