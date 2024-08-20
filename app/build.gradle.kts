@@ -59,6 +59,7 @@ dependencies {
     testImplementation(libs.androidx.junit.ktx)
     testImplementation(libs.robolectric)
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
 
     androidTestImplementation(libs.androidx.junit)
 }
