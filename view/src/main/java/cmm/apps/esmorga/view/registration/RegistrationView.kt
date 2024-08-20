@@ -128,7 +128,11 @@ fun RegistrationView(
                 .fillMaxWidth()
                 .verticalScroll(state = rememberScrollState())
         ) {
-            EsmorgaText(text = stringResource(id = R.string.registration_screen_title), style = EsmorgaTextStyle.HEADING_1, modifier = Modifier.padding(vertical = 16.dp))
+            EsmorgaText(
+                text = stringResource(id = R.string.registration_screen_title),
+                style = EsmorgaTextStyle.HEADING_1,
+                modifier = Modifier.padding(vertical = 16.dp)
+            )
             EsmorgaTextField(
                 value = name,
                 isEnabled = !uiState.loading,

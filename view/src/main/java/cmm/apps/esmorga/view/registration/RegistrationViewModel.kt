@@ -61,52 +61,38 @@ class RegistrationViewModel(app: Application, private val performRegistrationUse
     }
 
     fun validateName(name: String, acceptsEmpty: Boolean = true) {
-        if(!acceptsEmpty && name.isBlank()) {
-            _uiState.value = _uiState.value.copy(nameError = getEmptyFieldErrorText())
-        } else if (name.isNotEmpty() && !name.matches(NAME_REGEX.toRegex())) {
-            _uiState.value = _uiState.value.copy(nameError = getNameErrorText())
-        } else {
-            _uiState.value = _uiState.value.copy(nameError = null)
-        }
+        _uiState.value = _uiState.value.copy(nameError = getFieldErrorText(name, getNameErrorText(), acceptsEmpty, name.matches(NAME_REGEX.toRegex())))
     }
 
     fun validateLastName(lastName: String, acceptsEmpty: Boolean = true) {
-        if(!acceptsEmpty && lastName.isBlank()) {
-            _uiState.value = _uiState.value.copy(lastNameError = getEmptyFieldErrorText())
-        } else if (lastName.isNotEmpty() && !lastName.matches(NAME_REGEX.toRegex())) {
-            _uiState.value = _uiState.value.copy(lastNameError = getLastNameErrorText())
-        } else {
-            _uiState.value = _uiState.value.copy(lastNameError = null)
-        }
+        _uiState.value = _uiState.value.copy(lastNameError = getFieldErrorText(lastName, getLastNameErrorText(), acceptsEmpty, lastName.matches(NAME_REGEX.toRegex())))
     }
 
     fun validateEmail(email: String, acceptsEmpty: Boolean = true) {
-        if(!acceptsEmpty && email.isBlank()) {
-            _uiState.value = _uiState.value.copy(emailError = getEmptyFieldErrorText())
-        } else if (email.isNotEmpty() && !email.matches(EMAIL_REGEX.toRegex())) {
-            _uiState.value = _uiState.value.copy(emailError = getEmailErrorText())
-        } else {
-            _uiState.value = _uiState.value.copy(emailError = null)
-        }
+        _uiState.value = _uiState.value.copy(emailError = getFieldErrorText(email, getEmailErrorText(), acceptsEmpty, email.matches(EMAIL_REGEX.toRegex())))
     }
 
     fun validatePass(pass: String, acceptsEmpty: Boolean = true) {
-        if(!acceptsEmpty && pass.isBlank()) {
-            _uiState.value = _uiState.value.copy(passwordError = getEmptyFieldErrorText())
-        } else if (pass.isNotEmpty() && !pass.matches(PASSWORD_REGEX.toRegex())) {
-            _uiState.value = _uiState.value.copy(passwordError = getPasswordErrorText())
-        } else {
-            _uiState.value = _uiState.value.copy(passwordError = null)
-        }
+        _uiState.value = _uiState.value.copy(passwordError = getFieldErrorText(pass, getPasswordErrorText(), acceptsEmpty, pass.matches(PASSWORD_REGEX.toRegex())))
     }
 
     fun validateRepeatedPass(pass: String, repeatedPass: String, acceptsEmpty: Boolean = true) {
-        if(!acceptsEmpty && repeatedPass.isBlank()) {
-            _uiState.value = _uiState.value.copy(repeatPasswordError = getEmptyFieldErrorText())
-        } else if (repeatedPass.isNotEmpty() && pass != repeatedPass) {
-            _uiState.value = _uiState.value.copy(repeatPasswordError = getRepeatPasswordErrorText())
-        } else {
-            _uiState.value = _uiState.value.copy(repeatPasswordError = null)
+        _uiState.value = _uiState.value.copy(repeatPasswordError = getFieldErrorText(repeatedPass, getRepeatPasswordErrorText(), acceptsEmpty, pass == repeatedPass))
+    }
+
+    private fun getFieldErrorText(
+        value: String,
+        errorTextProvider: String,
+        acceptsEmpty: Boolean,
+        nonEmptyCondition: Boolean
+    ): String? {
+        val isBlank = value.isBlank()
+        val isValid = value.isEmpty() || nonEmptyCondition
+
+        return when {
+            !acceptsEmpty && isBlank -> getEmptyFieldErrorText()
+            !isValid -> errorTextProvider
+            else -> null
         }
     }
 
