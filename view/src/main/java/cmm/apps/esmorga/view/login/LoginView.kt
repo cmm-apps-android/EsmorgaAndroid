@@ -1,8 +1,11 @@
 package cmm.apps.esmorga.view.login
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -18,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.layout.ContentScale
@@ -39,7 +43,13 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun LoginScreen(lvm: LoginViewModel = koinViewModel(), onRegisterClicked: () -> Unit, onLoginSuccess: () -> Unit, onLoginError: (EsmorgaErrorScreenArguments) -> Unit) {
+fun LoginScreen(
+    lvm: LoginViewModel = koinViewModel(),
+    onRegisterClicked: () -> Unit,
+    onLoginSuccess: () -> Unit,
+    onLoginError: (EsmorgaErrorScreenArguments) -> Unit,
+    onBackClicked: () -> Unit
+) {
     val uiState: LoginUiState by lvm.uiState.collectAsStateWithLifecycle()
     val message = stringResource(R.string.no_internet_snackbar)
     val snackbarHostState = remember { SnackbarHostState() }
@@ -59,8 +69,11 @@ fun LoginScreen(lvm: LoginViewModel = koinViewModel(), onRegisterClicked: () -> 
         LoginView(
             uiState = uiState,
             snackbarHostState = snackbarHostState,
+            onBackClicked = onBackClicked,
             onLoginClicked = { email, password -> lvm.onLoginClicked(email, password) },
             onRegisterClicked = { lvm.onRegisterClicked() },
+            onEmailChanged = { lvm.onEmailChanged() },
+            onPassChanged = { lvm.onPassChanged() },
             validateEmail = { email -> lvm.validateEmail(email) },
             validatePass = { password -> lvm.validatePass(password) }
         )
@@ -71,15 +84,37 @@ fun LoginScreen(lvm: LoginViewModel = koinViewModel(), onRegisterClicked: () -> 
 fun LoginView(
     uiState: LoginUiState,
     snackbarHostState: SnackbarHostState,
+    onBackClicked: () -> Unit,
     onLoginClicked: (String, String) -> Unit,
     onRegisterClicked: () -> Unit,
+    onEmailChanged: () -> Unit,
+    onPassChanged: () -> Unit,
     validateEmail: (String) -> Unit,
     validatePass: (String) -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) }
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        topBar = {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        top = 16.dp,
+                        bottom = 16.dp,
+                        start = 16.dp,
+                        end = 8.dp
+                    )
+                    .height(48.dp)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_arrow_back),
+                    contentDescription = stringResource(R.string.back_icon_description),
+                    modifier = Modifier.align(Alignment.CenterStart).clickable { onBackClicked() }
+                )
+            }
+        }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -89,7 +124,7 @@ fun LoginView(
             Image(
                 painter = painterResource(id = R.drawable.img_login_header),
                 contentDescription = "Login header",
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().fillMaxHeight(0.3f),
                 contentScale = ContentScale.FillWidth
             )
             Column(
@@ -108,6 +143,7 @@ fun LoginView(
                     isEnabled = !uiState.loading,
                     onValueChange = {
                         email = it
+                        onEmailChanged()
                     },
                     errorText = uiState.emailError,
                     placeholder = R.string.login_screen_email,
@@ -123,6 +159,7 @@ fun LoginView(
                     isEnabled = !uiState.loading,
                     onValueChange = {
                         password = it
+                        onPassChanged()
                     },
                     errorText = uiState.passwordError,
                     isPassword = true,

@@ -73,6 +73,9 @@ class MainActivity : ComponentActivity() {
                 },
                 onLoginError = { esmorgaFullScreenArguments ->
                     navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = esmorgaFullScreenArguments))
+                },
+                onBackClicked = {
+                    navigationController.popBackStack()
                 })
         }
         composable<Navigation.RegistrationScreen> {

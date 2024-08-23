@@ -29,8 +29,8 @@ private val DarkColorScheme = darkColorScheme(
     background = DarkLavender,
     surface = DarkLavender,
     surfaceVariant = DarkPearl,
-    surfaceContainerLow = DarkWhiteSmoke,
-    surfaceContainerLowest = DarkestWhite,
+    surfaceContainerLow = NightRider,
+    surfaceContainerLowest = VeryDarkGrey,
     onSurfaceVariant = LightSepia,
     onSurface = VeryLightGrey
 )

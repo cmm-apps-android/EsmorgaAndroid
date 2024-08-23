@@ -60,5 +60,25 @@ class LoginViewModelTest {
         }
     }
 
+    @Test
+    fun `given a ui state with a email error when email text changes error is hidden`() = runTest {
+        val useCase = mockk<PerformLoginUseCase>(relaxed = true)
+        val sut = LoginViewModel(useCase)
+        sut.validateEmail("wrongEmail")
+        Assert.assertFalse(sut.uiState.value.emailError.isNullOrEmpty())
 
+        sut.onEmailChanged()
+        Assert.assertTrue(sut.uiState.value.emailError.isNullOrEmpty())
+    }
+
+    @Test
+    fun `given a ui state with a password error when password text changes error is hidden`() = runTest {
+        val useCase = mockk<PerformLoginUseCase>(relaxed = true)
+        val sut = LoginViewModel(useCase)
+        sut.validatePass("wrongpass")
+        Assert.assertFalse(sut.uiState.value.passwordError.isNullOrEmpty())
+
+        sut.onPassChanged()
+        Assert.assertTrue(sut.uiState.value.passwordError.isNullOrEmpty())
+    }
 }

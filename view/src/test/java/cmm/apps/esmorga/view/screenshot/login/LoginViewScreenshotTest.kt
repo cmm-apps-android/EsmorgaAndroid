@@ -34,8 +34,11 @@ class LoginViewScreenshotTest : BaseScreenshotTest() {
                         passwordError = passwordError
                     ),
                     snackbarHostState = SnackbarHostState(),
+                    onBackClicked = { },
                     onLoginClicked = { _, _ -> },
                     onRegisterClicked = { },
+                    onEmailChanged = { },
+                    onPassChanged = { },
                     validateEmail = { },
                     validatePass = { }
                 )
