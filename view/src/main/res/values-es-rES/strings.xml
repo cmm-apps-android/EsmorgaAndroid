@@ -37,4 +37,5 @@
     <string name="registration_email_already_used">Email ya ha sido usado</string>
     <string name="registration_password_invalid">Mínimo 8 caracteres, debe incluir al menos 1 dígito, 1 letra y 1 símbolo</string>
     <string name="registration_password_mismatch_error">¡Las contraseñas no coinciden, inténtalo de nuevo!</string>
+    <string name="back_icon_description">Icon atrás</string>
 </resources>

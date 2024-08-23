@@ -35,17 +35,14 @@ class RegistrationViewScreenshotTest : BaseScreenshotTest() {
                         nameError = nameError,
                         lastNameError = lastNameError,
                         emailError = emailError,
-                        passwordError = passwordError,
-                        repeatPasswordError = repeatPasswordError
+                        passError = passwordError,
+                        repeatPassError = repeatPasswordError
                     ),
                     snackbarHostState = SnackbarHostState(),
                     onBackClicked = {},
                     onRegisterClicked = { _, _, _, _, _ -> },
-                    validateName = {},
-                    validateLastName = {},
-                    validateEmail = {},
-                    validatePass = {},
-                    validateRepeatedPass = { _, _ -> },
+                    validateField = { _ , _ , _ -> },
+                    onFieldChanged = { _ -> }
                 )
             }
         }

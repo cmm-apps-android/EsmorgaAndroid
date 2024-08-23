@@ -9,8 +9,7 @@ import cmm.apps.esmorga.domain.user.model.User.Companion.EMAIL_REGEX
 import cmm.apps.esmorga.domain.user.model.User.Companion.PASSWORD_REGEX
 import cmm.apps.esmorga.view.login.model.LoginEffect
 import cmm.apps.esmorga.view.login.model.LoginUiState
-import cmm.apps.esmorga.view.login.model.LoginViewHelper.getEmailErrorText
-import cmm.apps.esmorga.view.login.model.LoginViewHelper.getPasswordErrorText
+import cmm.apps.esmorga.view.login.model.LoginViewHelper
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,12 +27,12 @@ class LoginViewModel(private val performLoginUseCase: PerformLoginUseCase) : Vie
     val effect: SharedFlow<LoginEffect> = _effect.asSharedFlow()
 
     fun onLoginClicked(email: String, password: String) {
-        validateEmail(email)
-        validatePass(password)
+        validateEmail(email, false)
+        validatePass(password, false)
         if (!_uiState.value.hasAnyError()) {
             viewModelScope.launch {
                 _uiState.value = LoginUiState(loading = true)
-                val result = performLoginUseCase(email, password)
+                val result = performLoginUseCase(email.trim(), password.trim())
                 result.onSuccess {
                     _effect.tryEmit(LoginEffect.NavigateToEventList)
                 }.onFailure { error ->
@@ -52,19 +51,35 @@ class LoginViewModel(private val performLoginUseCase: PerformLoginUseCase) : Vie
         _effect.tryEmit(LoginEffect.NavigateToRegistration)
     }
 
-    fun validateEmail(email: String) {
-        if (!email.matches(EMAIL_REGEX.toRegex()) && email.isNotEmpty()) {
-            _uiState.value = _uiState.value.copy(emailError = getEmailErrorText())
-        } else {
-            _uiState.value = _uiState.value.copy(emailError = null)
+    fun validateEmail(email: String, acceptsEmpty: Boolean = true) {
+        _uiState.value = _uiState.value.copy(emailError = getFieldErrorText(email, LoginViewHelper.getEmailErrorText(), acceptsEmpty, email.matches(EMAIL_REGEX.toRegex())))
+    }
+
+    fun validatePass(pass: String, acceptsEmpty: Boolean = true) {
+        _uiState.value =
+            _uiState.value.copy(passwordError = getFieldErrorText(pass, LoginViewHelper.getPasswordErrorText(), acceptsEmpty, pass.matches(PASSWORD_REGEX.toRegex())))
+    }
+
+    private fun getFieldErrorText(
+        value: String,
+        errorTextProvider: String,
+        acceptsEmpty: Boolean,
+        nonEmptyCondition: Boolean
+    ): String? {
+        val isBlank = value.isBlank()
+        val isValid = value.isEmpty() || nonEmptyCondition
+
+        return when {
+            (!acceptsEmpty && isBlank) || !isValid -> errorTextProvider
+            else -> null
         }
     }
 
-    fun validatePass(pass: String) {
-        if (!pass.matches(PASSWORD_REGEX.toRegex()) && pass.isNotEmpty()) {
-            _uiState.value = _uiState.value.copy(passwordError = getPasswordErrorText())
-        } else {
-            _uiState.value = _uiState.value.copy(passwordError = null)
-        }
+    fun onEmailChanged() {
+        _uiState.value = _uiState.value.copy(emailError = null)
+    }
+
+    fun onPassChanged() {
+        _uiState.value = _uiState.value.copy(passwordError = null)
     }
 }

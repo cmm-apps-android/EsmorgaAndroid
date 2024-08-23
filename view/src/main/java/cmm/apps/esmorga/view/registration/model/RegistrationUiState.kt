@@ -13,10 +13,10 @@ data class RegistrationUiState(
     val nameError: String? = null,
     val lastNameError: String? = null,
     val emailError: String? = null,
-    val passwordError: String? = null,
-    val repeatPasswordError: String? = null
+    val passError: String? = null,
+    val repeatPassError: String? = null
 ) {
-    fun hasAnyError() = nameError != null || lastNameError != null || emailError != null || passwordError != null || repeatPasswordError != null
+    fun hasAnyError() = nameError != null || lastNameError != null || emailError != null || passError != null || repeatPassError != null
 }
 
 sealed class RegistrationEffect {

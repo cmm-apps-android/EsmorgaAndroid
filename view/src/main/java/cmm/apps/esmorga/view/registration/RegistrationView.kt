@@ -68,11 +68,8 @@ fun RegistrationScreen(
             snackbarHostState = snackbarHostState,
             onBackClicked = onBackClicked,
             onRegisterClicked = { name, lastName, email, password, repeatedPassword -> rvm.onRegisterClicked(name, lastName, email, password, repeatedPassword) },
-            validateName = { name -> rvm.validateName(name) },
-            validateLastName = { lastName -> rvm.validateLastName(lastName) },
-            validateEmail = { email -> rvm.validateEmail(email) },
-            validatePass = { password -> rvm.validatePass(password) },
-            validateRepeatedPass = { password, repeatedPassword -> rvm.validateRepeatedPass(password, repeatedPassword) }
+            validateField = { field, value, comparisonValue -> rvm.validateField(field, value, comparisonValue) },
+            onFieldChanged = { field -> rvm.onFieldChanged(field) }
         )
     }
 }
@@ -83,11 +80,8 @@ fun RegistrationView(
     snackbarHostState: SnackbarHostState,
     onBackClicked: () -> Unit,
     onRegisterClicked: (String, String, String, String, String) -> Unit,
-    validateName: (String) -> Unit,
-    validateLastName: (String) -> Unit,
-    validateEmail: (String) -> Unit,
-    validatePass: (String) -> Unit,
-    validateRepeatedPass: (String, String) -> Unit
+    validateField: (RegistrationField, String, String?) -> Unit,
+    onFieldChanged: (RegistrationField) -> Unit
 ) {
     var name by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
@@ -110,7 +104,7 @@ fun RegistrationView(
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_arrow_back),
-                    contentDescription = stringResource(R.string.event_list_error_title),
+                    contentDescription = stringResource(R.string.back_icon_description),
                     modifier = Modifier.align(Alignment.CenterStart).clickable { onBackClicked() }
                 )
             }
@@ -138,12 +132,13 @@ fun RegistrationView(
                 isEnabled = !uiState.loading,
                 onValueChange = {
                     name = it
+                    onFieldChanged(RegistrationField.NAME)
                 },
                 errorText = uiState.nameError,
                 placeholder = R.string.registration_name_placeholder,
                 modifier = Modifier.onFocusChanged { focusState ->
                     if (!focusState.isFocused) {
-                        validateName(name)
+                        validateField(RegistrationField.NAME, name, null)
                     }
                 },
                 imeAction = ImeAction.Next
@@ -153,12 +148,13 @@ fun RegistrationView(
                 isEnabled = !uiState.loading,
                 onValueChange = {
                     lastName = it
+                    onFieldChanged(RegistrationField.LAST_NAME)
                 },
                 errorText = uiState.lastNameError,
                 placeholder = R.string.registration_last_name_placeholder,
                 modifier = Modifier.onFocusChanged { focusState ->
                     if (!focusState.isFocused) {
-                        validateLastName(lastName)
+                        validateField(RegistrationField.LAST_NAME, lastName, null)
                     }
                 },
                 imeAction = ImeAction.Next
@@ -168,12 +164,13 @@ fun RegistrationView(
                 isEnabled = !uiState.loading,
                 onValueChange = {
                     email = it
+                    onFieldChanged(RegistrationField.EMAIL)
                 },
                 errorText = uiState.emailError,
                 placeholder = R.string.registration_email_placeholder,
                 modifier = Modifier.onFocusChanged { focusState ->
                     if (!focusState.isFocused) {
-                        validateEmail(email)
+                        validateField(RegistrationField.EMAIL, email, null)
                     }
                 },
                 imeAction = ImeAction.Next
@@ -183,13 +180,14 @@ fun RegistrationView(
                 isEnabled = !uiState.loading,
                 onValueChange = {
                     password = it
+                    onFieldChanged(RegistrationField.PASS)
                 },
-                errorText = uiState.passwordError,
+                errorText = uiState.passError,
                 isPassword = true,
                 placeholder = R.string.registration_password_placeholder,
                 modifier = Modifier.onFocusChanged { focusState ->
                     if (!focusState.isFocused) {
-                        validatePass(password)
+                        validateField(RegistrationField.PASS, password, null)
                     }
                 },
                 imeAction = ImeAction.Next
@@ -199,13 +197,14 @@ fun RegistrationView(
                 isEnabled = !uiState.loading,
                 onValueChange = {
                     repeatedPassword = it
+                    onFieldChanged(RegistrationField.REPEAT_PASS)
                 },
-                errorText = uiState.repeatPasswordError,
+                errorText = uiState.repeatPassError,
                 isPassword = true,
                 placeholder = R.string.registration_confirm_password_placeholder,
                 modifier = Modifier.onFocusChanged { focusState ->
                     if (!focusState.isFocused) {
-                        validateRepeatedPass(password, repeatedPassword)
+                        validateField(RegistrationField.REPEAT_PASS, password, repeatedPassword)
                     }
                 },
                 imeAction = ImeAction.Done,

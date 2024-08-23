@@ -6,6 +6,7 @@ import app.cash.turbine.test
 import cmm.apps.esmorga.domain.result.Success
 import cmm.apps.esmorga.domain.user.PerformRegistrationUserCase
 import cmm.apps.esmorga.view.R
+import cmm.apps.esmorga.view.registration.RegistrationField
 import cmm.apps.esmorga.view.registration.RegistrationViewModel
 import cmm.apps.esmorga.view.registration.model.RegistrationEffect
 import cmm.apps.esmorga.view.viewmodel.mock.LoginViewMock
@@ -74,8 +75,8 @@ class RegistrationViewModelTest : KoinTest {
         Assert.assertEquals(mockContext.getString(R.string.registration_empty_field), state.nameError)
         Assert.assertEquals(mockContext.getString(R.string.registration_empty_field), state.lastNameError)
         Assert.assertEquals(mockContext.getString(R.string.registration_empty_field), state.emailError)
-        Assert.assertEquals(mockContext.getString(R.string.registration_empty_field), state.passwordError)
-        Assert.assertEquals(mockContext.getString(R.string.registration_empty_field), state.repeatPasswordError)
+        Assert.assertEquals(mockContext.getString(R.string.registration_empty_field), state.passError)
+        Assert.assertEquals(mockContext.getString(R.string.registration_empty_field), state.repeatPassError)
     }
 
     @Test
@@ -127,7 +128,7 @@ class RegistrationViewModelTest : KoinTest {
         sut.onRegisterClicked(user.name, user.lastName, user.email, "test", "test")
 
         val state = sut.uiState.value
-        Assert.assertEquals(mockContext.getString(R.string.registration_password_invalid), state.passwordError)
+        Assert.assertEquals(mockContext.getString(R.string.registration_password_invalid), state.passError)
     }
 
     @Test
@@ -140,7 +141,62 @@ class RegistrationViewModelTest : KoinTest {
         sut.onRegisterClicked(user.name, user.lastName, user.email, "Test@123", "test")
 
         val state = sut.uiState.value
-        Assert.assertEquals(mockContext.getString(R.string.registration_password_mismatch_error), state.repeatPasswordError)
+        Assert.assertEquals(mockContext.getString(R.string.registration_password_mismatch_error), state.repeatPassError)
+    }
+
+    @Test
+    fun `given a ui state with a name error when name text changes error is hidden`() = runTest {
+        val useCase = mockk<PerformRegistrationUserCase>(relaxed = true)
+        val sut = RegistrationViewModel(useCase)
+        sut.validateField(RegistrationField.NAME, "wrongname!")
+        Assert.assertFalse(sut.uiState.value.nameError.isNullOrEmpty())
+
+        sut.onFieldChanged(RegistrationField.NAME)
+        Assert.assertTrue(sut.uiState.value.nameError.isNullOrEmpty())
+    }
+
+    @Test
+    fun `given a ui state with a last name error when last name text changes error is hidden`() = runTest {
+        val useCase = mockk<PerformRegistrationUserCase>(relaxed = true)
+        val sut = RegistrationViewModel(useCase)
+        sut.validateField(RegistrationField.LAST_NAME, "wrongLastName!")
+        Assert.assertFalse(sut.uiState.value.lastNameError.isNullOrEmpty())
+
+        sut.onFieldChanged(RegistrationField.LAST_NAME)
+        Assert.assertTrue(sut.uiState.value.lastNameError.isNullOrEmpty())
+    }
+
+    @Test
+    fun `given a ui state with a email error when email text changes error is hidden`() = runTest {
+        val useCase = mockk<PerformRegistrationUserCase>(relaxed = true)
+        val sut = RegistrationViewModel(useCase)
+        sut.validateField(RegistrationField.EMAIL, "wrongemail")
+        Assert.assertFalse(sut.uiState.value.emailError.isNullOrEmpty())
+
+        sut.onFieldChanged(RegistrationField.EMAIL)
+        Assert.assertTrue(sut.uiState.value.emailError.isNullOrEmpty())
+    }
+
+    @Test
+    fun `given a ui state with a password error when password text changes error is hidden`() = runTest {
+        val useCase = mockk<PerformRegistrationUserCase>(relaxed = true)
+        val sut = RegistrationViewModel(useCase)
+        sut.validateField(RegistrationField.PASS, "wrongpass")
+        Assert.assertFalse(sut.uiState.value.passError.isNullOrEmpty())
+
+        sut.onFieldChanged(RegistrationField.PASS)
+        Assert.assertTrue(sut.uiState.value.passError.isNullOrEmpty())
+    }
+
+    @Test
+    fun `given a ui state with a repeated password error when repeated password text changes error is hidden`() = runTest {
+        val useCase = mockk<PerformRegistrationUserCase>(relaxed = true)
+        val sut = RegistrationViewModel(useCase)
+        sut.validateField(RegistrationField.REPEAT_PASS, "wrongpass", "normalPass")
+        Assert.assertFalse(sut.uiState.value.repeatPassError.isNullOrEmpty())
+
+        sut.onFieldChanged(RegistrationField.REPEAT_PASS)
+        Assert.assertTrue(sut.uiState.value.repeatPassError.isNullOrEmpty())
     }
 
 }
