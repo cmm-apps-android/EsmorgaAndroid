@@ -83,10 +83,9 @@ class RegistrationViewModelComponentTest : KoinTest {
         coEvery { remoteDatasource.register(any(), any(), any(), any()) } returns UserDataMock.provideUserDataModel()
         startDI()
 
-        val app = mockk<Application>(relaxed = true)
         val useCase: PerformRegistrationUserCase by inject()
 
-        val sut = RegistrationViewModel(app, useCase)
+        val sut = RegistrationViewModel(useCase)
 
         sut.effect.test {
             sut.onRegisterClicked("User", "test", "test@test.com", "Test@123", "Test@123")

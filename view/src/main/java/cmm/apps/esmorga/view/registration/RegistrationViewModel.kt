@@ -1,7 +1,6 @@
 package cmm.apps.esmorga.view.registration
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
@@ -28,7 +27,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 
-class RegistrationViewModel(app: Application, private val performRegistrationUserCase: PerformRegistrationUserCase) : AndroidViewModel(app) {
+class RegistrationViewModel(private val performRegistrationUserCase: PerformRegistrationUserCase) : ViewModel() {
 
     private val _uiState = MutableStateFlow(RegistrationUiState())
     val uiState: StateFlow<RegistrationUiState> = _uiState.asStateFlow()

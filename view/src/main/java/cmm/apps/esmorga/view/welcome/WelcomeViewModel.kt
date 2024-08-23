@@ -1,7 +1,6 @@
 package cmm.apps.esmorga.view.welcome
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import cmm.apps.esmorga.view.welcome.model.WelcomeEffect
 import cmm.apps.esmorga.view.welcome.model.WelcomeUiState
 import kotlinx.coroutines.channels.BufferOverflow
@@ -12,9 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class WelcomeViewModel(
-    app: Application,
-) : AndroidViewModel(app) {
+class WelcomeViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(WelcomeUiState().createDefaultWelcomeUiState())
     val uiState: StateFlow<WelcomeUiState> = _uiState.asStateFlow()

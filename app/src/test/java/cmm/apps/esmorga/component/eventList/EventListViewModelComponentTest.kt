@@ -82,10 +82,9 @@ class EventListViewModelComponentTest : KoinTest {
         coEvery { remoteDatasource.getEvents() } returns EventDataMock.provideEventDataModelList(listOf(remoteEventName))
         startDI()
 
-        val app = mockk<Application>(relaxed = true)
         val useCase: GetEventListUseCase by inject()
 
-        val sut = EventListViewModel(app, useCase)
+        val sut = EventListViewModel(useCase)
 
         sut.loadEvents()
 

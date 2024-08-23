@@ -1,6 +1,5 @@
 package cmm.apps.esmorga.view.viewmodel.eventdetails
 
-import android.app.Application
 import cmm.apps.esmorga.domain.event.GetEventDetailsUseCase
 import cmm.apps.esmorga.domain.result.Success
 import cmm.apps.esmorga.view.eventdetails.EventDetailsViewModel
@@ -22,11 +21,10 @@ class EventDetailsViewModelTest {
     fun `given a successful usecase when get event by id is called usecase executed and UI state containing event is emitted`() = runTest {
         val domainEventName = "DomainEvent"
 
-        val app = mockk<Application>(relaxed = true)
         val useCase = mockk<GetEventDetailsUseCase>(relaxed = true)
         coEvery { useCase(any()) } returns Result.success(Success(EventViewMock.provideEvent(domainEventName)))
 
-        val sut = EventDetailsViewModel(app, useCase, "eventId")
+        val sut = EventDetailsViewModel(useCase, "eventId")
 
         val uiState = sut.uiState.value
         Assert.assertEquals(domainEventName, uiState.title)
