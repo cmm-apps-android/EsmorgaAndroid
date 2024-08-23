@@ -1,6 +1,5 @@
 package cmm.apps.esmorga.view.viewmodel.registration
 
-import android.app.Application
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import app.cash.turbine.test
@@ -50,11 +49,10 @@ class RegistrationViewModelTest : KoinTest {
     @Test
     fun `given a successful usecase when register method is called then usecase executed and UI effect for successful register is emitted`() = runTest {
         val user = LoginViewMock.provideUser()
-        val app = mockk<Application>(relaxed = true)
         val useCase = mockk<PerformRegistrationUserCase>(relaxed = true)
         coEvery { useCase(any(), any(), any(), any()) } returns Result.success(Success(user))
 
-        val sut = RegistrationViewModel(app, useCase)
+        val sut = RegistrationViewModel(useCase)
 
         sut.effect.test {
             sut.onRegisterClicked(user.name, user.lastName, user.email, "Test@123", "Test@123")
@@ -66,11 +64,10 @@ class RegistrationViewModelTest : KoinTest {
 
     @Test
     fun `given invalid fields inputted when register method is called then ui shows errors in all fields`() = runTest {
-        val app = mockk<Application>(relaxed = true)
         val useCase = mockk<PerformRegistrationUserCase>(relaxed = true)
         coEvery { useCase(any(), any(), any(), any()) } returns Result.success(Success(LoginViewMock.provideUser()))
 
-        val sut = RegistrationViewModel(app, useCase)
+        val sut = RegistrationViewModel(useCase)
         sut.onRegisterClicked("", "", "", "", "")
 
         val state = sut.uiState.value
@@ -84,11 +81,10 @@ class RegistrationViewModelTest : KoinTest {
     @Test
     fun `given an invalid name inputted when register method is called then ui shows name error`() = runTest {
         val user = LoginViewMock.provideUser()
-        val app = mockk<Application>(relaxed = true)
         val useCase = mockk<PerformRegistrationUserCase>(relaxed = true)
         coEvery { useCase(any(), any(), any(), any()) } returns Result.success(Success(user))
 
-        val sut = RegistrationViewModel(app, useCase)
+        val sut = RegistrationViewModel(useCase)
         sut.onRegisterClicked("Invalid!", user.lastName, user.email, "Test@123", "Test@123")
 
         val state = sut.uiState.value
@@ -98,11 +94,10 @@ class RegistrationViewModelTest : KoinTest {
     @Test
     fun `given an invalid last name inputted when register method is called then ui shows last name error`() = runTest {
         val user = LoginViewMock.provideUser()
-        val app = mockk<Application>(relaxed = true)
         val useCase = mockk<PerformRegistrationUserCase>(relaxed = true)
         coEvery { useCase(any(), any(), any(), any()) } returns Result.success(Success(user))
 
-        val sut = RegistrationViewModel(app, useCase)
+        val sut = RegistrationViewModel(useCase)
         sut.onRegisterClicked(user.name, "Invalid!", user.email, "Test@123", "Test@123")
 
         val state = sut.uiState.value
@@ -112,11 +107,10 @@ class RegistrationViewModelTest : KoinTest {
     @Test
     fun `given an invalid email inputted when register method is called then ui shows email error`() = runTest {
         val user = LoginViewMock.provideUser()
-        val app = mockk<Application>(relaxed = true)
         val useCase = mockk<PerformRegistrationUserCase>(relaxed = true)
         coEvery { useCase(any(), any(), any(), any()) } returns Result.success(Success(user))
 
-        val sut = RegistrationViewModel(app, useCase)
+        val sut = RegistrationViewModel(useCase)
         sut.onRegisterClicked(user.name, user.lastName, "Invalid", "Test@123", "Test@123")
 
         val state = sut.uiState.value
@@ -126,11 +120,10 @@ class RegistrationViewModelTest : KoinTest {
     @Test
     fun `given an invalid password inputted when register method is called then ui shows password error`() = runTest {
         val user = LoginViewMock.provideUser()
-        val app = mockk<Application>(relaxed = true)
         val useCase = mockk<PerformRegistrationUserCase>(relaxed = true)
         coEvery { useCase(any(), any(), any(), any()) } returns Result.success(Success(user))
 
-        val sut = RegistrationViewModel(app, useCase)
+        val sut = RegistrationViewModel(useCase)
         sut.onRegisterClicked(user.name, user.lastName, user.email, "test", "test")
 
         val state = sut.uiState.value
@@ -140,11 +133,10 @@ class RegistrationViewModelTest : KoinTest {
     @Test
     fun `given an invalid repeated password inputted when register method is called then ui shows repeated password error`() = runTest {
         val user = LoginViewMock.provideUser()
-        val app = mockk<Application>(relaxed = true)
         val useCase = mockk<PerformRegistrationUserCase>(relaxed = true)
         coEvery { useCase(any(), any(), any(), any()) } returns Result.success(Success(user))
 
-        val sut = RegistrationViewModel(app, useCase)
+        val sut = RegistrationViewModel(useCase)
         sut.onRegisterClicked(user.name, user.lastName, user.email, "Test@123", "test")
 
         val state = sut.uiState.value

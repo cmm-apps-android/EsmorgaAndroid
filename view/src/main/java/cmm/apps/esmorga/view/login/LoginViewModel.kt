@@ -1,7 +1,6 @@
 package cmm.apps.esmorga.view.login
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
@@ -21,7 +20,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class LoginViewModel(app: Application, private val performLoginUseCase: PerformLoginUseCase) : AndroidViewModel(app) {
+class LoginViewModel(private val performLoginUseCase: PerformLoginUseCase) : ViewModel() {
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 

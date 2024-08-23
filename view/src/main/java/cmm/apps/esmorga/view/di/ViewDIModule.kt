@@ -13,19 +13,19 @@ object ViewDIModule {
 
     val module = module {
         viewModel {
-            EventListViewModel(get(), get())
+            EventListViewModel(get())
         }
         viewModel { (eventId: String) ->
-            EventDetailsViewModel(get(), get(), eventId)
+            EventDetailsViewModel(get(), eventId)
         }
         viewModel {
-            WelcomeViewModel(get())
+            WelcomeViewModel()
         }
         viewModel {
-            LoginViewModel(get(), get())
+            LoginViewModel(get())
         }
         viewModel {
-            RegistrationViewModel(get(), get())
+            RegistrationViewModel(get())
         }
     }
 }

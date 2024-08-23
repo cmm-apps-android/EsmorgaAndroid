@@ -1,7 +1,6 @@
 package cmm.apps.esmorga.view.eventlist
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cmm.apps.esmorga.domain.event.GetEventListUseCase
 import cmm.apps.esmorga.domain.result.ErrorCodes
@@ -18,7 +17,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class EventListViewModel(app: Application, private val getEventListUseCase: GetEventListUseCase) : AndroidViewModel(app) {
+class EventListViewModel(private val getEventListUseCase: GetEventListUseCase) : ViewModel() {
 
     private val _uiState = MutableStateFlow(EventListUiState())
     val uiState: StateFlow<EventListUiState> = _uiState.asStateFlow()

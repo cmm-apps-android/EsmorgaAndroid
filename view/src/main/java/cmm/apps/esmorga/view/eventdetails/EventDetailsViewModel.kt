@@ -1,7 +1,6 @@
 package cmm.apps.esmorga.view.eventdetails
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cmm.apps.esmorga.domain.event.GetEventDetailsUseCase
 import cmm.apps.esmorga.view.eventdetails.mapper.EventDetailsUiMapper.toEventUiDetails
@@ -17,10 +16,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class EventDetailsViewModel(
-    app: Application,
     private val getEventDetailsUseCase: GetEventDetailsUseCase,
     private val eventId: String
-) : AndroidViewModel(app) {
+) : ViewModel() {
     private val _uiState = MutableStateFlow(EventDetailsUiState())
     val uiState: StateFlow<EventDetailsUiState> = _uiState.asStateFlow()
 
