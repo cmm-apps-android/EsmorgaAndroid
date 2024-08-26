@@ -8,13 +8,12 @@
     </queries>
     <application
         android:allowBackup="true"
-        android:theme="@style/Theme.EsmorgaView"
+        android:theme="@style/Theme.EsmorgaView.Starting"
         tools:targetApi="31">
         <activity
             android:name="cmm.apps.esmorga.view.MainActivity"
             android:exported="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.EsmorgaView">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
