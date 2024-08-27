@@ -2,4 +2,11 @@
 <resources>
 
     <style name="Theme.EsmorgaView" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.EsmorgaView.Starting" parent="Theme.SplashScreen.IconBackground">
+        <item name="windowSplashScreenBackground">@color/splash_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_logo</item>
+        <item name="postSplashScreenTheme">@style/Theme.EsmorgaView</item>
+        <item name="windowSplashScreenIconBackgroundColor">@android:color/white</item>
+    </style>
 </resources>

@@ -14,7 +14,7 @@ class WelcomeViewScreenshotTest : BaseScreenshotTest() {
         val uiState = WelcomeUiState(
             primaryButtonText = "Primary",
             secondaryButtonText = "Secondary",
-            icon = R.drawable.ic_app
+            icon = R.drawable.ic_logo
         )
 
         snapshotWithState(uiState)

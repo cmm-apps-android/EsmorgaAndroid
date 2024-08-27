@@ -6,14 +6,18 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -60,8 +64,11 @@ fun WelcomeView(uiState: WelcomeUiState, onPrimaryButtonClicked: () -> Unit, onS
             Image(
                 painter = painterResource(id = uiState.icon), contentDescription = "App logo",
                 modifier = Modifier
+                    .fillMaxWidth(0.3f)
                     .aspectRatio(1f)
+                    .clip(RoundedCornerShape(32.dp))
             )
+            Spacer(modifier = Modifier.height(32.dp))
             EsmorgaButton(text = uiState.primaryButtonText) {
                 onPrimaryButtonClicked()
             }
