@@ -4,6 +4,7 @@ import cmm.apps.esmorga.datasource_local.database.dao.UserDao
 import cmm.apps.esmorga.datasource_local.mock.UserLocalMock
 import cmm.apps.esmorga.datasource_local.user.mapper.toUserDataModel
 import cmm.apps.esmorga.datasource_local.user.model.UserLocalModel
+import cmm.apps.esmorga.domain.result.EsmorgaException
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.slot
@@ -19,7 +20,7 @@ class UserLocalDatasourceImplTest {
         val userSlot = slot<UserLocalModel>()
         val dao = mockk<UserDao>()
         coEvery { dao.getUser() } coAnswers {
-            fakeStorage ?: throw Exception("User not found")
+            fakeStorage
         }
         coEvery { dao.insertUser(capture(userSlot)) } coAnswers {
             fakeStorage = userSlot.captured
@@ -83,5 +84,10 @@ class UserLocalDatasourceImplTest {
         Assert.assertEquals(localUserName, result.dataName)
     }
 
+    @Test(expected = EsmorgaException::class)
+    fun `given an empty storage when is requested then correct error is returned`() = runTest {
+        val sut = UserLocalDatasourceImpl(provideFakeDao())
+        sut.getUser()
+    }
 
 }

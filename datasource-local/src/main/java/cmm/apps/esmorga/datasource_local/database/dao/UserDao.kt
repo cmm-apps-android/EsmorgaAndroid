@@ -12,7 +12,7 @@ interface UserDao {
     suspend fun insertUser(user: UserLocalModel)
 
     @Query("SELECT * FROM UserLocalModel")
-    suspend fun getUser(): UserLocalModel
+    suspend fun getUser(): UserLocalModel?
 
     @Query("DELETE FROM UserLocalModel")
     suspend fun deleteUser()

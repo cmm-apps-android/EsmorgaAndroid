@@ -40,32 +40,12 @@ class MainActivity : ComponentActivity() {
 
         var uiState: MainUiState by mutableStateOf(MainUiState())
         lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                mvm.uiState
-                    .onEach { uiState = it }
-                    .collect {
-                        if (!it.loading) {
-                            val startDestination = if (it.loggedIn) Navigation.EventListScreen else Navigation.WelcomeScreen
-
-                            setContent {
-                                val navigationController = rememberNavController()
-                                NavHost(navController = navigationController, startDestination = startDestination) {
-                                    eventFlow(navigationController)
-                                    loginFlow(navigationController)
-                                    composable<Navigation.FullScreenError>(
-                                        typeMap = mapOf(typeOf<EsmorgaErrorScreenArguments>() to serializableType<EsmorgaErrorScreenArguments>())
-                                    ) { backStackEntry ->
-                                        val esmorgaErrorScreenArguments = backStackEntry.toRoute<Navigation.FullScreenError>().esmorgaErrorScreenArguments
-                                        EsmorgaErrorScreen(
-                                            esmorgaErrorScreenArguments = esmorgaErrorScreenArguments,
-                                            onButtonPressed = {
-                                                navigationController.popBackStack()
-                                            })
-                                    }
-                                }
-                            }
-                        }
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mvm.uiState.onEach { uiState = it }.collect {
+                    if (!it.loading) {
+                        setupNavigation(it.loggedIn)
                     }
+                }
             }
         }
 
@@ -75,6 +55,18 @@ class MainActivity : ComponentActivity() {
 
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+    }
+
+    private fun setupNavigation(loggedIn: Boolean) {
+        setContent {
+            val navigationController = rememberNavController()
+            val startDestination = if (loggedIn) Navigation.EventListScreen else Navigation.WelcomeScreen
+            NavHost(navController = navigationController, startDestination = startDestination) {
+                loginFlow(navigationController)
+                eventFlow(navigationController)
+                errorFlow(navigationController)
+            }
+        }
     }
 
     private fun NavGraphBuilder.loginFlow(navigationController: NavHostController) {
@@ -141,6 +133,19 @@ class MainActivity : ComponentActivity() {
                 eventId = backStackEntry.toRoute<Navigation.EventDetailScreen>().eventId,
                 onBackPressed = { navigationController.popBackStack() }
             )
+        }
+    }
+
+    private fun NavGraphBuilder.errorFlow(navigationController: NavHostController) {
+        composable<Navigation.FullScreenError>(
+            typeMap = mapOf(typeOf<EsmorgaErrorScreenArguments>() to serializableType<EsmorgaErrorScreenArguments>())
+        ) { backStackEntry ->
+            val esmorgaErrorScreenArguments = backStackEntry.toRoute<Navigation.FullScreenError>().esmorgaErrorScreenArguments
+            EsmorgaErrorScreen(
+                esmorgaErrorScreenArguments = esmorgaErrorScreenArguments,
+                onButtonPressed = {
+                    navigationController.popBackStack()
+                })
         }
     }
 }

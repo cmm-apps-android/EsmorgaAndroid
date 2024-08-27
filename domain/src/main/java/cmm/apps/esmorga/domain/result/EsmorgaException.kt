@@ -17,6 +17,7 @@ object ErrorCodes {
     const val UNKNOWN_ERROR = -1
     const val UNSUPPORTED_OPERATION = -10
     const val PARSE_ERROR = -100
+    const val NO_DATA = -404
     const val NO_CONNECTION = -999
 
 }
