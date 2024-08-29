@@ -49,7 +49,7 @@ fun RegistrationScreen(
     onBackClicked: () -> Unit
 ) {
     val uiState: RegistrationUiState by rvm.uiState.collectAsStateWithLifecycle()
-    val message = stringResource(R.string.no_internet_snackbar)
+    val message = stringResource(R.string.snackbar_no_internet)
     val snackbarHostState = remember { SnackbarHostState() }
     val localCoroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
@@ -104,7 +104,7 @@ fun RegistrationView(
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_arrow_back),
-                    contentDescription = stringResource(R.string.back_icon_description),
+                    contentDescription = stringResource(R.string.content_description_back_icon),
                     modifier = Modifier.align(Alignment.CenterStart).clickable { onBackClicked() }
                 )
             }
@@ -123,7 +123,7 @@ fun RegistrationView(
                 .verticalScroll(state = rememberScrollState())
         ) {
             EsmorgaText(
-                text = stringResource(id = R.string.registration_screen_title),
+                text = stringResource(id = R.string.screen_registration_title),
                 style = EsmorgaTextStyle.HEADING_1,
                 modifier = Modifier.padding(vertical = 16.dp)
             )
@@ -134,8 +134,9 @@ fun RegistrationView(
                     name = it
                     onFieldChanged(RegistrationField.NAME)
                 },
+                title = R.string.field_title_name,
+                placeholder = R.string.placeholder_name,
                 errorText = uiState.nameError,
-                placeholder = R.string.registration_name_placeholder,
                 modifier = Modifier.onFocusChanged { focusState ->
                     if (!focusState.isFocused) {
                         validateField(RegistrationField.NAME, name, null)
@@ -150,8 +151,9 @@ fun RegistrationView(
                     lastName = it
                     onFieldChanged(RegistrationField.LAST_NAME)
                 },
+                title = R.string.field_title_last_name,
+                placeholder = R.string.placeholder_last_name,
                 errorText = uiState.lastNameError,
-                placeholder = R.string.registration_last_name_placeholder,
                 modifier = Modifier.onFocusChanged { focusState ->
                     if (!focusState.isFocused) {
                         validateField(RegistrationField.LAST_NAME, lastName, null)
@@ -166,8 +168,9 @@ fun RegistrationView(
                     email = it
                     onFieldChanged(RegistrationField.EMAIL)
                 },
+                title = R.string.field_title_email,
+                placeholder = R.string.placeholder_email,
                 errorText = uiState.emailError,
-                placeholder = R.string.registration_email_placeholder,
                 modifier = Modifier.onFocusChanged { focusState ->
                     if (!focusState.isFocused) {
                         validateField(RegistrationField.EMAIL, email, null)
@@ -182,9 +185,10 @@ fun RegistrationView(
                     password = it
                     onFieldChanged(RegistrationField.PASS)
                 },
+                title = R.string.field_title_password,
+                placeholder = R.string.placeholder_password,
                 errorText = uiState.passError,
                 isPassword = true,
-                placeholder = R.string.registration_password_placeholder,
                 modifier = Modifier.onFocusChanged { focusState ->
                     if (!focusState.isFocused) {
                         validateField(RegistrationField.PASS, password, null)
@@ -199,9 +203,10 @@ fun RegistrationView(
                     repeatedPassword = it
                     onFieldChanged(RegistrationField.REPEAT_PASS)
                 },
+                title = R.string.field_title_repeat_password,
+                placeholder = R.string.placeholder_confirm_password,
                 errorText = uiState.repeatPassError,
                 isPassword = true,
-                placeholder = R.string.registration_confirm_password_placeholder,
                 modifier = Modifier.onFocusChanged { focusState ->
                     if (!focusState.isFocused) {
                         validateField(RegistrationField.REPEAT_PASS, password, repeatedPassword)
@@ -213,7 +218,7 @@ fun RegistrationView(
                 }
             )
             Spacer(modifier = Modifier.height(16.dp))
-            EsmorgaButton(text = stringResource(id = R.string.registration_submit_button), isEnabled = !uiState.loading, primary = true) {
+            EsmorgaButton(text = stringResource(id = R.string.button_register), isEnabled = !uiState.loading, primary = true) {
                 onRegisterClicked(name, lastName, email, password, repeatedPassword)
             }
         }
