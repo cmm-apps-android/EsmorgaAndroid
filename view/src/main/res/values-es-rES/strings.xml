@@ -10,7 +10,8 @@
    <string name="content_description_event_image">Imagen del evento %s</string>
    <string name="date_formatter">dd\&apos; de \&apos;MMMM\&apos; a las \&apos;HH:mm</string>
    <string name="default_error_body">Inténtalo de nuevo más tarde</string>
-   <string name="default_error_title">Algo ha fallado, inténtalo de nuevo</string>
+   <string name="default_error_title">Algo ha fallado</string>
+   <string name="default_error_title_expanded">Algo ha fallado, por favor inténtalo de nuevo más tarde</string>
    <string name="field_title_email">Email</string>
    <string name="field_title_last_name">Apellido</string>
    <string name="field_title_name">Nombre</string>

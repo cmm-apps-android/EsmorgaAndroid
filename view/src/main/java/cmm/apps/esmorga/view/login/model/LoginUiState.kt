@@ -25,7 +25,7 @@ sealed class LoginEffect {
 object LoginViewHelper : KoinComponent{
     private val context : Context by inject()
     fun getEsmorgaErrorScreenArguments() = EsmorgaErrorScreenArguments(
-        title = context.getString(R.string.default_error_title),
+        title = context.getString(R.string.default_error_title_expanded),
         buttonText = context.getString(R.string.button_retry)
     )
 
