@@ -50,7 +50,7 @@ import org.koin.androidx.compose.koinViewModel
 fun EventListScreen(elvm: EventListViewModel = koinViewModel(), onEventClick: (eventId: String) -> Unit) {
     val uiState: EventListUiState by elvm.uiState.collectAsStateWithLifecycle()
 
-    val message = stringResource(R.string.no_internet_snackbar)
+    val message = stringResource(R.string.snackbar_no_internet)
     val snackbarHostState = remember { SnackbarHostState() }
     val localCoroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
@@ -91,7 +91,7 @@ fun EventListView(uiState: EventListUiState, snackbarHostState: SnackbarHostStat
                 end = 16.dp
             )
         ) {
-            EsmorgaText(text = stringResource(R.string.event_list_title), style = EsmorgaTextStyle.HEADING_1, modifier = Modifier.padding(vertical = 32.dp))
+            EsmorgaText(text = stringResource(R.string.screen_event_list_title), style = EsmorgaTextStyle.HEADING_1, modifier = Modifier.padding(vertical = 32.dp))
             if (uiState.loading) {
                 EventListLoading()
             } else {
@@ -110,7 +110,7 @@ fun EventListView(uiState: EventListUiState, snackbarHostState: SnackbarHostStat
 @Composable
 fun EventListLoading() {
     Column(modifier = Modifier.fillMaxSize()) {
-        EsmorgaText(text = stringResource(R.string.event_list_loading), style = EsmorgaTextStyle.HEADING_1, modifier = Modifier.padding(vertical = 16.dp))
+        EsmorgaText(text = stringResource(R.string.screen_event_list_loading), style = EsmorgaTextStyle.HEADING_1, modifier = Modifier.padding(vertical = 16.dp))
         EsmorgaLinearLoader(modifier = Modifier.fillMaxWidth())
     }
 }
@@ -120,7 +120,7 @@ fun EventListEmpty() {
     Column(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.img_event_list_empty),
-            contentDescription = stringResource(id = R.string.event_list_empty_text),
+            contentDescription = stringResource(id = R.string.screen_event_list_empty_text),
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxWidth()
@@ -129,7 +129,7 @@ fun EventListEmpty() {
         )
 
         EsmorgaText(
-            text = stringResource(R.string.event_list_empty_text),
+            text = stringResource(R.string.screen_event_list_empty_text),
             style = EsmorgaTextStyle.HEADING_2,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(vertical = 32.dp, horizontal = 16.dp)
@@ -156,19 +156,19 @@ fun EventListError(onRetryClick: () -> Unit) {
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_error),
-                    contentDescription = stringResource(R.string.event_list_error_title),
+                    contentDescription = stringResource(R.string.default_error_title),
                     modifier = Modifier.align(Alignment.Center)
                 )
             }
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                EsmorgaText(text = stringResource(R.string.event_list_error_title), style = EsmorgaTextStyle.HEADING_2, modifier = Modifier.padding(vertical = 4.dp))
-                EsmorgaText(text = stringResource(R.string.event_list_error_subtitle), style = EsmorgaTextStyle.BODY_1)
+                EsmorgaText(text = stringResource(R.string.default_error_title), style = EsmorgaTextStyle.HEADING_2, modifier = Modifier.padding(vertical = 4.dp))
+                EsmorgaText(text = stringResource(R.string.default_error_body), style = EsmorgaTextStyle.BODY_1)
             }
         }
 
         Box(modifier = Modifier.height(32.dp))
 
-        EsmorgaButton(text = stringResource(R.string.event_list_error_button)) {
+        EsmorgaButton(text = stringResource(R.string.button_retry)) {
             onRetryClick()
         }
     }
@@ -192,7 +192,7 @@ fun EventList(events: List<EventListUiModel>, onEventClick: (eventId: String) ->
                         .build(),
                     placeholder = painterResource(R.drawable.img_event_list_empty),
                     error = painterResource(R.drawable.img_event_list_empty),
-                    contentDescription = stringResource(id = R.string.event_image_content_description).format(event.cardTitle),
+                    contentDescription = stringResource(id = R.string.content_description_event_image).format(event.cardTitle),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxWidth()

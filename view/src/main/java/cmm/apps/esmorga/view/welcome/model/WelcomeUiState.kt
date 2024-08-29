@@ -13,8 +13,8 @@ data class WelcomeUiState(
     fun createDefaultWelcomeUiState(): WelcomeUiState {
         val context: Context by inject()
         return WelcomeUiState(
-            primaryButtonText = context.getString(R.string.welcome_login_register),
-            secondaryButtonText = context.getString(R.string.welcome_guest),
+            primaryButtonText = context.getString(R.string.button_login_register),
+            secondaryButtonText = context.getString(R.string.button_guest),
             icon = R.drawable.ic_logo
         )
     }

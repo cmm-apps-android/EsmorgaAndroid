@@ -26,9 +26,9 @@ object LoginViewHelper : KoinComponent{
     private val context : Context by inject()
     fun getEsmorgaErrorScreenArguments() = EsmorgaErrorScreenArguments(
         title = context.getString(R.string.default_error_title),
-        buttonText = context.getString(R.string.default_error_button)
+        buttonText = context.getString(R.string.button_retry)
     )
 
-    fun getEmailErrorText() = context.getString(R.string.login_email_invalid)
-    fun getPasswordErrorText() = context.getString(R.string.login_password_invalid)
+    fun getEmailErrorText() = context.getString(R.string.inline_error_email)
+    fun getPasswordErrorText() = context.getString(R.string.inline_error_password)
 }

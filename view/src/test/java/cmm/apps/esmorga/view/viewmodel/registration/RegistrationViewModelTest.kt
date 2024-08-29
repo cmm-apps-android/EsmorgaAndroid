@@ -72,11 +72,11 @@ class RegistrationViewModelTest : KoinTest {
         sut.onRegisterClicked("", "", "", "", "")
 
         val state = sut.uiState.value
-        Assert.assertEquals(mockContext.getString(R.string.registration_empty_field), state.nameError)
-        Assert.assertEquals(mockContext.getString(R.string.registration_empty_field), state.lastNameError)
-        Assert.assertEquals(mockContext.getString(R.string.registration_empty_field), state.emailError)
-        Assert.assertEquals(mockContext.getString(R.string.registration_empty_field), state.passError)
-        Assert.assertEquals(mockContext.getString(R.string.registration_empty_field), state.repeatPassError)
+        Assert.assertEquals(mockContext.getString(R.string.inline_error_empty_field), state.nameError)
+        Assert.assertEquals(mockContext.getString(R.string.inline_error_empty_field), state.lastNameError)
+        Assert.assertEquals(mockContext.getString(R.string.inline_error_empty_field), state.emailError)
+        Assert.assertEquals(mockContext.getString(R.string.inline_error_empty_field), state.passError)
+        Assert.assertEquals(mockContext.getString(R.string.inline_error_empty_field), state.repeatPassError)
     }
 
     @Test
@@ -89,7 +89,7 @@ class RegistrationViewModelTest : KoinTest {
         sut.onRegisterClicked("Invalid!", user.lastName, user.email, "Test@123", "Test@123")
 
         val state = sut.uiState.value
-        Assert.assertEquals(mockContext.getString(R.string.registration_name_last_name_invalid), state.nameError)
+        Assert.assertEquals(mockContext.getString(R.string.inline_error_name), state.nameError)
     }
 
     @Test
@@ -102,7 +102,7 @@ class RegistrationViewModelTest : KoinTest {
         sut.onRegisterClicked(user.name, "Invalid!", user.email, "Test@123", "Test@123")
 
         val state = sut.uiState.value
-        Assert.assertEquals(mockContext.getString(R.string.registration_name_last_name_invalid), state.lastNameError)
+        Assert.assertEquals(mockContext.getString(R.string.inline_error_last_name), state.lastNameError)
     }
 
     @Test
@@ -115,7 +115,7 @@ class RegistrationViewModelTest : KoinTest {
         sut.onRegisterClicked(user.name, user.lastName, "Invalid", "Test@123", "Test@123")
 
         val state = sut.uiState.value
-        Assert.assertEquals(mockContext.getString(R.string.registration_email_invalid), state.emailError)
+        Assert.assertEquals(mockContext.getString(R.string.inline_error_name), state.emailError)
     }
 
     @Test
@@ -128,7 +128,7 @@ class RegistrationViewModelTest : KoinTest {
         sut.onRegisterClicked(user.name, user.lastName, user.email, "test", "test")
 
         val state = sut.uiState.value
-        Assert.assertEquals(mockContext.getString(R.string.registration_password_invalid), state.passError)
+        Assert.assertEquals(mockContext.getString(R.string.inline_error_password_invalid), state.passError)
     }
 
     @Test
@@ -141,7 +141,7 @@ class RegistrationViewModelTest : KoinTest {
         sut.onRegisterClicked(user.name, user.lastName, user.email, "Test@123", "test")
 
         val state = sut.uiState.value
-        Assert.assertEquals(mockContext.getString(R.string.registration_password_mismatch_error), state.repeatPassError)
+        Assert.assertEquals(mockContext.getString(R.string.inline_error_password_mismatch), state.repeatPassError)
     }
 
     @Test

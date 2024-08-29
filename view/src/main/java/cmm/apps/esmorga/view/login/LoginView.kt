@@ -51,7 +51,7 @@ fun LoginScreen(
     onBackClicked: () -> Unit
 ) {
     val uiState: LoginUiState by lvm.uiState.collectAsStateWithLifecycle()
-    val message = stringResource(R.string.no_internet_snackbar)
+    val message = stringResource(R.string.snackbar_no_internet)
     val snackbarHostState = remember { SnackbarHostState() }
     val localCoroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
@@ -110,7 +110,7 @@ fun LoginView(
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_arrow_back),
-                    contentDescription = stringResource(R.string.back_icon_description),
+                    contentDescription = stringResource(R.string.content_description_back_icon),
                     modifier = Modifier.align(Alignment.CenterStart).clickable { onBackClicked() }
                 )
             }
@@ -137,7 +137,7 @@ fun LoginView(
                     .fillMaxWidth()
                     .verticalScroll(state = rememberScrollState())
             ) {
-                EsmorgaText(text = stringResource(id = R.string.login_screen_title), style = EsmorgaTextStyle.HEADING_1, modifier = Modifier.padding(vertical = 16.dp))
+                EsmorgaText(text = stringResource(id = R.string.screen_login_title), style = EsmorgaTextStyle.HEADING_1, modifier = Modifier.padding(vertical = 16.dp))
                 EsmorgaTextField(
                     value = email,
                     isEnabled = !uiState.loading,
@@ -145,8 +145,9 @@ fun LoginView(
                         email = it
                         onEmailChanged()
                     },
+                    title = R.string.field_title_email,
+                    placeholder = R.string.placeholder_email,
                     errorText = uiState.emailError,
-                    placeholder = R.string.login_screen_email,
                     modifier = Modifier.onFocusChanged { focusState ->
                         if (!focusState.isFocused) {
                             validateEmail(email)
@@ -161,9 +162,10 @@ fun LoginView(
                         password = it
                         onPassChanged()
                     },
+                    title = R.string.field_title_password,
+                    placeholder = R.string.placeholder_password,
                     errorText = uiState.passwordError,
                     isPassword = true,
-                    placeholder = R.string.login_screen_password,
                     modifier = Modifier.onFocusChanged { focusState ->
                         if (!focusState.isFocused) {
                             validatePass(password)
@@ -175,10 +177,10 @@ fun LoginView(
                     }
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                EsmorgaButton(text = stringResource(id = R.string.login_button), isLoading = uiState.loading) {
+                EsmorgaButton(text = stringResource(id = R.string.button_login), isLoading = uiState.loading) {
                     onLoginClicked(email, password)
                 }
-                EsmorgaButton(text = stringResource(id = R.string.login_screen_create_account_button), isEnabled = !uiState.loading, primary = false) {
+                EsmorgaButton(text = stringResource(id = R.string.button_create_account), isEnabled = !uiState.loading, primary = false) {
                     onRegisterClicked()
                 }
             }

@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 fun EsmorgaTextField(
     value: String,
     onValueChange: (String) -> Unit,
+    title: Int,
     placeholder: Int,
     modifier: Modifier = Modifier,
     singleLine: Boolean = true,
@@ -43,7 +44,7 @@ fun EsmorgaTextField(
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
     Column {
-        EsmorgaText(text = stringResource(id = placeholder), style = EsmorgaTextStyle.BODY_1)
+        EsmorgaText(text = stringResource(id = title), style = EsmorgaTextStyle.BODY_1)
         Spacer(modifier = Modifier.height(8.dp))
         OutlinedTextField(
             value = value,

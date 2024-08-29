@@ -105,7 +105,7 @@ fun EventDetailsView(uiState: EventDetailsUiState, onNavigateClicked: () -> Unit
                     .build(),
                 placeholder = painterResource(R.drawable.img_event_list_empty),
                 error = painterResource(R.drawable.img_event_list_empty),
-                contentDescription = stringResource(id = R.string.event_image_content_description).format(uiState.title),
+                contentDescription = stringResource(id = R.string.content_description_event_image).format(uiState.title),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -117,7 +117,7 @@ fun EventDetailsView(uiState: EventDetailsUiState, onNavigateClicked: () -> Unit
             )
             EsmorgaText(text = uiState.subtitle, style = EsmorgaTextStyle.BODY_1_ACCENT, modifier = Modifier.padding(horizontal = 16.dp))
             EsmorgaText(
-                text = stringResource(id = R.string.event_details_description),
+                text = stringResource(id = R.string.screen_event_details_description),
                 style = EsmorgaTextStyle.HEADING_1,
                 modifier = Modifier.padding(start = 16.dp, top = 32.dp, end = 16.dp)
             )
@@ -125,7 +125,7 @@ fun EventDetailsView(uiState: EventDetailsUiState, onNavigateClicked: () -> Unit
                 text = uiState.description, style = EsmorgaTextStyle.BODY_1, modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)
             )
             EsmorgaText(
-                text = stringResource(id = R.string.event_details_location),
+                text = stringResource(id = R.string.screen_event_details_location),
                 style = EsmorgaTextStyle.HEADING_1,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)
             )
@@ -135,7 +135,7 @@ fun EventDetailsView(uiState: EventDetailsUiState, onNavigateClicked: () -> Unit
             if (uiState.navigateButton) {
                 EsmorgaButton(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 32.dp),
-                    text = stringResource(id = R.string.navigate),
+                    text = stringResource(id = R.string.button_navigate),
                     primary = false
                 ) {
                     onNavigateClicked()

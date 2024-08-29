@@ -29,14 +29,14 @@ object RegistrationViewHelper : KoinComponent {
     private val context: Context by inject()
     fun getEsmorgaErrorScreenArguments() = EsmorgaErrorScreenArguments(
         title = context.getString(R.string.default_error_title),
-        buttonText = context.getString(R.string.default_error_button)
+        buttonText = context.getString(R.string.button_retry)
     )
 
-    fun getNameErrorText() = context.getString(R.string.registration_name_last_name_invalid)
-    fun getLastNameErrorText() = context.getString(R.string.registration_name_last_name_invalid)
-    fun getEmailErrorText() = context.getString(R.string.registration_email_invalid)
-    fun getEmailAlreadyInUseErrorText() = context.getString(R.string.registration_email_already_used)
-    fun getPasswordErrorText() = context.getString(R.string.registration_password_invalid)
-    fun getRepeatPasswordErrorText() = context.getString(R.string.registration_password_mismatch_error)
-    fun getEmptyFieldErrorText() = context.getString(R.string.registration_empty_field)
+    fun getNameErrorText() = context.getString(R.string.inline_error_name)
+    fun getLastNameErrorText() = context.getString(R.string.inline_error_last_name)
+    fun getEmailErrorText() = context.getString(R.string.inline_error_name)
+    fun getEmailAlreadyInUseErrorText() = context.getString(R.string.inline_error_email_already_used)
+    fun getPasswordErrorText() = context.getString(R.string.inline_error_password_invalid)
+    fun getRepeatPasswordErrorText() = context.getString(R.string.inline_error_password_mismatch)
+    fun getEmptyFieldErrorText() = context.getString(R.string.inline_error_empty_field)
 }
