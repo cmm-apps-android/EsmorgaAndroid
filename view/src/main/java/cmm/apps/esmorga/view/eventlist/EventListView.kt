@@ -145,9 +145,8 @@ fun EventListError(onRetryClick: () -> Unit) {
             modifier = Modifier
                 .clip(RoundedCornerShape(8.dp))
                 .background(MaterialTheme.colorScheme.surfaceContainerLowest)
-                .height(72.dp)
                 .padding(12.dp)
-                .fillMaxSize()
+                .fillMaxWidth()
         ) {
             Box(
                 modifier = Modifier
