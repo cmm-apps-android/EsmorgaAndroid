@@ -34,7 +34,7 @@ object RegistrationViewHelper : KoinComponent {
 
     fun getNameErrorText() = context.getString(R.string.inline_error_name)
     fun getLastNameErrorText() = context.getString(R.string.inline_error_last_name)
-    fun getEmailErrorText() = context.getString(R.string.inline_error_name)
+    fun getEmailErrorText() = context.getString(R.string.inline_error_email)
     fun getEmailAlreadyInUseErrorText() = context.getString(R.string.inline_error_email_already_used)
     fun getPasswordErrorText() = context.getString(R.string.inline_error_password_invalid)
     fun getRepeatPasswordErrorText() = context.getString(R.string.inline_error_password_mismatch)

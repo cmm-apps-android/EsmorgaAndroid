@@ -115,7 +115,7 @@ class RegistrationViewModelTest : KoinTest {
         sut.onRegisterClicked(user.name, user.lastName, "Invalid", "Test@123", "Test@123")
 
         val state = sut.uiState.value
-        Assert.assertEquals(mockContext.getString(R.string.inline_error_name), state.emailError)
+        Assert.assertEquals(mockContext.getString(R.string.inline_error_email), state.emailError)
     }
 
     @Test
