@@ -26,6 +26,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmm.apps.designsystem.EsmorgaButton
@@ -105,7 +106,9 @@ fun RegistrationView(
                 Image(
                     painter = painterResource(id = R.drawable.ic_arrow_back),
                     contentDescription = stringResource(R.string.content_description_back_icon),
-                    modifier = Modifier.align(Alignment.CenterStart).clickable { onBackClicked() }
+                    modifier = Modifier
+                        .align(Alignment.CenterStart)
+                        .clickable { onBackClicked() }
                 )
             }
         }
@@ -176,7 +179,8 @@ fun RegistrationView(
                         validateField(RegistrationField.EMAIL, email, null)
                     }
                 },
-                imeAction = ImeAction.Next
+                imeAction = ImeAction.Next,
+                keyboardType = KeyboardType.Email
             )
             EsmorgaTextField(
                 value = password,
@@ -188,13 +192,13 @@ fun RegistrationView(
                 title = R.string.field_title_password,
                 placeholder = R.string.placeholder_password,
                 errorText = uiState.passError,
-                isPassword = true,
                 modifier = Modifier.onFocusChanged { focusState ->
                     if (!focusState.isFocused) {
                         validateField(RegistrationField.PASS, password, null)
                     }
                 },
-                imeAction = ImeAction.Next
+                imeAction = ImeAction.Next,
+                keyboardType = KeyboardType.Password
             )
             EsmorgaTextField(
                 value = repeatedPassword,
@@ -206,19 +210,19 @@ fun RegistrationView(
                 title = R.string.field_title_repeat_password,
                 placeholder = R.string.placeholder_confirm_password,
                 errorText = uiState.repeatPassError,
-                isPassword = true,
                 modifier = Modifier.onFocusChanged { focusState ->
                     if (!focusState.isFocused) {
                         validateField(RegistrationField.REPEAT_PASS, password, repeatedPassword)
                     }
                 },
                 imeAction = ImeAction.Done,
+                keyboardType = KeyboardType.Password,
                 onDonePressed = {
                     onRegisterClicked(name, lastName, email, password, repeatedPassword)
                 }
             )
             Spacer(modifier = Modifier.height(16.dp))
-            EsmorgaButton(text = stringResource(id = R.string.button_register), isEnabled = !uiState.loading, primary = true) {
+            EsmorgaButton(text = stringResource(id = R.string.button_register), isLoading = uiState.loading, primary = true) {
                 onRegisterClicked(name, lastName, email, password, repeatedPassword)
             }
         }

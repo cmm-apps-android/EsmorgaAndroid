@@ -10,7 +10,8 @@ import androidx.compose.ui.text.style.TextAlign
 @Composable
 fun EsmorgaText(text: String, style: EsmorgaTextStyle, modifier: Modifier = Modifier, textAlign: TextAlign = TextAlign.Start) {
     Text(
-        text = text, style = getTextStyle(style),
+        text = text,
+        style = getTextStyle(style),
         modifier = modifier,
         textAlign = textAlign
     )

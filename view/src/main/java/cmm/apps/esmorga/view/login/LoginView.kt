@@ -28,6 +28,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmm.apps.designsystem.EsmorgaButton
@@ -153,7 +154,9 @@ fun LoginView(
                             validateEmail(email)
                         }
                     },
-                    imeAction = ImeAction.Next
+                    imeAction = ImeAction.Next,
+                    keyboardType = KeyboardType.Email
+
                 )
                 EsmorgaTextField(
                     value = password,
@@ -165,13 +168,13 @@ fun LoginView(
                     title = R.string.field_title_password,
                     placeholder = R.string.placeholder_password,
                     errorText = uiState.passwordError,
-                    isPassword = true,
                     modifier = Modifier.onFocusChanged { focusState ->
                         if (!focusState.isFocused) {
                             validatePass(password)
                         }
                     },
                     imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Password,
                     onDonePressed = {
                         onLoginClicked(email, password)
                     }
