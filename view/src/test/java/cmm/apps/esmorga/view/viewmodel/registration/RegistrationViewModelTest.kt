@@ -3,6 +3,9 @@ package cmm.apps.esmorga.view.viewmodel.registration
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import app.cash.turbine.test
+import cmm.apps.esmorga.domain.result.ErrorCodes.NO_CONNECTION
+import cmm.apps.esmorga.domain.result.EsmorgaException
+import cmm.apps.esmorga.domain.result.Source
 import cmm.apps.esmorga.domain.result.Success
 import cmm.apps.esmorga.domain.user.PerformRegistrationUserCase
 import cmm.apps.esmorga.view.R
@@ -64,6 +67,38 @@ class RegistrationViewModelTest : KoinTest {
     }
 
     @Test
+    fun `given a failure usecase when register method is called then usecase executed and UI effect for error is emitted`() = runTest {
+        val user = LoginViewMock.provideUser()
+        val useCase = mockk<PerformRegistrationUserCase>(relaxed = true)
+        coEvery { useCase(any(), any(), any(), any()) } returns Result.failure(EsmorgaException("Fake error", Source.REMOTE, 500))
+
+        val sut = RegistrationViewModel(useCase)
+
+        sut.effect.test {
+            sut.onRegisterClicked(user.name, user.lastName, user.email, "Test@123", "Test@123")
+
+            val effect = awaitItem()
+            Assert.assertTrue(effect is RegistrationEffect.ShowFullScreenError)
+        }
+    }
+
+    @Test
+    fun `given no internet connection when register method is called then usecase executed and UI effect for snackbar is emitted`() = runTest {
+        val user = LoginViewMock.provideUser()
+        val useCase = mockk<PerformRegistrationUserCase>(relaxed = true)
+        coEvery { useCase(any(), any(), any(), any()) } returns Result.failure(EsmorgaException("Fake No Internet error", Source.REMOTE, NO_CONNECTION))
+
+        val sut = RegistrationViewModel(useCase)
+
+        sut.effect.test {
+            sut.onRegisterClicked(user.name, user.lastName, user.email, "Test@123", "Test@123")
+
+            val effect = awaitItem()
+            Assert.assertTrue(effect is RegistrationEffect.ShowNoNetworkSnackbar)
+        }
+    }
+
+    @Test
     fun `given invalid fields inputted when register method is called then ui shows errors in all fields`() = runTest {
         val useCase = mockk<PerformRegistrationUserCase>(relaxed = true)
         coEvery { useCase(any(), any(), any(), any()) } returns Result.success(Success(LoginViewMock.provideUser()))
@@ -85,11 +120,18 @@ class RegistrationViewModelTest : KoinTest {
         val useCase = mockk<PerformRegistrationUserCase>(relaxed = true)
         coEvery { useCase(any(), any(), any(), any()) } returns Result.success(Success(user))
 
-        val sut = RegistrationViewModel(useCase)
-        sut.onRegisterClicked("Invalid!", user.lastName, user.email, "Test@123", "Test@123")
+        val invalidNameList = listOf(
+            "a",
+            "name!!!"
+        )
 
-        val state = sut.uiState.value
-        Assert.assertEquals(mockContext.getString(R.string.inline_error_name), state.nameError)
+        val sut = RegistrationViewModel(useCase)
+
+        for (invalidName in invalidNameList) {
+            sut.onRegisterClicked(invalidName, user.lastName, user.email, "Test@123", "Test@123")
+            val state = sut.uiState.value
+            Assert.assertEquals("$invalidName did not result in an error", mockContext.getString(R.string.inline_error_name), state.nameError)
+        }
     }
 
     @Test
@@ -98,11 +140,18 @@ class RegistrationViewModelTest : KoinTest {
         val useCase = mockk<PerformRegistrationUserCase>(relaxed = true)
         coEvery { useCase(any(), any(), any(), any()) } returns Result.success(Success(user))
 
-        val sut = RegistrationViewModel(useCase)
-        sut.onRegisterClicked(user.name, "Invalid!", user.email, "Test@123", "Test@123")
+        val invalidLastNameList = listOf(
+            "a",
+            "name!!!"
+        )
 
-        val state = sut.uiState.value
-        Assert.assertEquals(mockContext.getString(R.string.inline_error_last_name), state.lastNameError)
+        val sut = RegistrationViewModel(useCase)
+
+        for (invalidLastName in invalidLastNameList) {
+            sut.onRegisterClicked(user.name, invalidLastName, user.email, "Test@123", "Test@123")
+            val state = sut.uiState.value
+            Assert.assertEquals("$invalidLastName did not result in an error", mockContext.getString(R.string.inline_error_last_name), state.lastNameError)
+        }
     }
 
     @Test
@@ -111,11 +160,22 @@ class RegistrationViewModelTest : KoinTest {
         val useCase = mockk<PerformRegistrationUserCase>(relaxed = true)
         coEvery { useCase(any(), any(), any(), any()) } returns Result.success(Success(user))
 
-        val sut = RegistrationViewModel(useCase)
-        sut.onRegisterClicked(user.name, user.lastName, "Invalid", "Test@123", "Test@123")
+        val invalidEmailList = listOf(
+            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@example.com",
+            "space@domain .com",
+            "invalidemail",
+            "user+alias@domain.com",
+            "invalid@domain,com",
+            "invalid@domain.c"
+        )
 
-        val state = sut.uiState.value
-        Assert.assertEquals(mockContext.getString(R.string.inline_error_email), state.emailError)
+        val sut = RegistrationViewModel(useCase)
+
+        for (invalidEmail in invalidEmailList) {
+            sut.onRegisterClicked(user.name, user.lastName, invalidEmail, "Test@123", "Test@123")
+            val state = sut.uiState.value
+            Assert.assertEquals("$invalidEmail did not result in an error", mockContext.getString(R.string.inline_error_email), state.emailError)
+        }
     }
 
     @Test
@@ -124,11 +184,20 @@ class RegistrationViewModelTest : KoinTest {
         val useCase = mockk<PerformRegistrationUserCase>(relaxed = true)
         coEvery { useCase(any(), any(), any(), any()) } returns Result.success(Success(user))
 
-        val sut = RegistrationViewModel(useCase)
-        sut.onRegisterClicked(user.name, user.lastName, user.email, "test", "test")
+        val invalidPasswordList = listOf(
+            "12ab@",
+            "@abcdefg",
+            "1234abcd",
+            "1234567@"
+        )
 
-        val state = sut.uiState.value
-        Assert.assertEquals(mockContext.getString(R.string.inline_error_password_invalid), state.passError)
+        val sut = RegistrationViewModel(useCase)
+
+        for (invalidPass in invalidPasswordList) {
+            sut.onRegisterClicked(user.name, user.lastName, user.email, invalidPass, invalidPass)
+            val state = sut.uiState.value
+            Assert.assertEquals("$invalidPass did not result in an error", mockContext.getString(R.string.inline_error_password_invalid), state.passError)
+        }
     }
 
     @Test
@@ -138,7 +207,7 @@ class RegistrationViewModelTest : KoinTest {
         coEvery { useCase(any(), any(), any(), any()) } returns Result.success(Success(user))
 
         val sut = RegistrationViewModel(useCase)
-        sut.onRegisterClicked(user.name, user.lastName, user.email, "Test@123", "test")
+        sut.onRegisterClicked(user.name, user.lastName, user.email, "Password01!", "Password02!")
 
         val state = sut.uiState.value
         Assert.assertEquals(mockContext.getString(R.string.inline_error_password_mismatch), state.repeatPassError)
