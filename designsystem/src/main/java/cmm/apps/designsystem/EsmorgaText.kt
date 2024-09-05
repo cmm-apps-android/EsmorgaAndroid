@@ -26,8 +26,7 @@ fun getTextStyle(style: EsmorgaTextStyle): TextStyle {
         EsmorgaTextStyle.BODY_1 -> MaterialTheme.typography.bodyMedium
         EsmorgaTextStyle.BODY_1_ACCENT -> MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onSurfaceVariant)
         EsmorgaTextStyle.CAPTION -> MaterialTheme.typography.labelSmall
-        EsmorgaTextStyle.BUTTON_PRIMARY -> MaterialTheme.typography.labelLarge.copy(color = MaterialTheme.colorScheme.onPrimary)
-        EsmorgaTextStyle.BUTTON_SECONDARY -> MaterialTheme.typography.labelLarge
+        EsmorgaTextStyle.BUTTON -> MaterialTheme.typography.labelLarge
     }
 }
 
@@ -38,6 +37,5 @@ enum class EsmorgaTextStyle {
     BODY_1,
     BODY_1_ACCENT,
     CAPTION,
-    BUTTON_PRIMARY,
-    BUTTON_SECONDARY
+    BUTTON
 }

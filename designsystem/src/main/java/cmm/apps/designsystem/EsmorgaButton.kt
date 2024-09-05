@@ -30,7 +30,7 @@ fun EsmorgaButton(text: String, modifier: Modifier = Modifier, isLoading: Boolea
         if (isLoading) {
             EsmorgaCircularLoader(modifier = Modifier.size(24.dp))
         } else {
-            EsmorgaText(text = text, style = if (primary) EsmorgaTextStyle.BUTTON_PRIMARY else EsmorgaTextStyle.BUTTON_SECONDARY)
+            EsmorgaText(text = text, style = EsmorgaTextStyle.BUTTON)
         }
     }
 
