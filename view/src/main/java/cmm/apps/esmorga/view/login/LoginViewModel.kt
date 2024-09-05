@@ -10,6 +10,7 @@ import cmm.apps.esmorga.domain.user.model.User.Companion.PASSWORD_REGEX
 import cmm.apps.esmorga.view.login.model.LoginEffect
 import cmm.apps.esmorga.view.login.model.LoginUiState
 import cmm.apps.esmorga.view.login.model.LoginViewHelper
+import cmm.apps.esmorga.view.login.model.LoginViewHelper.getEmptyFieldErrorText
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -70,7 +71,8 @@ class LoginViewModel(private val performLoginUseCase: PerformLoginUseCase) : Vie
         val isValid = value.isEmpty() || nonEmptyCondition
 
         return when {
-            (!acceptsEmpty && isBlank) || !isValid -> errorTextProvider
+            !acceptsEmpty && isBlank -> getEmptyFieldErrorText()
+            !isValid -> errorTextProvider
             else -> null
         }
     }
