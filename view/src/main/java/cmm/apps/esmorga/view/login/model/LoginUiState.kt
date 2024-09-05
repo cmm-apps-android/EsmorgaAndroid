@@ -31,4 +31,5 @@ object LoginViewHelper : KoinComponent{
 
     fun getEmailErrorText() = context.getString(R.string.inline_error_email)
     fun getPasswordErrorText() = context.getString(R.string.inline_error_password)
+    fun getEmptyFieldErrorText() = context.getString(R.string.inline_error_empty_field)
 }
