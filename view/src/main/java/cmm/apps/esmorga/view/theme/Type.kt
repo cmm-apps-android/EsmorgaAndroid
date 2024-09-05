@@ -70,46 +70,40 @@ fun getEsmorgaTypography(colorScheme: ColorScheme): Typography {
             fontWeight = FontWeight.Bold,
             fontSize = 32.sp,
             lineHeight = 40.sp,
-            letterSpacing = (-0.33).sp,
-            color = colorScheme.onSurface
+            letterSpacing = (-0.33).sp
         ),
         headlineLarge = TextStyle(
             fontFamily = JackartaFontFamily,
             fontWeight = FontWeight.Bold,
             fontSize = 22.sp,
             lineHeight = 27.5.sp,
-            letterSpacing = (-0.33).sp,
-            color = colorScheme.onSurface
+            letterSpacing = (-0.33).sp
         ),
         headlineMedium = TextStyle(
             fontFamily = JackartaFontFamily,
             fontWeight = FontWeight.Bold,
             fontSize = 18.sp,
             lineHeight = 22.5.sp,
-            letterSpacing = (-0.27).sp,
-            color = colorScheme.onSurface
+            letterSpacing = (-0.27).sp
         ),
         bodyMedium = TextStyle(
             fontFamily = JackartaFontFamily,
             fontWeight = FontWeight.Normal,
             fontSize = 16.sp,
-            lineHeight = 24.sp,
-            color = colorScheme.onSurface
+            lineHeight = 24.sp
         ),
         labelLarge = TextStyle(
             fontFamily = EpilogueFontFamily,
             fontWeight = FontWeight.Bold,
             fontSize = 14.sp,
             lineHeight = 21.sp,
-            letterSpacing = 0.20.sp,
-            color = colorScheme.onSurface
+            letterSpacing = 0.20.sp
         ),
         labelSmall = TextStyle(
             fontFamily = EpilogueFontFamily,
             fontWeight = FontWeight.Normal,
             fontSize = 14.sp,
-            lineHeight = 21.sp,
-            color = colorScheme.onSurfaceVariant
+            lineHeight = 21.sp
         )
     )
 }

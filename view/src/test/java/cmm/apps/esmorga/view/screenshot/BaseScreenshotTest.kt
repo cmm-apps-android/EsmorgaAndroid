@@ -9,6 +9,8 @@ import coil.ImageLoader
 import coil.annotation.ExperimentalCoilApi
 import coil.test.FakeImageLoaderEngine
 import com.android.ide.common.rendering.api.SessionParams
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.test.setMain
 import org.junit.Before
 import org.junit.Rule
 
@@ -27,8 +29,9 @@ open class BaseScreenshotTest {
     @OptIn(ExperimentalCoilApi::class)
     @Before
     fun before() {
+        Dispatchers.setMain(Dispatchers.Unconfined)
         val engine = FakeImageLoaderEngine.Builder()
-            .intercept({ it is String }, ColorDrawable(Color.BLACK))
+            .intercept({ it is String }, ColorDrawable(0xFF641C34.toInt()))
             .default(ColorDrawable(Color.BLUE))
             .build()
         val imageLoader = ImageLoader.Builder(paparazzi.context)

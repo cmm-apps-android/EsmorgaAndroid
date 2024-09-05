@@ -13,6 +13,7 @@ private val LightColorScheme = lightColorScheme(
     secondary = Pink,
     onSecondary = DarkGrey,
     background = Lavender,
+    onBackground = DarkGrey,
     surface = Lavender,
     surfaceVariant = Pearl,
     surfaceContainerLow = WhiteSmoke,
@@ -27,12 +28,13 @@ private val DarkColorScheme = darkColorScheme(
     secondary = DarkPink,
     onSecondary = SoftDarkGrey,
     background = DarkLavender,
+    onBackground = VeryLightGrey,
     surface = DarkLavender,
     surfaceVariant = DarkPearl,
     surfaceContainerLow = NightRider,
     surfaceContainerLowest = VeryDarkGrey,
-    onSurfaceVariant = LightSepia,
-    onSurface = VeryLightGrey
+    onSurface = VeryLightGrey,
+    onSurfaceVariant = LightSepia
 )
 
 @Composable
