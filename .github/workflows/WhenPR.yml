@@ -31,7 +31,7 @@ jobs:
       - name: Test with Gradle
         run: ./gradlew koverXmlReport
       - name: List coverage report files
-        run: ls -R $GITHUB_WORKSPACE/app/build/reports/kover/
+        run: ls -R $GITHUB_WORKSPACE/build/reports/kover/
       - name: Add coverage report to PR
         id: kover
         uses: mi-kas/kover-report@v1
