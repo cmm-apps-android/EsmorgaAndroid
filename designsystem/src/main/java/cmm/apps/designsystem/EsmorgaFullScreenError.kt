@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -22,7 +23,7 @@ fun EsmorgaFullScreenError(
     Scaffold { innerPadding ->
         Box(modifier = Modifier.fillMaxSize()) {
             Column(
-                modifier = Modifier.align(Alignment.Center),
+                modifier = Modifier.align(Alignment.Center).padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(
@@ -30,7 +31,7 @@ fun EsmorgaFullScreenError(
                     contentDescription = "Error",
                     modifier = Modifier.size(128.dp)
                 )
-                EsmorgaText(text = title, style = EsmorgaTextStyle.HEADING_1)
+                EsmorgaText(text = title, style = EsmorgaTextStyle.HEADING_1, textAlign = TextAlign.Center)
             }
             EsmorgaButton(
                 text = buttonText,
