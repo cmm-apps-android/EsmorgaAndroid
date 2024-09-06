@@ -10,6 +10,7 @@ import coil.annotation.ExperimentalCoilApi
 import coil.test.FakeImageLoaderEngine
 import com.android.ide.common.rendering.api.SessionParams
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.setMain
 import org.junit.Before
 import org.junit.Rule
@@ -26,7 +27,7 @@ open class BaseScreenshotTest {
         showSystemUi = false
     )
 
-    @OptIn(ExperimentalCoilApi::class)
+    @OptIn(ExperimentalCoilApi::class, ExperimentalCoroutinesApi::class)
     @Before
     fun before() {
         Dispatchers.setMain(Dispatchers.Unconfined)

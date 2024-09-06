@@ -34,6 +34,7 @@ import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextField
 import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.view.R
+import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.registration.model.RegistrationEffect
 import cmm.apps.esmorga.view.registration.model.RegistrationUiState
@@ -42,6 +43,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 
+@Screen
 @Composable
 fun RegistrationScreen(
     rvm: RegistrationViewModel = koinViewModel(),
