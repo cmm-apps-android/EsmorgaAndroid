@@ -40,7 +40,7 @@ class MainActivity : ComponentActivity() {
 
         var uiState: MainUiState by mutableStateOf(MainUiState())
         lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.CREATED) {
                 mvm.uiState.onEach { uiState = it }.collect {
                     if (!it.loading) {
                         setupNavigation(it.loggedIn)
