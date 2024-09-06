@@ -16,7 +16,7 @@ import org.junit.Rule
 
 
 open class BaseScreenshotTest {
-    //record screenshots with: ./gradlew view:recordPaparazziDebug
+    //record screenshots with: ./gradlew view:recordPaparazziDebug (optional: --tests=com.package.ClassName.test_name)
     //execute tests with ./gradlew view:verifyPaparazziDebug
 
     @get:Rule
