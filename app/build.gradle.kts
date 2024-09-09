@@ -33,6 +33,20 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+
+    buildFeatures {
+        flavorDimensions += "environment"
+    }
+
+    productFlavors {
+        create("prod") {
+            dimension = "environment"
+        }
+        create("qa") {
+            dimension = "environment"
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8

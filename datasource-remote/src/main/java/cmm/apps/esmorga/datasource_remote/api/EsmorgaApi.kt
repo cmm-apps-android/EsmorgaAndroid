@@ -2,6 +2,7 @@ package cmm.apps.esmorga.datasource_remote.api
 
 import cmm.apps.esmorga.datasource_remote.event.model.EventListWrapperRemoteModel
 import cmm.apps.esmorga.datasource_remote.user.model.UserRemoteModel
+import cmm.apps.esmorga.datasource_remote.BuildConfig
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -10,7 +11,7 @@ import retrofit2.http.POST
 interface EsmorgaApi {
 
     companion object {
-        fun baseUrl(): String = "https://qa.esmorga.canarte.org/v1/"
+        fun baseUrl(): String = BuildConfig.ESMORGA_API_BASE_URL
     }
 
     @GET("events")

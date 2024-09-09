@@ -26,6 +26,22 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+
+    buildFeatures {
+        flavorDimensions += "environment"
+        buildConfig = true
+    }
+
+    productFlavors {
+        create("prod") {
+            dimension = "environment"
+            buildConfigField("String", "ESMORGA_API_BASE_URL", "\"https://esmorga.canarte.org/v1/\"")
+        }
+        create("qa") {
+            dimension = "environment"
+            buildConfigField("String", "ESMORGA_API_BASE_URL", "\"https://qa.esmorga.canarte.org/v1/\"")
+        }
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
