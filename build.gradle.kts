@@ -24,6 +24,14 @@ kover {
         filters {
             excludes {
                 androidGeneratedClasses()
+                classes(
+                    "*Module", //Dependency Injection Koin modules
+                    "*.EsmorgaApp", //Application
+                    "*.data.*.datasource.*", //Datasource interfaces defined in data
+                    "*.domain.*.repository.*" //Repository interfaces defined in domain
+                    //Navigation?
+                )
+                annotatedBy("cmm.apps.esmorga.view.Screen") //Screens that receive a ViewModel and cannot be tested with Paparazzi
             }
         }
     }

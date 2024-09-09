@@ -22,11 +22,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmm.apps.designsystem.EsmorgaButton
+import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import cmm.apps.esmorga.view.welcome.model.WelcomeEffect
 import cmm.apps.esmorga.view.welcome.model.WelcomeUiState
 import org.koin.androidx.compose.koinViewModel
 
+@Screen
 @Composable
 fun WelcomeScreen(wvm: WelcomeViewModel = koinViewModel(), onLoginRegisterClicked: () -> Unit, onEnterAsGuestClicked: () -> Unit) {
     val uiState: WelcomeUiState by wvm.uiState.collectAsStateWithLifecycle()

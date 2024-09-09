@@ -28,6 +28,7 @@ import cmm.apps.designsystem.EsmorgaButton
 import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.view.R
+import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsEffect
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiState
 import cmm.apps.esmorga.view.navigation.openNavigationApp
@@ -38,6 +39,7 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 
+@Screen
 @Composable
 fun EventDetailsScreen(eventId: String, onBackPressed: () -> Unit, edvm: EventDetailsViewModel = koinViewModel(parameters = { parametersOf(eventId) })) {
     val uiState: EventDetailsUiState by edvm.uiState.collectAsStateWithLifecycle()

@@ -37,6 +37,7 @@ import cmm.apps.designsystem.EsmorgaLinearLoader
 import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.view.R
+import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.eventlist.model.EventListEffect
 import cmm.apps.esmorga.view.eventlist.model.EventListUiModel
 import cmm.apps.esmorga.view.eventlist.model.EventListUiState
@@ -46,6 +47,7 @@ import coil.request.ImageRequest
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
+@Screen
 @Composable
 fun EventListScreen(elvm: EventListViewModel = koinViewModel(), onEventClick: (eventId: String) -> Unit) {
     val uiState: EventListUiState by elvm.uiState.collectAsStateWithLifecycle()
