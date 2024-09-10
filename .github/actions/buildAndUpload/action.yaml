@@ -3,7 +3,7 @@ name: Build And Upload to OTA
 
 inputs:
   Build-ENVL:
-    description: matrix.build-ENV
+    description: matrix.Build-ENV
     required: true
   Build-USER:
     description: secrets.BUIUSER
