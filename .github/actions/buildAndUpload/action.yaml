@@ -5,10 +5,10 @@ inputs:
     description: 'ENV'
     required: true
   Build-USER:
-    description: '${{ secrets.BUIUSER }}'
+    description: secrets.BUIUSER
     required: true
   Build-PASSWORD:
-    description: '${{ secrets.BUIPASSWORD }}'
+    description: secrets.BUIPASSWORD
     required: true
 
 runs:
