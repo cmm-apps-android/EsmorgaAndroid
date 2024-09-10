@@ -4,7 +4,7 @@ plugins:
 
 inputs:
   Build-ENVL:
-    description: 'ENV'
+    description: ENV
     required: true
   Build-USER:
     description: secrets.BUIUSER
@@ -33,7 +33,7 @@ runs:
         
         rootDir="./"
         GRADLE_FILE=$rootDir"app/build.gradle.kts"
-        file=$rootDir"app/build/outputs/apk/${{ inputsBuild-ENVL }}/esmorgaRelease/app-${{ inputsBuild-ENVL }}-esmorgaRelease.apk"
+        file=$rootDir"app/build/outputs/apk/${{ inputs.Build-ENVL }}/esmorgaRelease/app-${{ inputs.Build-ENVL }}-esmorgaRelease.apk"
         name=Esmorga
         versionName=$(grep "versionName" $GRADLE_FILE | awk '{print $3}')
         versionCode=$(grep "versionCode" $GRADLE_FILE | awk '{print $3}')
