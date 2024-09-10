@@ -1,9 +1,9 @@
 package cmm.apps.esmorga.component.registration
 
-import android.app.Application
 import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import app.cash.turbine.test
 import cmm.apps.esmorga.component.mock.MockApplication
 import cmm.apps.esmorga.component.mock.UserDataMock
@@ -32,12 +32,11 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.koin.test.KoinTest
 import org.koin.test.inject
-import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@RunWith(RobolectricTestRunner::class)
-@Config (application = MockApplication::class)
+@RunWith(AndroidJUnit4::class)
+@Config(application = MockApplication::class)
 class RegistrationViewModelComponentTest : KoinTest {
 
     private lateinit var mockContext: Context

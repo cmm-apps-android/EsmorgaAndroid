@@ -6,7 +6,6 @@ kotlinxCoroutines = "1.8.1"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 testExtJunit = "1.2.1"
-espressoCore = "3.6.1"
 mockk = "1.13.11"
 lifecycleRuntime = "2.8.5"
 activityCompose = "1.9.2"
@@ -73,9 +72,7 @@ room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" } 
 
 #Testing
 junit = { group = "junit", name = "junit", version.ref = "junit" }
-androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "testExtJunit" }
 androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "testExtJunit" }
-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
 koin-test = { group = "io.insert-koin", name = "koin-test" }
