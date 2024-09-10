@@ -1,17 +1,16 @@
 name: Build And Upload to OTA
 
-on:
-  workflow_call:
-    inputs:
-      Build-ENVL:
-        description: 'ENV'
-        required: true
-      Build-USER:
-        description: secrets.BUIUSER
-        required: true
-      Build-PASSWORD:
-        description: secrets.BUIPASSWORD
-        required: true
+
+inputs:
+  Build-ENVL:
+    description: 'ENV'
+    required: true
+  Build-USER:
+    description: secrets.BUIUSER
+    required: true
+  Build-PASSWORD:
+    description: secrets.BUIPASSWORD
+    required: true
 
 runs:
 #  env:
