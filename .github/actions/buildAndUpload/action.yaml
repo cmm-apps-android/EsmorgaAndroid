@@ -31,11 +31,11 @@ runs:
     - name: Build with Gradle
       shell: bash
       env:
-        Input_Build-ENVL: ${{ inputs.Build-ENVL }}
+        Build-ENVL: ${{ inputs.Build-ENVL }}
       run: ./gradlew :app:assemble${{ Build-ENVL }}EsmorgaRelease
     - shell: bash
       env:
-        Input_Build-ENVL: ${{ inputs.Build-ENVL }}
+        Build-ENVL: ${{ inputs.Build-ENVL }}
       run: |
         
         rootDir="./"
