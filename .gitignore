@@ -9,6 +9,9 @@ local.properties
 # Log/OS Files
 *.log
 
+# Kotlin
+.kotlin
+
 # Android Studio generated files and folders
 captures/
 .externalNativeBuild/
