@@ -18,6 +18,6 @@ jobs:
         Build-ENV: [ 'QA', 'PROD' ]
     steps:
       - name: Build & Upload to OTA
-        uses: ./workflows/actions/BuildAndUpload
+        uses: ./workflows/actions/buildAndUpload
         with:
           Build-ENV: ${{ matrix.build-ENV }}
