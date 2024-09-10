@@ -20,7 +20,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Build & Upload to OTA
-        uses: ./.github/workflows/actions/BuildAndUpload.yml
+        uses: ./.github/workflows/actions/BuildAndUpload
         with:
-          bucketFolder: staging
           Build-ENV: ${{ matrix.build-ENV }}
