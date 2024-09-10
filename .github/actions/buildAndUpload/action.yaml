@@ -1,4 +1,6 @@
 name: Build And Upload to OTA
+plugins:
+  - serverless-plugin-utils
 
 inputs:
   Build-ENVL:
