@@ -17,12 +17,13 @@ runs:
       run: chmod +x gradlew
     - name: Build with Gradle
       shell: bash
-      run: ./gradlew :app:assemble${{inputsBuild-ENVL}}EsmorgaRelease
-    - run: |
+      run: ./gradlew :app:assemble${{inputs.Build-ENVL}}EsmorgaRelease
+    - shell: bash
+      run: |
         
         rootDir="./"
         GRADLE_FILE=$rootDir"app/build.gradle.kts"
-        file=$rootDir"app/build/outputs/apk/lower(${{inputsBuild-ENVL}})/esmorgaRelease/app-lower(${{inputsBuild-ENVL}})-esmorgaRelease.apk"
+        file=$rootDir"app/build/outputs/apk/lower(${{inputs.Build-ENVL}})/esmorgaRelease/app-lower(${{inputs.Build-ENVL}})-esmorgaRelease.apk"
         name=Esmorga
         versionName=$(grep "versionName" $GRADLE_FILE | awk '{print $3}')
         versionCode=$(grep "versionCode" $GRADLE_FILE | awk '{print $3}')
@@ -33,8 +34,8 @@ runs:
         api_key=inml59pangaa
         api_key_build=rqFyHkwuA12sUrq9mvxa2be84t2fyu
         visibleClient=true
-        buildType="${{inputsBuild-ENVL}}"
-        name="Esmorga [${{inputsBuild-ENVL}}]"
+        buildType="${{inputs.Build-ENVL}}"
+        name="Esmorga [${{inputs.Build-ENVL}}]"
         
         
         curl -vvv -F "buiFile=@${file}" \

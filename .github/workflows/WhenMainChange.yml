@@ -11,12 +11,12 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
-    #    runs-on: ${{ matrix.os }}
-#    strategy:
-#      matrix:
-#        os: [ ubuntu-latest ]
-#        Build-ENV: [ 'QA', 'PROD' ]
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest ]
+        Build-ENV: [ 'QA', 'PROD' ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -25,4 +25,4 @@ jobs:
       - name: Build & Upload to OTA
         uses: ./.github/actions/buildAndUpload
         with:
-          Build-ENV: 'QA'
+          Build-ENV: ${{ matrix.build-ENV }}
