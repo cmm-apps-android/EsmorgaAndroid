@@ -1,4 +1,5 @@
 name: Build Android
+run-name: ${{ github.actor }} is testing a github action ${{ github.ref }} new feature
 
 on:
   pull_request:
@@ -18,7 +19,7 @@ jobs:
         Build-ENV: [ 'QA', 'PROD' ]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
       - name: pepe test
         run: ls -Rv ./.github
       - name: Build & Upload to OTA
