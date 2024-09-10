@@ -4,7 +4,7 @@ plugins:
 
 inputs:
   Build-ENVL:
-    description: ENV
+    description: 'ENV'
     required: true
   Build-USER:
     description: secrets.BUIUSER
@@ -14,6 +14,11 @@ inputs:
     required: true
 
 runs:
+  env:
+    Build-ENVL: ${{ inputs.Build-ENVL }}
+    Build-USER: ${{ inputs.Build-USER }}
+    Build-PASSWORD: ${{ inputs.Build-PASSWORD }}
+
   using: "composite"
   steps:
     - uses: actions/checkout@v2
