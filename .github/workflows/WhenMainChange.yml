@@ -9,8 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-#  Test:
-  runs:
+  test:
 
     runs-on: ${{ matrix.os }}
     strategy:
@@ -20,13 +19,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin' # See 'Supported distributions' for available options
-          java-version: '17'
-          cache: gradle
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
       - name: Build & Upload to OTA
         uses: ./.github/workflows/actions/BuildAndUpload
         with:
