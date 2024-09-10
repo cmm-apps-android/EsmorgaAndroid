@@ -1,10 +1,8 @@
 name: Build And Upload to OTA
-plugins:
-  - serverless-plugin-utils
 
 inputs:
   Build-ENVL:
-    description: 'ENV'
+    description: matrix.build-ENV
     required: true
   Build-USER:
     description: secrets.BUIUSER
@@ -14,10 +12,10 @@ inputs:
     required: true
 
 runs:
-  env:
-    Build-ENVL: ${{ inputs.Build-ENVL }}
-    Build-USER: ${{ inputs.Build-USER }}
-    Build-PASSWORD: ${{ inputs.Build-PASSWORD }}
+#  env:
+#    Build-ENVL: ${{ inputs.Build-ENVL }}
+#    Build-USER: ${{ inputs.Build-USER }}
+#    Build-PASSWORD: ${{ inputs.Build-PASSWORD }}
 
   using: "composite"
   steps:
@@ -32,13 +30,13 @@ runs:
       run: chmod +x gradlew
     - name: Build with Gradle
       shell: bash
-      run: ./gradlew :app:assemble${{ Build-ENVL }}EsmorgaRelease
+      run: ./gradlew :app:assemble${{ inputs.Build-ENVL }}EsmorgaRelease
     - shell: bash
       run: |
         
         rootDir="./"
         GRADLE_FILE=$rootDir"app/build.gradle.kts"
-        file=$rootDir"app/build/outputs/apk/${{ Build-ENVL }}/esmorgaRelease/app-${{ Build-ENVL }}-esmorgaRelease.apk"
+        file=$rootDir"app/build/outputs/apk/${{ inputs.Build-ENVL }}/esmorgaRelease/app-${{ inputs.Build-ENVL }}-esmorgaRelease.apk"
         name=Esmorga
         versionName=$(grep "versionName" $GRADLE_FILE | awk '{print $3}')
         versionCode=$(grep "versionCode" $GRADLE_FILE | awk '{print $3}')
@@ -49,8 +47,8 @@ runs:
         api_key=inml59pangaa
         api_key_build=rqFyHkwuA12sUrq9mvxa2be84t2fyu
         visibleClient=true
-        buildType="${{ Build-ENVL }}"
-        name="Esmorga [${{ Build-ENVL }}]"
+        buildType="${{ inputs.Build-ENVL }}"
+        name="Esmorga [${{ inputs.Build-ENVL }}]"
         
         
         curl -vvv -F "buiFile=@${file}" \
@@ -62,5 +60,5 @@ runs:
             -F "buiHash=${buildHash}" \
             -F "buiVisibleClient=${visibleClient}" \
             -F "buiChangeLog=none" \
-            -F "buiUser=${{ Build-USER }}" -F "buiPassword=${{ Build-PASSWORD }}" \
+            -F "buiUser=${{ inputs.Build-USER }}" -F "buiPassword=${{ inputs.Build-PASSWORD }}" \
             "https://otashare-api.mobgen.com/v1/builds/registernewbuild/${project_id}/${api_key}/${api_key_build}"
