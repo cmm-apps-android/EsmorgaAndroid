@@ -24,6 +24,6 @@ jobs:
           java-version: '17'
           cache: gradle
       - name: Build & Upload to OTA
-        uses: actions/BuildAndUpload
+        uses: ./workflows/actions/BuildAndUpload
         with:
           Build-ENV: ${{ matrix.build-ENV }}
