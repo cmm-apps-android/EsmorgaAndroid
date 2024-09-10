@@ -1,0 +1,50 @@
+name: Build And Upload to OTA
+
+inputs:
+  Build-ENVL:
+    description: 'ENV'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin' # See 'Supported distributions' for available options
+        java-version: '17'
+        cache: gradle
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Build with Gradle
+      shell: bash
+      run: ./gradlew :app:assemble${{inputsBuild-ENVL}}EsmorgaRelease
+    - run: |
+        
+        rootDir="./"
+        GRADLE_FILE=$rootDir"app/build.gradle.kts"
+        file=$rootDir"app/build/outputs/apk/lower(${{inputsBuild-ENVL}})/esmorgaRelease/app-lower(${{inputsBuild-ENVL}})-esmorgaRelease.apk"
+        name=Esmorga
+        versionName=$(grep "versionName" $GRADLE_FILE | awk '{print $3}')
+        versionCode=$(grep "versionCode" $GRADLE_FILE | awk '{print $3}')
+        
+        buildHash=$(md5sum $file | awk '{print $4}')
+        
+        project_id=2793
+        api_key=inml59pangaa
+        api_key_build=rqFyHkwuA12sUrq9mvxa2be84t2fyu
+        visibleClient=true
+        buildType="${{inputsBuild-ENVL}}"
+        name="Esmorga [${{inputsBuild-ENVL}}]"
+        
+        
+        curl -vvv -F "buiFile=@${file}" \
+            -F "buiName=${name}" \
+            -F "buiVersion=${versionName}" \
+            -F "buiBuildNum=${versionCode}" \
+            -F "buiBuildType=${buildType}" \
+            -F "buiTemplate=0" \
+            -F "buiHash=${buildHash}" \
+            -F "buiVisibleClient=${visibleClient}" \
+            -F "buiChangeLog=none" \
+            -F "buiUser=${{ secrets.BUIUSER }}" -F "buiPassword=${{ secrets.BUIPASSWORD }}" \
+            "https://otashare-api.mobgen.com/v1/builds/registernewbuild/${project_id}/${api_key}/${api_key_build}"
