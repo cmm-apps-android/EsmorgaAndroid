@@ -23,6 +23,6 @@ jobs:
       - name: pepe test
         run: ls -Rv ./.github
       - name: Build & Upload to OTA
-        uses: ./.github/actions/buildAndUpload/action.yml
+        uses: ./.github/actions/buildAndUpload
         with:
           Build-ENV: 'QA'
