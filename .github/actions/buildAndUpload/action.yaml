@@ -32,7 +32,7 @@ runs:
       shell: bash
       env:
         Build-ENVL: ${{ inputs.Build-ENVL }}
-      run: ./gradlew :app:assemble${{ Build-ENVL }}EsmorgaRelease
+      run: ./gradlew :app:assemble${{ inputs.Build-ENVL }}EsmorgaRelease
     - shell: bash
       env:
         Build-ENVL: ${{ inputs.Build-ENVL }}
@@ -40,7 +40,7 @@ runs:
         
         rootDir="./"
         GRADLE_FILE=$rootDir"app/build.gradle.kts"
-        file=$rootDir"app/build/outputs/apk/${{ Build-ENVL }}/esmorgaRelease/app-${{ Build-ENVL }}-esmorgaRelease.apk"
+        file=$rootDir"app/build/outputs/apk/${{ inputs.Build-ENVL }}/esmorgaRelease/app-${{ inputs.Build-ENVL }}-esmorgaRelease.apk"
         name=Esmorga
         versionName=$(grep "versionName" $GRADLE_FILE | awk '{print $3}')
         versionCode=$(grep "versionCode" $GRADLE_FILE | awk '{print $3}')
