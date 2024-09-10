@@ -17,6 +17,7 @@ jobs:
         os: [ ubuntu-latest ]
         Build-ENV: [ 'QA', 'PROD' ]
     steps:
+      - uses: actions/checkout@v4
       - name: Build & Upload to OTA
         uses: ./.github/workflows/actions/BuildAndUpload
         with:
