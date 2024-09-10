@@ -25,6 +25,6 @@ jobs:
       - name: Build & Upload to OTA
         uses: ./.github/actions/buildAndUpload
         with:
-          Build-ENV: ${{ matrix.build-ENV }}
+          Build-ENV: ${{ matrix.Build-ENV }}
           Build-USER: secrets.BUIUSER
           Build-PASSWORD: secrets.BUIPASSWORD
