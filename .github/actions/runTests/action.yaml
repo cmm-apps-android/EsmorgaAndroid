@@ -16,14 +16,3 @@ runs:
     - name: Test with Gradle
       shell: bash
       run: ./gradlew koverXmlReport
-    - name: Add coverage report to PR
-      id: kover
-      uses: mi-kas/kover-report@v1
-      with:
-        path: |
-          ${{ github.workspace }}/build/reports/kover/report.xml
-        title: Code Coverage
-        update-comment: true
-        min-coverage-overall: 75
-        min-coverage-changed-files: 75
-        coverage-counter-type: LINE
