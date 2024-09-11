@@ -25,9 +25,8 @@ runs:
       run: chmod +x gradlew
     - name: Build with Gradle
       shell: bash
-      run: ./gradlew :app:assemble${{ inputs.Build-ENVL }}Release
-    - shell: bash
-      run: |
+      run: ./gradlew :app:assemble${{ inputs.Build-ENVL }}EsmorgaRelease
+    - run: |
         
         rootDir="./"
         GRADLE_FILE=$rootDir"app/build.gradle.kts"
@@ -57,3 +56,4 @@ runs:
             -F "buiChangeLog=none" \
             -F "buiUser=${{ inputs.Build-USER }}" -F "buiPassword=${{ inputs.Build-PASSWORD }}" \
             "https://otashare-api.mobgen.com/v1/builds/registernewbuild/${project_id}/${api_key}/${api_key_build}"
+      shell: bash
