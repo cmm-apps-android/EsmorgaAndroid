@@ -25,7 +25,7 @@ runs:
       run: chmod +x gradlew
     - name: Build with Gradle
       shell: bash
-      run: ./gradlew :app:assemble${{ inputs.Build-ENVL }}EsmorgaRelease
+      run: ./gradlew :app:assemble${{ inputs.Build-ENVL }}Release
     - shell: bash
       run: |
         
