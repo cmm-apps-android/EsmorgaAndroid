@@ -14,7 +14,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - uses: actions/setup-java@v4
       with:
         distribution: 'temurin' # See 'Supported distributions' for available options
@@ -25,12 +25,8 @@ runs:
       run: chmod +x gradlew
     - name: Build with Gradle
       shell: bash
-#      env:
-#        Build-ENVL: ${{ inputs.Build-ENVL }}
       run: ./gradlew :app:assemble$${{ inputs.Build-ENVL }}EsmorgaRelease
     - shell: bash
-#      env:
-#        Build-ENVL: ${{ inputs.Build-ENVL }}
       run: |
         
         rootDir="./"

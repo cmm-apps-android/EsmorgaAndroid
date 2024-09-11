@@ -1,5 +1,5 @@
 name: Build Android
-run-name: Creating Android Build
+run-name: ${{ github.actor }} is testing a github action ${{ github.ref }} new feature
 
 on:
   pull_request:
@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
+  test-and-build:
 
     runs-on: ${{ matrix.os }}
     strategy:
@@ -19,7 +19,9 @@ jobs:
         Build-ENVL: [ 'qa', 'prod' ]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+      - name: Run Test
+        uses: ./.github/actions/runTests
       - name: Build & Upload to OTA
         uses: ./.github/actions/buildAndUpload
         with:
