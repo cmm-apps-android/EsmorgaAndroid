@@ -1,6 +1,5 @@
 name: Build And Upload to OTA
 
-
 inputs:
   Build-ENVL:
     description: matrix.Build-ENV
@@ -13,11 +12,6 @@ inputs:
     required: true
 
 runs:
-#  env:
-#    Build-ENVL: ${{ inputs.Build-ENVL }}
-#    Build-USER: ${{ inputs.Build-USER }}
-#    Build-PASSWORD: ${{ inputs.Build-PASSWORD }}
-
   using: "composite"
   steps:
     - uses: actions/checkout@v2
@@ -31,12 +25,12 @@ runs:
       run: chmod +x gradlew
     - name: Build with Gradle
       shell: bash
-      env:
-        Build-ENVL: ${{ inputs.Build-ENVL }}
+#      env:
+#        Build-ENVL: ${{ inputs.Build-ENVL }}
       run: ./gradlew :app:assemble$${{ inputs.Build-ENVL }}EsmorgaRelease
     - shell: bash
-      env:
-        Build-ENVL: ${{ inputs.Build-ENVL }}
+#      env:
+#        Build-ENVL: ${{ inputs.Build-ENVL }}
       run: |
         
         rootDir="./"
