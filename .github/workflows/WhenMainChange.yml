@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest ]
-        Build-ENVL: [ 'QA', 'PROD' ]
+        Build-ENVL: [ 'qa', 'prod' ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
