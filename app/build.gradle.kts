@@ -27,12 +27,21 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             signingConfig = signingConfigs.getByName("debug")
         }
-        create("esmorgaRelease") {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            signingConfig = signingConfigs.getByName("debug")
+    }
+
+    buildFeatures {
+        flavorDimensions += "environment"
+    }
+
+    productFlavors {
+        create("prod") {
+            dimension = "environment"
+        }
+        create("qa") {
+            dimension = "environment"
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8

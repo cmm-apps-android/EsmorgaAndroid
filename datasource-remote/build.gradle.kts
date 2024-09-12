@@ -20,10 +20,21 @@ android {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
-        create("esmorgaRelease") {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            signingConfig = signingConfigs.getByName("debug")
+    }
+
+    buildFeatures {
+        flavorDimensions += "environment"
+        buildConfig = true
+    }
+
+    productFlavors {
+        create("prod") {
+            dimension = "environment"
+            buildConfigField("String", "ESMORGA_API_BASE_URL", "\"https://esmorga.canarte.org/v1/\"")
+        }
+        create("qa") {
+            dimension = "environment"
+            buildConfigField("String", "ESMORGA_API_BASE_URL", "\"https://qa.esmorga.canarte.org/v1/\"")
         }
     }
     compileOptions {

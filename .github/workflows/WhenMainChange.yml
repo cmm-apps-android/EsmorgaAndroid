@@ -1,4 +1,5 @@
 name: Build Android
+run-name: Creating Android builds
 
 on:
   push:
@@ -6,50 +7,23 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  test-and-build:
 
-    runs-on: ubuntu-latest
-
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest ]
+        Build-ENVL: [ 'qa', 'prod' ]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Run Test
+        uses: ./.github/actions/runTests
+      - name: Build & Upload to OTA
+        uses: ./.github/actions/buildAndUpload
         with:
-          distribution: 'temurin' # See 'Supported distributions' for available options
-          java-version: '17'
-          cache: gradle
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-      - name: Build with Gradle
-        run: ./gradlew :app:assembleEsmorgaRelease
-      - run: |
-          
-          rootDir="./" 
-          GRADLE_FILE=$rootDir"app/build.gradle.kts"
-          fileQA=$rootDir"app/build/outputs/apk/esmorgaRelease/app-esmorgaRelease.apk"
-          name=Esmorga
-          versionName=$(grep "versionName" $GRADLE_FILE | awk '{print $3}')
-          versionCode=$(grep "versionCode" $GRADLE_FILE | awk '{print $3}')
-
-          buildHash=$(md5sum $fileQA | awk '{print $4}')
-
-          project_id=2793
-          api_key=inml59pangaa
-          api_key_build=rqFyHkwuA12sUrq9mvxa2be84t2fyu
-          visibleClient=true
-          buildType="QA"
-          name="Esmorga [QA]"
-      
-          
-          curl -vvv -F "buiFile=@${fileQA}" \
-              -F "buiName=${name}" \
-              -F "buiVersion=${versionName}" \
-              -F "buiBuildNum=${versionCode}" \
-              -F "buiBuildType=${buildType}" \
-              -F "buiTemplate=0" \
-              -F "buiHash=${buildHash}" \
-              -F "buiVisibleClient=${visibleClient}" \
-              -F "buiChangeLog=none" \
-              -F "buiUser=${{ secrets.BUIUSER }}" -F "buiPassword=${{ secrets.BUIPASSWORD }}" \
-              "https://otashare-api.mobgen.com/v1/builds/registernewbuild/${project_id}/${api_key}/${api_key_build}"
-    
+          Build-ENVL: ${{ matrix.Build-ENVL }}
+          Build-USER: secrets.BUIUSER
+          Build-PASSWORD: secrets.BUIPASSWORD
+          Build-OTA-APIKEY: secrets.OTASHARE_APIKEY
+          Build-OTA-APIKEY-BUILD: secrets.OTASHARE_APIKEY_BUILD
