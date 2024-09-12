@@ -80,4 +80,7 @@ dependencies {
     testImplementation(libs.robolectric)
     testImplementation(libs.koin.test)
     testImplementation(libs.androidx.junit.ktx)
+    testImplementation(libs.compose.ui.junit)
+    testImplementation(libs.compose.ui.test.manifest)
+    testImplementation(libs.hamcrest)
 }

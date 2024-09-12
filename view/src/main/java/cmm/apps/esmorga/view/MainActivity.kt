@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -22,6 +23,7 @@ import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreen
 import cmm.apps.esmorga.view.eventlist.EventListScreen
 import cmm.apps.esmorga.view.login.LoginScreen
+import cmm.apps.esmorga.view.navigation.EsmorgaNavHost
 import cmm.apps.esmorga.view.navigation.Navigation
 import cmm.apps.esmorga.view.navigation.serializableType
 import cmm.apps.esmorga.view.registration.RegistrationScreen
@@ -60,92 +62,8 @@ class MainActivity : ComponentActivity() {
     private fun setupNavigation(loggedIn: Boolean) {
         setContent {
             val navigationController = rememberNavController()
-            val startDestination = if (loggedIn) Navigation.EventListScreen else Navigation.WelcomeScreen
-            NavHost(navController = navigationController, startDestination = startDestination) {
-                loginFlow(navigationController)
-                eventFlow(navigationController)
-                errorFlow(navigationController)
-            }
+            EsmorgaNavHost(navigationController = navigationController, loggedIn = loggedIn)
         }
     }
 
-    private fun NavGraphBuilder.loginFlow(navigationController: NavHostController) {
-        composable<Navigation.WelcomeScreen> {
-            WelcomeScreen(
-                onEnterAsGuestClicked = {
-                    navigationController.navigate(Navigation.EventListScreen) {
-                        popUpTo(Navigation.WelcomeScreen) {
-                            inclusive = true
-                        }
-                    }
-                },
-                onLoginRegisterClicked = {
-                    navigationController.navigate(Navigation.LoginScreen)
-                })
-        }
-        composable<Navigation.LoginScreen> {
-            LoginScreen(
-                onRegisterClicked = {
-                    navigationController.navigate(Navigation.RegistrationScreen)
-                },
-                onLoginSuccess = {
-                    navigationController.navigate(Navigation.EventListScreen) {
-                        popUpTo(Navigation.WelcomeScreen) {
-                            inclusive = true
-                        }
-                    }
-                },
-                onLoginError = { esmorgaFullScreenArguments ->
-                    navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = esmorgaFullScreenArguments))
-                },
-                onBackClicked = {
-                    navigationController.popBackStack()
-                })
-        }
-        composable<Navigation.RegistrationScreen> {
-            RegistrationScreen(
-                onRegistrationSuccess = {
-                    navigationController.navigate(Navigation.EventListScreen) {
-                        popUpTo(Navigation.WelcomeScreen) {
-                            inclusive = true
-                        }
-                    }
-                },
-                onRegistrationError = { esmorgaFullScreenArguments ->
-                    navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = esmorgaFullScreenArguments))
-                },
-                onBackClicked = {
-                    navigationController.popBackStack()
-                }
-            )
-        }
-    }
-
-    private fun NavGraphBuilder.eventFlow(navigationController: NavHostController) {
-        composable<Navigation.EventListScreen> {
-            EventListScreen(
-                onEventClick = { eventId ->
-                    navigationController.navigate(Navigation.EventDetailScreen(eventId))
-                })
-        }
-        composable<Navigation.EventDetailScreen> { backStackEntry ->
-            EventDetailsScreen(
-                eventId = backStackEntry.toRoute<Navigation.EventDetailScreen>().eventId,
-                onBackPressed = { navigationController.popBackStack() }
-            )
-        }
-    }
-
-    private fun NavGraphBuilder.errorFlow(navigationController: NavHostController) {
-        composable<Navigation.FullScreenError>(
-            typeMap = mapOf(typeOf<EsmorgaErrorScreenArguments>() to serializableType<EsmorgaErrorScreenArguments>())
-        ) { backStackEntry ->
-            val esmorgaErrorScreenArguments = backStackEntry.toRoute<Navigation.FullScreenError>().esmorgaErrorScreenArguments
-            EsmorgaErrorScreen(
-                esmorgaErrorScreenArguments = esmorgaErrorScreenArguments,
-                onButtonPressed = {
-                    navigationController.popBackStack()
-                })
-        }
-    }
 }
