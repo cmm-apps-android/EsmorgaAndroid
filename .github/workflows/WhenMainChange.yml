@@ -2,8 +2,11 @@ name: Build Android
 run-name: Creating Android builds
 
 on:
-  push:
+  pull_request:
+    types: [opened,reopened,edited,synchronize]
     branches: [ "main" ]
+    paths:
+      - '**'
   workflow_dispatch:
 
 jobs:
@@ -25,3 +28,5 @@ jobs:
           Build-ENVL: ${{ matrix.Build-ENVL }}
           Build-USER: secrets.BUIUSER
           Build-PASSWORD: secrets.BUIPASSWORD
+          OTA-APIKEY: secrets.OTASHARE_APIKEY
+          OTA-APIKEY-BUILD: secrets.OTASHARE_APIKEY_BUILD
