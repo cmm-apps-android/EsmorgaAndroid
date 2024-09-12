@@ -2,11 +2,8 @@ name: Build Android
 run-name: Creating Android builds
 
 on:
-  pull_request:
-    types: [opened,reopened,edited,synchronize]
+  push:
     branches: [ "main" ]
-    paths:
-      - '**'
   workflow_dispatch:
 
 jobs:
