@@ -28,5 +28,5 @@ jobs:
           Build-ENVL: ${{ matrix.Build-ENVL }}
           Build-USER: secrets.BUIUSER
           Build-PASSWORD: secrets.BUIPASSWORD
-          OTA-APIKEY: secrets.OTASHARE_APIKEY
-          OTA-APIKEY-BUILD: secrets.OTASHARE_APIKEY_BUILD
+          Build-OTA-APIKEY: secrets.OTASHARE_APIKEY
+          Build-OTA-APIKEY-BUILD: secrets.OTASHARE_APIKEY_BUILD

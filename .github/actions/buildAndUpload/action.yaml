@@ -10,10 +10,10 @@ inputs:
   Build-PASSWORD:
     description: secrets.BUIPASSWORD
     required: true
-  OTA-APIKEY:
+  Build-OTA-APIKEY:
     description: secrets.OTASHARE_APIKEY
     required: true
-  OTA-APIKEY-BUILD:
+  Build-OTA-APIKEY-BUILD:
     description: secrets.OTASHARE_APIKEY_BUILD
     required: true
 
@@ -44,8 +44,8 @@ runs:
         buildHash=$(md5sum $file | awk '{print $4}')
         
         project_id=2793
-        api_key=${{ inputs.OTA-APIKEY }}
-        api_key_build=${{ inputs.OTA-APIKEY-BUILD }}
+        api_key=${{ inputs.Build-OTA-APIKEY }}
+        api_key_build=${{ inputs.Build-OTA-APIKEY-BUILD }}
         visibleClient=true
         buildType="upper(${{ inputs.Build-ENVL }})"
         name="Esmorga [upper(${{ inputs.Build-ENVL }})]"
