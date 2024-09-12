@@ -1,12 +1,9 @@
 name: Build Android
-run-name: ${{ github.actor }} is testing a github action ${{ github.ref }} new feature
+run-name: Creating Android builds
 
 on:
-  pull_request:
-    types: [opened,reopened,edited,synchronize]
+  push:
     branches: [ "main" ]
-    paths:
-      - '**'
   workflow_dispatch:
 
 jobs:
