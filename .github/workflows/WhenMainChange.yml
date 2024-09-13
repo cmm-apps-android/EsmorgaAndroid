@@ -2,14 +2,6 @@ name: Build Android
 run-name: Creating Android builds
 
 on:
-  #Delete this , just for test
-  #  pull_request:
-  #    types: [opened,reopened,edited,synchronize]
-  #    branches:
-  #      - main
-  #    paths:
-  #      - '**'
-
   push:
     branches:
       - main

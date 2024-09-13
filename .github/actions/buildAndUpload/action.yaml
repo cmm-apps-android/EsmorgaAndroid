@@ -48,7 +48,6 @@ runs:
         api_key=${{ inputs.Build-OTA-APIKEY }}
         api_key_build=${{ inputs.Build-OTA-APIKEY-BUILD }}
         visibleClient=true
-        visibleClient=true
         BuildENVL="$(echo ${{ inputs.Build-ENVL }} | tr a-z A-Z )"
         buildType="$BuildENVL"
         name="Esmorga [$BuildENVL]"
