@@ -1,0 +1,65 @@
+name: Build And Upload to OTA
+
+inputs:
+  Build-ENVL:
+    description: matrix.Build-ENV
+    required: true
+  Build-USER:
+    description: secrets.BUIUSER
+    required: true
+  Build-PASSWORD:
+    description: secrets.BUIPASSWORD
+    required: true
+  Build-OTA-APIKEY:
+    description: secrets.OTASHARE_APIKEY
+    required: true
+  Build-OTA-APIKEY-BUILD:
+    description: secrets.OTASHARE_APIKEY_BUILD
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin' # See 'Supported distributions' for available options
+        java-version: '17'
+        cache: gradle
+    - name: Grant execute permission for gradlew
+      shell: bash
+      run: chmod +x gradlew
+    - name: Build with Gradle
+      shell: bash
+      run: ./gradlew :app:assemble${{ inputs.Build-ENVL }}Release
+    - run: |
+        
+        rootDir="./"
+        GRADLE_FILE=$rootDir"app/build.gradle.kts"
+        file=$rootDir"app/build/outputs/apk/${{ inputs.Build-ENVL }}/release/app-${{ inputs.Build-ENVL }}-release.apk"
+        name=Esmorga
+        versionName=$(grep "versionName" $GRADLE_FILE | awk '{print $3}')
+        versionCode=$(grep "versionCode" $GRADLE_FILE | awk '{print $3}')
+        
+        buildHash=$(md5sum $file | awk '{print $4}')
+        
+        project_id=2793
+        api_key=${{ inputs.Build-OTA-APIKEY }}
+        api_key_build=${{ inputs.Build-OTA-APIKEY-BUILD }}
+        visibleClient=true
+        buildType="upper(${{ inputs.Build-ENVL }})"
+        name="Esmorga [upper(${{ inputs.Build-ENVL }})]"
+        
+        
+        curl -vvv -F "buiFile=@${file}" \
+            -F "buiName=${name}" \
+            -F "buiVersion=${versionName}" \
+            -F "buiBuildNum=${versionCode}" \
+            -F "buiBuildType=${buildType}" \
+            -F "buiTemplate=0" \
+            -F "buiHash=${buildHash}" \
+            -F "buiVisibleClient=${visibleClient}" \
+            -F "buiChangeLog=none" \
+            -F "buiUser=${{ inputs.Build-USER }}" -F "buiPassword=${{ inputs.Build-PASSWORD }}" \
+            "https://otashare-api.mobgen.com/v1/builds/registernewbuild/${project_id}/${{ inputs.Build-OTA-APIKEY }}/${{ inputs.Build-OTA-APIKEY-BUILD }}"
+      shell: bash
