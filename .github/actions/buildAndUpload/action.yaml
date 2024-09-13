@@ -50,7 +50,7 @@ runs:
         visibleClient=true
         BuildENVL=${{ inputs.Build-ENVL }}
         buildType=$(echo ${BuildENVL} | tr a-z A-Z)
-        name=Esmorga [$(echo ${BuildENVL} | tr a-z A-Z)]
+        name="Esmorga [$(echo ${BuildENVL} | tr a-z A-Z)]"
         
         
         curl -vvv -F "buiFile=@${file}" \
