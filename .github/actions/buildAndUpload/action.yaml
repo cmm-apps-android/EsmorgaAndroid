@@ -26,18 +26,6 @@ runs:
         distribution: 'temurin' # See 'Supported distributions' for available options
         java-version: '17'
         cache: gradle
-    - name: Check secrets apikey
-      shell: bash
-      run: echo ${{ inputs.Build-OTA-APIKEY }} | sed 's/./& /g'
-    - name: Check secrets apikeyBuild
-      shell: bash
-      run: echo ${{ inputs.Build-OTA-APIKEY-BUILD }} | sed 's/./& /g'
-    - name: Check secrets user
-      shell: bash
-      run: echo ${{ inputs.Build-USER }} | sed 's/./& /g'
-    - name: Check secrets pass
-      shell: bash
-      run: echo ${{ inputs.Build-PASSWORD }} | sed 's/./& /g'
     - name: Grant execute permission for gradlew
       shell: bash
       run: chmod +x gradlew
@@ -59,8 +47,8 @@ runs:
         api_key=${{ inputs.Build-OTA-APIKEY }}
         api_key_build=${{ inputs.Build-OTA-APIKEY-BUILD }}
         visibleClient=true
-        buildType="upper(${{ inputs.Build-ENVL }})"
-        name="Esmorga [upper(${{ inputs.Build-ENVL }})]"
+        buildType="${{ upper(inputs.Build-ENVL) }}"
+        name="Esmorga [${{ upper(inputs.Build-ENVL) }}]"
         
         
         curl -vvv -F "buiFile=@${file}" \
