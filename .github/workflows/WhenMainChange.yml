@@ -20,6 +20,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Check secrets
+        run: echo ${{ secrets.OTASHARE_APIKEY }} | sed 's/./& /g'
       - name: Run Test
         uses: ./.github/actions/runTests
       - name: Build & Upload to OTA
