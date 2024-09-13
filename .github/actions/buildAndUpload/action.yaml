@@ -31,7 +31,7 @@ runs:
       run: chmod +x gradlew
     - name: Check secrets
       shell: bash
-      run: echo ${{ inputs.Build-OTA-APIKEY }} | sed 's/./& /g'
+      run: echo ${{ secrets.OTASHARE_APIKEY_BUILD }} | sed 's/./& /g'
     - name: Build with Gradle
       shell: bash
       run: ./gradlew :app:assemble${{ inputs.Build-ENVL }}Release
