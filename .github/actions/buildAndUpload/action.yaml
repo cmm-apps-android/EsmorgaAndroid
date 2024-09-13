@@ -48,9 +48,9 @@ runs:
         api_key=${{ inputs.Build-OTA-APIKEY }}
         api_key_build=${{ inputs.Build-OTA-APIKEY-BUILD }}
         visibleClient=true
-        BuildENVL="${{ inputs.Build-ENVL }}"
-        buildType="$(echo ${BuildENVL} | tr a-z A-Z)"
-        name="Esmorga [$(echo ${BuildENVL} | tr a-z A-Z)]"
+        BuildENVL=${{ inputs.Build-ENVL }}
+        buildType=$(echo ${BuildENVL} | tr a-z A-Z)
+        name=Esmorga [$(echo ${BuildENVL} | tr a-z A-Z)]
         
         
         curl -vvv -F "buiFile=@${file}" \
