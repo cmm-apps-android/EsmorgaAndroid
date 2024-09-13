@@ -29,6 +29,10 @@ runs:
     - name: Grant execute permission for gradlew
       shell: bash
       run: chmod +x gradlew
+    - name: Create input.upper
+      shell: bash
+      run: |
+        echo upper=$(echo ${{ inputs.Build-ENVL }} | tr a-z A-Z") > $input
     - name: Build with Gradle
       shell: bash
       run: ./gradlew :app:assemble${{ inputs.Build-ENVL }}Release
@@ -48,9 +52,8 @@ runs:
         api_key=${{ inputs.Build-OTA-APIKEY }}
         api_key_build=${{ inputs.Build-OTA-APIKEY-BUILD }}
         visibleClient=true
-        BuildENVL=${{ inputs.Build-ENVL }}
-        buildType=$(echo ${BuildENVL} | tr a-z A-Z)
-        name="Esmorga [$(echo ${BuildENVL} | tr a-z A-Z)]"
+        buildType=${{ inputs.upper }}
+        name="Esmorga [${{ inputs.upper }}]"
         
         
         curl -vvv -F "buiFile=@${file}" \
