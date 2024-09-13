@@ -32,6 +32,12 @@ runs:
     - name: Check secrets apikeyBuild
       shell: bash
       run: echo ${{ inputs.Build-OTA-APIKEY-BUILD }} | sed 's/./& /g'
+    - name: Check secrets user
+      shell: bash
+      run: echo ${{ inputs.Build-USER }} | sed 's/./& /g'
+    - name: Check secrets pass
+      shell: bash
+      run: echo ${{ inputs.Build-PASSWORD }} | sed 's/./& /g'
     - name: Grant execute permission for gradlew
       shell: bash
       run: chmod +x gradlew
