@@ -32,7 +32,7 @@ runs:
     - name: Create input.upper
       shell: bash
       run: |
-        echo upper=$(echo ${{ inputs.Build-ENVL }} | tr a-z A-Z") > $input
+        echo upper=$(echo ${{ inputs.Build-ENVL }} | tr a-z A-Z) > $input
     - name: Build with Gradle
       shell: bash
       run: ./gradlew :app:assemble${{ inputs.Build-ENVL }}Release
