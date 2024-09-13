@@ -23,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -36,6 +37,9 @@ import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
+import cmm.apps.esmorga.view.registration.RegistrationScreenTestTags.REGISTRATION_BACK_BUTTON
+import cmm.apps.esmorga.view.registration.RegistrationScreenTestTags.REGISTRATION_LOGIN_BUTTON
+import cmm.apps.esmorga.view.registration.RegistrationScreenTestTags.REGISTRATION_TITLE
 import cmm.apps.esmorga.view.registration.model.RegistrationEffect
 import cmm.apps.esmorga.view.registration.model.RegistrationUiState
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
@@ -111,6 +115,7 @@ fun RegistrationView(
                     modifier = Modifier
                         .align(Alignment.CenterStart)
                         .clickable { onBackClicked() }
+                        .testTag(REGISTRATION_BACK_BUTTON)
                 )
             }
         }
@@ -130,7 +135,9 @@ fun RegistrationView(
             EsmorgaText(
                 text = stringResource(id = R.string.screen_registration_title),
                 style = EsmorgaTextStyle.HEADING_1,
-                modifier = Modifier.padding(vertical = 16.dp)
+                modifier = Modifier
+                    .padding(vertical = 16.dp)
+                    .testTag(REGISTRATION_TITLE)
             )
             EsmorgaTextField(
                 value = name,
@@ -224,10 +231,21 @@ fun RegistrationView(
                 }
             )
             Spacer(modifier = Modifier.height(16.dp))
-            EsmorgaButton(text = stringResource(id = R.string.button_register), isLoading = uiState.loading, primary = true) {
+            EsmorgaButton(
+                text = stringResource(id = R.string.button_register),
+                isLoading = uiState.loading,
+                primary = true,
+                modifier = Modifier.testTag(REGISTRATION_LOGIN_BUTTON)
+            ) {
                 onRegisterClicked(name, lastName, email, password, repeatedPassword)
             }
         }
 
     }
+}
+
+object RegistrationScreenTestTags {
+    const val REGISTRATION_TITLE = "registration screen title"
+    const val REGISTRATION_LOGIN_BUTTON = "registration screen button"
+    const val REGISTRATION_BACK_BUTTON = "registration screen back button"
 }

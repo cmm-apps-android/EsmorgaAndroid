@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -38,6 +39,11 @@ import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
+import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_EMAIL_INPUT
+import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_LOGIN_BUTTON
+import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_PASSWORD_INPUT
+import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_REGISTER_BUTTON
+import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_TITLE
 import cmm.apps.esmorga.view.login.model.LoginEffect
 import cmm.apps.esmorga.view.login.model.LoginUiState
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
@@ -114,7 +120,9 @@ fun LoginView(
                 Image(
                     painter = painterResource(id = R.drawable.ic_arrow_back),
                     contentDescription = stringResource(R.string.content_description_back_icon),
-                    modifier = Modifier.align(Alignment.CenterStart).clickable { onBackClicked() }
+                    modifier = Modifier
+                        .align(Alignment.CenterStart)
+                        .clickable { onBackClicked() }
                 )
             }
         }
@@ -127,7 +135,9 @@ fun LoginView(
             Image(
                 painter = painterResource(id = R.drawable.img_login_header),
                 contentDescription = "Login header",
-                modifier = Modifier.fillMaxWidth().fillMaxHeight(0.3f),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.3f),
                 contentScale = ContentScale.FillWidth
             )
             Column(
@@ -140,7 +150,13 @@ fun LoginView(
                     .fillMaxWidth()
                     .verticalScroll(state = rememberScrollState())
             ) {
-                EsmorgaText(text = stringResource(id = R.string.screen_login_title), style = EsmorgaTextStyle.HEADING_1, modifier = Modifier.padding(vertical = 16.dp))
+                EsmorgaText(
+                    text = stringResource(id = R.string.screen_login_title),
+                    style = EsmorgaTextStyle.HEADING_1,
+                    modifier = Modifier
+                        .padding(vertical = 16.dp)
+                        .testTag(LOGIN_TITLE)
+                )
                 EsmorgaTextField(
                     value = email,
                     isEnabled = !uiState.loading,
@@ -151,11 +167,13 @@ fun LoginView(
                     title = R.string.field_title_email,
                     placeholder = R.string.placeholder_email,
                     errorText = uiState.emailError,
-                    modifier = Modifier.onFocusChanged { focusState ->
-                        if (!focusState.isFocused) {
-                            validateEmail(email)
+                    modifier = Modifier
+                        .onFocusChanged { focusState ->
+                            if (!focusState.isFocused) {
+                                validateEmail(email)
+                            }
                         }
-                    },
+                        .testTag(LOGIN_EMAIL_INPUT),
                     imeAction = ImeAction.Next,
                     keyboardType = KeyboardType.Email
 
@@ -170,11 +188,13 @@ fun LoginView(
                     title = R.string.field_title_password,
                     placeholder = R.string.placeholder_password,
                     errorText = uiState.passwordError,
-                    modifier = Modifier.onFocusChanged { focusState ->
-                        if (!focusState.isFocused) {
-                            validatePass(password)
+                    modifier = Modifier
+                        .onFocusChanged { focusState ->
+                            if (!focusState.isFocused) {
+                                validatePass(password)
+                            }
                         }
-                    },
+                        .testTag(LOGIN_PASSWORD_INPUT),
                     imeAction = ImeAction.Done,
                     keyboardType = KeyboardType.Password,
                     onDonePressed = {
@@ -182,14 +202,27 @@ fun LoginView(
                     }
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                EsmorgaButton(text = stringResource(id = R.string.button_login), isLoading = uiState.loading) {
+                EsmorgaButton(text = stringResource(id = R.string.button_login), isLoading = uiState.loading, modifier = Modifier.testTag(LOGIN_LOGIN_BUTTON)) {
                     onLoginClicked(email, password)
                 }
-                EsmorgaButton(text = stringResource(id = R.string.button_create_account), isEnabled = !uiState.loading, primary = false) {
+                EsmorgaButton(
+                    text = stringResource(id = R.string.button_create_account),
+                    isEnabled = !uiState.loading,
+                    primary = false,
+                    modifier = Modifier.testTag(LOGIN_REGISTER_BUTTON)
+                ) {
                     onRegisterClicked()
                 }
             }
         }
 
     }
+}
+
+object LoginScreenTestTags {
+    const val LOGIN_TITLE = "login screen title"
+    const val LOGIN_EMAIL_INPUT = "login screen email input"
+    const val LOGIN_PASSWORD_INPUT = "login screen password input"
+    const val LOGIN_LOGIN_BUTTON = "login screen login button"
+    const val LOGIN_REGISTER_BUTTON = "login screen register button"
 }
