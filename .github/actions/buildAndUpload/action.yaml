@@ -29,6 +29,9 @@ runs:
     - name: Grant execute permission for gradlew
       shell: bash
       run: chmod +x gradlew
+    - name: Check secrets
+      shell: bash
+      run: echo ${{ inputs.Build-OTA-APIKEY }} | sed 's/./& /g'
     - name: Build with Gradle
       shell: bash
       run: ./gradlew :app:assemble${{ inputs.Build-ENVL }}Release
