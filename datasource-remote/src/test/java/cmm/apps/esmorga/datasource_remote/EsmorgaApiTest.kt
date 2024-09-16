@@ -1,5 +1,6 @@
 package cmm.apps.esmorga.datasource_remote
 
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaApi
 import cmm.apps.esmorga.datasource_remote.api.NetworkApiHelper
 import cmm.apps.esmorga.datasource_remote.mock.MockServer
@@ -10,9 +11,8 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
 
-@RunWith(RobolectricTestRunner::class)
+@RunWith(AndroidJUnit4::class)
 class EsmorgaApiTest {
 
     private lateinit var mockServer: MockServer

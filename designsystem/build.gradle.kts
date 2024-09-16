@@ -47,8 +47,6 @@ dependencies {
     implementation(libs.compose.material3)
 
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
 
     debugImplementation(libs.compose.ui.tooling)
 }

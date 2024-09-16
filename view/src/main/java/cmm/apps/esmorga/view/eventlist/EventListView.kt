@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -38,6 +39,8 @@ import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
+import cmm.apps.esmorga.view.eventlist.EventListScreenTestTags.EVENT_LIST_EVENT_NAME
+import cmm.apps.esmorga.view.eventlist.EventListScreenTestTags.EVENT_LIST_TITLE
 import cmm.apps.esmorga.view.eventlist.model.EventListEffect
 import cmm.apps.esmorga.view.eventlist.model.EventListUiModel
 import cmm.apps.esmorga.view.eventlist.model.EventListUiState
@@ -93,7 +96,13 @@ fun EventListView(uiState: EventListUiState, snackbarHostState: SnackbarHostStat
                 end = 16.dp
             )
         ) {
-            EsmorgaText(text = stringResource(R.string.screen_event_list_title), style = EsmorgaTextStyle.HEADING_1, modifier = Modifier.padding(vertical = 32.dp))
+            EsmorgaText(
+                text = stringResource(R.string.screen_event_list_title),
+                style = EsmorgaTextStyle.HEADING_1,
+                modifier = Modifier
+                    .padding(vertical = 32.dp)
+                    .testTag(EVENT_LIST_TITLE)
+            )
             if (uiState.loading) {
                 EventListLoading()
             } else {
@@ -202,10 +211,21 @@ fun EventList(events: List<EventListUiModel>, onEventClick: (eventId: String) ->
                         .clip(RoundedCornerShape(16.dp))
                 )
 
-                EsmorgaText(text = event.cardTitle, style = EsmorgaTextStyle.HEADING_2, modifier = Modifier.padding(vertical = 4.dp))
+                EsmorgaText(
+                    text = event.cardTitle,
+                    style = EsmorgaTextStyle.HEADING_2,
+                    modifier = Modifier
+                        .padding(vertical = 4.dp)
+                        .testTag(EVENT_LIST_EVENT_NAME)
+                )
                 EsmorgaText(text = event.cardSubtitle1, style = EsmorgaTextStyle.BODY_1_ACCENT, modifier = Modifier.padding(vertical = 4.dp))
                 EsmorgaText(text = event.cardSubtitle2, style = EsmorgaTextStyle.BODY_1_ACCENT, modifier = Modifier.padding(vertical = 4.dp))
             }
         }
     }
+}
+
+object EventListScreenTestTags {
+    const val EVENT_LIST_TITLE = "event list screen title"
+    const val EVENT_LIST_EVENT_NAME = "event list event name"
 }

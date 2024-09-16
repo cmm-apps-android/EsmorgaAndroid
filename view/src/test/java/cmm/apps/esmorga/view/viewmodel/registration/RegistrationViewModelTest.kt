@@ -2,6 +2,7 @@ package cmm.apps.esmorga.view.viewmodel.registration
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import app.cash.turbine.test
 import cmm.apps.esmorga.domain.result.ErrorCodes.NO_CONNECTION
 import cmm.apps.esmorga.domain.result.EsmorgaException
@@ -27,9 +28,8 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.test.KoinTest
-import org.robolectric.RobolectricTestRunner
 
-@RunWith(RobolectricTestRunner::class)
+@RunWith(AndroidJUnit4::class)
 class RegistrationViewModelTest : KoinTest {
 
     @get:Rule

@@ -1,9 +1,9 @@
 package cmm.apps.esmorga.component.eventList
 
-import android.app.Application
 import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import cmm.apps.esmorga.component.mock.EventDataMock
 import cmm.apps.esmorga.component.mock.MockApplication
 import cmm.apps.esmorga.data.di.DataDIModule.REMOTE_DATASOURCE_INSTANCE_NAME
@@ -30,11 +30,10 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.koin.test.KoinTest
 import org.koin.test.inject
-import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@RunWith(RobolectricTestRunner::class)
+@RunWith(AndroidJUnit4::class)
 @Config(application = MockApplication::class)
 class EventListViewModelComponentTest : KoinTest {
 
