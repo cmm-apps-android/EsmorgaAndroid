@@ -22,6 +22,9 @@ import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.domain.user.PerformLoginUseCase
 import cmm.apps.esmorga.domain.user.PerformRegistrationUserCase
 import cmm.apps.esmorga.view.di.ViewDIModule
+import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAILS_BACK_BUTTON
+import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAILS_EVENT_NAME
+import cmm.apps.esmorga.view.eventlist.EventListScreenTestTags.EVENT_LIST_EVENT_NAME
 import cmm.apps.esmorga.view.eventlist.EventListScreenTestTags.EVENT_LIST_TITLE
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_EMAIL_INPUT
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_LOGIN_BUTTON
@@ -59,7 +62,7 @@ class NavigationTest {
     private lateinit var navController: NavHostController
 
     private val getEventListUseCase = mockk<GetEventListUseCase>(relaxed = true).also { useCase ->
-        coEvery { useCase() } returns Result.success(Success(listOf()))
+        coEvery { useCase() } returns Result.success(Success(EventViewMock.provideEventList(listOf("event"))))
     }
 
     private val getEventDetailsUseCase = mockk<GetEventDetailsUseCase>(relaxed = true).also { useCase ->
@@ -106,12 +109,7 @@ class NavigationTest {
 
     @Test
     fun `given user not logged, when app is open, then welcome screen is shown`() {
-        composeTestRule.setContent {
-            KoinContext {
-                navController = rememberNavController()
-                EsmorgaNavHost(navigationController = navController, loggedIn = false)
-            }
-        }
+        setNavigationFromAppLaunch(loggedIn = false)
 
         composeTestRule.onNodeWithTag(WELCOME_PRIMARY_BUTTON).assertIsDisplayed()
         composeTestRule.onNodeWithTag(WELCOME_SECONDARY_BUTTON).assertIsDisplayed()
@@ -119,24 +117,14 @@ class NavigationTest {
 
     @Test
     fun `given user logged, when app is open, then event list screen is shown`() {
-        composeTestRule.setContent {
-            KoinContext {
-                navController = rememberNavController()
-                EsmorgaNavHost(navigationController = navController, loggedIn = true)
-            }
-        }
+        setNavigationFromAppLaunch(loggedIn = true)
 
         composeTestRule.onNodeWithTag(EVENT_LIST_TITLE).assertIsDisplayed()
     }
 
     @Test
     fun `given user not logged, when app is open and continue as guest is clicked, then events screen is shown`() {
-        composeTestRule.setContent {
-            KoinContext {
-                navController = rememberNavController()
-                EsmorgaNavHost(navigationController = navController, loggedIn = false)
-            }
-        }
+        setNavigationFromAppLaunch(loggedIn = false)
 
         composeTestRule.onNodeWithTag(WELCOME_SECONDARY_BUTTON).performClick()
 
@@ -145,12 +133,7 @@ class NavigationTest {
 
     @Test
     fun `given user not logged, when app is open and login is clicked, then login screen is shown`() {
-        composeTestRule.setContent {
-            KoinContext {
-                navController = rememberNavController()
-                EsmorgaNavHost(navigationController = navController, loggedIn = false)
-            }
-        }
+        setNavigationFromAppLaunch(loggedIn = false)
 
         composeTestRule.onNodeWithTag(WELCOME_PRIMARY_BUTTON).performClick()
 
@@ -160,15 +143,8 @@ class NavigationTest {
     }
 
     @Test
-    fun `given user not logged, when app is open, login visited and login is performed, then event list screen is shown`() {
-        composeTestRule.setContent {
-            KoinContext {
-                navController = rememberNavController()
-                EsmorgaNavHost(navigationController = navController, loggedIn = false)
-            }
-        }
-
-        composeTestRule.onNodeWithTag(WELCOME_PRIMARY_BUTTON).performClick()
+    fun `given user not logged, when login visited and login is performed, then event list screen is shown`() {
+        setNavigationFromDestination(Navigation.LoginScreen)
 
         composeTestRule.onNodeWithTag(LOGIN_EMAIL_INPUT).performTextInput("simple@man.com")
         composeTestRule.onNodeWithTag(LOGIN_PASSWORD_INPUT).performTextInput("Test@123")
@@ -178,30 +154,18 @@ class NavigationTest {
     }
 
     @Test
-    fun `given user not logged, when app is open, login is clicked and register is clicked, then register screen is shown`() {
-        composeTestRule.setContent {
-            KoinContext {
-                navController = rememberNavController()
-                EsmorgaNavHost(navigationController = navController, loggedIn = false)
-            }
-        }
+    fun `given user not logged, when login visited and register is clicked, then register screen is shown`() {
+        setNavigationFromDestination(Navigation.LoginScreen)
 
-        composeTestRule.onNodeWithTag(WELCOME_PRIMARY_BUTTON).performClick()
         composeTestRule.onNodeWithTag(LOGIN_REGISTER_BUTTON).performClick()
 
         composeTestRule.onNodeWithTag(REGISTRATION_TITLE).assertIsDisplayed()
     }
 
     @Test
-    fun `given user not logged, when app is open, login, register and back are clicked, then login screen is shown`() {
-        composeTestRule.setContent {
-            KoinContext {
-                navController = rememberNavController()
-                EsmorgaNavHost(navigationController = navController, loggedIn = false)
-            }
-        }
+    fun `given user not logged, when login, register and back are clicked, then login screen is shown`() {
+        setNavigationFromDestination(Navigation.LoginScreen)
 
-        composeTestRule.onNodeWithTag(WELCOME_PRIMARY_BUTTON).performClick()
         composeTestRule.onNodeWithTag(LOGIN_REGISTER_BUTTON).performClick()
         composeTestRule.onNodeWithTag(REGISTRATION_BACK_BUTTON).performClick()
 
@@ -209,20 +173,13 @@ class NavigationTest {
     }
 
     @Test
-    fun `given user not logged, when app is open, login is visited and login fails, then error screen is shown`() {
+    fun `given user not logged, when login is visited and login fails, then error screen is shown`() {
         val failurePerformLoginUseCase = mockk<PerformLoginUseCase>(relaxed = true).also { useCase ->
             coEvery { useCase(any(), any()) } returns Result.failure(EsmorgaException("Mock error", Source.REMOTE, 401))
         }
         loadKoinModules(module { factory<PerformLoginUseCase> { failurePerformLoginUseCase } })
 
-        composeTestRule.setContent {
-            KoinContext {
-                navController = rememberNavController()
-                EsmorgaNavHost(navigationController = navController, loggedIn = false)
-            }
-        }
-
-        composeTestRule.onNodeWithTag(WELCOME_PRIMARY_BUTTON).performClick()
+        setNavigationFromDestination(Navigation.LoginScreen)
 
         composeTestRule.onNodeWithTag(LOGIN_TITLE).assertIsDisplayed()
         composeTestRule.onNodeWithTag(LOGIN_EMAIL_INPUT).performTextInput("simple@man.com")
@@ -234,6 +191,42 @@ class NavigationTest {
 
         composeTestRule.onNodeWithTag(LOGIN_TITLE).assertIsDisplayed()
     }
+
+    @Test
+    fun `given user logged, when event list screen visited and event is clicked, then event detail is shown`() {
+        setNavigationFromDestination(Navigation.EventListScreen)
+
+        composeTestRule.onNodeWithTag(EVENT_LIST_EVENT_NAME, true).performClick()
+        composeTestRule.onNodeWithTag(EVENT_DETAILS_EVENT_NAME).assertIsDisplayed()
+    }
+
+    @Test
+    fun `given user logged, when visiting event list, details and back clicked, then event list is shown`() {
+        setNavigationFromDestination(Navigation.EventListScreen)
+
+        composeTestRule.onNodeWithTag(EVENT_LIST_EVENT_NAME, true).performClick()
+        composeTestRule.onNodeWithTag(EVENT_DETAILS_BACK_BUTTON).performClick()
+        composeTestRule.onNodeWithTag(EVENT_LIST_TITLE).assertIsDisplayed()
+    }
+
+    private fun setNavigationFromAppLaunch(loggedIn: Boolean) {
+        composeTestRule.setContent {
+            KoinContext {
+                navController = rememberNavController()
+                EsmorgaNavigationGraph(navigationController = navController, loggedIn = loggedIn)
+            }
+        }
+    }
+
+    private fun setNavigationFromDestination(startDestination: Navigation) {
+        composeTestRule.setContent {
+            KoinContext {
+                navController = rememberNavController()
+                EsmorgaNavHost(navigationController = navController, startDestination = startDestination)
+            }
+        }
+    }
+
 
     private fun printComposeUiTreeToLog(testTag: String? = null) {
         if (testTag.isNullOrEmpty()) {

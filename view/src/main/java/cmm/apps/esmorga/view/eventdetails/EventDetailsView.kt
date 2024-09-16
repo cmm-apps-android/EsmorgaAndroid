@@ -20,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -29,9 +30,11 @@ import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
+import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAILS_BACK_BUTTON
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsEffect
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiState
 import cmm.apps.esmorga.view.navigation.openNavigationApp
+import cmm.apps.esmorga.view.registration.RegistrationScreenTestTags.REGISTRATION_BACK_BUTTON
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -80,9 +83,8 @@ fun EventDetailsView(uiState: EventDetailsUiState, onNavigateClicked: () -> Unit
             TopAppBar(
                 title = {},
                 navigationIcon = {
-                    IconButton(onClick = {
-                        onBackPressed()
-                    }) {
+                    IconButton(onClick = { onBackPressed() },
+                        modifier = Modifier.testTag(EVENT_DETAILS_BACK_BUTTON)) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back to event list"
@@ -114,8 +116,11 @@ fun EventDetailsView(uiState: EventDetailsUiState, onNavigateClicked: () -> Unit
                     .aspectRatio(16 / 9f)
             )
             EsmorgaText(
-                text = uiState.title, style = EsmorgaTextStyle.TITLE, modifier = Modifier
+                text = uiState.title,
+                style = EsmorgaTextStyle.TITLE,
+                modifier = Modifier
                     .padding(top = 32.dp, start = 16.dp, bottom = 16.dp, end = 16.dp)
+                    .testTag(EventDetailsScreenTestTags.EVENT_DETAILS_EVENT_NAME)
             )
             EsmorgaText(text = uiState.subtitle, style = EsmorgaTextStyle.BODY_1_ACCENT, modifier = Modifier.padding(horizontal = 16.dp))
             EsmorgaText(
@@ -146,4 +151,9 @@ fun EventDetailsView(uiState: EventDetailsUiState, onNavigateClicked: () -> Unit
 
         }
     }
+}
+
+object EventDetailsScreenTestTags {
+    const val EVENT_DETAILS_EVENT_NAME = "event details event name"
+    const val EVENT_DETAILS_BACK_BUTTON = "event details back button"
 }

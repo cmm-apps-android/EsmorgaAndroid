@@ -18,6 +18,7 @@ import cmm.apps.esmorga.view.login.LoginScreen
 import cmm.apps.esmorga.view.registration.RegistrationScreen
 import cmm.apps.esmorga.view.welcome.WelcomeScreen
 import kotlinx.serialization.Serializable
+import org.jetbrains.annotations.VisibleForTesting
 import kotlin.reflect.typeOf
 
 sealed class Navigation {
@@ -44,8 +45,17 @@ sealed class Navigation {
 const val GOOGLE_MAPS_PACKAGE = "com.google.android.apps.maps"
 
 @Composable
-fun EsmorgaNavHost(navigationController: NavHostController, loggedIn: Boolean) {
+fun EsmorgaNavigationGraph(navigationController: NavHostController, loggedIn: Boolean) {
     val startDestination = if (loggedIn) Navigation.EventListScreen else Navigation.WelcomeScreen
+    EsmorgaNavHost(navigationController = navigationController, startDestination = startDestination)
+}
+
+/**
+ * Function created setting up the navigation graph from a given starting point. **DO NOT CALL FROM APP CODE**, it only exists for testing purposes.
+ * */
+@VisibleForTesting
+@Composable
+internal fun EsmorgaNavHost(navigationController: NavHostController, startDestination: Navigation) {
     NavHost(navController = navigationController, startDestination = startDestination) {
         loginFlow(navigationController)
         eventFlow(navigationController)
