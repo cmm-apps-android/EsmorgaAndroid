@@ -87,7 +87,7 @@ fun EventDetailsView(uiState: EventDetailsUiState, onNavigateClicked: () -> Unit
                         modifier = Modifier.testTag(EVENT_DETAILS_BACK_BUTTON)) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back to event list"
+                            contentDescription = stringResource(R.string.content_description_back_icon)
                         )
                     }
                 },
