@@ -32,7 +32,8 @@ runs:
     - name: Build with Gradle
       shell: bash
       run: ./gradlew :app:assemble${{ inputs.Build-ENVL }}Release
-    - run: |
+    - shell: bash
+      run: |
         
         rootDir="./"
         GRADLE_FILE=$rootDir"app/build.gradle.kts"
@@ -47,9 +48,9 @@ runs:
         api_key=${{ inputs.Build-OTA-APIKEY }}
         api_key_build=${{ inputs.Build-OTA-APIKEY-BUILD }}
         visibleClient=true
-        buildType="upper(${{ inputs.Build-ENVL }})"
-        name="Esmorga [upper(${{ inputs.Build-ENVL }})]"
-        
+        BuildENVL="$(echo ${{ inputs.Build-ENVL }} | tr a-z A-Z )"
+        buildType="$BuildENVL"
+        name="Esmorga [$BuildENVL]"
         
         curl -vvv -F "buiFile=@${file}" \
             -F "buiName=${name}" \
@@ -61,5 +62,4 @@ runs:
             -F "buiVisibleClient=${visibleClient}" \
             -F "buiChangeLog=none" \
             -F "buiUser=${{ inputs.Build-USER }}" -F "buiPassword=${{ inputs.Build-PASSWORD }}" \
-            "https://otashare-api.mobgen.com/v1/builds/registernewbuild/${project_id}/${{ inputs.Build-OTA-APIKEY }}/${{ inputs.Build-OTA-APIKEY-BUILD }}"
-      shell: bash
+            "https://otashare-api.mobgen.com/v1/builds/registernewbuild/${project_id}/${api_key}/${api_key_build}"

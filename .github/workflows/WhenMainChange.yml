@@ -3,11 +3,12 @@ run-name: Creating Android builds
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
-  test-and-build:
+  build:
 
     runs-on: ${{ matrix.os }}
     strategy:
@@ -17,13 +18,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Run Test
-        uses: ./.github/actions/runTests
       - name: Build & Upload to OTA
         uses: ./.github/actions/buildAndUpload
         with:
           Build-ENVL: ${{ matrix.Build-ENVL }}
-          Build-USER: secrets.BUIUSER
-          Build-PASSWORD: secrets.BUIPASSWORD
-          Build-OTA-APIKEY: secrets.OTASHARE_APIKEY
-          Build-OTA-APIKEY-BUILD: secrets.OTASHARE_APIKEY_BUILD
+          Build-USER: ${{ secrets.BUIUSER }}
+          Build-PASSWORD: ${{ secrets.BUIPASSWORD }}
+          Build-OTA-APIKEY: ${{ secrets.OTASHARE_APIKEY }}
+          Build-OTA-APIKEY-BUILD: ${{ secrets.OTASHARE_APIKEY_BUILD }}
