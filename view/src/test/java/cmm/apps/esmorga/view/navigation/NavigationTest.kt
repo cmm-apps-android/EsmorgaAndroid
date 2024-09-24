@@ -31,6 +31,8 @@ import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_LOGIN_BUTTON
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_PASSWORD_INPUT
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_REGISTER_BUTTON
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_TITLE
+import cmm.apps.esmorga.view.navigation.HomeScreenTestTags.MY_EVENTS_TITLE
+import cmm.apps.esmorga.view.navigation.HomeScreenTestTags.PROFILE__TITLE
 import cmm.apps.esmorga.view.registration.RegistrationScreenTestTags.REGISTRATION_BACK_BUTTON
 import cmm.apps.esmorga.view.registration.RegistrationScreenTestTags.REGISTRATION_TITLE
 import cmm.apps.esmorga.view.viewmodel.mock.EventViewMock
@@ -207,6 +209,19 @@ class NavigationTest {
         composeTestRule.onNodeWithTag(EVENT_LIST_EVENT_NAME, true).performClick()
         composeTestRule.onNodeWithTag(EVENT_DETAILS_BACK_BUTTON).performClick()
         composeTestRule.onNodeWithTag(EVENT_LIST_TITLE).assertIsDisplayed()
+    }
+
+    //TODO Modify this two last tests when the screens will be done
+    @Test
+    fun `given main screen, when clicks on bottom bar my events item, then my events screen is shown`() {
+        setNavigationFromDestination(Navigation.MyEventsScreen)
+        composeTestRule.onNodeWithTag(MY_EVENTS_TITLE).assertIsDisplayed()
+    }
+
+    @Test
+    fun `given main screen, when clicks on profile nav item, then profile screen is shown`() {
+        setNavigationFromDestination(Navigation.ProfileScreen)
+        composeTestRule.onNodeWithTag(PROFILE__TITLE).assertIsDisplayed()
     }
 
     private fun setNavigationFromAppLaunch(loggedIn: Boolean) {
