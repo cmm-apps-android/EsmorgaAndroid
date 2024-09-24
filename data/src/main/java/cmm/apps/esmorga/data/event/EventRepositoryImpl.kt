@@ -54,11 +54,9 @@ class EventRepositoryImpl(private val localUserDs: UserDatasource, private val l
         if (user != null) {
             val myEvents = remoteEventDs.getMyEvents()
 
-            for (event in remoteEventList) {
-                val userJoined = myEvents.firstOrNull { me -> event.dataId == me.dataId } != null
-
-                combinedList.add(event.copy(dataUserJoined = userJoined))
-            }
+            combinedList.addAll(
+                remoteEventList.map { event -> event.copy(dataUserJoined = myEvents.firstOrNull { me -> event.dataId == me.dataId } != null) }
+            )
         } else{
             combinedList.addAll(remoteEventList)
         }

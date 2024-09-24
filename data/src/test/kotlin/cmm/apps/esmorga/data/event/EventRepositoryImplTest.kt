@@ -60,18 +60,19 @@ class EventRepositoryImplTest {
     @Test
     fun `given empty local and user logged and joined to event when events requested then remote event with joined value is returned`() = runTest {
         val remoteName = "RemoteEvent"
-        val remoteEvents = EventDataMock.provideEventDataModelList(listOf(remoteName))
+        val joinedEvent = EventDataMock.provideEventDataModel(remoteName)
+        val notJoinedEvent = EventDataMock.provideEventDataModel(remoteName)
 
         coEvery { userDS.getUser() } returns UserDataMock.provideUserDataModel()
         coEvery { localDS.getEvents() } returns emptyList()
-        coEvery { remoteDS.getEvents() } returns remoteEvents
-        coEvery { remoteDS.getMyEvents() } returns remoteEvents
+        coEvery { remoteDS.getEvents() } returns listOf(joinedEvent, notJoinedEvent)
+        coEvery { remoteDS.getMyEvents() } returns listOf(joinedEvent)
 
         val sut = EventRepositoryImpl(userDS, localDS, remoteDS)
         val result = sut.getEvents()
 
         Assert.assertEquals(remoteName, result.data[0].name)
-        Assert.assertTrue(result.data[0].userJoined)
+        Assert.assertTrue(result.data.find { it.id == joinedEvent.dataId }?.userJoined == true)
     }
 
     @Test

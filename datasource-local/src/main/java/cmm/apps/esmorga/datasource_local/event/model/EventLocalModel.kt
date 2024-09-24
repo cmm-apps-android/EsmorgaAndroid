@@ -1,5 +1,6 @@
 package cmm.apps.esmorga.datasource_local.event.model
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.time.ZonedDateTime
@@ -17,5 +18,5 @@ data class EventLocalModel(
     val localLocationLong: Double? = null,
     val localTags: List<String> = listOf(),
     val localCreationTime: Long,
-    val localUserJoined: Boolean
+    @ColumnInfo(defaultValue = "0") val localUserJoined: Boolean //SQLite does not support Boolean, INTEGER is used
 )
