@@ -34,7 +34,8 @@ fun EventRemoteModel.toEventDataModel(): EventDataModel {
         dataType = parsedType,
         dataImageUrl = this.remoteImageUrl,
         dataLocation = this.remoteLocation.toEventLocationDataModel(),
-        dataTags = this.remoteTags ?: listOf()
+        dataTags = this.remoteTags ?: listOf(),
+        dataUserJoined = false
     )
 }
 

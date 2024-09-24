@@ -13,7 +13,8 @@ fun EventDataModel.toEvent(): Event = Event(
     type = this.dataType,
     imageUrl = this.dataImageUrl,
     location = EventLocation(this.dataLocation.name, this.dataLocation.lat, this.dataLocation.long),
-    tags = this.dataTags
+    tags = this.dataTags,
+    userJoined = this.dataUserJoined
 )
 
 fun List<EventDataModel>.toEventList(): List<Event> = map { edm -> edm.toEvent() }

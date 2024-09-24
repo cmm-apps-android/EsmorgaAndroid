@@ -17,6 +17,9 @@ interface EsmorgaApi {
     @GET("events")
     suspend fun getEvents(): EventListWrapperRemoteModel
 
+    @GET("account/events")
+    suspend fun getMyEvents(): EventListWrapperRemoteModel
+
     @POST("account/login")
     suspend fun login(@Body body: Map<String, String>): UserRemoteModel
 

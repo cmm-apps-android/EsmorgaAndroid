@@ -16,7 +16,8 @@ object EventLocalMock {
         localDescription = "Description",
         localType = EventType.SPORT.name,
         localLocationName = "Location",
-        localCreationTime = System.currentTimeMillis()
+        localCreationTime = System.currentTimeMillis(),
+        localUserJoined = false
     )
 
 }

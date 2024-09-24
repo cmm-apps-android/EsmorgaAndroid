@@ -4,26 +4,28 @@ import cmm.apps.esmorga.data.CacheHelper
 import cmm.apps.esmorga.data.event.datasource.EventDatasource
 import cmm.apps.esmorga.data.event.mapper.toEvent
 import cmm.apps.esmorga.data.event.mapper.toEventList
+import cmm.apps.esmorga.data.event.model.EventDataModel
+import cmm.apps.esmorga.data.user.datasource.UserDatasource
+import cmm.apps.esmorga.data.user.model.UserDataModel
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.domain.event.repository.EventRepository
 import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.Success
 
-class EventRepositoryImpl(private val localDs: EventDatasource, private val remoteDs: EventDatasource) : EventRepository {
+class EventRepositoryImpl(private val localUserDs: UserDatasource, private val localEventDs: EventDatasource, private val remoteEventDs: EventDatasource) : EventRepository {
 
     override suspend fun getEvents(forceRefresh: Boolean): Success<List<Event>> {
-        val localList = localDs.getEvents()
+        val localList = localEventDs.getEvents()
 
         if (forceRefresh.not() && localList.isNotEmpty() && CacheHelper.shouldReturnCache(localList[0].dataCreationTime)) {
             return Success(localList.toEventList())
         }
 
         try {
-            val remoteList = remoteDs.getEvents()
-            localDs.cacheEvents(remoteList)
+            val remoteEventList = getEventsFromRemote()
 
-            return Success(remoteList.toEventList())
+            return Success(remoteEventList.toEventList())
         } catch (esmorgaEx: EsmorgaException) {
             if (esmorgaEx.code == ErrorCodes.NO_CONNECTION) {
                 return Success(localList.toEventList(), ErrorCodes.NO_CONNECTION)
@@ -34,7 +36,35 @@ class EventRepositoryImpl(private val localDs: EventDatasource, private val remo
     }
 
     override suspend fun getEventDetails(eventId: String): Success<Event> {
-        return Success(localDs.getEventById(eventId).toEvent())
+        return Success(localEventDs.getEventById(eventId).toEvent())
+    }
+
+
+    private suspend fun getEventsFromRemote(): List<EventDataModel> {
+        val combinedList = mutableListOf<EventDataModel>()
+        val remoteEventList = remoteEventDs.getEvents()
+
+        var user: UserDataModel? = null
+        try {
+            user = localUserDs.getUser()
+        } catch (_: Exception) {
+            //Do nothing, either user not logged in
+        }
+
+        if (user != null) {
+            val myEvents = remoteEventDs.getMyEvents()
+
+            for (event in remoteEventList) {
+                val userJoined = myEvents.firstOrNull { me -> event.dataId == me.dataId } != null
+
+                combinedList.add(event.copy(dataUserJoined = userJoined))
+            }
+        } else{
+            combinedList.addAll(remoteEventList)
+        }
+
+        localEventDs.cacheEvents(combinedList)
+        return combinedList
     }
 
 }

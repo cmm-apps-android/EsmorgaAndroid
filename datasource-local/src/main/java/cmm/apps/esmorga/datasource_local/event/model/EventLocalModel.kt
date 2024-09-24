@@ -16,5 +16,6 @@ data class EventLocalModel(
     val localLocationLat: Double? = null,
     val localLocationLong: Double? = null,
     val localTags: List<String> = listOf(),
-    val localCreationTime: Long
+    val localCreationTime: Long,
+    val localUserJoined: Boolean
 )

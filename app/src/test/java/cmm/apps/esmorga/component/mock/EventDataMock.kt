@@ -16,7 +16,8 @@ object EventDataMock {
         dataDate = ZonedDateTime.now(),
         dataDescription = "description",
         dataType = EventType.SPORT,
-        dataLocation = EventLocationDataModel("Location")
+        dataLocation = EventLocationDataModel("Location"),
+        dataUserJoined = false
     )
 
 }

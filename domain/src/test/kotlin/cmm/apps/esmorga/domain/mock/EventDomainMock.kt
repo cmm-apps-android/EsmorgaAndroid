@@ -16,7 +16,8 @@ object EventDomainMock {
         date = ZonedDateTime.now(),
         description = "description",
         type = EventType.SPORT,
-        location = EventLocation("Location")
+        location = EventLocation("Location"),
+        userJoined = false
     )
 
 }
