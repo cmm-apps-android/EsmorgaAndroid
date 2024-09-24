@@ -1,6 +1,7 @@
 package cmm.apps.esmorga.datasource_local.di
 
 import android.content.Context
+import android.content.SharedPreferences
 import cmm.apps.esmorga.data.di.DataDIModule
 import cmm.apps.esmorga.data.event.datasource.EventDatasource
 import cmm.apps.esmorga.data.user.datasource.UserDatasource
@@ -19,11 +20,15 @@ object LocalDIModule {
 
     val module = module {
         single { esmorgaDatabase(get()) }
+        single<SharedPreferences> {
+            val context: Context = get()
+            context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+        }
         single<EventDao> { get<EsmorgaDatabase>().eventDao() }
         factory<EventDatasource>(named(DataDIModule.LOCAL_DATASOURCE_INSTANCE_NAME)) { EventLocalDatasourceImpl(get()) }
 
         single<UserDao> { get<EsmorgaDatabase>().userDao() }
-        factory<UserDatasource>(named(DataDIModule.LOCAL_DATASOURCE_INSTANCE_NAME)) { UserLocalDatasourceImpl(get()) }
+        factory<UserDatasource>(named(DataDIModule.LOCAL_DATASOURCE_INSTANCE_NAME)) { UserLocalDatasourceImpl(get(), get()) }
     }
 
 }

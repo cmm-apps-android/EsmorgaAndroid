@@ -1,7 +1,9 @@
 package cmm.apps.esmorga.datasource_remote.api
 
 
+import cmm.apps.esmorga.datasource_remote.api.authenticator.EsmorgaAuthenticator
 import com.google.gson.GsonBuilder
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -9,28 +11,31 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.util.concurrent.TimeUnit
 
 
-class NetworkApiHelper() {
+class NetworkApiHelper {
 
-    private val okHttpClient = provideOkHttpClient()
 
     fun <T> provideApi(
         baseUrl: String,
-        clazz: Class<T>
-    ): T =
-        Retrofit.Builder()
+        clazz: Class<T>,
+        authenticator: EsmorgaAuthenticator,
+        authInterceptor: Interceptor
+    ): T {
+        val okHttpClient = provideOkHttpClient(authenticator, authInterceptor)
+        return Retrofit.Builder()
             .baseUrl(baseUrl)
             .client(okHttpClient)
             .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .build()
             .create(clazz)
+    }
 
-    private fun provideOkHttpClient(): OkHttpClient =
+    private fun provideOkHttpClient(authenticator: EsmorgaAuthenticator, authInterceptor: Interceptor): OkHttpClient =
         try {
             OkHttpClient.Builder().apply {
-                //TODO add authenticator when needed
-//              authenticator(oauthAuthenticator)
+                authenticator(authenticator)
 
+                addInterceptor(authInterceptor)
                 addInterceptor(CurlLogInterceptor)
                 addInterceptor(LogInterceptor)
 

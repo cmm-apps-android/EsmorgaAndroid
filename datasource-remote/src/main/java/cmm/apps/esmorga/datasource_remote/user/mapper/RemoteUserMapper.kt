@@ -7,6 +7,8 @@ fun UserRemoteModel.toUserDataModel(): UserDataModel {
     return UserDataModel(
         dataName = remoteProfile.remoteName,
         dataLastName = remoteProfile.remoteLastName,
-        dataEmail = remoteProfile.remoteEmail
+        dataEmail = remoteProfile.remoteEmail,
+        dataAccessToken = remoteAccessToken,
+        dataRefreshToken = remoteRefreshToken
     )
 }
