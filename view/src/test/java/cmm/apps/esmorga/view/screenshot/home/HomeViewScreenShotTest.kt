@@ -6,6 +6,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import cmm.apps.esmorga.view.HomeBottomBar
+import cmm.apps.esmorga.view.navigation.Navigation
 import cmm.apps.esmorga.view.screenshot.BaseScreenshotTest
 import cmm.apps.esmorga.view.viewmodel.mock.BottomBarMock
 import org.junit.Test
@@ -14,17 +15,17 @@ class HomeViewScreenShotTest : BaseScreenshotTest() {
 
     @Test
     fun bottombar_eventLst_selected() {
-        snapshotWithState("EventListScreen")
+        snapshotWithState(Navigation.EventListScreen.toString())
     }
 
     @Test
     fun bottombar_myEvents_selected() {
-        snapshotWithState("MyEventsScreen")
+        snapshotWithState(Navigation.MyEventsScreen.toString())
     }
 
     @Test
     fun bottombar_profile_selected() {
-        snapshotWithState("ProfileScreen")
+        snapshotWithState(Navigation.ProfileScreen.toString())
     }
 
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

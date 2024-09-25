@@ -211,7 +211,7 @@ class NavigationTest {
         composeTestRule.onNodeWithTag(EVENT_LIST_TITLE).assertIsDisplayed()
     }
 
-    //TODO Modify this two last tests when the screens will be done
+    //TODO Modify this two last tests with the correct screen when the screens will be done
     @Test
     fun `given main screen, when clicks on bottom bar my events item, then my events screen is shown`() {
         setNavigationFromDestination(Navigation.MyEventsScreen)
