@@ -60,7 +60,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
     }
 
-    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     private fun setupNavigation(loggedIn: Boolean) {
         setContent {
             EsmorgaTheme {
@@ -77,7 +76,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -94,17 +92,21 @@ fun HomeView(bottomNavItems: List<BottomNavItem>, navigationController: NavHostC
             }
 
             val visibility = currentRoute in items
-
-            AnimatedVisibility(
-                visible = visibility
-            ) {
-                Column {
-                    HorizontalDivider(Modifier.fillMaxWidth(), thickness = 1.dp, color = Pearl)
-                    EsmorgaBottomBar(navigationController, bottomNavItems, currentRoute)
-                }
-            }
+            HomeBottomBar(bottomNavItems, visibility, navigationController, currentRoute)
         }
     ) {
         content.invoke()
+    }
+}
+
+@Composable
+fun HomeBottomBar(bottomNavItems: List<BottomNavItem>, visibility: Boolean, navigationController: NavHostController, currentRoute: String?) {
+    AnimatedVisibility(
+        visible = visibility
+    ) {
+        Column {
+            HorizontalDivider(Modifier.fillMaxWidth(), thickness = 1.dp, color = Pearl)
+            EsmorgaBottomBar(navigationController, bottomNavItems, currentRoute)
+        }
     }
 }
