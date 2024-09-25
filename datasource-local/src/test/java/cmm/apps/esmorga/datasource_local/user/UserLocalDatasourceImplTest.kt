@@ -36,6 +36,8 @@ class UserLocalDatasourceImplTest {
     }
 
     private fun provideFakeSharedPreferences() : SharedPreferences {
+        val fakeSharedTokenSlot = slot<String>()
+        val fakeSharedRefreshTokenSlot = slot<String>()
         val sharedPreferences = mockk<SharedPreferences>(relaxed = true)
         coEvery { sharedPreferences.getString("refresh_token", null) } coAnswers {
             fakeSharedToken
@@ -43,13 +45,11 @@ class UserLocalDatasourceImplTest {
         coEvery { sharedPreferences.getString("access_token", null) } coAnswers {
             fakeSharedRefreshToken
         }
-        coEvery { sharedPreferences.edit().putString("access_token", any()).apply() } coAnswers {
-            fakeSharedToken = "fakeToken"
-            fakeSharedToken
+        coEvery { sharedPreferences.edit().putString("access_token", capture(fakeSharedTokenSlot)).apply() } coAnswers {
+            fakeSharedToken = fakeSharedTokenSlot.captured
         }
-        coEvery { sharedPreferences.edit().putString("refresh_token", any()).apply() } coAnswers {
-            fakeSharedRefreshToken = "fakeRefreshToken"
-            fakeSharedRefreshToken
+        coEvery { sharedPreferences.edit().putString("refresh_token", capture(fakeSharedRefreshTokenSlot)).apply() } coAnswers {
+            fakeSharedRefreshToken = fakeSharedRefreshTokenSlot.captured
         }
         return sharedPreferences
     }

@@ -38,8 +38,10 @@ class EsmorgaAuthenticator : Authenticator, KoinComponent {
     private suspend fun refreshAccessToken(refreshToken: String): String? {
         return try {
             val refreshedTokens = apiService.refreshAccessToken(mapOf(REFRESH_TOKEN_KEY to refreshToken))
-            sharedPreferences.edit().putString(SHARED_REFRESH_TOKEN_KEY, refreshedTokens.remoteRefreshToken).apply()
-            sharedPreferences.edit().putString(SHARED_AUTH_TOKEN_KEY, refreshedTokens.remoteAccessToken).apply()
+            sharedPreferences.edit().run {
+                putString(SHARED_REFRESH_TOKEN_KEY, refreshedTokens.remoteRefreshToken)
+                putString(SHARED_AUTH_TOKEN_KEY, refreshedTokens.remoteAccessToken)
+            }.apply()
             return refreshedTokens.remoteAccessToken
         } catch (e: Exception) {
             null

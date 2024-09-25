@@ -13,8 +13,10 @@ import cmm.apps.esmorga.domain.result.Source
 class UserLocalDatasourceImpl(private val userDao: UserDao, private val sharedPreferences: SharedPreferences) : UserDatasource {
 
     override suspend fun saveUser(user: UserDataModel) {
-        sharedPreferences.edit().putString("refresh_token", user.dataRefreshToken).apply()
-        sharedPreferences.edit().putString("access_token", user.dataAccessToken).apply()
+        sharedPreferences.edit().run {
+            putString("access_token", user.dataAccessToken)
+            putString("refresh_token",  user.dataRefreshToken)
+        }.apply()
         userDao.insertUser(user.toUserLocalModel())
     }
 
