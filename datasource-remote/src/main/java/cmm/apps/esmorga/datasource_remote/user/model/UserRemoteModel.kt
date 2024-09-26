@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class UserRemoteModel(
     @SerializedName("accessToken") val remoteAccessToken: String,
     @SerializedName("refreshToken") val remoteRefreshToken: String,
+    @SerializedName("ttl") val ttl: Int,
     @SerializedName("profile") val remoteProfile: ProfileRemoteModel
 )
 

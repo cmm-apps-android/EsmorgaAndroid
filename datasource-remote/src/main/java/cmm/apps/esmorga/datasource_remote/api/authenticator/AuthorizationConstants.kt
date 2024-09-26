@@ -7,4 +7,5 @@ object AuthorizationConstants {
     const val SHARED_PREFERENCES_KEY = "auth_prefs"
     const val SHARED_AUTH_TOKEN_KEY = "access_token"
     const val SHARED_REFRESH_TOKEN_KEY = "refresh_token"
+    const val SHARED_TTL = "ttl"
 }

@@ -3,7 +3,6 @@ package cmm.apps.esmorga.domain.event
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.domain.event.repository.EventRepository
 import cmm.apps.esmorga.domain.result.Success
-import kotlinx.coroutines.delay
 
 interface GetEventListUseCase {
     suspend operator fun invoke(forceRefresh: Boolean = false): Result<Success<List<Event>>>
