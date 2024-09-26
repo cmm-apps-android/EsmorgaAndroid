@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import cmm.apps.esmorga.view.HomeBottomBar
 import cmm.apps.esmorga.view.navigation.Navigation
 import cmm.apps.esmorga.view.screenshot.BaseScreenshotTest
+import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import cmm.apps.esmorga.view.viewmodel.mock.BottomBarMock
 import org.junit.Test
 
@@ -32,13 +33,15 @@ class HomeViewScreenShotTest : BaseScreenshotTest() {
     private fun snapshotWithState(currentRoute: String) {
         paparazzi.snapshot {
             val navigationController = rememberNavController()
-            Scaffold(
-                modifier = Modifier.fillMaxSize(),
-                bottomBar = {
-                    HomeBottomBar(BottomBarMock.provideBottomNavItems(), true, navigationController, currentRoute)
-                }
-            ) {
+            EsmorgaTheme {
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    bottomBar = {
+                        HomeBottomBar(BottomBarMock.provideBottomNavItems(), true, navigationController, currentRoute)
+                    }
+                ) {
 
+                }
             }
         }
     }

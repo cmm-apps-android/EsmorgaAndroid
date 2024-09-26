@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -105,7 +106,7 @@ fun HomeBottomBar(bottomNavItems: List<BottomNavItem>, visibility: Boolean, navi
         visible = visibility
     ) {
         Column {
-            HorizontalDivider(Modifier.fillMaxWidth(), thickness = 1.dp, color = Pearl)
+            HorizontalDivider(Modifier.fillMaxWidth(), thickness = 1.dp, color = colorScheme.surfaceVariant)
             EsmorgaBottomBar(navigationController, bottomNavItems, currentRoute)
         }
     }

@@ -2,11 +2,11 @@ package cmm.apps.esmorga.view.home
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -16,14 +16,11 @@ import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.navigation.Navigation
-import cmm.apps.esmorga.view.theme.Lavender
-import cmm.apps.esmorga.view.theme.Sepia
 
 @Composable
 fun EsmorgaBottomBar(navigationController: NavHostController, items: List<BottomNavItem>, currentRoute: String?) {
-
     NavigationBar(
-        containerColor = Lavender,
+        containerColor = colorScheme.surface,
     ) {
         items.forEach { item ->
             NavigationBarItem(
@@ -39,7 +36,7 @@ fun EsmorgaBottomBar(navigationController: NavHostController, items: List<Bottom
                         imageVector = ImageVector.vectorResource(item.icon),
                         contentDescription = null,
                         modifier = Modifier.padding(top = 4.dp, bottom = 4.dp),
-                        tint = if (currentRoute == item.route.toString()) DarkGray else Sepia
+                        tint = if (currentRoute == item.route.toString()) colorScheme.onSurface else colorScheme.onSurfaceVariant
                     )
                 },
                 label = {
@@ -50,11 +47,11 @@ fun EsmorgaBottomBar(navigationController: NavHostController, items: List<Bottom
                 },
                 colors = androidx.compose.material3.NavigationBarItemDefaults
                     .colors(
-                        selectedIconColor = DarkGray,
-                        selectedTextColor = DarkGray,
-                        unselectedIconColor = Sepia,
-                        unselectedTextColor = Sepia,
-                        indicatorColor = Lavender
+                        selectedIconColor = colorScheme.onSurface,
+                        selectedTextColor = colorScheme.onSurface,
+                        unselectedIconColor = colorScheme.onSurfaceVariant,
+                        unselectedTextColor = colorScheme.onSurfaceVariant,
+                        indicatorColor = colorScheme.surface
                     )
             )
         }
