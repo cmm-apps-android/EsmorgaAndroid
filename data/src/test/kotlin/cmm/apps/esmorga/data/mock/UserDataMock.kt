@@ -7,6 +7,8 @@ object UserDataMock {
     fun provideUserDataModel(name: String = "Hermione", lastName: String = "Granger", email: String = "hermione@dirtyblood.com"): UserDataModel = UserDataModel(
         dataName = name,
         dataLastName = lastName,
-        dataEmail = email
+        dataEmail = email,
+        dataAccessToken = null,
+        dataRefreshToken = null
     )
 }

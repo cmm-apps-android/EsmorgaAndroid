@@ -5,6 +5,8 @@ import cmm.apps.esmorga.data.event.datasource.EventDatasource
 import cmm.apps.esmorga.data.user.datasource.UserDatasource
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaApi
 import cmm.apps.esmorga.datasource_remote.api.NetworkApiHelper
+import cmm.apps.esmorga.datasource_remote.api.authenticator.EsmorgaAuthInterceptor
+import cmm.apps.esmorga.datasource_remote.api.authenticator.EsmorgaAuthenticator
 import cmm.apps.esmorga.datasource_remote.event.EventRemoteDatasourceImpl
 import cmm.apps.esmorga.datasource_remote.user.UserRemoteDatasourceImpl
 import org.koin.core.qualifier.named
@@ -18,9 +20,10 @@ object RemoteDIModule {
         single {
             NetworkApiHelper().provideApi(
                 baseUrl = EsmorgaApi.baseUrl(),
-                clazz = EsmorgaApi::class.java
+                clazz = EsmorgaApi::class.java,
+                authenticator = EsmorgaAuthenticator(),
+                authInterceptor = EsmorgaAuthInterceptor(get())
             )
         }
     }
-
 }
