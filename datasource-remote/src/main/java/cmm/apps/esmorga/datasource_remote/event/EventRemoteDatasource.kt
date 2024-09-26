@@ -3,14 +3,8 @@ package cmm.apps.esmorga.datasource_remote.event
 import cmm.apps.esmorga.data.event.datasource.EventDatasource
 import cmm.apps.esmorga.data.event.model.EventDataModel
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaApi
+import cmm.apps.esmorga.datasource_remote.api.ExceptionHandler.manageApiException
 import cmm.apps.esmorga.datasource_remote.event.mapper.toEventDataModelList
-import cmm.apps.esmorga.domain.result.ErrorCodes
-import cmm.apps.esmorga.domain.result.EsmorgaException
-import cmm.apps.esmorga.domain.result.Source
-import retrofit2.HttpException
-import java.net.ConnectException
-import java.net.UnknownHostException
-import java.time.format.DateTimeParseException
 
 
 class EventRemoteDatasourceImpl(private val eventApi: EsmorgaApi) : EventDatasource {
@@ -33,13 +27,5 @@ class EventRemoteDatasourceImpl(private val eventApi: EsmorgaApi) : EventDatasou
         }
     }
 
-    private fun manageApiException(e: Exception): EsmorgaException = when (e) {
-        is HttpException -> throw EsmorgaException(message = e.response()?.message().orEmpty(), source = Source.REMOTE, code = e.code())
-        is DateTimeParseException -> throw EsmorgaException(message = "Date parse error: ${e.message.orEmpty()}", source = Source.REMOTE, code = ErrorCodes.PARSE_ERROR)
-        is ConnectException,
-        is UnknownHostException -> throw EsmorgaException(message = "No connection error: ${e.message.orEmpty()}", source = Source.REMOTE, code = ErrorCodes.NO_CONNECTION)
-        is EsmorgaException -> throw e
-        else -> throw EsmorgaException(message = "Unexpected error: ${e.message.orEmpty()}", source = Source.REMOTE, code = ErrorCodes.UNKNOWN_ERROR)
-    }
 
 }
