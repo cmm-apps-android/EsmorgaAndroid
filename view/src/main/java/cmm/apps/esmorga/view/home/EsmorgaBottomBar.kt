@@ -18,15 +18,15 @@ import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.navigation.Navigation
 
 @Composable
-fun EsmorgaBottomBar(navigationController: NavHostController, items: List<BottomNavItem>, currentRoute: String?) {
+fun EsmorgaBottomBar(navigationController: NavHostController, items: List<BottomNavItem>, currentRoute: BottomNavItemRoute?) {
     NavigationBar(
         containerColor = colorScheme.surface,
     ) {
         items.forEach { item ->
             NavigationBarItem(
-                selected = currentRoute == item.route.toString(),
+                selected = currentRoute == item.route,
                 onClick = {
-                    navigationController.navigate(item.route) {
+                    navigationController.navigate(item.route.navigation) {
                         popUpTo(navigationController.graph.startDestinationId)
                         launchSingleTop = true
                     }
@@ -36,7 +36,7 @@ fun EsmorgaBottomBar(navigationController: NavHostController, items: List<Bottom
                         imageVector = ImageVector.vectorResource(item.icon),
                         contentDescription = null,
                         modifier = Modifier.padding(top = 4.dp, bottom = 4.dp),
-                        tint = if (currentRoute == item.route.toString()) colorScheme.onSurface else colorScheme.onSurfaceVariant
+                        tint = if (currentRoute == item.route) colorScheme.onSurface else colorScheme.onSurfaceVariant
                     )
                 },
                 label = {
@@ -58,8 +58,12 @@ fun EsmorgaBottomBar(navigationController: NavHostController, items: List<Bottom
     }
 }
 
-sealed class BottomNavItem(val route: Navigation, val icon: Int, val label: Int) {
-    object Explore : BottomNavItem(Navigation.EventListScreen, R.drawable.ic_explore, R.string.bottom_bar_explore)
-    object MyEvents : BottomNavItem(Navigation.MyEventsScreen, R.drawable.ic_my_events, R.string.bottom_bar_myevents)
-    object Profile : BottomNavItem(Navigation.ProfileScreen, R.drawable.ic_profile, R.string.bottom_bar_myprofile)
+sealed class BottomNavItem(val route: BottomNavItemRoute, val icon: Int, val label: Int) {
+    object Explore : BottomNavItem(BottomNavItemRoute.EVENT_LIST, R.drawable.ic_explore, R.string.bottom_bar_explore)
+    object MyEvents : BottomNavItem(BottomNavItemRoute.MY_EVENTS, R.drawable.ic_my_events, R.string.bottom_bar_myevents)
+    object Profile : BottomNavItem(BottomNavItemRoute.PROFILE, R.drawable.ic_profile, R.string.bottom_bar_myprofile)
+}
+
+enum class BottomNavItemRoute(val screen: String, val navigation: Navigation) {
+    EVENT_LIST("EventListScreen", Navigation.EventListScreen), MY_EVENTS("MyEventsScreen", Navigation.MyEventsScreen), PROFILE("ProfileScreen", Navigation.ProfileScreen)
 }

@@ -6,7 +6,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import cmm.apps.esmorga.view.HomeBottomBar
-import cmm.apps.esmorga.view.navigation.Navigation
+import cmm.apps.esmorga.view.home.BottomNavItemRoute
 import cmm.apps.esmorga.view.screenshot.BaseScreenshotTest
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import cmm.apps.esmorga.view.viewmodel.mock.BottomBarMock
@@ -16,21 +16,21 @@ class HomeViewScreenShotTest : BaseScreenshotTest() {
 
     @Test
     fun bottombar_eventLst_selected() {
-        snapshotWithState(Navigation.EventListScreen.toString())
+        snapshotWithState(BottomNavItemRoute.EVENT_LIST)
     }
 
     @Test
     fun bottombar_myEvents_selected() {
-        snapshotWithState(Navigation.MyEventsScreen.toString())
+        snapshotWithState(BottomNavItemRoute.MY_EVENTS)
     }
 
     @Test
     fun bottombar_profile_selected() {
-        snapshotWithState(Navigation.ProfileScreen.toString())
+        snapshotWithState(BottomNavItemRoute.PROFILE)
     }
 
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-    private fun snapshotWithState(currentRoute: String) {
+    private fun snapshotWithState(currentRoute: BottomNavItemRoute) {
         paparazzi.snapshot {
             val navigationController = rememberNavController()
             EsmorgaTheme {

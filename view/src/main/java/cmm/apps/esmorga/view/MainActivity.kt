@@ -27,10 +27,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import cmm.apps.esmorga.view.home.BottomNavItem
+import cmm.apps.esmorga.view.home.BottomNavItemRoute
 import cmm.apps.esmorga.view.home.EsmorgaBottomBar
 import cmm.apps.esmorga.view.navigation.EsmorgaNavigationGraph
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
-import cmm.apps.esmorga.view.theme.Pearl
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -88,12 +88,10 @@ fun HomeView(bottomNavItems: List<BottomNavItem>, navigationController: NavHostC
             val navBackStackEntry by navigationController.currentBackStackEntryAsState()
             val currentRoute =
                 navBackStackEntry?.destination?.hierarchy?.first()?.route?.substringAfterLast(".")
-            val items = bottomNavItems.map {
-                it.route.toString()
-            }
+            val route = bottomNavItems.find { currentRoute == it.route.screen }?.route
 
-            val visibility = currentRoute in items
-            HomeBottomBar(bottomNavItems, visibility, navigationController, currentRoute)
+            val visibility = route != null
+            HomeBottomBar(bottomNavItems, visibility, navigationController, route)
         }
     ) {
         content.invoke()
@@ -101,7 +99,7 @@ fun HomeView(bottomNavItems: List<BottomNavItem>, navigationController: NavHostC
 }
 
 @Composable
-fun HomeBottomBar(bottomNavItems: List<BottomNavItem>, visibility: Boolean, navigationController: NavHostController, currentRoute: String?) {
+fun HomeBottomBar(bottomNavItems: List<BottomNavItem>, visibility: Boolean, navigationController: NavHostController, currentRoute: BottomNavItemRoute?) {
     AnimatedVisibility(
         visible = visibility
     ) {
