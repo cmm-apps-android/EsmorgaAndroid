@@ -91,4 +91,37 @@ class EventRemoteDatasourceImplTest {
         Assert.assertTrue(exception is EsmorgaException)
         Assert.assertEquals(ErrorCodes.PARSE_ERROR, (exception as EsmorgaException).code)
     }
+
+    @Test
+    fun `given a working api when my events requested then event list is successfully returned`() = runTest {
+        val remoteEventName = "RemoteEvent"
+
+        val api = mockk<EsmorgaApi>(relaxed = true)
+        coEvery { api.getMyEvents() } returns EventRemoteMock.provideEventListWrapper(listOf(remoteEventName))
+
+        val sut = EventRemoteDatasourceImpl(api)
+        val result = sut.getMyEvents()
+
+        Assert.assertEquals(remoteEventName, result[0].dataName)
+    }
+
+    @Test
+    fun `given an api returning 500 when my events requested then EsmorgaException is thrown`() = runTest {
+        val errorCode = 500
+
+        val api = mockk<EsmorgaApi>(relaxed = true)
+        coEvery { api.getMyEvents() } throws HttpException(Response.error<ResponseBody>(errorCode, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
+
+        val sut = EventRemoteDatasourceImpl(api)
+
+        val exception = try {
+            sut.getMyEvents()
+            null
+        } catch (exception: RuntimeException) {
+            exception
+        }
+
+        Assert.assertTrue(exception is EsmorgaException)
+        Assert.assertEquals(errorCode, (exception as EsmorgaException).code)
+    }
 }

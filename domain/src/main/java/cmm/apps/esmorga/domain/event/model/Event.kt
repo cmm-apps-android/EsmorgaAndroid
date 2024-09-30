@@ -15,6 +15,7 @@ data class Event(
     val imageUrl: String? = null,
     val location: EventLocation,
     val tags: List<String> = listOf(),
+    val userJoined: Boolean
 )
 
 data class EventLocation(

@@ -13,7 +13,8 @@ data class EventDataModel(
     val dataImageUrl: String? = null,
     val dataLocation: EventLocationDataModel,
     val dataTags: List<String> = listOf(),
-    val dataCreationTime: Long = System.currentTimeMillis()
+    val dataCreationTime: Long = System.currentTimeMillis(),
+    val dataUserJoined: Boolean
 )
 
 data class EventLocationDataModel(

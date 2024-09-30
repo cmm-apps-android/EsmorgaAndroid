@@ -1,0 +1,133 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "ddf9e42c156128181f71336f44b2fb83",
+    "entities": [
+      {
+        "tableName": "EventLocalModel",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`localId` TEXT NOT NULL, `localName` TEXT NOT NULL, `localDate` TEXT NOT NULL, `localDescription` TEXT NOT NULL, `localType` TEXT NOT NULL, `localImageUrl` TEXT, `localLocationName` TEXT NOT NULL, `localLocationLat` REAL, `localLocationLong` REAL, `localTags` TEXT NOT NULL, `localCreationTime` INTEGER NOT NULL, `localUserJoined` INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(`localId`))",
+        "fields": [
+          {
+            "fieldPath": "localId",
+            "columnName": "localId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localName",
+            "columnName": "localName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localDate",
+            "columnName": "localDate",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localDescription",
+            "columnName": "localDescription",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localType",
+            "columnName": "localType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localImageUrl",
+            "columnName": "localImageUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "localLocationName",
+            "columnName": "localLocationName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localLocationLat",
+            "columnName": "localLocationLat",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "localLocationLong",
+            "columnName": "localLocationLong",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "localTags",
+            "columnName": "localTags",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localCreationTime",
+            "columnName": "localCreationTime",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localUserJoined",
+            "columnName": "localUserJoined",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "localId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "UserLocalModel",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`localEmail` TEXT NOT NULL, `localName` TEXT NOT NULL, `localLastName` TEXT NOT NULL, PRIMARY KEY(`localEmail`))",
+        "fields": [
+          {
+            "fieldPath": "localEmail",
+            "columnName": "localEmail",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localName",
+            "columnName": "localName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localLastName",
+            "columnName": "localLastName",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "localEmail"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ddf9e42c156128181f71336f44b2fb83')"
+    ]
+  }
+}

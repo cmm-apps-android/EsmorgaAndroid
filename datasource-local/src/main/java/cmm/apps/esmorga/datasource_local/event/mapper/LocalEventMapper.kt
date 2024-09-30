@@ -25,7 +25,8 @@ fun EventLocalModel.toEventDataModel(): EventDataModel {
         dataImageUrl = this.localImageUrl,
         dataLocation = EventLocationDataModel(this.localLocationName, this.localLocationLat, this.localLocationLong),
         dataTags = this.localTags,
-        dataCreationTime = localCreationTime
+        dataCreationTime = localCreationTime,
+        dataUserJoined = this.localUserJoined
     )
 }
 
@@ -43,7 +44,8 @@ fun EventDataModel.toEventLocalModel(): EventLocalModel {
         localLocationLat = this.dataLocation.lat,
         localLocationLong = this.dataLocation.long,
         localTags = this.dataTags,
-        localCreationTime = dataCreationTime
+        localCreationTime = dataCreationTime,
+        localUserJoined = this.dataUserJoined
     )
 }
 
