@@ -27,7 +27,11 @@ fun EsmorgaBottomBar(navigationController: NavHostController, items: List<Bottom
                 selected = currentRoute == item.route,
                 onClick = {
                     navigationController.navigate(item.route.navigation) {
-                        popUpTo(navigationController.graph.startDestinationId)
+                        currentRoute?.let {
+                            popUpTo(it.navigation) {
+                                inclusive = true
+                            }
+                        }
                         launchSingleTop = true
                     }
                 },
