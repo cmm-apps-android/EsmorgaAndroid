@@ -1,10 +1,17 @@
 name: Build Android
 run-name: Creating Android builds
 
+#on:
+#  push:
+#    branches:
+#      - main
+#  workflow_dispatch:
 on:
-  push:
-    branches:
-      - main
+  pull_request:
+    types: [opened,reopened,edited,synchronize]
+    branches: [ "main" ]
+    paths:
+      - '**'
   workflow_dispatch:
 
 jobs:
@@ -26,3 +33,7 @@ jobs:
           Build-PASSWORD: ${{ secrets.BUIPASSWORD }}
           Build-OTA-APIKEY: ${{ secrets.OTASHARE_APIKEY }}
           Build-OTA-APIKEY-BUILD: ${{ secrets.OTASHARE_APIKEY_BUILD }}
+          Build-KEY-STORE: ${{ secrets.BUILD_KEYSTORE }}
+          Build-KEY-ALIAS: ${{ secrets.BUILD_KEY_ALIAS }}
+          Build-KEY-PASSWORD: ${{ secrets.BUILD_KEY_PASSWORD }}
+          Build-STORE-PASSWORD: ${{ secrets.BUILD_STORE_PASSWORD }}
