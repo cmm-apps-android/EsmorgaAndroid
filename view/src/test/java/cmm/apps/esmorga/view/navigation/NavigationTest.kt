@@ -110,38 +110,10 @@ class NavigationTest {
     }
 
     @Test
-    fun `given user not logged, when app is open, then welcome screen is shown`() {
-        setNavigationFromAppLaunch(loggedIn = false)
-
-        composeTestRule.onNodeWithTag(WELCOME_PRIMARY_BUTTON).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(WELCOME_SECONDARY_BUTTON).assertIsDisplayed()
-    }
-
-    @Test
     fun `given user logged, when app is open, then event list screen is shown`() {
-        setNavigationFromAppLaunch(loggedIn = true)
+        setNavigationFromAppLaunch()
 
         composeTestRule.onNodeWithTag(EVENT_LIST_TITLE).assertIsDisplayed()
-    }
-
-    @Test
-    fun `given user not logged, when app is open and continue as guest is clicked, then events screen is shown`() {
-        setNavigationFromAppLaunch(loggedIn = false)
-
-        composeTestRule.onNodeWithTag(WELCOME_SECONDARY_BUTTON).performClick()
-
-        composeTestRule.onNodeWithTag(EVENT_LIST_TITLE).assertIsDisplayed()
-    }
-
-    @Test
-    fun `given user not logged, when app is open and login is clicked, then login screen is shown`() {
-        setNavigationFromAppLaunch(loggedIn = false)
-
-        composeTestRule.onNodeWithTag(WELCOME_PRIMARY_BUTTON).performClick()
-
-        composeTestRule.onNodeWithTag(LOGIN_TITLE).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(LOGIN_LOGIN_BUTTON).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(LOGIN_REGISTER_BUTTON).assertIsDisplayed()
     }
 
     @Test
@@ -224,11 +196,11 @@ class NavigationTest {
         composeTestRule.onNodeWithTag(PROFILE__TITLE).assertIsDisplayed()
     }
 
-    private fun setNavigationFromAppLaunch(loggedIn: Boolean) {
+    private fun setNavigationFromAppLaunch() {
         composeTestRule.setContent {
             KoinContext {
                 navController = rememberNavController()
-                EsmorgaNavigationGraph(navigationController = navController, loggedIn = loggedIn)
+                EsmorgaNavigationGraph(navigationController = navController)
             }
         }
     }

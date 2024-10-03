@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
             lifecycle.repeatOnLifecycle(Lifecycle.State.CREATED) {
                 mvm.uiState.onEach { uiState = it }.collect {
                     if (!it.loading) {
-                        setupNavigation(it.loggedIn)
+                        setupNavigation()
                     }
                 }
             }
@@ -61,7 +61,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
     }
 
-    private fun setupNavigation(loggedIn: Boolean) {
+    private fun setupNavigation() {
         setContent {
             EsmorgaTheme {
                 val navigationController = rememberNavController()
@@ -72,7 +72,7 @@ class MainActivity : ComponentActivity() {
                 )
 
                 HomeView(bottomNavItems, navigationController) {
-                    EsmorgaNavigationGraph(navigationController = navigationController, loggedIn)
+                    EsmorgaNavigationGraph(navigationController = navigationController)
                 }
             }
         }
@@ -89,9 +89,7 @@ fun HomeView(bottomNavItems: List<BottomNavItem>, navigationController: NavHostC
             val currentRoute =
                 navBackStackEntry?.destination?.hierarchy?.first()?.route?.substringAfterLast(".")
             val route = bottomNavItems.find { currentRoute == it.route.screen }?.route
-
-            val visibility = route != null
-            HomeBottomBar(bottomNavItems, visibility, navigationController, route)
+            HomeBottomBar(bottomNavItems, false, navigationController, route)
         }
     ) {
         content.invoke()

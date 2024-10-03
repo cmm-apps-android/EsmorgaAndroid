@@ -61,8 +61,8 @@ sealed class Navigation {
 const val GOOGLE_MAPS_PACKAGE = "com.google.android.apps.maps"
 
 @Composable
-fun EsmorgaNavigationGraph(navigationController: NavHostController, loggedIn: Boolean) {
-    val startDestination = if (loggedIn) Navigation.EventListScreen else Navigation.WelcomeScreen
+fun EsmorgaNavigationGraph(navigationController: NavHostController) {
+    val startDestination = Navigation.EventListScreen
     EsmorgaNavHost(navigationController, startDestination)
 }
 
