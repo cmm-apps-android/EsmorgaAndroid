@@ -1,14 +1,15 @@
 package cmm.apps.esmorga.view
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Scaffold
@@ -79,7 +80,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeView(bottomNavItems: List<BottomNavItem>, navigationController: NavHostController, content: @Composable () -> Unit) {
     Scaffold(
@@ -93,8 +93,14 @@ fun HomeView(bottomNavItems: List<BottomNavItem>, navigationController: NavHostC
             val visibility = route != null
             HomeBottomBar(bottomNavItems, visibility, navigationController, route)
         }
-    ) {
-        content.invoke()
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier.padding(
+                bottom = innerPadding.calculateBottomPadding(),
+            )
+        ) {
+            content.invoke()
+        }
     }
 }
 

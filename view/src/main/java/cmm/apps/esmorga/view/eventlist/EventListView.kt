@@ -91,7 +91,6 @@ fun EventListView(uiState: EventListUiState, snackbarHostState: SnackbarHostStat
         Column(
             modifier = Modifier.padding(
                 top = innerPadding.calculateTopPadding(),
-                bottom = innerPadding.calculateBottomPadding(),
                 start = 16.dp,
                 end = 16.dp
             )
