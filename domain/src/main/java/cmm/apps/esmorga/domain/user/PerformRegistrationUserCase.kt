@@ -1,21 +1,20 @@
 package cmm.apps.esmorga.domain.user
 
-import cmm.apps.esmorga.domain.result.Success
+import cmm.apps.esmorga.domain.result.EsmorgaResult
 import cmm.apps.esmorga.domain.user.model.User
 import cmm.apps.esmorga.domain.user.repository.UserRepository
 
-
 interface PerformRegistrationUserCase {
-    suspend operator fun invoke(name: String, lastName: String, email: String, password: String): Result<Success<User>>
+    suspend operator fun invoke(name: String, lastName: String, email: String, password: String): EsmorgaResult<User>
 }
 
 class PerformRegistrationUserCaseImpl(private val repo: UserRepository) : PerformRegistrationUserCase {
-    override suspend fun invoke(name: String, lastName: String, email: String, password: String): Result<Success<User>>{
+    override suspend fun invoke(name: String, lastName: String, email: String, password: String): EsmorgaResult<User> {
         try {
             val result = repo.register(name, lastName, email, password)
-            return Result.success(result)
+            return EsmorgaResult.success(result)
         } catch (e: Exception) {
-            return Result.failure(e)
+            return EsmorgaResult.failure(e)
         }
     }
 }

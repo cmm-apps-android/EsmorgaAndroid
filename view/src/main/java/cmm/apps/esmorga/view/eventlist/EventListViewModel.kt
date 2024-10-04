@@ -3,8 +3,6 @@ package cmm.apps.esmorga.view.eventlist
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cmm.apps.esmorga.domain.event.GetEventListUseCase
-import cmm.apps.esmorga.domain.result.ErrorCodes
-import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.view.eventlist.mapper.EventListUiMapper.toEventUiList
 import cmm.apps.esmorga.view.eventlist.model.EventListEffect
 import cmm.apps.esmorga.view.eventlist.model.EventListUiState
@@ -33,21 +31,17 @@ class EventListViewModel(private val getEventListUseCase: GetEventListUseCase) :
         _uiState.value = EventListUiState(loading = true)
         viewModelScope.launch {
             val result = getEventListUseCase()
-
             result.onSuccess { success ->
-                if (success.hasError() && success.nonBlockingError == ErrorCodes.NO_CONNECTION) {
-                    _effect.tryEmit(EventListEffect.ShowNoNetworkPrompt)
-                }
                 _uiState.value = EventListUiState(
-                    eventList = success.data.toEventUiList(),
-                    error = if (success.hasError() && success.nonBlockingError == ErrorCodes.NO_CONNECTION && success.data.isEmpty()) "No Connection" else null
+                    eventList = success.toEventUiList(),
                 )
             }.onFailure { error ->
-                if (error is EsmorgaException) {
-                    _uiState.value = EventListUiState(error = "${error.source} error: ${error.message}")
-                } else {
-                    _uiState.value = EventListUiState(error = "Unknown error: ${error.message}")
-                }
+                _uiState.value = EventListUiState(error = "${error.source} error: ${error.message}")
+            }.onNoConnectionError {
+                _effect.tryEmit(EventListEffect.ShowNoNetworkPrompt)
+                _uiState.value = EventListUiState(
+                    eventList = it.toEventUiList(),
+                )
             }
         }
     }

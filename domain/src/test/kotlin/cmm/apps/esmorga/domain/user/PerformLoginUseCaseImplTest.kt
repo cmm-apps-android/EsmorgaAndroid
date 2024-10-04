@@ -1,7 +1,6 @@
 package cmm.apps.esmorga.domain.user
 
 import cmm.apps.esmorga.domain.mock.UserDomainMock
-import cmm.apps.esmorga.domain.result.Success
 import cmm.apps.esmorga.domain.user.repository.UserRepository
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -16,11 +15,10 @@ class PerformLoginUseCaseImplTest {
         val repoUserName = "Luna"
         val repoUser = UserDomainMock.provideUser(name = repoUserName)
         val repo = mockk<UserRepository>(relaxed = true)
-        coEvery { repo.login(any(), any()) } returns Success(repoUser)
+        coEvery { repo.login(any(), any()) } returns repoUser
 
         val sut = PerformLoginUseCaseImpl(repo)
         val result = sut.invoke(repoUser.email, "password")
-        Assert.assertTrue(result.isSuccess)
-        Assert.assertEquals(repoUserName, result.getOrThrow().data.name)
+        Assert.assertEquals(repoUserName, result.data!!.name)
     }
 }
