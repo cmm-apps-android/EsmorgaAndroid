@@ -29,7 +29,7 @@ class EventDetailsViewModel(
 
     init {
         viewModelScope.launch {
-            val user = getSavedUserUseCase.invoke()
+            val user = getSavedUserUseCase()
             val result = getEventDetailsUseCase(eventId)
             result.onSuccess {
                 _uiState.value = it.toEventUiDetails(user.data != null)
