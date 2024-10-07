@@ -39,9 +39,6 @@ class EventListViewModel(private val getEventListUseCase: GetEventListUseCase) :
                 _uiState.value = EventListUiState(error = "${error.source} error: ${error.message}")
             }.onNoConnectionError {
                 _effect.tryEmit(EventListEffect.ShowNoNetworkPrompt)
-                _uiState.value = EventListUiState(
-                    eventList = it.toEventUiList(),
-                )
             }
         }
     }

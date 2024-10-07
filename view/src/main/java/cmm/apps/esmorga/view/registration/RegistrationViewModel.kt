@@ -50,10 +50,11 @@ class RegistrationViewModel(private val performRegistrationUserCase: PerformRegi
                 }.onFailure { error ->
                     _uiState.value = _uiState.value.copy(loading = false)
                     when {
-                        error is EsmorgaException && error.code == ErrorCodes.NO_CONNECTION -> _effect.tryEmit(RegistrationEffect.ShowNoNetworkSnackbar)
-                        error is EsmorgaException && error.code == 409 -> _uiState.value = RegistrationUiState(nameError = getEmailAlreadyInUseErrorText())
+                        error.code == 409 -> _uiState.value = RegistrationUiState(nameError = getEmailAlreadyInUseErrorText())
                         else -> _effect.tryEmit(RegistrationEffect.ShowFullScreenError())
                     }
+                }.onNoConnectionError {
+                    _effect.tryEmit(RegistrationEffect.ShowNoNetworkSnackbar)
                 }
             }
         }

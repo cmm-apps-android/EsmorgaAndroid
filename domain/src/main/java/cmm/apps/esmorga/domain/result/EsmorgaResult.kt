@@ -22,7 +22,7 @@ data class EsmorgaResult<T>(
     }
 
     fun onSuccess(action: (value: T) -> Unit): EsmorgaResult<T> {
-        if(data != null && error == null){
+        if(data != null){
             action(data)
         }
         return this
@@ -35,9 +35,9 @@ data class EsmorgaResult<T>(
         return this
     }
 
-    fun onNoConnectionError(action: (value: T) -> Unit): EsmorgaResult<T> {
-        if(data != null && error != null && error.code == ErrorCodes.NO_CONNECTION){
-            action(data)
+    fun onNoConnectionError(action: () -> Unit): EsmorgaResult<T> {
+        if(error != null && error.code == ErrorCodes.NO_CONNECTION){
+            action()
         }
         return this
     }
