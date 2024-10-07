@@ -10,7 +10,7 @@ class UserRepositoryImpl(private val localDs: UserDatasource, private val remote
     override suspend fun login(email: String, password: String): User {
         val userDataModel = remoteDs.login(email, password)
         localDs.saveUser(userDataModel)
-        localEventDs.deleteCacheEvent()
+        localEventDs.deleteCacheEvents()
         return userDataModel.toUser()
     }
 

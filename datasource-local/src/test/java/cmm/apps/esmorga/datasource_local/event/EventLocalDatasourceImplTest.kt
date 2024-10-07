@@ -104,7 +104,7 @@ class EventLocalDatasourceImplTest {
         result = sut.getEvents()
 
         Assert.assertEquals(localEventName, result[0].dataName)
-        sut.deleteCacheEvent()
+        sut.deleteCacheEvents()
         result = sut.getEvents()
         Assert.assertEquals(emptyList<List<EventLocalModel>>(), result)
     }
