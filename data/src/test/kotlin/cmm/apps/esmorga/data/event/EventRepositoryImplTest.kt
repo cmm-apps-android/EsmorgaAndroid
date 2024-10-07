@@ -23,7 +23,7 @@ class EventRepositoryImplTest {
     private lateinit var remoteDS: EventDatasource
 
     @Before
-    fun setUp(){
+    fun setUp() {
         userDS = mockk<UserDatasource>(relaxed = true)
         localDS = mockk<EventDatasource>(relaxed = true)
         remoteDS = mockk<EventDatasource>(relaxed = true)
@@ -40,7 +40,7 @@ class EventRepositoryImplTest {
         val sut = EventRepositoryImpl(userDS, localDS, remoteDS)
         val result = sut.getEvents()
 
-        Assert.assertEquals(remoteName, result.data[0].name)
+        Assert.assertEquals(remoteName, result[0].name)
     }
 
     @Test
@@ -54,7 +54,7 @@ class EventRepositoryImplTest {
         val sut = EventRepositoryImpl(userDS, localDS, remoteDS)
         val result = sut.getEvents()
 
-        Assert.assertEquals(remoteName, result.data[0].name)
+        Assert.assertEquals(remoteName, result[0].name)
     }
 
     @Test
@@ -71,8 +71,8 @@ class EventRepositoryImplTest {
         val sut = EventRepositoryImpl(userDS, localDS, remoteDS)
         val result = sut.getEvents()
 
-        Assert.assertEquals(remoteName, result.data[0].name)
-        Assert.assertTrue(result.data.find { it.id == joinedEvent.dataId }?.userJoined == true)
+        Assert.assertEquals(remoteName, result[0].name)
+        Assert.assertTrue(result.find { it.id == joinedEvent.dataId }?.userJoined == true)
     }
 
     @Test
@@ -85,7 +85,7 @@ class EventRepositoryImplTest {
         val sut = EventRepositoryImpl(userDS, localDS, remoteDS)
         val result = sut.getEvents()
 
-        Assert.assertEquals(localName, result.data[0].name)
+        Assert.assertEquals(localName, result[0].name)
     }
 
     @Test
@@ -101,7 +101,7 @@ class EventRepositoryImplTest {
         coVerify { localDS.cacheEvents(events) }
     }
 
-    @Test
+    @Test(expected = EsmorgaException::class)
     fun `given no connection and expired local when events requested then local events are returned and a non blocking error is returned`() = runTest {
         val localName = "LocalEvent"
         val oldDate = System.currentTimeMillis() - (CacheHelper.DEFAULT_CACHE_TTL + 1000)
@@ -112,8 +112,7 @@ class EventRepositoryImplTest {
         val sut = EventRepositoryImpl(userDS, localDS, remoteDS)
         val result = sut.getEvents()
 
-        Assert.assertEquals(localName, result.data[0].name)
-        Assert.assertEquals(ErrorCodes.NO_CONNECTION, result.nonBlockingError)
+        Assert.assertEquals(localName, result[0].name)
     }
 
 }

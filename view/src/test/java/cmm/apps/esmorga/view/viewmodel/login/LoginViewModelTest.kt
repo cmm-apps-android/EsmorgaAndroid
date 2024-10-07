@@ -6,8 +6,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import app.cash.turbine.test
 import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
+import cmm.apps.esmorga.domain.result.EsmorgaResult
 import cmm.apps.esmorga.domain.result.Source
-import cmm.apps.esmorga.domain.result.Success
 import cmm.apps.esmorga.domain.user.PerformLoginUseCase
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.login.LoginViewModel
@@ -52,7 +52,7 @@ class LoginViewModelTest {
     fun `given a successful usecase when login method is called usecase executed and UI effect for successful login is emitted`() = runTest {
         val user = LoginViewMock.provideUser()
         val useCase = mockk<PerformLoginUseCase>(relaxed = true)
-        coEvery { useCase(any(), any()) } returns Result.success(Success(user))
+        coEvery { useCase(any(), any()) } returns EsmorgaResult.success(user)
 
         val sut = LoginViewModel(useCase)
 
@@ -68,7 +68,7 @@ class LoginViewModelTest {
     fun `given a failure usecase when login method is called usecase executed and UI effect for error is emitted`() = runTest {
         val user = LoginViewMock.provideUser()
         val useCase = mockk<PerformLoginUseCase>(relaxed = true)
-        coEvery { useCase(any(), any()) } returns Result.failure(EsmorgaException("Mock Login Error", Source.REMOTE, 401))
+        coEvery { useCase(any(), any()) } returns EsmorgaResult.failure(EsmorgaException("Mock Login Error", Source.REMOTE, 401))
 
         val sut = LoginViewModel(useCase)
 
@@ -84,7 +84,7 @@ class LoginViewModelTest {
     fun `given no internet connection when login method is called usecase executed and UI effect for no connection is emitted`() = runTest {
         val user = LoginViewMock.provideUser()
         val useCase = mockk<PerformLoginUseCase>(relaxed = true)
-        coEvery { useCase(any(), any()) } returns Result.failure(EsmorgaException("Mock Login Error", Source.REMOTE, ErrorCodes.NO_CONNECTION))
+        coEvery { useCase(any(), any()) } returns EsmorgaResult.failure(EsmorgaException("Mock Login Error", Source.REMOTE, ErrorCodes.NO_CONNECTION))
 
         val sut = LoginViewModel(useCase)
 
@@ -99,7 +99,7 @@ class LoginViewModelTest {
     @Test
     fun `given invalid fields inputted when login method is called then ui shows errors in all fields`() = runTest {
         val useCase = mockk<PerformLoginUseCase>(relaxed = true)
-        coEvery { useCase(any(), any()) } returns Result.success(Success(LoginViewMock.provideUser()))
+        coEvery { useCase(any(), any()) } returns EsmorgaResult.success(LoginViewMock.provideUser())
 
         val sut = LoginViewModel(useCase)
         sut.onLoginClicked("", "")
@@ -113,7 +113,7 @@ class LoginViewModelTest {
     fun `given an invalid email inputted when login method is called then ui shows email error`() = runTest {
         val user = LoginViewMock.provideUser()
         val useCase = mockk<PerformLoginUseCase>(relaxed = true)
-        coEvery { useCase(any(), any()) } returns Result.success(Success(user))
+        coEvery { useCase(any(), any()) } returns EsmorgaResult.success(user)
 
         val invalidEmailList = listOf(
             "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@example.com",
@@ -137,7 +137,7 @@ class LoginViewModelTest {
     fun `given an invalid password inputted when login method is called then ui shows password error`() = runTest {
         val user = LoginViewMock.provideUser()
         val useCase = mockk<PerformLoginUseCase>(relaxed = true)
-        coEvery { useCase(any(), any()) } returns Result.success(Success(user))
+        coEvery { useCase(any(), any()) } returns EsmorgaResult.success(user)
 
         val invalidPasswordList = listOf(
             "12ab@",
@@ -181,7 +181,7 @@ class LoginViewModelTest {
     fun `given email and password are correctly filled when login clicked then ui shows loading state`() = runTest {
         val user = LoginViewMock.provideUser()
         val useCase = mockk<PerformLoginUseCase>(relaxed = true)
-        coEvery { useCase(any(), any()) } returns Result.success(Success(user))
+        coEvery { useCase(any(), any()) } returns EsmorgaResult.success(user)
 
         val sut = LoginViewModel(useCase)
 
