@@ -88,7 +88,8 @@ private fun NavGraphBuilder.homeFlow(navigationController: NavHostController) {
     composable<Navigation.EventDetailScreen> { backStackEntry ->
         EventDetailsScreen(
             eventId = backStackEntry.toRoute<Navigation.EventDetailScreen>().eventId,
-            onBackPressed = { navigationController.popBackStack() }
+            onBackPressed = { navigationController.popBackStack() },
+            onPrimaryButtonClicked = { navigationController.navigate(Navigation.LoginScreen) }
         )
     }
     composable<Navigation.MyEventsScreen> {

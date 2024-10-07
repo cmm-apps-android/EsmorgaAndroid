@@ -1,5 +1,6 @@
 package cmm.apps.esmorga.datasource_local.event
 
+import cmm.apps.esmorga.data.event.model.EventDataModel
 import cmm.apps.esmorga.datasource_local.database.dao.EventDao
 import cmm.apps.esmorga.datasource_local.event.mapper.toEventDataModelList
 import cmm.apps.esmorga.datasource_local.event.model.EventLocalModel
@@ -33,7 +34,7 @@ class EventLocalDatasourceImplTest {
         }
 
         coEvery { dao.getEventById(capture(singleEventSlot)) } coAnswers {
-            EventLocalMock.provideEvent(fakeStorage.find { it == singleEventSlot.captured}!!)
+            EventLocalMock.provideEvent(fakeStorage.find { it == singleEventSlot.captured }!!)
         }
 
         return dao
@@ -91,6 +92,21 @@ class EventLocalDatasourceImplTest {
         val result = sut.getEventById(localEventName)
 
         Assert.assertEquals(localEventName, result.dataName)
+    }
+
+    @Test
+    fun `given a storage with events when delete cached events is requested then the list is empty`() = runTest {
+        val localEventName = "LocalEvent"
+        lateinit var result: List<EventDataModel>
+
+        val sut = EventLocalDatasourceImpl(provideFakeDao())
+        sut.cacheEvents(EventLocalMock.provideEventList(listOf(localEventName)).toEventDataModelList())
+        result = sut.getEvents()
+
+        Assert.assertEquals(localEventName, result[0].dataName)
+        sut.deleteCacheEvent()
+        result = sut.getEvents()
+        Assert.assertEquals(emptyList<List<EventLocalModel>>(), result)
     }
 
 }

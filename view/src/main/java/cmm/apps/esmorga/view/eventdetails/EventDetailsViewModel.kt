@@ -3,6 +3,7 @@ package cmm.apps.esmorga.view.eventdetails
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cmm.apps.esmorga.domain.event.GetEventDetailsUseCase
+import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.view.eventdetails.mapper.EventDetailsUiMapper.toEventUiDetails
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsEffect
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiState
@@ -17,6 +18,7 @@ import kotlinx.coroutines.launch
 
 class EventDetailsViewModel(
     private val getEventDetailsUseCase: GetEventDetailsUseCase,
+    private val getSavedUserUseCase: GetSavedUserUseCase,
     private val eventId: String
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(EventDetailsUiState())
@@ -27,9 +29,10 @@ class EventDetailsViewModel(
 
     init {
         viewModelScope.launch {
+            val user = getSavedUserUseCase.invoke()
             val result = getEventDetailsUseCase(eventId)
             result.onSuccess {
-                _uiState.value = it.toEventUiDetails()
+                _uiState.value = it.toEventUiDetails(user.data != null)
             }
         }
     }
@@ -47,4 +50,9 @@ class EventDetailsViewModel(
         _effect.tryEmit(EventDetailsEffect.NavigateBack)
     }
 
+    fun onPrimaryButtonClicked() {
+        if (!_uiState.value.isAuthenticated) {
+            _effect.tryEmit(EventDetailsEffect.NavigateToLoginScreen)
+        }
+    }
 }

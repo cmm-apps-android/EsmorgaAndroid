@@ -23,4 +23,7 @@ class EventLocalDatasourceImpl(private val eventDao: EventDao) : EventDatasource
         return eventDao.getEventById(eventId).toEventDataModel()
     }
 
+    override suspend fun deleteCacheEvent() {
+        eventDao.deleteAll()
+    }
 }

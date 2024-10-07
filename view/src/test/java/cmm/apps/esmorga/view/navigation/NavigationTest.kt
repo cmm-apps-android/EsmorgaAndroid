@@ -22,6 +22,7 @@ import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.domain.user.PerformLoginUseCase
 import cmm.apps.esmorga.domain.user.PerformRegistrationUserCase
 import cmm.apps.esmorga.view.di.ViewDIModule
+import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAILS_BACK_BUTTON
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAILS_EVENT_NAME
 import cmm.apps.esmorga.view.eventlist.EventListScreenTestTags.EVENT_LIST_EVENT_NAME
@@ -209,6 +210,22 @@ class NavigationTest {
         composeTestRule.onNodeWithTag(EVENT_LIST_EVENT_NAME, true).performClick()
         composeTestRule.onNodeWithTag(EVENT_DETAILS_BACK_BUTTON).performClick()
         composeTestRule.onNodeWithTag(EVENT_LIST_TITLE).assertIsDisplayed()
+    }
+
+    @Test
+    fun `given user logged, when event detail screen visited and login button is clicked, then login screen is visited`() {
+        val getSavedUserUseCaseFailure = mockk<GetSavedUserUseCase>(relaxed = true).also { useCase ->
+            coEvery { useCase() } returns EsmorgaResult.failure(Exception())
+        }
+        loadKoinModules(module { factory<GetSavedUserUseCase> { getSavedUserUseCaseFailure } })
+
+        setNavigationFromDestination(Navigation.EventListScreen)
+
+        composeTestRule.onNodeWithTag(EVENT_LIST_TITLE).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(EVENT_LIST_EVENT_NAME, true).performClick()
+        composeTestRule.onNodeWithTag(EVENT_DETAILS_EVENT_NAME).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(EventDetailsScreenTestTags.EVENT_DETAIL_PRIMARY_BUTTON, true).performClick()
+        composeTestRule.onNodeWithTag(LOGIN_TITLE).assertIsDisplayed()
     }
 
     //TODO Modify this two last tests with the correct screen when the screens will be done

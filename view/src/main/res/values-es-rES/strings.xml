@@ -42,4 +42,7 @@
    <string name="bottom_bar_explore">Explorar</string>
    <string name="bottom_bar_myevents">Mis Eventos</string>
    <string name="bottom_bar_myprofile">Perfil</string>
+   <string name="button_join_event">Apuntarse</string>
+   <string name="button_leave_event">Rajarse</string>
+   <string name="button_login_to_join">Identifícate para apuntarte</string>
 </resources>
