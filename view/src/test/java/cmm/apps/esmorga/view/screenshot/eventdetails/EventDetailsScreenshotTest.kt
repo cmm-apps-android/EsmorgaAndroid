@@ -40,9 +40,7 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
                         image = "test.png",
                         locationName = "Mi casa",
                         locationLat = lat,
-                        locationLng = lng,
-                        userJoined = userJoined,
-                        isAuthenticated = isAuthenticate
+                        locationLng = lng
                     ),
                     onNavigateClicked = {},
                     onBackPressed = {},

@@ -27,12 +27,17 @@ class EventDetailsViewModel(
     private val _effect: MutableSharedFlow<EventDetailsEffect> = MutableSharedFlow(extraBufferCapacity = 2, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val effect: SharedFlow<EventDetailsEffect> = _effect.asSharedFlow()
 
+    private var isAuthenticated: Boolean = false
+    private var userJoined: Boolean = false
+
     init {
         viewModelScope.launch {
             val user = getSavedUserUseCase()
             val result = getEventDetailsUseCase(eventId)
+            isAuthenticated = user.data != null
             result.onSuccess {
-                _uiState.value = it.toEventUiDetails(user.data != null)
+                userJoined = it.userJoined
+                _uiState.value = it.toEventUiDetails(isAuthenticated, userJoined)
             }
         }
     }
@@ -51,7 +56,7 @@ class EventDetailsViewModel(
     }
 
     fun onPrimaryButtonClicked() {
-        if (!_uiState.value.isAuthenticated) {
+        if (!isAuthenticated) {
             _effect.tryEmit(EventDetailsEffect.NavigateToLoginScreen)
         }
     }

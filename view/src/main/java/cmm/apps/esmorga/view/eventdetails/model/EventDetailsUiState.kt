@@ -1,7 +1,6 @@
 package cmm.apps.esmorga.view.eventdetails.model
 
 import cmm.apps.esmorga.view.R
-import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiStateHelper.getPrimaryButtonTitle
 
 data class EventDetailsUiState(
     val id: String = "",
@@ -13,13 +12,11 @@ data class EventDetailsUiState(
     val locationLat: Double? = null,
     val locationLng: Double? = null,
     val navigateButton: Boolean = locationLat != null && locationLng != null,
-    val userJoined: Boolean = false,
-    val isAuthenticated: Boolean = false,
-    val primaryButtonTitle: Int = getPrimaryButtonTitle(userJoined, isAuthenticated)
+    val primaryButtonTitle: Int = R.string.button_login_to_join
 )
 
 object EventDetailsUiStateHelper {
-    fun getPrimaryButtonTitle(userJoined: Boolean, isAuthenticated: Boolean): Int {
+    fun getPrimaryButtonTitle(isAuthenticated: Boolean, userJoined: Boolean): Int {
         return if (isAuthenticated) {
             if (userJoined) {
                 R.string.button_leave_event

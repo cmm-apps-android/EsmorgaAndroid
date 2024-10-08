@@ -43,7 +43,12 @@ import org.koin.core.parameter.parametersOf
 
 @Screen
 @Composable
-fun EventDetailsScreen(eventId: String, onBackPressed: () -> Unit, edvm: EventDetailsViewModel = koinViewModel(parameters = { parametersOf(eventId) }), onPrimaryButtonClicked: () -> Unit) {
+fun EventDetailsScreen(
+    eventId: String,
+    onBackPressed: () -> Unit,
+    edvm: EventDetailsViewModel = koinViewModel(parameters = { parametersOf(eventId) }),
+    onLoginClicked: () -> Unit
+) {
     val uiState: EventDetailsUiState by edvm.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
     LaunchedEffect(Unit) {
@@ -58,7 +63,7 @@ fun EventDetailsScreen(eventId: String, onBackPressed: () -> Unit, edvm: EventDe
                 }
 
                 is EventDetailsEffect.NavigateToLoginScreen -> {
-                    onPrimaryButtonClicked()
+                    onLoginClicked()
                 }
             }
         }
@@ -158,7 +163,9 @@ fun EventDetailsView(uiState: EventDetailsUiState, onNavigateClicked: () -> Unit
             }
 
             EsmorgaButton(
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = if (!uiState.navigateButton) 32.dp else 0.dp).testTag(EventDetailsScreenTestTags.EVENT_DETAIL_PRIMARY_BUTTON),
+                modifier = Modifier
+                    .padding(horizontal = 16.dp, vertical = if (!uiState.navigateButton) 32.dp else 0.dp)
+                    .testTag(EventDetailsScreenTestTags.EVENT_DETAIL_PRIMARY_BUTTON),
                 text = stringResource(uiState.primaryButtonTitle),
                 primary = true
             ) {

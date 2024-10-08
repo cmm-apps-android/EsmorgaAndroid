@@ -37,7 +37,6 @@ class EventDetailsViewModelTest {
 
         val uiState = sut.uiState.value
         Assert.assertEquals(domainEventName, uiState.title)
-        Assert.assertFalse(uiState.isAuthenticated)
         Assert.assertEquals(R.string.button_login_to_join, uiState.primaryButtonTitle)
     }
 
@@ -55,7 +54,6 @@ class EventDetailsViewModelTest {
 
         val uiState = sut.uiState.value
         Assert.assertEquals(domainEventName, uiState.title)
-        Assert.assertTrue(uiState.isAuthenticated)
         Assert.assertEquals(R.string.button_leave_event, uiState.primaryButtonTitle)
     }
 
@@ -73,7 +71,6 @@ class EventDetailsViewModelTest {
 
         val uiState = sut.uiState.value
         Assert.assertEquals(domainEventName, uiState.title)
-        Assert.assertTrue(uiState.isAuthenticated)
         Assert.assertEquals(R.string.button_join_event, uiState.primaryButtonTitle)
     }
 }

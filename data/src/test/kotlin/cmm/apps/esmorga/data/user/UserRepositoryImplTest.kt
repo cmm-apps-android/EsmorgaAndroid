@@ -1,6 +1,7 @@
 package cmm.apps.esmorga.data.user
 
 import cmm.apps.esmorga.data.event.datasource.EventDatasource
+import cmm.apps.esmorga.data.mock.EventDataMock
 import cmm.apps.esmorga.data.mock.UserDataMock
 import cmm.apps.esmorga.data.user.datasource.UserDatasource
 import cmm.apps.esmorga.domain.result.EsmorgaException
@@ -96,5 +97,22 @@ class UserRepositoryImplTest {
         sut.register("name", "lastName", "email", "password")
 
         coVerify { localDS.saveUser(user) }
+    }
+
+    @Test
+    fun `given valid credentials when login succeed then events cache is deleted`() = runTest {
+        val localEventName = "LocalEvent"
+        val name = "Hermione"
+        val eventsMock = EventDataMock.provideEventDataModelList(listOf(localEventName))
+
+        val localDS = mockk<UserDatasource>(relaxed = true)
+        val remoteDS = mockk<UserDatasource>(relaxed = true)
+        val localEventDS = mockk<EventDatasource>(relaxed = true)
+        coEvery { remoteDS.login(any(), any()) } returns UserDataMock.provideUserDataModel(name = name)
+        coEvery { localEventDS.getEvents() } returns eventsMock
+        val sut = UserRepositoryImpl(localDS, remoteDS, localEventDS)
+        sut.login("email", "password")
+
+        coVerify { localEventDS.deleteCacheEvents() }
     }
 }
