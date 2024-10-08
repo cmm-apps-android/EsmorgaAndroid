@@ -91,15 +91,13 @@ fun EventListView(uiState: EventListUiState, snackbarHostState: SnackbarHostStat
         Column(
             modifier = Modifier.padding(
                 top = innerPadding.calculateTopPadding(),
-                start = 16.dp,
-                end = 16.dp
             )
         ) {
             EsmorgaText(
                 text = stringResource(R.string.screen_event_list_title),
                 style = EsmorgaTextStyle.HEADING_1,
                 modifier = Modifier
-                    .padding(vertical = 32.dp)
+                    .padding(vertical = 32.dp, horizontal = 16.dp)
                     .testTag(EVENT_LIST_TITLE)
             )
             if (uiState.loading) {
@@ -110,7 +108,7 @@ fun EventListView(uiState: EventListUiState, snackbarHostState: SnackbarHostStat
                 } else if (uiState.eventList.isEmpty()) {
                     EventListEmpty()
                 } else {
-                    EventList(uiState.eventList, onEventClick)
+                    EventList(uiState.eventList, onEventClick, modifier = Modifier.padding(horizontal = 16.dp))
                 }
             }
         }
@@ -119,7 +117,7 @@ fun EventListView(uiState: EventListUiState, snackbarHostState: SnackbarHostStat
 
 @Composable
 fun EventListLoading() {
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp)) {
         EsmorgaText(text = stringResource(R.string.screen_event_list_loading), style = EsmorgaTextStyle.HEADING_1, modifier = Modifier.padding(vertical = 16.dp))
         EsmorgaLinearLoader(modifier = Modifier.fillMaxWidth())
     }
@@ -127,7 +125,7 @@ fun EventListLoading() {
 
 @Composable
 fun EventListEmpty() {
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp)) {
         Image(
             painter = painterResource(id = R.drawable.img_event_list_empty),
             contentDescription = stringResource(id = R.string.screen_event_list_empty_text),
@@ -149,7 +147,7 @@ fun EventListEmpty() {
 
 @Composable
 fun EventListError(onRetryClick: () -> Unit) {
-    Column {
+    Column(modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp)) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
@@ -185,12 +183,12 @@ fun EventListError(onRetryClick: () -> Unit) {
 }
 
 @Composable
-fun EventList(events: List<EventListUiModel>, onEventClick: (eventId: String) -> Unit) {
+fun EventList(events: List<EventListUiModel>, onEventClick: (eventId: String) -> Unit, modifier: Modifier = Modifier) {
     LazyColumn {
         items(events.size) { pos ->
             val event = events[pos]
 
-            Column(modifier = Modifier
+            Column(modifier = modifier
                 .padding(bottom = 32.dp)
                 .clickable {
                     onEventClick(event.id)

@@ -3,6 +3,7 @@ package cmm.apps.esmorga.view.di
 import cmm.apps.esmorga.view.MainViewModel
 import cmm.apps.esmorga.view.eventdetails.EventDetailsViewModel
 import cmm.apps.esmorga.view.eventlist.EventListViewModel
+import cmm.apps.esmorga.view.eventlist.MyEventListViewModel
 import cmm.apps.esmorga.view.login.LoginViewModel
 import cmm.apps.esmorga.view.registration.RegistrationViewModel
 import cmm.apps.esmorga.view.welcome.WelcomeViewModel
@@ -13,11 +14,14 @@ import org.koin.dsl.module
 object ViewDIModule {
 
     val module = module {
-        viewModel{
+        viewModel {
             MainViewModel(get())
         }
         viewModel {
             EventListViewModel(get())
+        }
+        viewModel {
+            MyEventListViewModel(get())
         }
         viewModel { (eventId: String) ->
             EventDetailsViewModel(get(), eventId)

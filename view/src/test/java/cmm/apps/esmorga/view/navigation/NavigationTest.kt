@@ -15,6 +15,7 @@ import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_RETRY_BUTTON
 import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_TITLE
 import cmm.apps.esmorga.domain.event.GetEventDetailsUseCase
 import cmm.apps.esmorga.domain.event.GetEventListUseCase
+import cmm.apps.esmorga.domain.event.GetMyEventListUseCase
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.EsmorgaResult
 import cmm.apps.esmorga.domain.result.Source
@@ -26,12 +27,12 @@ import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAI
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAILS_EVENT_NAME
 import cmm.apps.esmorga.view.eventlist.EventListScreenTestTags.EVENT_LIST_EVENT_NAME
 import cmm.apps.esmorga.view.eventlist.EventListScreenTestTags.EVENT_LIST_TITLE
+import cmm.apps.esmorga.view.eventlist.MyEventListScreenTestTags.MY_EVENT_LIST_TITLE
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_EMAIL_INPUT
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_LOGIN_BUTTON
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_PASSWORD_INPUT
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_REGISTER_BUTTON
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_TITLE
-import cmm.apps.esmorga.view.navigation.HomeScreenTestTags.MY_EVENTS_TITLE
 import cmm.apps.esmorga.view.navigation.HomeScreenTestTags.PROFILE__TITLE
 import cmm.apps.esmorga.view.registration.RegistrationScreenTestTags.REGISTRATION_BACK_BUTTON
 import cmm.apps.esmorga.view.registration.RegistrationScreenTestTags.REGISTRATION_TITLE
@@ -83,6 +84,10 @@ class NavigationTest {
         coEvery { useCase() } returns EsmorgaResult.success(LoginViewMock.provideUser())
     }
 
+    private val getMyEventListUseCase = mockk<GetMyEventListUseCase>(relaxed = true).also { useCase ->
+        coEvery { useCase() } returns EsmorgaResult.success(EventViewMock.provideEventList(listOf("event")))
+    }
+
     @Before
     @Throws(Exception::class)
     fun setUp() {
@@ -99,6 +104,7 @@ class NavigationTest {
                     factory<PerformLoginUseCase> { performLoginUseCase }
                     factory<PerformRegistrationUserCase> { performRegistrationUserCase }
                     factory<GetSavedUserUseCase> { getSavedUserUseCase }
+                    factory<GetMyEventListUseCase> { getMyEventListUseCase }
                 }
             )
         }
@@ -211,13 +217,13 @@ class NavigationTest {
         composeTestRule.onNodeWithTag(EVENT_LIST_TITLE).assertIsDisplayed()
     }
 
-    //TODO Modify this two last tests with the correct screen when the screens will be done
     @Test
     fun `given main screen, when clicks on bottom bar my events item, then my events screen is shown`() {
         setNavigationFromDestination(Navigation.MyEventsScreen)
-        composeTestRule.onNodeWithTag(MY_EVENTS_TITLE).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(MY_EVENT_LIST_TITLE).assertIsDisplayed()
     }
 
+    //TODO Modify this last test with the correct screen when profile screen is done
     @Test
     fun `given main screen, when clicks on profile nav item, then profile screen is shown`() {
         setNavigationFromDestination(Navigation.ProfileScreen)
