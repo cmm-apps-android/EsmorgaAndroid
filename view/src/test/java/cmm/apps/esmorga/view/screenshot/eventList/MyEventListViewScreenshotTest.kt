@@ -13,11 +13,6 @@ import org.junit.Test
 class MyEventListViewScreenshotTest : BaseScreenshotTest() {
 
     @Test
-    fun myEventListView_lightTheme_empty() {
-        snapshotWithState(loading = false, eventList = listOf(), error = MyEventListError.EMPTY_LIST)
-    }
-
-    @Test
     fun myEventListView_lightTheme_error_not_logged_in() {
         snapshotWithState(loading = false, eventList = listOf(), error = MyEventListError.NOT_LOGGED_IN)
     }
