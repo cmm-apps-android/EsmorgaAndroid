@@ -6,8 +6,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import app.cash.turbine.test
 import cmm.apps.esmorga.domain.result.ErrorCodes.NO_CONNECTION
 import cmm.apps.esmorga.domain.result.EsmorgaException
+import cmm.apps.esmorga.domain.result.EsmorgaResult
 import cmm.apps.esmorga.domain.result.Source
-import cmm.apps.esmorga.domain.result.Success
 import cmm.apps.esmorga.domain.user.PerformRegistrationUserCase
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.registration.RegistrationField
@@ -54,7 +54,7 @@ class RegistrationViewModelTest : KoinTest {
     fun `given a successful usecase when register method is called then usecase executed and UI effect for successful register is emitted`() = runTest {
         val user = LoginViewMock.provideUser()
         val useCase = mockk<PerformRegistrationUserCase>(relaxed = true)
-        coEvery { useCase(any(), any(), any(), any()) } returns Result.success(Success(user))
+        coEvery { useCase(any(), any(), any(), any()) } returns EsmorgaResult.success(user)
 
         val sut = RegistrationViewModel(useCase)
 
@@ -70,7 +70,7 @@ class RegistrationViewModelTest : KoinTest {
     fun `given a failure usecase when register method is called then usecase executed and UI effect for error is emitted`() = runTest {
         val user = LoginViewMock.provideUser()
         val useCase = mockk<PerformRegistrationUserCase>(relaxed = true)
-        coEvery { useCase(any(), any(), any(), any()) } returns Result.failure(EsmorgaException("Fake error", Source.REMOTE, 500))
+        coEvery { useCase(any(), any(), any(), any()) } returns EsmorgaResult.failure(EsmorgaException("Fake error", Source.REMOTE, 500))
 
         val sut = RegistrationViewModel(useCase)
 
@@ -86,7 +86,7 @@ class RegistrationViewModelTest : KoinTest {
     fun `given no internet connection when register method is called then usecase executed and UI effect for snackbar is emitted`() = runTest {
         val user = LoginViewMock.provideUser()
         val useCase = mockk<PerformRegistrationUserCase>(relaxed = true)
-        coEvery { useCase(any(), any(), any(), any()) } returns Result.failure(EsmorgaException("Fake No Internet error", Source.REMOTE, NO_CONNECTION))
+        coEvery { useCase(any(), any(), any(), any()) } returns EsmorgaResult.failure(EsmorgaException("Fake No Internet error", Source.REMOTE, NO_CONNECTION))
 
         val sut = RegistrationViewModel(useCase)
 
@@ -101,7 +101,7 @@ class RegistrationViewModelTest : KoinTest {
     @Test
     fun `given invalid fields inputted when register method is called then ui shows errors in all fields`() = runTest {
         val useCase = mockk<PerformRegistrationUserCase>(relaxed = true)
-        coEvery { useCase(any(), any(), any(), any()) } returns Result.success(Success(LoginViewMock.provideUser()))
+        coEvery { useCase(any(), any(), any(), any()) } returns EsmorgaResult.success(LoginViewMock.provideUser())
 
         val sut = RegistrationViewModel(useCase)
         sut.onRegisterClicked("", "", "", "", "")
@@ -118,7 +118,7 @@ class RegistrationViewModelTest : KoinTest {
     fun `given an invalid name inputted when register method is called then ui shows name error`() = runTest {
         val user = LoginViewMock.provideUser()
         val useCase = mockk<PerformRegistrationUserCase>(relaxed = true)
-        coEvery { useCase(any(), any(), any(), any()) } returns Result.success(Success(user))
+        coEvery { useCase(any(), any(), any(), any()) } returns EsmorgaResult.success(user)
 
         val invalidNameList = listOf(
             "a",
@@ -138,7 +138,7 @@ class RegistrationViewModelTest : KoinTest {
     fun `given an invalid last name inputted when register method is called then ui shows last name error`() = runTest {
         val user = LoginViewMock.provideUser()
         val useCase = mockk<PerformRegistrationUserCase>(relaxed = true)
-        coEvery { useCase(any(), any(), any(), any()) } returns Result.success(Success(user))
+        coEvery { useCase(any(), any(), any(), any()) } returns EsmorgaResult.success(user)
 
         val invalidLastNameList = listOf(
             "a",
@@ -158,7 +158,7 @@ class RegistrationViewModelTest : KoinTest {
     fun `given an invalid email inputted when register method is called then ui shows email error`() = runTest {
         val user = LoginViewMock.provideUser()
         val useCase = mockk<PerformRegistrationUserCase>(relaxed = true)
-        coEvery { useCase(any(), any(), any(), any()) } returns Result.success(Success(user))
+        coEvery { useCase(any(), any(), any(), any()) } returns EsmorgaResult.success(user)
 
         val invalidEmailList = listOf(
             "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@example.com",
@@ -182,7 +182,7 @@ class RegistrationViewModelTest : KoinTest {
     fun `given an invalid password inputted when register method is called then ui shows password error`() = runTest {
         val user = LoginViewMock.provideUser()
         val useCase = mockk<PerformRegistrationUserCase>(relaxed = true)
-        coEvery { useCase(any(), any(), any(), any()) } returns Result.success(Success(user))
+        coEvery { useCase(any(), any(), any(), any()) } returns EsmorgaResult.success(user)
 
         val invalidPasswordList = listOf(
             "12ab@",
@@ -204,7 +204,7 @@ class RegistrationViewModelTest : KoinTest {
     fun `given an invalid repeated password inputted when register method is called then ui shows repeated password error`() = runTest {
         val user = LoginViewMock.provideUser()
         val useCase = mockk<PerformRegistrationUserCase>(relaxed = true)
-        coEvery { useCase(any(), any(), any(), any()) } returns Result.success(Success(user))
+        coEvery { useCase(any(), any(), any(), any()) } returns EsmorgaResult.success(user)
 
         val sut = RegistrationViewModel(useCase)
         sut.onRegisterClicked(user.name, user.lastName, user.email, "Password01!", "Password02!")

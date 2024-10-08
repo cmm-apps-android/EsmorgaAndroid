@@ -23,7 +23,7 @@ class UserRepositoryImplTest {
         val sut = UserRepositoryImpl(localDS, remoteDS)
         val result = sut.getUser()
 
-        Assert.assertEquals(name, result.data.name)
+        Assert.assertEquals(name, result.name)
     }
 
     @Test
@@ -35,7 +35,7 @@ class UserRepositoryImplTest {
         val sut = UserRepositoryImpl(localDS, remoteDS)
         val result = sut.login("email", "password")
 
-        Assert.assertEquals(name, result.data.name)
+        Assert.assertEquals(name, result.name)
     }
 
     @Test
@@ -75,7 +75,7 @@ class UserRepositoryImplTest {
         val sut = UserRepositoryImpl(localDS, remoteDS)
         val result = sut.register(name, "lastName", "email", "password")
 
-        Assert.assertEquals(name, result.data.name)
+        Assert.assertEquals(name, result.name)
     }
 
     @Test

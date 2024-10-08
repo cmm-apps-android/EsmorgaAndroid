@@ -9,34 +9,21 @@ import cmm.apps.esmorga.data.user.datasource.UserDatasource
 import cmm.apps.esmorga.data.user.model.UserDataModel
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.domain.event.repository.EventRepository
-import cmm.apps.esmorga.domain.result.ErrorCodes
-import cmm.apps.esmorga.domain.result.EsmorgaException
-import cmm.apps.esmorga.domain.result.Success
 
 class EventRepositoryImpl(private val localUserDs: UserDatasource, private val localEventDs: EventDatasource, private val remoteEventDs: EventDatasource) : EventRepository {
 
-    override suspend fun getEvents(forceRefresh: Boolean): Success<List<Event>> {
+    override suspend fun getEvents(forceRefresh: Boolean, forceLocal: Boolean): List<Event> {
         val localList = localEventDs.getEvents()
 
-        if (forceRefresh.not() && localList.isNotEmpty() && CacheHelper.shouldReturnCache(localList[0].dataCreationTime)) {
-            return Success(localList.toEventList())
+        if (forceLocal || forceRefresh.not() && localList.isNotEmpty() && CacheHelper.shouldReturnCache(localList[0].dataCreationTime)) {
+            return localList.toEventList()
         }
 
-        try {
-            val remoteEventList = getEventsFromRemote()
-
-            return Success(remoteEventList.toEventList())
-        } catch (esmorgaEx: EsmorgaException) {
-            if (esmorgaEx.code == ErrorCodes.NO_CONNECTION) {
-                return Success(localList.toEventList(), ErrorCodes.NO_CONNECTION)
-            } else {
-                throw esmorgaEx
-            }
-        }
+        return getEventsFromRemote().toEventList()
     }
 
-    override suspend fun getEventDetails(eventId: String): Success<Event> {
-        return Success(localEventDs.getEventById(eventId).toEvent())
+    override suspend fun getEventDetails(eventId: String): Event {
+        return localEventDs.getEventById(eventId).toEvent()
     }
 
 
@@ -57,7 +44,7 @@ class EventRepositoryImpl(private val localUserDs: UserDatasource, private val l
             combinedList.addAll(
                 remoteEventList.map { event -> event.copy(dataUserJoined = myEvents.firstOrNull { me -> event.dataId == me.dataId } != null) }
             )
-        } else{
+        } else {
             combinedList.addAll(remoteEventList)
         }
 

@@ -4,7 +4,6 @@ import cmm.apps.esmorga.domain.mock.UserDomainMock
 import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.Source
-import cmm.apps.esmorga.domain.result.Success
 import cmm.apps.esmorga.domain.user.repository.UserRepository
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -20,12 +19,11 @@ class GetSavedUserUserCaseTest {
         val repoUserName = "Io"
         val repoUser = UserDomainMock.provideUser(name = repoUserName)
         val repo = mockk<UserRepository>(relaxed = true)
-        coEvery { repo.getUser() } returns Success(repoUser)
+        coEvery { repo.getUser() } returns repoUser
 
         val sut = GetSavedUserUseCaseImpl(repo)
         val result = sut.invoke()
-        Assert.assertTrue(result.isSuccess)
-        Assert.assertEquals(repoUserName, result.getOrThrow().data.name)
+        Assert.assertEquals(repoUserName, result.data!!.name)
     }
 
     @Test
@@ -35,8 +33,7 @@ class GetSavedUserUserCaseTest {
 
         val sut = GetSavedUserUseCaseImpl(repo)
         val result = sut.invoke()
-        Assert.assertTrue(result.isFailure)
-        Assert.assertTrue(result.exceptionOrNull() is EsmorgaException)
+        Assert.assertTrue(result.error is EsmorgaException)
     }
 
 }

@@ -14,15 +14,22 @@ android {
         applicationId = "cmm.apps.esmorga"
         minSdk = 28
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 101000
+        versionName = "1.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
     }
-
+    signingConfigs {
+        create("release") {
+            storeFile = file("../esmorgabuild.keystore.jks")
+            keyAlias = System.getenv("BUILD_KEY_ALIAS")
+            keyPassword = System.getenv("BUILD_KEY_PASSWORD")
+            storePassword = System.getenv("BUILD_STORE_PASSWORD")
+        }
+    }
     buildTypes {
         release {
             isMinifyEnabled = false

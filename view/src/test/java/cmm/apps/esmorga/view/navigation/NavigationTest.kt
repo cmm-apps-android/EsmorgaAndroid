@@ -16,8 +16,8 @@ import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_TITLE
 import cmm.apps.esmorga.domain.event.GetEventDetailsUseCase
 import cmm.apps.esmorga.domain.event.GetEventListUseCase
 import cmm.apps.esmorga.domain.result.EsmorgaException
+import cmm.apps.esmorga.domain.result.EsmorgaResult
 import cmm.apps.esmorga.domain.result.Source
-import cmm.apps.esmorga.domain.result.Success
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.domain.user.PerformLoginUseCase
 import cmm.apps.esmorga.domain.user.PerformRegistrationUserCase
@@ -64,23 +64,23 @@ class NavigationTest {
     private lateinit var navController: NavHostController
 
     private val getEventListUseCase = mockk<GetEventListUseCase>(relaxed = true).also { useCase ->
-        coEvery { useCase() } returns Result.success(Success(EventViewMock.provideEventList(listOf("event"))))
+        coEvery { useCase() } returns EsmorgaResult.success(EventViewMock.provideEventList(listOf("event")))
     }
 
     private val getEventDetailsUseCase = mockk<GetEventDetailsUseCase>(relaxed = true).also { useCase ->
-        coEvery { useCase(any()) } returns Result.success(Success(EventViewMock.provideEvent("event")))
+        coEvery { useCase(any()) } returns EsmorgaResult.success(EventViewMock.provideEvent("event"))
     }
 
     private val performLoginUseCase = mockk<PerformLoginUseCase>(relaxed = true).also { useCase ->
-        coEvery { useCase(any(), any()) } returns Result.success(Success(LoginViewMock.provideUser()))
+        coEvery { useCase(any(), any()) } returns EsmorgaResult.success(LoginViewMock.provideUser())
     }
 
     private val performRegistrationUserCase = mockk<PerformRegistrationUserCase>(relaxed = true).also { useCase ->
-        coEvery { useCase(any(), any(), any(), any()) } returns Result.success(Success(LoginViewMock.provideUser()))
+        coEvery { useCase(any(), any(), any(), any()) } returns EsmorgaResult.success(LoginViewMock.provideUser())
     }
 
     private val getSavedUserUseCase = mockk<GetSavedUserUseCase>(relaxed = true).also { useCase ->
-        coEvery { useCase() } returns Result.success(Success(LoginViewMock.provideUser()))
+        coEvery { useCase() } returns EsmorgaResult.success(LoginViewMock.provideUser())
     }
 
     @Before
@@ -177,7 +177,7 @@ class NavigationTest {
     @Test
     fun `given user not logged, when login is visited and login fails, then error screen is shown`() {
         val failurePerformLoginUseCase = mockk<PerformLoginUseCase>(relaxed = true).also { useCase ->
-            coEvery { useCase(any(), any()) } returns Result.failure(EsmorgaException("Mock error", Source.REMOTE, 401))
+            coEvery { useCase(any(), any()) } returns EsmorgaResult.failure(EsmorgaException("Mock error", Source.REMOTE, 401))
         }
         loadKoinModules(module { factory<PerformLoginUseCase> { failurePerformLoginUseCase } })
 

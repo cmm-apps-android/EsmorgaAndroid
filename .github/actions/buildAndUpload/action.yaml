@@ -16,6 +16,18 @@ inputs:
   Build-OTA-APIKEY-BUILD:
     description: secrets.OTASHARE_APIKEY_BUILD
     required: true
+  Build-KEY-STORE:
+    description: secrets.BUILD_KEYSTORE
+    required: true
+  Build-KEY-ALIAS:
+    description: secrets.BUILD_KEY_ALIAS
+    required: true
+  Build-KEY-PASSWORD:
+    description: secrets.BUILD_KEY_PASSWORD
+    required: true
+  Build-STORE-PASSWORD:
+    description: secrets.BUILD_STORE_PASSWORD
+    required: true
 
 runs:
   using: "composite"
@@ -29,8 +41,18 @@ runs:
     - name: Grant execute permission for gradlew
       shell: bash
       run: chmod +x gradlew
+    - name: Decode Keystore
+      env:
+        BUILD_KEYSTORE: ${{ inputs.Build-KEY-STORE }}
+      shell: bash
+      run: |
+        echo $BUILD_KEYSTORE | base64 --decode > esmorgabuild.keystore.jks
     - name: Build with Gradle
       shell: bash
+      env:
+        BUILD_KEY_ALIAS: ${{ inputs.Build-KEY-ALIAS }}
+        BUILD_KEY_PASSWORD: ${{ inputs.Build-KEY-PASSWORD }}
+        BUILD_STORE_PASSWORD: ${{ inputs.Build-STORE-PASSWORD }}
       run: ./gradlew :app:assemble${{ inputs.Build-ENVL }}Release
     - shell: bash
       run: |
