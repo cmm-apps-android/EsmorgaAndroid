@@ -3,7 +3,6 @@ package cmm.apps.esmorga.domain.user
 import cmm.apps.esmorga.domain.mock.UserDomainMock
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.Source
-import cmm.apps.esmorga.domain.result.Success
 import cmm.apps.esmorga.domain.user.repository.UserRepository
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -18,12 +17,11 @@ class PerformRegistrationUseCaseImplTest {
         val repoUserName = "Io"
         val repoUser = UserDomainMock.provideUser(name = repoUserName)
         val repo = mockk<UserRepository>(relaxed = true)
-        coEvery { repo.register(any(), any(), any(), any()) } returns Success(repoUser)
+        coEvery { repo.register(any(), any(), any(), any()) } returns repoUser
 
         val sut = PerformRegistrationUserCaseImpl(repo)
         val result = sut.invoke(repoUser.name, repoUser.lastName, repoUser.email, "password")
-        Assert.assertTrue(result.isSuccess)
-        Assert.assertEquals(repoUserName, result.getOrThrow().data.name)
+        Assert.assertEquals(repoUserName, result.data!!.name)
     }
 
     @Test
@@ -35,7 +33,6 @@ class PerformRegistrationUseCaseImplTest {
         val sut = PerformRegistrationUserCaseImpl(repo)
         val result = sut.invoke(repoUser.name, repoUser.lastName, repoUser.email, "password")
 
-        Assert.assertTrue(result.isFailure)
-        Assert.assertTrue(result.exceptionOrNull() is EsmorgaException)
+        Assert.assertTrue(result.error is EsmorgaException)
     }
 }

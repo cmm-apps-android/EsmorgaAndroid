@@ -1,7 +1,7 @@
 package cmm.apps.esmorga.view.viewmodel.eventdetails
 
 import cmm.apps.esmorga.domain.event.GetEventDetailsUseCase
-import cmm.apps.esmorga.domain.result.Success
+import cmm.apps.esmorga.domain.result.EsmorgaResult
 import cmm.apps.esmorga.view.eventdetails.EventDetailsViewModel
 import cmm.apps.esmorga.view.viewmodel.mock.EventViewMock
 import cmm.apps.esmorga.view.viewmodel.util.MainDispatcherRule
@@ -22,7 +22,7 @@ class EventDetailsViewModelTest {
         val domainEventName = "DomainEvent"
 
         val useCase = mockk<GetEventDetailsUseCase>(relaxed = true)
-        coEvery { useCase(any()) } returns Result.success(Success(EventViewMock.provideEvent(domainEventName)))
+        coEvery { useCase(any()) } returns EsmorgaResult.success(EventViewMock.provideEvent(domainEventName))
 
         val sut = EventDetailsViewModel(useCase, "eventId")
 

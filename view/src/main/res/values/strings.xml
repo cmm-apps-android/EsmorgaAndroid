@@ -39,4 +39,7 @@
    <string name="screen_login_title">Hello again!</string>
    <string name="screen_registration_title">Register</string>
    <string name="snackbar_no_internet">No internet connection.</string>
+   <string name="bottom_bar_explore">Explore</string>
+   <string name="bottom_bar_myevents">My Events</string>
+   <string name="bottom_bar_myprofile">Profile</string>
 </resources>

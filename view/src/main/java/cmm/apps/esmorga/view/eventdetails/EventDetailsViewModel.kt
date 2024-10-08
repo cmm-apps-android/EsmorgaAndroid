@@ -29,7 +29,7 @@ class EventDetailsViewModel(
         viewModelScope.launch {
             val result = getEventDetailsUseCase(eventId)
             result.onSuccess {
-                _uiState.value = it.data.toEventUiDetails()
+                _uiState.value = it.toEventUiDetails()
             }
         }
     }

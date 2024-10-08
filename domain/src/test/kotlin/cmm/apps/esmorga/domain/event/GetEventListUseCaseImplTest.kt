@@ -2,7 +2,6 @@ package cmm.apps.esmorga.domain.event
 
 import cmm.apps.esmorga.domain.event.repository.EventRepository
 import cmm.apps.esmorga.domain.mock.EventDomainMock
-import cmm.apps.esmorga.domain.result.Success
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
@@ -16,12 +15,11 @@ class GetEventListUseCaseImplTest {
         val repoEventName = "RepoEvent"
 
         val repo = mockk<EventRepository>(relaxed = true)
-        coEvery { repo.getEvents() } returns Success(EventDomainMock.provideEventList(listOf(repoEventName)))
+        coEvery { repo.getEvents() } returns EventDomainMock.provideEventList(listOf(repoEventName))
 
         val sut = GetEventListUseCaseImpl(repo)
         val result = sut.invoke()
 
-        Assert.assertTrue(result.isSuccess)
-        Assert.assertEquals(repoEventName, result.getOrThrow().data[0].name)
+        Assert.assertEquals(repoEventName, result.data!![0].name)
     }
 }

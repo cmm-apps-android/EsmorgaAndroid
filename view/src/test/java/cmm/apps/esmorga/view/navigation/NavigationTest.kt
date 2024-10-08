@@ -16,8 +16,8 @@ import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_TITLE
 import cmm.apps.esmorga.domain.event.GetEventDetailsUseCase
 import cmm.apps.esmorga.domain.event.GetEventListUseCase
 import cmm.apps.esmorga.domain.result.EsmorgaException
+import cmm.apps.esmorga.domain.result.EsmorgaResult
 import cmm.apps.esmorga.domain.result.Source
-import cmm.apps.esmorga.domain.result.Success
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.domain.user.PerformLoginUseCase
 import cmm.apps.esmorga.domain.user.PerformRegistrationUserCase
@@ -31,6 +31,8 @@ import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_LOGIN_BUTTON
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_PASSWORD_INPUT
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_REGISTER_BUTTON
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_TITLE
+import cmm.apps.esmorga.view.navigation.HomeScreenTestTags.MY_EVENTS_TITLE
+import cmm.apps.esmorga.view.navigation.HomeScreenTestTags.PROFILE__TITLE
 import cmm.apps.esmorga.view.registration.RegistrationScreenTestTags.REGISTRATION_BACK_BUTTON
 import cmm.apps.esmorga.view.registration.RegistrationScreenTestTags.REGISTRATION_TITLE
 import cmm.apps.esmorga.view.viewmodel.mock.EventViewMock
@@ -62,23 +64,23 @@ class NavigationTest {
     private lateinit var navController: NavHostController
 
     private val getEventListUseCase = mockk<GetEventListUseCase>(relaxed = true).also { useCase ->
-        coEvery { useCase() } returns Result.success(Success(EventViewMock.provideEventList(listOf("event"))))
+        coEvery { useCase() } returns EsmorgaResult.success(EventViewMock.provideEventList(listOf("event")))
     }
 
     private val getEventDetailsUseCase = mockk<GetEventDetailsUseCase>(relaxed = true).also { useCase ->
-        coEvery { useCase(any()) } returns Result.success(Success(EventViewMock.provideEvent("event")))
+        coEvery { useCase(any()) } returns EsmorgaResult.success(EventViewMock.provideEvent("event"))
     }
 
     private val performLoginUseCase = mockk<PerformLoginUseCase>(relaxed = true).also { useCase ->
-        coEvery { useCase(any(), any()) } returns Result.success(Success(LoginViewMock.provideUser()))
+        coEvery { useCase(any(), any()) } returns EsmorgaResult.success(LoginViewMock.provideUser())
     }
 
     private val performRegistrationUserCase = mockk<PerformRegistrationUserCase>(relaxed = true).also { useCase ->
-        coEvery { useCase(any(), any(), any(), any()) } returns Result.success(Success(LoginViewMock.provideUser()))
+        coEvery { useCase(any(), any(), any(), any()) } returns EsmorgaResult.success(LoginViewMock.provideUser())
     }
 
     private val getSavedUserUseCase = mockk<GetSavedUserUseCase>(relaxed = true).also { useCase ->
-        coEvery { useCase() } returns Result.success(Success(LoginViewMock.provideUser()))
+        coEvery { useCase() } returns EsmorgaResult.success(LoginViewMock.provideUser())
     }
 
     @Before
@@ -175,7 +177,7 @@ class NavigationTest {
     @Test
     fun `given user not logged, when login is visited and login fails, then error screen is shown`() {
         val failurePerformLoginUseCase = mockk<PerformLoginUseCase>(relaxed = true).also { useCase ->
-            coEvery { useCase(any(), any()) } returns Result.failure(EsmorgaException("Mock error", Source.REMOTE, 401))
+            coEvery { useCase(any(), any()) } returns EsmorgaResult.failure(EsmorgaException("Mock error", Source.REMOTE, 401))
         }
         loadKoinModules(module { factory<PerformLoginUseCase> { failurePerformLoginUseCase } })
 
@@ -207,6 +209,19 @@ class NavigationTest {
         composeTestRule.onNodeWithTag(EVENT_LIST_EVENT_NAME, true).performClick()
         composeTestRule.onNodeWithTag(EVENT_DETAILS_BACK_BUTTON).performClick()
         composeTestRule.onNodeWithTag(EVENT_LIST_TITLE).assertIsDisplayed()
+    }
+
+    //TODO Modify this two last tests with the correct screen when the screens will be done
+    @Test
+    fun `given main screen, when clicks on bottom bar my events item, then my events screen is shown`() {
+        setNavigationFromDestination(Navigation.MyEventsScreen)
+        composeTestRule.onNodeWithTag(MY_EVENTS_TITLE).assertIsDisplayed()
+    }
+
+    @Test
+    fun `given main screen, when clicks on profile nav item, then profile screen is shown`() {
+        setNavigationFromDestination(Navigation.ProfileScreen)
+        composeTestRule.onNodeWithTag(PROFILE__TITLE).assertIsDisplayed()
     }
 
     private fun setNavigationFromAppLaunch(loggedIn: Boolean) {

@@ -36,13 +36,11 @@ class LoginViewModel(private val performLoginUseCase: PerformLoginUseCase) : Vie
                 val result = performLoginUseCase(email.trim(), password.trim())
                 result.onSuccess {
                     _effect.tryEmit(LoginEffect.NavigateToEventList)
-                }.onFailure { error ->
+                }.onFailure {
                     _uiState.value = _uiState.value.copy(loading = false)
-                    if (error is EsmorgaException && error.code == ErrorCodes.NO_CONNECTION) {
-                        _effect.tryEmit(LoginEffect.ShowNoNetworkSnackbar)
-                    } else {
-                        _effect.tryEmit(LoginEffect.ShowFullScreenError())
-                    }
+                    _effect.tryEmit(LoginEffect.ShowFullScreenError())
+                }.onNoConnectionError {
+                    _effect.tryEmit(LoginEffect.ShowNoNetworkSnackbar)
                 }
             }
         }
