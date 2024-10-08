@@ -15,6 +15,5 @@ jobs:
     - name: Run a simple test
       run: |
         cd appium
-        #npm install --save-dev @wdio/cli --no-wizard
-        #npm ci
+        npm ci
         npm run test
