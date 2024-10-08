@@ -16,5 +16,4 @@ jobs:
       run: |
         cd appium
         npm ci
-        npx wdio run --config ./wdio.conf.js
-
+        npm run test
