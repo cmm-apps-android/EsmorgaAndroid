@@ -16,5 +16,5 @@ jobs:
       run: |
         cd appium
         npm ci
-        npx wdio run ./wdio.conf.js
+        npx wdio run --config ./wdio.conf.js
 
