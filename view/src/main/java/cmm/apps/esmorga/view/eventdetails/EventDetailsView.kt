@@ -45,8 +45,8 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun EventDetailsScreen(
     eventId: String,
-    onBackPressed: () -> Unit,
     edvm: EventDetailsViewModel = koinViewModel(parameters = { parametersOf(eventId) }),
+    onBackPressed: () -> Unit,
     onLoginClicked: () -> Unit
 ) {
     val uiState: EventDetailsUiState by edvm.uiState.collectAsStateWithLifecycle()
