@@ -12,9 +12,8 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Run a simple script
+    - name: Run a simple test
       run: |
-        echo "Running on self-hosted runner"
-        echo "Current directory: $(pwd)"
-        echo "Listing files:"
-        ls -al
+        npm ci
+        npx wdio run ./wdio.conf.js
+

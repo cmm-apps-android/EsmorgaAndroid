@@ -36,3 +36,5 @@ google-services.json
 
 # Android Profiling
 *.hprof
+appium/node_modules/
+appium/.tmp/json/
