@@ -42,4 +42,7 @@
    <string name="bottom_bar_explore">Explore</string>
    <string name="bottom_bar_myevents">My Events</string>
    <string name="bottom_bar_myprofile">Profile</string>
+   <string name="button_join_event">Join Event</string>
+   <string name="button_leave_event">Leave Event</string>
+   <string name="button_login_to_join">Sign in to sign up</string>
 </resources>
