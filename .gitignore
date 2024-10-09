@@ -38,3 +38,5 @@ google-services.json
 *.hprof
 appium/node_modules/
 appium/.tmp/json/
+appium/features/smoke.feature
+appium/esmorga.apk
