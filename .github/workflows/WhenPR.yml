@@ -9,7 +9,6 @@ on:
   workflow_dispatch:
 jobs:
   Test:
-
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
@@ -32,4 +31,9 @@ jobs:
           min-coverage-overall: 75
           min-coverage-changed-files: 75
           coverage-counter-type: LINE
-  
+
+  RunE2ETests:
+    needs: Test
+    uses: ./.github/workflows/E2E-On-Selfhosted-test.yml
+    with:
+      apk_url: https://otashare.mobgen.com/build/download/4lhn5r7g3tzy
