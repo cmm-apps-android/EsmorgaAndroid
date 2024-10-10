@@ -1,0 +1,33 @@
+name: Self-Hosted Runner Example
+
+on:
+  workflow_dispatch:
+    inputs:
+      apk_url:
+        description: OTA URL
+        required: true
+        type: string
+        
+  workflow_call:
+    inputs:
+      apk_url:
+        description: OTA URL
+        required: true
+        type: string
+
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Run a simple test
+      env: 
+        apk_url: ${{inputs.apk_url}}
+      run: |
+        cd appium
+        npm ci
+        npm run test
