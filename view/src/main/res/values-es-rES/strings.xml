@@ -45,4 +45,5 @@
    <string name="button_join_event">Apuntarse</string>
    <string name="button_leave_event">Rajarse</string>
    <string name="button_login_to_join">Identifícate para apuntarte</string>
+   <string name="snackbar_event_joined">Bravo! Te has unido al evento!</string>
 </resources>

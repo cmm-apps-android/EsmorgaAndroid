@@ -45,4 +45,5 @@
    <string name="button_join_event">Join Event</string>
    <string name="button_leave_event">Leave Event</string>
    <string name="button_login_to_join">Sign in to sign up</string>
+   <string name="snackbar_event_joined">Bravo! You have joined the event!</string>
 </resources>

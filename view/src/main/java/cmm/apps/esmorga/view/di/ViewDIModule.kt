@@ -13,14 +13,14 @@ import org.koin.dsl.module
 object ViewDIModule {
 
     val module = module {
-        viewModel{
+        viewModel {
             MainViewModel(get())
         }
         viewModel {
             EventListViewModel(get())
         }
         viewModel { (eventId: String) ->
-            EventDetailsViewModel(get(), get(), eventId)
+            EventDetailsViewModel(get(), get(), get(), eventId)
         }
         viewModel {
             WelcomeViewModel()
