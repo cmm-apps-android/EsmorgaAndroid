@@ -66,7 +66,8 @@ fun MyEventListScreen(elvm: MyEventListViewModel = koinViewModel(), onEventClick
             uiState = uiState,
             snackbarHostState = snackbarHostState,
             onSignInClick = { elvm.onSignInClick() },
-            onEventClick = { elvm.onEventClick(it) }
+            onEventClick = { elvm.onEventClick(it) },
+            onRetryClick = { elvm.onRetryClick() }
         )
     }
 }
@@ -76,7 +77,8 @@ fun MyEventListView(
     uiState: MyEventListUiState,
     snackbarHostState: SnackbarHostState,
     onSignInClick: () -> Unit,
-    onEventClick: (eventId: String) -> Unit
+    onEventClick: (eventId: String) -> Unit,
+    onRetryClick: () -> Unit
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -99,10 +101,9 @@ fun MyEventListView(
                 EventListLoading()
             } else {
                 when (uiState.error) {
-                    MyEventListError.NO_JOINED_EVENTS -> MyEventsEmptyView()
                     MyEventListError.EMPTY_LIST -> MyEventsEmptyView()
                     MyEventListError.NOT_LOGGED_IN -> MyEventGuestError(stringResource(R.string.unauthenticated_error_title), stringResource(R.string.button_login)) { onSignInClick() }
-                    MyEventListError.NO_CONNECTION -> MyEventGuestError(stringResource(R.string.default_error_title), stringResource(R.string.button_retry)) { onSignInClick() }
+                    MyEventListError.NO_CONNECTION, MyEventListError.UNKNOWN -> MyEventGuestError(stringResource(R.string.default_error_title), stringResource(R.string.button_retry)) { onRetryClick() }
                     null -> EventList(uiState.eventList, onEventClick, modifier = Modifier.padding(horizontal = 16.dp))
                 }
             }

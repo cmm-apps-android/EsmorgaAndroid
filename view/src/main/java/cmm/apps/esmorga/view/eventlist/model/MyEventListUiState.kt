@@ -8,9 +8,9 @@ data class MyEventListUiState(
 
 enum class MyEventListError {
     NOT_LOGGED_IN,
-    NO_JOINED_EVENTS,
     NO_CONNECTION,
-    EMPTY_LIST
+    EMPTY_LIST,
+    UNKNOWN
 }
 
 sealed class MyEventListEffect {

@@ -37,14 +37,16 @@ class MyEventListViewModel(private val getMyEventListUseCase: GetMyEventListUseC
             result.onSuccess { myEventList ->
                 if (myEventList.isEmpty()) {
                     _uiState.value = MyEventListUiState(error = MyEventListError.EMPTY_LIST)
-                    return@onSuccess
+                } else {
+                    _uiState.value = MyEventListUiState(
+                        eventList = myEventList.toEventUiList(),
+                    )
                 }
-                _uiState.value = MyEventListUiState(
-                    eventList = myEventList.toEventUiList(),
-                )
             }.onFailure { error ->
                 if (error.code == ErrorCodes.NOT_LOGGED_IN) {
                     _uiState.value = MyEventListUiState(error = MyEventListError.NOT_LOGGED_IN)
+                } else {
+                    _uiState.value = MyEventListUiState(error = MyEventListError.UNKNOWN)
                 }
             }.onNoConnectionError {
                 _effect.tryEmit(MyEventListEffect.ShowNoNetworkPrompt)
@@ -58,5 +60,9 @@ class MyEventListViewModel(private val getMyEventListUseCase: GetMyEventListUseC
 
     fun onSignInClick() {
         _effect.tryEmit(MyEventListEffect.NavigateToSignIn)
+    }
+
+    fun onRetryClick() {
+        loadMyEvents()
     }
 }

@@ -6,7 +6,7 @@ enum class Source {
     UNSUPPORTED
 }
 
-open class EsmorgaException(
+class EsmorgaException(
     override val message: String,
     val source: Source?,
     val code: Int?

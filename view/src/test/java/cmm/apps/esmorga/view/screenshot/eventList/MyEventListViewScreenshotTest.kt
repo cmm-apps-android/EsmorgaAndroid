@@ -19,7 +19,7 @@ class MyEventListViewScreenshotTest : BaseScreenshotTest() {
 
     @Test
     fun myEventListView_lightTheme_error_no_events_joined() {
-        snapshotWithState(loading = false, eventList = listOf(), error = MyEventListError.NO_JOINED_EVENTS)
+        snapshotWithState(loading = false, eventList = listOf(), error = MyEventListError.EMPTY_LIST)
     }
 
     @Test
@@ -46,7 +46,8 @@ class MyEventListViewScreenshotTest : BaseScreenshotTest() {
                 MyEventListView(uiState = MyEventListUiState(loading = loading, eventList = eventList, error = error),
                     snackbarHostState = SnackbarHostState(),
                     onEventClick = { },
-                    onSignInClick = { }
+                    onSignInClick = { },
+                    onRetryClick = { }
                 )
             }
         }
