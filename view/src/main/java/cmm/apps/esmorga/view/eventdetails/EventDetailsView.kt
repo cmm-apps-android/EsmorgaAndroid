@@ -34,7 +34,6 @@ import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAI
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsEffect
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiState
 import cmm.apps.esmorga.view.navigation.openNavigationApp
-import cmm.apps.esmorga.view.registration.RegistrationScreenTestTags.REGISTRATION_BACK_BUTTON
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -44,7 +43,12 @@ import org.koin.core.parameter.parametersOf
 
 @Screen
 @Composable
-fun EventDetailsScreen(eventId: String, onBackPressed: () -> Unit, edvm: EventDetailsViewModel = koinViewModel(parameters = { parametersOf(eventId) })) {
+fun EventDetailsScreen(
+    eventId: String,
+    edvm: EventDetailsViewModel = koinViewModel(parameters = { parametersOf(eventId) }),
+    onBackPressed: () -> Unit,
+    onLoginClicked: () -> Unit
+) {
     val uiState: EventDetailsUiState by edvm.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
     LaunchedEffect(Unit) {
@@ -57,6 +61,10 @@ fun EventDetailsScreen(eventId: String, onBackPressed: () -> Unit, edvm: EventDe
                 is EventDetailsEffect.NavigateBack -> {
                     onBackPressed()
                 }
+
+                is EventDetailsEffect.NavigateToLoginScreen -> {
+                    onLoginClicked()
+                }
             }
         }
     }
@@ -68,6 +76,9 @@ fun EventDetailsScreen(eventId: String, onBackPressed: () -> Unit, edvm: EventDe
             },
             onBackPressed = {
                 edvm.onBackPressed()
+            },
+            onPrimaryButtonClicked = {
+                edvm.onPrimaryButtonClicked()
             }
         )
     }
@@ -76,15 +87,17 @@ fun EventDetailsScreen(eventId: String, onBackPressed: () -> Unit, edvm: EventDe
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EventDetailsView(uiState: EventDetailsUiState, onNavigateClicked: () -> Unit, onBackPressed: () -> Unit) {
+fun EventDetailsView(uiState: EventDetailsUiState, onNavigateClicked: () -> Unit, onBackPressed: () -> Unit, onPrimaryButtonClicked: () -> Unit) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
                 title = {},
                 navigationIcon = {
-                    IconButton(onClick = { onBackPressed() },
-                        modifier = Modifier.testTag(EVENT_DETAILS_BACK_BUTTON)) {
+                    IconButton(
+                        onClick = { onBackPressed() },
+                        modifier = Modifier.testTag(EVENT_DETAILS_BACK_BUTTON)
+                    ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.content_description_back_icon)
@@ -149,6 +162,16 @@ fun EventDetailsView(uiState: EventDetailsUiState, onNavigateClicked: () -> Unit
                 }
             }
 
+            EsmorgaButton(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp, vertical = if (!uiState.navigateButton) 32.dp else 0.dp)
+                    .testTag(EventDetailsScreenTestTags.EVENT_DETAIL_PRIMARY_BUTTON),
+                text = stringResource(uiState.primaryButtonTitle),
+                primary = true
+            ) {
+                onPrimaryButtonClicked()
+            }
+
         }
     }
 }
@@ -156,4 +179,5 @@ fun EventDetailsView(uiState: EventDetailsUiState, onNavigateClicked: () -> Unit
 object EventDetailsScreenTestTags {
     const val EVENT_DETAILS_EVENT_NAME = "event details event name"
     const val EVENT_DETAILS_BACK_BUTTON = "event details back button"
+    const val EVENT_DETAIL_PRIMARY_BUTTON = "event_detail_primary_button"
 }

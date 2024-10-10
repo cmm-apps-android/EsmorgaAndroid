@@ -18,7 +18,17 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
         snapshotWithState()
     }
 
-    private fun snapshotWithState(lat: Double? = 0.0, lng: Double? = 2.88) {
+    @Test
+    fun eventDetailsView_lightTheme_data_user_event_joined() {
+        snapshotWithState(userJoined = true, isAuthenticate = true)
+    }
+
+    @Test
+    fun eventDetailsView_lightTheme_data_user_event_not_joined() {
+        snapshotWithState(userJoined = false, isAuthenticate = true)
+    }
+
+    private fun snapshotWithState(lat: Double? = 0.0, lng: Double? = 2.88, userJoined: Boolean = false, isAuthenticate: Boolean = false) {
         paparazzi.snapshot {
             EsmorgaTheme(darkTheme = false) {
                 EventDetailsView(
@@ -33,7 +43,8 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
                         locationLng = lng
                     ),
                     onNavigateClicked = {},
-                    onBackPressed = {}
+                    onBackPressed = {},
+                    onPrimaryButtonClicked = {}
                 )
             }
         }

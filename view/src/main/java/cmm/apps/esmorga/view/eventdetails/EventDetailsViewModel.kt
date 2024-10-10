@@ -3,6 +3,7 @@ package cmm.apps.esmorga.view.eventdetails
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cmm.apps.esmorga.domain.event.GetEventDetailsUseCase
+import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.view.eventdetails.mapper.EventDetailsUiMapper.toEventUiDetails
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsEffect
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiState
@@ -17,6 +18,7 @@ import kotlinx.coroutines.launch
 
 class EventDetailsViewModel(
     private val getEventDetailsUseCase: GetEventDetailsUseCase,
+    private val getSavedUserUseCase: GetSavedUserUseCase,
     private val eventId: String
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(EventDetailsUiState())
@@ -25,11 +27,17 @@ class EventDetailsViewModel(
     private val _effect: MutableSharedFlow<EventDetailsEffect> = MutableSharedFlow(extraBufferCapacity = 2, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val effect: SharedFlow<EventDetailsEffect> = _effect.asSharedFlow()
 
+    private var isAuthenticated: Boolean = false
+    private var userJoined: Boolean = false
+
     init {
         viewModelScope.launch {
+            val user = getSavedUserUseCase()
             val result = getEventDetailsUseCase(eventId)
+            isAuthenticated = user.data != null
             result.onSuccess {
-                _uiState.value = it.toEventUiDetails()
+                userJoined = it.userJoined
+                _uiState.value = it.toEventUiDetails(isAuthenticated, userJoined)
             }
         }
     }
@@ -47,4 +55,9 @@ class EventDetailsViewModel(
         _effect.tryEmit(EventDetailsEffect.NavigateBack)
     }
 
+    fun onPrimaryButtonClicked() {
+        if (!isAuthenticated) {
+            _effect.tryEmit(EventDetailsEffect.NavigateToLoginScreen)
+        }
+    }
 }

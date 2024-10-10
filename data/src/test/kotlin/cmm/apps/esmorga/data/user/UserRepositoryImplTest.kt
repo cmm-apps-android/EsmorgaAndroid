@@ -1,5 +1,7 @@
 package cmm.apps.esmorga.data.user
 
+import cmm.apps.esmorga.data.event.datasource.EventDatasource
+import cmm.apps.esmorga.data.mock.EventDataMock
 import cmm.apps.esmorga.data.mock.UserDataMock
 import cmm.apps.esmorga.data.user.datasource.UserDatasource
 import cmm.apps.esmorga.domain.result.EsmorgaException
@@ -18,9 +20,10 @@ class UserRepositoryImplTest {
 
         val localDS = mockk<UserDatasource>(relaxed = true)
         val remoteDS = mockk<UserDatasource>(relaxed = true)
+        val localEventDS = mockk<EventDatasource>(relaxed = true)
         coEvery { localDS.getUser() } returns UserDataMock.provideUserDataModel(name = name)
 
-        val sut = UserRepositoryImpl(localDS, remoteDS)
+        val sut = UserRepositoryImpl(localDS, remoteDS, localEventDS)
         val result = sut.getUser()
 
         Assert.assertEquals(name, result.name)
@@ -31,8 +34,9 @@ class UserRepositoryImplTest {
         val name = "Ron"
         val localDS = mockk<UserDatasource>(relaxed = true)
         val remoteDS = mockk<UserDatasource>(relaxed = true)
+        val localEventDS = mockk<EventDatasource>(relaxed = true)
         coEvery { remoteDS.login(any(), any()) } returns UserDataMock.provideUserDataModel(name = name)
-        val sut = UserRepositoryImpl(localDS, remoteDS)
+        val sut = UserRepositoryImpl(localDS, remoteDS, localEventDS)
         val result = sut.login("email", "password")
 
         Assert.assertEquals(name, result.name)
@@ -43,8 +47,9 @@ class UserRepositoryImplTest {
         val errorCode = 401
         val localDS = mockk<UserDatasource>(relaxed = true)
         val remoteDS = mockk<UserDatasource>(relaxed = true)
+        val localEventDS = mockk<EventDatasource>(relaxed = true)
         coEvery { remoteDS.login(any(), any()) } throws EsmorgaException("error", Source.REMOTE, errorCode)
-        val sut = UserRepositoryImpl(localDS, remoteDS)
+        val sut = UserRepositoryImpl(localDS, remoteDS, localEventDS)
 
         val exception = try {
             sut.login("invalidEmail", "invalidPassword")
@@ -60,8 +65,9 @@ class UserRepositoryImplTest {
     fun `given valid credentials when login fails then exception is thrown`() = runTest {
         val localDS = mockk<UserDatasource>(relaxed = true)
         val remoteDS = mockk<UserDatasource>(relaxed = true)
+        val localEventDS = mockk<EventDatasource>(relaxed = true)
         coEvery { remoteDS.login(any(), any()) } throws EsmorgaException("error", Source.REMOTE, 500)
-        val sut = UserRepositoryImpl(localDS, remoteDS)
+        val sut = UserRepositoryImpl(localDS, remoteDS, localEventDS)
 
         sut.login("validEmail", "validPassword")
     }
@@ -71,8 +77,9 @@ class UserRepositoryImplTest {
         val name = "Mezcal"
         val localDS = mockk<UserDatasource>(relaxed = true)
         val remoteDS = mockk<UserDatasource>(relaxed = true)
+        val localEventDS = mockk<EventDatasource>(relaxed = true)
         coEvery { remoteDS.register(any(), any(), any(), any()) } returns UserDataMock.provideUserDataModel(name = name)
-        val sut = UserRepositoryImpl(localDS, remoteDS)
+        val sut = UserRepositoryImpl(localDS, remoteDS, localEventDS)
         val result = sut.register(name, "lastName", "email", "password")
 
         Assert.assertEquals(name, result.name)
@@ -84,10 +91,28 @@ class UserRepositoryImplTest {
 
         val localDS = mockk<UserDatasource>(relaxed = true)
         val remoteDS = mockk<UserDatasource>(relaxed = true)
+        val localEventDS = mockk<EventDatasource>(relaxed = true)
         coEvery { remoteDS.register(any(), any(), any(), any()) } returns user
-        val sut = UserRepositoryImpl(localDS, remoteDS)
+        val sut = UserRepositoryImpl(localDS, remoteDS, localEventDS)
         sut.register("name", "lastName", "email", "password")
 
         coVerify { localDS.saveUser(user) }
+    }
+
+    @Test
+    fun `given valid credentials when login succeed then events cache is deleted`() = runTest {
+        val localEventName = "LocalEvent"
+        val name = "Hermione"
+        val eventsMock = EventDataMock.provideEventDataModelList(listOf(localEventName))
+
+        val localDS = mockk<UserDatasource>(relaxed = true)
+        val remoteDS = mockk<UserDatasource>(relaxed = true)
+        val localEventDS = mockk<EventDatasource>(relaxed = true)
+        coEvery { remoteDS.login(any(), any()) } returns UserDataMock.provideUserDataModel(name = name)
+        coEvery { localEventDS.getEvents() } returns eventsMock
+        val sut = UserRepositoryImpl(localDS, remoteDS, localEventDS)
+        sut.login("email", "password")
+
+        coVerify { localEventDS.deleteCacheEvents() }
     }
 }

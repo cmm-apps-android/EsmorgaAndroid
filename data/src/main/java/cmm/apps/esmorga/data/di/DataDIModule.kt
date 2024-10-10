@@ -14,8 +14,20 @@ object DataDIModule {
     const val REMOTE_DATASOURCE_INSTANCE_NAME = "RemoteDatasourceInstance"
 
     val module = module {
-        factory<EventRepository> { EventRepositoryImpl(get(named(LOCAL_DATASOURCE_INSTANCE_NAME)), get(named(LOCAL_DATASOURCE_INSTANCE_NAME)), get(named(REMOTE_DATASOURCE_INSTANCE_NAME))) }
-        factory<UserRepository> { UserRepositoryImpl(get(named(LOCAL_DATASOURCE_INSTANCE_NAME)), get(named(REMOTE_DATASOURCE_INSTANCE_NAME))) }
+        factory<EventRepository> {
+            EventRepositoryImpl(
+                get(named(LOCAL_DATASOURCE_INSTANCE_NAME)),
+                get(named(LOCAL_DATASOURCE_INSTANCE_NAME)),
+                get(named(REMOTE_DATASOURCE_INSTANCE_NAME))
+            )
+        }
+        factory<UserRepository> {
+            UserRepositoryImpl(
+                get(named(LOCAL_DATASOURCE_INSTANCE_NAME)),
+                get(named(REMOTE_DATASOURCE_INSTANCE_NAME)),
+                get(named(LOCAL_DATASOURCE_INSTANCE_NAME))
+            )
+        }
     }
 
 }
