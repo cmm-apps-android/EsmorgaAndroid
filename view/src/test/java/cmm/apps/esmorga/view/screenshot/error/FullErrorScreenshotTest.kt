@@ -14,11 +14,18 @@ class FullErrorScreenshotTest : BaseScreenshotTest() {
         snapshotWithState()
     }
 
-    private fun snapshotWithState(lat: Double? = 0.0, lng: Double? = 2.88) {
+    @Test
+    fun fullScreenNoInternetErrorView_lightTheme_data() {
+        snapshotWithState(true, "There is no internet connection")
+    }
+
+    private fun snapshotWithState(isNoInternetError: Boolean = false, subtitle: String? = null) {
         paparazzi.snapshot {
             EsmorgaTheme(darkTheme = false) {
                 EsmorgaFullScreenError(
+                    isNoInternetError = isNoInternetError,
                     title = "Something has failed, please try again later.",
+                    subtitle = subtitle,
                     buttonText = "Retry",
                     buttonAction = {}
                 )

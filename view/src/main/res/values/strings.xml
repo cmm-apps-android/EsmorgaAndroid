@@ -48,4 +48,7 @@
    <string name="screen_my_events_empty_text">You are not registered for any event yet. Sign up for the next one!</string>
    <string name="screen_my_events_title">Your events</string>
    <string name="unauthenticated_error_title">Oh no! You are not logged in</string>
+   <string name="screen_no_connection_title">No network connection</string>
+   <string name="screen_no_connection_body">Please, check your connection and try again.</string>
+   <string name="button_ok">OK</string>
 </resources>
