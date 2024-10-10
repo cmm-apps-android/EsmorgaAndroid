@@ -1,6 +1,6 @@
 import { execSync } from 'child_process';  // Importar execSync
 import fs from 'fs';  // Importar fs si lo necesitas
-
+const appPackage = 'cmm.apps.esmorga'; 
 export const config = {
     //
     // ====================
@@ -263,8 +263,16 @@ export const config = {
      * @param {ITestCaseHookParameter} world    world object containing information on pickle and test step
      * @param {object}                 context  Cucumber World object
      */
-    // beforeScenario: function (world, context) {
-    // },
+    beforeScenario: function (world, context) {
+        
+        try {
+            // Limpiar los datos de la app usando adb shell
+            execSync(`adb shell pm clear ${appPackage}`);
+            console.log(`Datos de la aplicación ${appPackage} limpiados.`);
+        } catch (error) {
+            console.error(`Error al limpiar los datos de la aplicación: ${error}`);
+        }
+    },
     /**
      *
      * Runs before a Cucumber Step.

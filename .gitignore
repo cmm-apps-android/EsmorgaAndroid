@@ -36,7 +36,10 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+
+# Things of E2E Testing
 appium/node_modules/
 appium/.tmp/json/
-appium/features/smoke.feature
+#appium/features/smoke.feature
 appium/esmorga.apk
