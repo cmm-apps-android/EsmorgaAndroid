@@ -89,7 +89,8 @@ private fun NavGraphBuilder.homeFlow(navigationController: NavHostController) {
         EventDetailsScreen(
             eventId = backStackEntry.toRoute<Navigation.EventDetailScreen>().eventId,
             onBackPressed = { navigationController.popBackStack() },
-            onLoginClicked = { navigationController.navigate(Navigation.LoginScreen) }
+            onLoginClicked = { navigationController.navigate(Navigation.LoginScreen) },
+            onJoinEventError = { navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = it)) }
         )
     }
     composable<Navigation.MyEventsScreen> {

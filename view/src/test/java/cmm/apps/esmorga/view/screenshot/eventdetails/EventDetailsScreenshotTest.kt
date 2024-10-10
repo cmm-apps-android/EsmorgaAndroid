@@ -1,7 +1,9 @@
 package cmm.apps.esmorga.view.screenshot.eventdetails
 
+import androidx.compose.material3.SnackbarHostState
 import cmm.apps.esmorga.view.eventdetails.EventDetailsView
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiState
+import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiStateHelper.getPrimaryButtonTitle
 import cmm.apps.esmorga.view.screenshot.BaseScreenshotTest
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import org.junit.Test
@@ -28,7 +30,12 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
         snapshotWithState(userJoined = false, isAuthenticate = true)
     }
 
-    private fun snapshotWithState(lat: Double? = 0.0, lng: Double? = 2.88, userJoined: Boolean = false, isAuthenticate: Boolean = false) {
+    @Test
+    fun eventDetailsView_lightTheme_data_primary_button_loading_state() {
+        snapshotWithState(userJoined = false, isAuthenticate = true, isButtonLoading = true)
+    }
+
+    private fun snapshotWithState(lat: Double? = 0.0, lng: Double? = 2.88, userJoined: Boolean = false, isAuthenticate: Boolean = false, isButtonLoading: Boolean = false) {
         paparazzi.snapshot {
             EsmorgaTheme(darkTheme = false) {
                 EventDetailsView(
@@ -40,8 +47,11 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
                         image = "test.png",
                         locationName = "Mi casa",
                         locationLat = lat,
-                        locationLng = lng
+                        locationLng = lng,
+                        primaryButtonTitle = getPrimaryButtonTitle(isAuthenticate, userJoined),
+                        primaryButtonLoading = isButtonLoading
                     ),
+                    snackbarHostState = SnackbarHostState(),
                     onNavigateClicked = {},
                     onBackPressed = {},
                     onPrimaryButtonClicked = {}
