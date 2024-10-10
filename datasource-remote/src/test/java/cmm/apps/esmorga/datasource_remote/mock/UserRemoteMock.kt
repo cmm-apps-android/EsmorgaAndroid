@@ -13,5 +13,6 @@ object UserRemoteMock {
         ),
         remoteRefreshToken = "refreshToken",
         remoteAccessToken = "token",
+        ttl = 100
     )
 }

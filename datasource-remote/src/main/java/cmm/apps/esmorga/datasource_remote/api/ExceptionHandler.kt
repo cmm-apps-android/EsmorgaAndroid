@@ -8,9 +8,7 @@ import java.net.ConnectException
 import java.net.UnknownHostException
 import java.time.format.DateTimeParseException
 
-
 object ExceptionHandler {
-
     fun manageApiException(e: Exception): EsmorgaException = when (e) {
         is HttpException -> EsmorgaException(message = e.response()?.message().orEmpty(), source = Source.REMOTE, code = e.code())
         is DateTimeParseException -> EsmorgaException(message = "Date parse error: ${e.message.orEmpty()}", source = Source.REMOTE, code = ErrorCodes.PARSE_ERROR)
@@ -19,5 +17,4 @@ object ExceptionHandler {
         is EsmorgaException -> e
         else -> EsmorgaException(message = "Unexpected error: ${e.message.orEmpty()}", source = Source.REMOTE, code = ErrorCodes.UNKNOWN_ERROR)
     }
-
 }

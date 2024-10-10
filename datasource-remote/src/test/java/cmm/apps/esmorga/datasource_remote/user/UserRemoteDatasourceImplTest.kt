@@ -1,6 +1,6 @@
 package cmm.apps.esmorga.datasource_remote.user
 
-import cmm.apps.esmorga.datasource_remote.api.EsmorgaApi
+import cmm.apps.esmorga.datasource_remote.api.EsmorgaAuthApi
 import cmm.apps.esmorga.datasource_remote.mock.UserRemoteMock
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import io.mockk.coEvery
@@ -20,7 +20,7 @@ class UserRemoteDatasourceImplTest {
     fun `given valid credentials when login succeeds then user is returned`() = runTest {
         val remoteUserName = "Albus"
 
-        val api = mockk<EsmorgaApi>(relaxed = true)
+        val api = mockk<EsmorgaAuthApi>(relaxed = true)
         coEvery { api.login(any()) } returns UserRemoteMock.provideUser(remoteUserName)
 
         val sut = UserRemoteDatasourceImpl(api)
@@ -31,7 +31,7 @@ class UserRemoteDatasourceImplTest {
 
     @Test(expected = Exception::class)
     fun `given invalid credentials when login fails then exception is thrown`() = runTest {
-        val api = mockk<EsmorgaApi>(relaxed = true)
+        val api = mockk<EsmorgaAuthApi>(relaxed = true)
         coEvery { api.login(any()) } throws HttpException(Response.error<ResponseBody>(401, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
 
         val sut = UserRemoteDatasourceImpl(api)
@@ -42,7 +42,7 @@ class UserRemoteDatasourceImplTest {
     fun `given valid data when registration succeeds then user is returned`() = runTest {
         val remoteUserName = "Barbus"
 
-        val api = mockk<EsmorgaApi>(relaxed = true)
+        val api = mockk<EsmorgaAuthApi>(relaxed = true)
         coEvery { api.register(any()) } returns UserRemoteMock.provideUser(remoteUserName)
 
         val sut = UserRemoteDatasourceImpl(api)
@@ -55,7 +55,7 @@ class UserRemoteDatasourceImplTest {
     fun `given invalid data when registration fails then exception is thrown`() = runTest {
         val errorCode = 400
 
-        val api = mockk<EsmorgaApi>(relaxed = true)
+        val api = mockk<EsmorgaAuthApi>(relaxed = true)
         coEvery { api.register(any()) } throws HttpException(Response.error<ResponseBody>(errorCode, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
 
         val sut = UserRemoteDatasourceImpl(api)

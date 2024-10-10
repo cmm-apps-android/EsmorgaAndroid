@@ -3,6 +3,8 @@ package cmm.apps.esmorga.datasource_remote
 import android.content.Context
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaApi
+import cmm.apps.esmorga.datasource_remote.api.EsmorgaAuthApi
+import cmm.apps.esmorga.datasource_remote.api.EsmorgaGuestApi
 import cmm.apps.esmorga.datasource_remote.api.NetworkApiHelper
 import cmm.apps.esmorga.datasource_remote.mock.EsmorgaAuthenticationMock.getAuthInterceptor
 import cmm.apps.esmorga.datasource_remote.mock.EsmorgaAuthenticationMock.getEsmorgaAuthenticatorMock
@@ -45,7 +47,7 @@ class EsmorgaApiTest {
     fun `given a successful mock server when events are requested then a correct eventWrapper is returned`() = runTest {
         mockServer.enqueueFile(200, ServerFiles.GET_EVENTS)
 
-        val sut = NetworkApiHelper().provideApi(mockServer.start(), EsmorgaApi::class.java, getEsmorgaAuthenticatorMock(), getAuthInterceptor())
+        val sut = NetworkApiHelper().provideApi(mockServer.start(), EsmorgaGuestApi::class.java, getEsmorgaAuthenticatorMock(), getAuthInterceptor())
 
         val eventWrapper = sut.getEvents()
 
@@ -57,7 +59,7 @@ class EsmorgaApiTest {
     fun `given a successful mock server when login is requested then a correct user is returned`() = runTest {
         mockServer.enqueueFile(200, ServerFiles.LOGIN)
 
-        val sut = NetworkApiHelper().provideApi(mockServer.start(), EsmorgaApi::class.java, getEsmorgaAuthenticatorMock(), getAuthInterceptor())
+        val sut = NetworkApiHelper().provideApi(mockServer.start(), EsmorgaAuthApi::class.java, getEsmorgaAuthenticatorMock(), getAuthInterceptor())
 
         val user = sut.login(body = mapOf("email" to "email", "password" to "password"))
 

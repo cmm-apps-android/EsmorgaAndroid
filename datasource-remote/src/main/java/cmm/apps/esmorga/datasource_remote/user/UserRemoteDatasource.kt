@@ -2,11 +2,11 @@ package cmm.apps.esmorga.datasource_remote.user
 
 import cmm.apps.esmorga.data.user.datasource.UserDatasource
 import cmm.apps.esmorga.data.user.model.UserDataModel
-import cmm.apps.esmorga.datasource_remote.api.EsmorgaApi
+import cmm.apps.esmorga.datasource_remote.api.EsmorgaAuthApi
 import cmm.apps.esmorga.datasource_remote.api.ExceptionHandler.manageApiException
 import cmm.apps.esmorga.datasource_remote.user.mapper.toUserDataModel
 
-class UserRemoteDatasourceImpl(private val api: EsmorgaApi) : UserDatasource {
+class UserRemoteDatasourceImpl(private val api: EsmorgaAuthApi) : UserDatasource {
     override suspend fun login(email: String, password: String): UserDataModel {
         try {
             val loginBody = mapOf("email" to email, "password" to password)
