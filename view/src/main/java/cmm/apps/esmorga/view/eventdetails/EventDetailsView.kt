@@ -154,7 +154,7 @@ fun EventDetailsView(
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(uiState.image)
-                    .crossfade(true)
+                    //.crossfade(true) //Open bug in Coil https://github.com/coil-kt/coil/issues/1688 leads to image not being properly scaled if crossfade is used
                     .build(),
                 placeholder = painterResource(R.drawable.img_event_list_empty),
                 error = painterResource(R.drawable.img_event_list_empty),

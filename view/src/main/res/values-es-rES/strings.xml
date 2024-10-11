@@ -42,8 +42,14 @@
    <string name="bottom_bar_explore">Explorar</string>
    <string name="bottom_bar_myevents">Mis Eventos</string>
    <string name="bottom_bar_myprofile">Perfil</string>
+   <string name="screen_my_events_empty_text">Todavía no estás apuntado a ningún evento. Anímate para el siguiente!</string>
+   <string name="screen_my_events_title">Tus eventos</string>
+   <string name="unauthenticated_error_title">¡OH oh no estas logueado!</string>
    <string name="button_join_event">Apuntarse</string>
    <string name="button_leave_event">Rajarse</string>
    <string name="button_login_to_join">Identifícate para apuntarte</string>
    <string name="snackbar_event_joined">Bravo! Te has unido al evento!</string>
+   <string name="screen_no_connection_title">No hay conexión</string>
+   <string name="screen_no_connection_body">Por favor, revisa tu conexión e inténtelo de nuevo</string>
+   <string name="button_ok">OK</string>
 </resources>

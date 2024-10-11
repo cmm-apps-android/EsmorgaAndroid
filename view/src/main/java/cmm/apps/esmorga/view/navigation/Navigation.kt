@@ -22,14 +22,14 @@ import cmm.apps.esmorga.view.errors.EsmorgaErrorScreen
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreen
 import cmm.apps.esmorga.view.eventlist.EventListScreen
+import cmm.apps.esmorga.view.eventlist.MyEventListScreen
 import cmm.apps.esmorga.view.login.LoginScreen
-import cmm.apps.esmorga.view.navigation.HomeScreenTestTags.MY_EVENTS_TITLE
 import cmm.apps.esmorga.view.navigation.HomeScreenTestTags.PROFILE__TITLE
 import cmm.apps.esmorga.view.registration.RegistrationScreen
 import cmm.apps.esmorga.view.welcome.WelcomeScreen
-import kotlin.reflect.typeOf
 import kotlinx.serialization.Serializable
 import org.jetbrains.annotations.VisibleForTesting
+import kotlin.reflect.typeOf
 
 sealed class Navigation {
 
@@ -94,10 +94,11 @@ private fun NavGraphBuilder.homeFlow(navigationController: NavHostController) {
         )
     }
     composable<Navigation.MyEventsScreen> {
-        //TODO to be done
-        Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-            EsmorgaText(text = "To be done in other US", style = EsmorgaTextStyle.HEADING_1, modifier = Modifier.testTag(MY_EVENTS_TITLE))
-        }
+        MyEventListScreen(onEventClick = { eventId ->
+            navigationController.navigate(Navigation.EventDetailScreen(eventId))
+        }, onSignInClick = {
+            navigationController.navigate(Navigation.LoginScreen)
+        })
     }
     composable<Navigation.ProfileScreen> {
         //TODO to be done
@@ -191,6 +192,5 @@ private fun isPackageAvailable(context: Context, appPackage: String) = try {
 }
 
 object HomeScreenTestTags {
-    const val MY_EVENTS_TITLE = "my events screen title"
     const val PROFILE__TITLE = "profile event name"
 }

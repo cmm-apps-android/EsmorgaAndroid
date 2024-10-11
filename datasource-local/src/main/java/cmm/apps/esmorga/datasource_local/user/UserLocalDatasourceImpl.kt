@@ -26,6 +26,6 @@ class UserLocalDatasourceImpl(private val userDao: UserDao, private val sharedPr
             val accessToken = sharedPreferences.getString("access_token", null)
             val refreshToken = sharedPreferences.getString("refresh_token", null)
             return it.toUserDataModel(accessToken, refreshToken)
-        } ?: throw EsmorgaException(message = "User not found", source = Source.LOCAL, code = ErrorCodes.NO_DATA)
+        } ?: throw EsmorgaException(message = "User not found", source = Source.LOCAL, code = ErrorCodes.NOT_LOGGED_IN)
     }
 }
