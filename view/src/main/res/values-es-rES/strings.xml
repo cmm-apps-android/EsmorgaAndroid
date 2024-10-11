@@ -48,4 +48,7 @@
    <string name="button_join_event">Apuntarse</string>
    <string name="button_leave_event">Rajarse</string>
    <string name="button_login_to_join">Identifícate para apuntarte</string>
+   <string name="screen_no_connection_title">No hay conexión</string>
+   <string name="screen_no_connection_body">Por favor, revisa tu conexión e inténtelo de nuevo</string>
+   <string name="button_ok">OK</string>
 </resources>
