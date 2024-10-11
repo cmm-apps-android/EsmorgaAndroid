@@ -26,15 +26,12 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 
 @Composable
 fun EsmorgaFullScreenError(
-    showAnimation: Boolean = false,
+    animation: Int? = null,
     title: String,
     subtitle: String? = null,
     buttonText: String,
     buttonAction: () -> Unit
 ) {
-    val composition by rememberLottieComposition(
-        spec = LottieCompositionSpec.RawRes(R.raw.no_connection_anim)
-    )
     Scaffold { innerPadding ->
         Box(modifier = Modifier.fillMaxSize()) {
             Column(
@@ -43,14 +40,18 @@ fun EsmorgaFullScreenError(
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                if (showAnimation) {
+                animation?.let {
+                    val composition by rememberLottieComposition(
+                        spec = LottieCompositionSpec.RawRes(animation)
+                    )
+
                     LottieAnimation(
                         composition = composition,
                         iterations = LottieConstants.IterateForever,
                         contentScale = ContentScale.Inside,
                         modifier = Modifier.size(150.dp)
                     )
-                } else {
+                } ?: run {
                     Image(
                         painter = painterResource(id = R.drawable.outline_cancel),
                         contentDescription = "Error",
@@ -60,9 +61,11 @@ fun EsmorgaFullScreenError(
 
                 EsmorgaText(text = title, style = EsmorgaTextStyle.HEADING_1, textAlign = TextAlign.Center, modifier = Modifier.testTag(ERROR_TITLE))
                 subtitle?.let {
-                    EsmorgaText(text = subtitle, style = EsmorgaTextStyle.BODY_1, textAlign = TextAlign.Center, modifier = Modifier
-                        .padding(top = 16.dp)
-                        .testTag(ERROR_SUBTITLE))
+                    EsmorgaText(
+                        text = subtitle, style = EsmorgaTextStyle.BODY_1, textAlign = TextAlign.Center, modifier = Modifier
+                            .padding(top = 16.dp)
+                            .testTag(ERROR_SUBTITLE)
+                    )
                 }
 
             }

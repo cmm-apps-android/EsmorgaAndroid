@@ -14,7 +14,7 @@ fun EsmorgaErrorScreen(
 ) {
     EsmorgaTheme {
         EsmorgaFullScreenError(
-            showAnimation = esmorgaErrorScreenArguments.showAnimation,
+            animation = esmorgaErrorScreenArguments.animation,
             title = esmorgaErrorScreenArguments.title,
             subtitle = esmorgaErrorScreenArguments.subtitle,
             buttonText = esmorgaErrorScreenArguments.buttonText,
