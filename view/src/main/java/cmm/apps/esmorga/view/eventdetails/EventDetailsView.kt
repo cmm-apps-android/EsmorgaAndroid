@@ -203,7 +203,7 @@ fun EventDetailsView(
                 modifier = Modifier
                     .padding(horizontal = 16.dp, vertical = if (!uiState.navigateButton) 32.dp else 0.dp)
                     .testTag(EventDetailsScreenTestTags.EVENT_DETAIL_PRIMARY_BUTTON),
-                text = stringResource(uiState.primaryButtonTitle),
+                text = uiState.primaryButtonTitle,
                 primary = true,
                 isLoading = uiState.primaryButtonLoading
             ) {

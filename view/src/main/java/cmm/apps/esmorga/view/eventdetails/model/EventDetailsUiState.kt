@@ -1,8 +1,11 @@
 package cmm.apps.esmorga.view.eventdetails.model
 
+import android.content.Context
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.login.model.LoginViewHelper.getEsmorgaErrorScreenArguments
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 data class EventDetailsUiState(
     val id: String = "",
@@ -14,20 +17,21 @@ data class EventDetailsUiState(
     val locationLat: Double? = null,
     val locationLng: Double? = null,
     val navigateButton: Boolean = locationLat != null && locationLng != null,
-    val primaryButtonTitle: Int = R.string.button_login_to_join,
+    val primaryButtonTitle: String = "",
     val primaryButtonLoading: Boolean = false
 )
 
-object EventDetailsUiStateHelper {
-    fun getPrimaryButtonTitle(isAuthenticated: Boolean, userJoined: Boolean): Int {
+object EventDetailsUiStateHelper : KoinComponent {
+    private val context: Context by inject()
+    fun getPrimaryButtonTitle(isAuthenticated: Boolean, userJoined: Boolean): String {
         return if (isAuthenticated) {
             if (userJoined) {
-                R.string.button_leave_event
+                context.getString(R.string.button_leave_event)
             } else {
-                R.string.button_join_event
+                context.getString(R.string.button_join_event)
             }
         } else {
-            R.string.button_login_to_join
+            context.getString(R.string.button_login_to_join)
         }
     }
 }

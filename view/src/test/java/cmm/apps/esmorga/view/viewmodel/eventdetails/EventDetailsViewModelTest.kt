@@ -6,7 +6,10 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import app.cash.turbine.test
 import cmm.apps.esmorga.domain.event.GetEventDetailsUseCase
 import cmm.apps.esmorga.domain.event.JoinEventUseCase
+import cmm.apps.esmorga.domain.result.ErrorCodes
+import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.EsmorgaResult
+import cmm.apps.esmorga.domain.result.Source
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.domain.user.model.User
 import cmm.apps.esmorga.view.R
@@ -64,7 +67,7 @@ class EventDetailsViewModelTest {
 
         val uiState = sut.uiState.value
         Assert.assertEquals(domainEventName, uiState.title)
-        Assert.assertEquals(R.string.button_login_to_join, uiState.primaryButtonTitle)
+        Assert.assertEquals(mockContext.getString(R.string.button_login_to_join), uiState.primaryButtonTitle)
     }
 
     @Test
@@ -83,7 +86,7 @@ class EventDetailsViewModelTest {
 
         val uiState = sut.uiState.value
         Assert.assertEquals(domainEventName, uiState.title)
-        Assert.assertEquals(R.string.button_leave_event, uiState.primaryButtonTitle)
+        Assert.assertEquals(mockContext.getString(R.string.button_leave_event), uiState.primaryButtonTitle)
     }
 
     @Test
@@ -102,7 +105,7 @@ class EventDetailsViewModelTest {
 
         val uiState = sut.uiState.value
         Assert.assertEquals(domainEventName, uiState.title)
-        Assert.assertEquals(R.string.button_join_event, uiState.primaryButtonTitle)
+        Assert.assertEquals(mockContext.getString(R.string.button_join_event), uiState.primaryButtonTitle)
     }
 
     @Test
@@ -160,7 +163,7 @@ class EventDetailsViewModelTest {
         coEvery { userUseCase() } returns EsmorgaResult.success(User("", "", ""))
 
         val joinEventUseCase = mockk<JoinEventUseCase>(relaxed = true)
-        coEvery { joinEventUseCase("eventId") } returns EsmorgaResult.noConnectionError(Unit)
+        coEvery { joinEventUseCase("eventId") } returns EsmorgaResult.failure(EsmorgaException("No Connection", Source.REMOTE, ErrorCodes.NO_CONNECTION))
 
         val sut = EventDetailsViewModel(useCase, userUseCase, joinEventUseCase, "eventId")
         sut.effect.test {

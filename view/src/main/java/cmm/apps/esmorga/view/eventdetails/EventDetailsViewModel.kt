@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cmm.apps.esmorga.domain.event.GetEventDetailsUseCase
 import cmm.apps.esmorga.domain.event.JoinEventUseCase
+import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.view.eventdetails.mapper.EventDetailsUiMapper.toEventUiDetails
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsEffect
@@ -81,11 +82,13 @@ class EventDetailsViewModel(
             result.onSuccess {
                 _uiState.value = _uiState.value.copy(primaryButtonLoading = false, primaryButtonTitle = getPrimaryButtonTitle(true, true))
                 _effect.tryEmit(EventDetailsEffect.ShowJoinEventSuccessSnackbar)
-            }.onFailure {
+            }.onFailure { error ->
                 _uiState.value = _uiState.value.copy(primaryButtonLoading = false)
-                _effect.tryEmit(EventDetailsEffect.ShowFullScreenError())
-            }.onNoConnectionError {
-                _effect.tryEmit(EventDetailsEffect.ShowNoNetworkSnackbar)
+                if (error.code == ErrorCodes.NO_CONNECTION) {
+                    _effect.tryEmit(EventDetailsEffect.ShowNoNetworkSnackbar)
+                } else {
+                    _effect.tryEmit(EventDetailsEffect.ShowFullScreenError())
+                }
             }
         }
     }

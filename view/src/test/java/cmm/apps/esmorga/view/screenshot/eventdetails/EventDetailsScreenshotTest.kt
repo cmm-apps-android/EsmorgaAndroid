@@ -1,7 +1,6 @@
 package cmm.apps.esmorga.view.screenshot.eventdetails
 
 import androidx.compose.material3.SnackbarHostState
-import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.eventdetails.EventDetailsView
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiState
 import cmm.apps.esmorga.view.screenshot.BaseScreenshotTest
@@ -22,12 +21,12 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
 
     @Test
     fun eventDetailsView_lightTheme_data_user_event_joined() {
-        snapshotWithState(buttonTitle = R.string.button_leave_event)
+        snapshotWithState(buttonTitle = "Leave Event")
     }
 
     @Test
     fun eventDetailsView_lightTheme_data_user_event_not_joined() {
-        snapshotWithState(buttonTitle = R.string.button_join_event)
+        snapshotWithState(buttonTitle = "Join Event")
     }
 
     @Test
@@ -35,7 +34,7 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
         snapshotWithState(buttonLoading = true)
     }
 
-    private fun snapshotWithState(lat: Double? = 0.0, lng: Double? = 2.88, buttonTitle: Int = R.string.button_login_to_join, buttonLoading: Boolean = false) {
+    private fun snapshotWithState(lat: Double? = 0.0, lng: Double? = 2.88, buttonTitle: String = "Sign in to sign up", buttonLoading: Boolean = false) {
         paparazzi.snapshot {
             EsmorgaTheme(darkTheme = false) {
                 EventDetailsView(
