@@ -1,8 +1,6 @@
 package cmm.apps.esmorga.view.screenshot.error
 
 import cmm.apps.designsystem.EsmorgaFullScreenError
-import cmm.apps.esmorga.view.eventdetails.EventDetailsView
-import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiState
 import cmm.apps.esmorga.view.screenshot.BaseScreenshotTest
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import org.junit.Test
@@ -23,7 +21,7 @@ class FullErrorScreenshotTest : BaseScreenshotTest() {
         paparazzi.snapshot {
             EsmorgaTheme(darkTheme = false) {
                 EsmorgaFullScreenError(
-                    isNoInternetError = isNoInternetError,
+                    showAnimation = isNoInternetError,
                     title = "Something has failed, please try again later.",
                     subtitle = subtitle,
                     buttonText = "Retry",

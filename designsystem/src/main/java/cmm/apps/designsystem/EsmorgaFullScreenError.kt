@@ -26,7 +26,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 
 @Composable
 fun EsmorgaFullScreenError(
-    isNoInternetError: Boolean = false,
+    showAnimation: Boolean = false,
     title: String,
     subtitle: String? = null,
     buttonText: String,
@@ -43,7 +43,7 @@ fun EsmorgaFullScreenError(
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                if (isNoInternetError) {
+                if (showAnimation) {
                     LottieAnimation(
                         composition = composition,
                         iterations = LottieConstants.IterateForever,
