@@ -34,7 +34,6 @@ import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAI
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsEffect
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiState
 import cmm.apps.esmorga.view.navigation.openNavigationApp
-import cmm.apps.esmorga.view.registration.RegistrationScreenTestTags.REGISTRATION_BACK_BUTTON
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -105,7 +104,7 @@ fun EventDetailsView(uiState: EventDetailsUiState, onNavigateClicked: () -> Unit
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(uiState.image)
-                    .crossfade(true)
+                    //.crossfade(true) //Open bug in Coil https://github.com/coil-kt/coil/issues/1688 leads to image not being properly scaled if crossfade is used
                     .build(),
                 placeholder = painterResource(R.drawable.img_event_list_empty),
                 error = painterResource(R.drawable.img_event_list_empty),
