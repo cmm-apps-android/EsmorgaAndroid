@@ -59,7 +59,6 @@ class EventDetailsViewModelTest {
         coEvery { userUseCase() } returns EsmorgaResult.failure(Exception())
 
         val joinEventUseCase = mockk<JoinEventUseCase>(relaxed = true)
-        coEvery { joinEventUseCase("") } returns EsmorgaResult.success(Unit)
 
         val sut = EventDetailsViewModel(useCase, userUseCase, joinEventUseCase, "eventId")
 
@@ -79,7 +78,6 @@ class EventDetailsViewModelTest {
         coEvery { userUseCase() } returns EsmorgaResult.success(User("", "", ""))
 
         val joinEventUseCase = mockk<JoinEventUseCase>(relaxed = true)
-        coEvery { joinEventUseCase("") } returns EsmorgaResult.success(Unit)
 
         val sut = EventDetailsViewModel(useCase, userUseCase, joinEventUseCase, "eventId")
 
@@ -99,7 +97,6 @@ class EventDetailsViewModelTest {
         coEvery { userUseCase() } returns EsmorgaResult.success(User("", "", ""))
 
         val joinEventUseCase = mockk<JoinEventUseCase>(relaxed = true)
-        coEvery { joinEventUseCase("") } returns EsmorgaResult.success(Unit)
 
         val sut = EventDetailsViewModel(useCase, userUseCase, joinEventUseCase, "eventId")
 

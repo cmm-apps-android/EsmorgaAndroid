@@ -134,7 +134,7 @@ class EventRemoteDatasourceImplTest {
     }
 
     @Test
-    fun `given a working api when join event requested then the join event api is successfully called`() = runTest {
+    fun `given a working api when join event requested successfully then return Unit`() = runTest {
         val api = mockk<EsmorgaApi>(relaxed = true)
         val guestApi = mockk<EsmorgaGuestApi>(relaxed = true)
         coEvery { api.joinEvent(any()) } returns Unit

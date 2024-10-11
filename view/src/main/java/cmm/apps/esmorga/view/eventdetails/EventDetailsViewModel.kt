@@ -8,6 +8,7 @@ import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.view.eventdetails.mapper.EventDetailsUiMapper.toEventUiDetails
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsEffect
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiState
+import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiStateHelper.getPrimaryButtonTitle
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -78,13 +79,13 @@ class EventDetailsViewModel(
             _uiState.value = _uiState.value.copy(primaryButtonLoading = true)
             val result = joinEventUseCase(eventId)
             result.onSuccess {
-                getEventDetails()
+                _uiState.value = _uiState.value.copy(primaryButtonLoading = false, primaryButtonTitle = getPrimaryButtonTitle(true, true))
                 _effect.tryEmit(EventDetailsEffect.ShowJoinEventSuccessSnackbar)
-            }.onNoConnectionError {
-                _effect.tryEmit(EventDetailsEffect.ShowNoNetworkSnackbar)
             }.onFailure {
                 _uiState.value = _uiState.value.copy(primaryButtonLoading = false)
                 _effect.tryEmit(EventDetailsEffect.ShowFullScreenError())
+            }.onNoConnectionError {
+                _effect.tryEmit(EventDetailsEffect.ShowNoNetworkSnackbar)
             }
         }
     }

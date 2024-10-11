@@ -230,10 +230,8 @@ class NavigationTest {
         }
         loadKoinModules(module { factory<GetSavedUserUseCase> { getSavedUserUseCaseFailure } })
 
-        setNavigationFromDestination(Navigation.EventListScreen)
+        setNavigationFromDestination(Navigation.EventDetailScreen("1"))
 
-        composeTestRule.onNodeWithTag(EVENT_LIST_TITLE).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(EVENT_LIST_EVENT_NAME, true).performClick()
         composeTestRule.onNodeWithTag(EVENT_DETAILS_EVENT_NAME).assertIsDisplayed()
         composeTestRule.onNodeWithTag(EVENT_DETAIL_PRIMARY_BUTTON, true).performClick()
         composeTestRule.onNodeWithTag(LOGIN_TITLE).assertIsDisplayed()
@@ -246,10 +244,8 @@ class NavigationTest {
         }
         loadKoinModules(module { factory<JoinEventUseCase> { failureJoinEventUseCase } })
 
-        setNavigationFromDestination(Navigation.EventListScreen)
+        setNavigationFromDestination(Navigation.EventDetailScreen("1"))
 
-        composeTestRule.onNodeWithTag(EVENT_LIST_TITLE).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(EVENT_LIST_EVENT_NAME, true).performClick()
         composeTestRule.onNodeWithTag(EVENT_DETAILS_EVENT_NAME).assertIsDisplayed()
         composeTestRule.onNodeWithTag(EVENT_DETAIL_PRIMARY_BUTTON).performClick()
 

@@ -120,9 +120,7 @@ class EventRepositoryImplTest {
         val localEvent = listOf(EventDataMock.provideEventDataModel("localName"))
         val eventId = localEvent.first().dataId
 
-        coEvery { userDS.getUser() } returns UserDataMock.provideUserDataModel()
         coEvery { localDS.getEvents() } returns localEvent
-        coEvery { remoteDS.getEvents() } throws Exception()
         coEvery { remoteDS.joinEvent(any()) } returns Unit
 
         val sut = EventRepositoryImpl(userDS, localDS, remoteDS)
