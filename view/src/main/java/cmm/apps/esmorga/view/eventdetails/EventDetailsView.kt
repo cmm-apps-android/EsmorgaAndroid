@@ -13,10 +13,14 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -30,6 +34,7 @@ import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
+import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAILS_BACK_BUTTON
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsEffect
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiState
@@ -37,6 +42,7 @@ import cmm.apps.esmorga.view.navigation.openNavigationApp
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -47,10 +53,16 @@ fun EventDetailsScreen(
     eventId: String,
     edvm: EventDetailsViewModel = koinViewModel(parameters = { parametersOf(eventId) }),
     onBackPressed: () -> Unit,
-    onLoginClicked: () -> Unit
+    onLoginClicked: () -> Unit,
+    onJoinEventError: (EsmorgaErrorScreenArguments) -> Unit,
 ) {
     val uiState: EventDetailsUiState by edvm.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val message = stringResource(R.string.snackbar_event_joined)
+    val noNetworkMessage = stringResource(R.string.snackbar_no_internet)
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    val localCoroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
         edvm.effect.collect { eff ->
             when (eff) {
@@ -65,12 +77,29 @@ fun EventDetailsScreen(
                 is EventDetailsEffect.NavigateToLoginScreen -> {
                     onLoginClicked()
                 }
+
+                EventDetailsEffect.ShowJoinEventSuccessSnackbar -> {
+                    localCoroutineScope.launch {
+                        snackbarHostState.showSnackbar(message = message)
+                    }
+                }
+
+                is EventDetailsEffect.ShowFullScreenError -> {
+                    onJoinEventError(eff.esmorgaErrorScreenArguments)
+                }
+
+                EventDetailsEffect.ShowNoNetworkSnackbar -> {
+                    localCoroutineScope.launch {
+                        snackbarHostState.showSnackbar(message = noNetworkMessage)
+                    }
+                }
             }
         }
     }
     EsmorgaTheme {
         EventDetailsView(
             uiState = uiState,
+            snackbarHostState = snackbarHostState,
             onNavigateClicked = {
                 edvm.onNavigateClick()
             },
@@ -87,7 +116,13 @@ fun EventDetailsScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EventDetailsView(uiState: EventDetailsUiState, onNavigateClicked: () -> Unit, onBackPressed: () -> Unit, onPrimaryButtonClicked: () -> Unit) {
+fun EventDetailsView(
+    uiState: EventDetailsUiState,
+    snackbarHostState: SnackbarHostState,
+    onNavigateClicked: () -> Unit,
+    onBackPressed: () -> Unit,
+    onPrimaryButtonClicked: () -> Unit
+) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -105,7 +140,8 @@ fun EventDetailsView(uiState: EventDetailsUiState, onNavigateClicked: () -> Unit
                     }
                 },
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -156,7 +192,8 @@ fun EventDetailsView(uiState: EventDetailsUiState, onNavigateClicked: () -> Unit
                 EsmorgaButton(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 32.dp),
                     text = stringResource(id = R.string.button_navigate),
-                    primary = false
+                    primary = false,
+                    isEnabled = !uiState.primaryButtonLoading
                 ) {
                     onNavigateClicked()
                 }
@@ -166,8 +203,9 @@ fun EventDetailsView(uiState: EventDetailsUiState, onNavigateClicked: () -> Unit
                 modifier = Modifier
                     .padding(horizontal = 16.dp, vertical = if (!uiState.navigateButton) 32.dp else 0.dp)
                     .testTag(EventDetailsScreenTestTags.EVENT_DETAIL_PRIMARY_BUTTON),
-                text = stringResource(uiState.primaryButtonTitle),
-                primary = true
+                text = uiState.primaryButtonTitle,
+                primary = true,
+                isLoading = uiState.primaryButtonLoading
             ) {
                 onPrimaryButtonClicked()
             }

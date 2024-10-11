@@ -45,6 +45,7 @@
    <string name="button_join_event">Join Event</string>
    <string name="button_leave_event">Leave Event</string>
    <string name="button_login_to_join">Sign in to sign up</string>
+   <string name="snackbar_event_joined">Bravo! You have joined the event!</string>
    <string name="screen_my_events_empty_text">You are not registered for any event yet. Sign up for the next one!</string>
    <string name="screen_my_events_title">Your events</string>
    <string name="unauthenticated_error_title">Oh no! You are not logged in</string>

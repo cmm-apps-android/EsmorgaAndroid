@@ -7,6 +7,7 @@ import cmm.apps.esmorga.datasource_remote.mock.EventRemoteMock
 import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -124,6 +125,37 @@ class EventRemoteDatasourceImplTest {
         val exception = try {
             sut.getMyEvents()
             null
+        } catch (exception: RuntimeException) {
+            exception
+        }
+
+        Assert.assertTrue(exception is EsmorgaException)
+        Assert.assertEquals(errorCode, (exception as EsmorgaException).code)
+    }
+
+    @Test
+    fun `given a working api when join event requested successfully then return Unit`() = runTest {
+        val api = mockk<EsmorgaApi>(relaxed = true)
+        val guestApi = mockk<EsmorgaGuestApi>(relaxed = true)
+        coEvery { api.joinEvent(any()) } returns Unit
+
+        val sut = EventRemoteDatasourceImpl(api, guestApi)
+        val result = sut.joinEvent("eventId")
+
+        coVerify { api.joinEvent(any()) }
+        Assert.assertEquals(Unit, result)
+    }
+
+    @Test
+    fun `given an api returning a 400 when join event requested then Exception is thrown`() = runTest {
+        val errorCode = 400
+        val api = mockk<EsmorgaApi>(relaxed = true)
+        val guestApi = mockk<EsmorgaGuestApi>(relaxed = true)
+        coEvery { api.joinEvent(any()) } throws HttpException(Response.error<ResponseBody>(errorCode, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
+
+        val sut = EventRemoteDatasourceImpl(api, guestApi)
+        val exception = try {
+            sut.joinEvent("eventId")
         } catch (exception: RuntimeException) {
             exception
         }

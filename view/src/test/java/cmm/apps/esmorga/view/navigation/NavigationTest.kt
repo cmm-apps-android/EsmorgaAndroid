@@ -16,6 +16,7 @@ import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_TITLE
 import cmm.apps.esmorga.domain.event.GetEventDetailsUseCase
 import cmm.apps.esmorga.domain.event.GetEventListUseCase
 import cmm.apps.esmorga.domain.event.GetMyEventListUseCase
+import cmm.apps.esmorga.domain.event.JoinEventUseCase
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.EsmorgaResult
 import cmm.apps.esmorga.domain.result.Source
@@ -23,9 +24,9 @@ import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.domain.user.PerformLoginUseCase
 import cmm.apps.esmorga.domain.user.PerformRegistrationUserCase
 import cmm.apps.esmorga.view.di.ViewDIModule
-import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAILS_BACK_BUTTON
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAILS_EVENT_NAME
+import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAIL_PRIMARY_BUTTON
 import cmm.apps.esmorga.view.eventlist.EventListScreenTestTags.EVENT_LIST_EVENT_NAME
 import cmm.apps.esmorga.view.eventlist.EventListScreenTestTags.EVENT_LIST_TITLE
 import cmm.apps.esmorga.view.eventlist.MyEventListScreenTestTags.MY_EVENT_LIST_TITLE
@@ -56,7 +57,6 @@ import org.koin.core.context.stopKoin
 import org.koin.dsl.module
 import org.robolectric.shadows.ShadowLog
 
-
 @RunWith(AndroidJUnit4::class)
 class NavigationTest {
 
@@ -85,6 +85,10 @@ class NavigationTest {
         coEvery { useCase() } returns EsmorgaResult.success(LoginViewMock.provideUser())
     }
 
+    private val joinEventUseCase = mockk<JoinEventUseCase>(relaxed = true).also { useCase ->
+        coEvery { useCase(any()) } returns EsmorgaResult.success(Unit)
+    }
+
     private val getMyEventListUseCase = mockk<GetMyEventListUseCase>(relaxed = true).also { useCase ->
         coEvery { useCase() } returns EsmorgaResult.success(EventViewMock.provideEventList(listOf("event")))
     }
@@ -105,6 +109,7 @@ class NavigationTest {
                     factory<PerformLoginUseCase> { performLoginUseCase }
                     factory<PerformRegistrationUserCase> { performRegistrationUserCase }
                     factory<GetSavedUserUseCase> { getSavedUserUseCase }
+                    factory<JoinEventUseCase> { joinEventUseCase }
                     factory<GetMyEventListUseCase> { getMyEventListUseCase }
                 }
             )
@@ -225,13 +230,29 @@ class NavigationTest {
         }
         loadKoinModules(module { factory<GetSavedUserUseCase> { getSavedUserUseCaseFailure } })
 
-        setNavigationFromDestination(Navigation.EventListScreen)
+        setNavigationFromDestination(Navigation.EventDetailScreen("1"))
 
-        composeTestRule.onNodeWithTag(EVENT_LIST_TITLE).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(EVENT_LIST_EVENT_NAME, true).performClick()
         composeTestRule.onNodeWithTag(EVENT_DETAILS_EVENT_NAME).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(EventDetailsScreenTestTags.EVENT_DETAIL_PRIMARY_BUTTON, true).performClick()
+        composeTestRule.onNodeWithTag(EVENT_DETAIL_PRIMARY_BUTTON, true).performClick()
         composeTestRule.onNodeWithTag(LOGIN_TITLE).assertIsDisplayed()
+    }
+
+    @Test
+    fun `given user in event details, when clicks on join event and api call fails, then error screen is shown`() {
+        val failureJoinEventUseCase = mockk<JoinEventUseCase>(relaxed = true).also { useCase ->
+            coEvery { useCase(any()) } returns EsmorgaResult.failure(Exception())
+        }
+        loadKoinModules(module { factory<JoinEventUseCase> { failureJoinEventUseCase } })
+
+        setNavigationFromDestination(Navigation.EventDetailScreen("1"))
+
+        composeTestRule.onNodeWithTag(EVENT_DETAILS_EVENT_NAME).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(EVENT_DETAIL_PRIMARY_BUTTON).performClick()
+
+        composeTestRule.onNodeWithTag(ERROR_TITLE).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(ERROR_RETRY_BUTTON).performClick()
+
+        composeTestRule.onNodeWithTag(EVENT_DETAILS_EVENT_NAME).assertIsDisplayed()
     }
 
     @Test
@@ -274,3 +295,4 @@ class NavigationTest {
         }
     }
 }
+

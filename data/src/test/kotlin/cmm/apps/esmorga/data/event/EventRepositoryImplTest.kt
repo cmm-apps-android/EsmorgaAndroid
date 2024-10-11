@@ -115,4 +115,20 @@ class EventRepositoryImplTest {
         Assert.assertEquals(localName, result[0].name)
     }
 
+    @Test
+    fun `given events locally cached when join event is requested then local events are cached`() = runTest {
+        val localEvent = listOf(EventDataMock.provideEventDataModel("localName"))
+        val eventId = localEvent.first().dataId
+
+        coEvery { localDS.getEvents() } returns localEvent
+        coEvery { remoteDS.joinEvent(any()) } returns Unit
+
+        val sut = EventRepositoryImpl(userDS, localDS, remoteDS)
+        sut.joinEvent(eventId)
+
+        coVerify { remoteDS.joinEvent(eventId) }
+        coVerify { localDS.getEvents() }
+        coVerify { localDS.cacheEvents(localEvent.map { it.copy(dataUserJoined = true) }) }
+    }
+
 }
