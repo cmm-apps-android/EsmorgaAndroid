@@ -11,12 +11,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_ANIMATION
 import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_RETRY_BUTTON
+import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_SUBTITLE
 import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_TITLE
 import cmm.apps.esmorga.domain.event.GetEventDetailsUseCase
 import cmm.apps.esmorga.domain.event.GetEventListUseCase
 import cmm.apps.esmorga.domain.event.GetMyEventListUseCase
 import cmm.apps.esmorga.domain.event.JoinEventUseCase
+import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.EsmorgaResult
 import cmm.apps.esmorga.domain.result.Source
@@ -250,6 +253,26 @@ class NavigationTest {
         composeTestRule.onNodeWithTag(EVENT_DETAIL_PRIMARY_BUTTON).performClick()
 
         composeTestRule.onNodeWithTag(ERROR_TITLE).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(ERROR_RETRY_BUTTON).performClick()
+
+        composeTestRule.onNodeWithTag(EVENT_DETAILS_EVENT_NAME).assertIsDisplayed()
+    }
+
+    @Test
+    fun `given user in event details, when clicks on join event and no network available, then no network screen is shown`() {
+        val failureJoinEventUseCase = mockk<JoinEventUseCase>(relaxed = true).also { useCase ->
+            coEvery { useCase(any()) } returns EsmorgaResult.failure(EsmorgaException("No Connection", Source.REMOTE, ErrorCodes.NO_CONNECTION))
+        }
+        loadKoinModules(module { factory<JoinEventUseCase> { failureJoinEventUseCase } })
+
+        setNavigationFromDestination(Navigation.EventDetailScreen("1"))
+
+        composeTestRule.onNodeWithTag(EVENT_DETAILS_EVENT_NAME).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(EVENT_DETAIL_PRIMARY_BUTTON).performClick()
+
+        composeTestRule.onNodeWithTag(ERROR_ANIMATION).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(ERROR_TITLE).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(ERROR_SUBTITLE).assertIsDisplayed()
         composeTestRule.onNodeWithTag(ERROR_RETRY_BUTTON).performClick()
 
         composeTestRule.onNodeWithTag(EVENT_DETAILS_EVENT_NAME).assertIsDisplayed()

@@ -55,6 +55,7 @@ fun EventDetailsScreen(
     onBackPressed: () -> Unit,
     onLoginClicked: () -> Unit,
     onJoinEventError: (EsmorgaErrorScreenArguments) -> Unit,
+    onNoNetworkError: (EsmorgaErrorScreenArguments) -> Unit
 ) {
     val uiState: EventDetailsUiState by edvm.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -88,10 +89,8 @@ fun EventDetailsScreen(
                     onJoinEventError(eff.esmorgaErrorScreenArguments)
                 }
 
-                EventDetailsEffect.ShowNoNetworkSnackbar -> {
-                    localCoroutineScope.launch {
-                        snackbarHostState.showSnackbar(message = noNetworkMessage)
-                    }
+                is EventDetailsEffect.ShowNoNetworkScreenError -> {
+                    onNoNetworkError(eff.esmorgaNoNetworkArguments)
                 }
             }
         }
