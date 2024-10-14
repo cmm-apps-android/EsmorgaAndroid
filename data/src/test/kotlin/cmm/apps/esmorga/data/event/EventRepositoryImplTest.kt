@@ -131,4 +131,20 @@ class EventRepositoryImplTest {
         coVerify { localDS.cacheEvents(localEvent.map { it.copy(dataUserJoined = true) }) }
     }
 
+    @Test
+    fun `given events locally cached when leave event is requested then local events are cached`() = runTest {
+        val localEvent = listOf(EventDataMock.provideEventDataModel("localName", userJoined = true))
+        val eventId = localEvent.first().dataId
+
+        coEvery { localDS.getEvents() } returns localEvent
+        coEvery { remoteDS.leaveEvent(any()) } returns Unit
+
+        val sut = EventRepositoryImpl(userDS, localDS, remoteDS)
+        sut.leaveEvent(eventId)
+
+        coVerify { remoteDS.leaveEvent(eventId) }
+        coVerify { localDS.getEvents() }
+        coVerify { localDS.cacheEvents(localEvent.map { it.copy(dataUserJoined = false) }) }
+    }
+
 }

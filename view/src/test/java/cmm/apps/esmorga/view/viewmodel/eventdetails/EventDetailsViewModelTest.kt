@@ -6,6 +6,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import app.cash.turbine.test
 import cmm.apps.esmorga.domain.event.GetEventDetailsUseCase
 import cmm.apps.esmorga.domain.event.JoinEventUseCase
+import cmm.apps.esmorga.domain.event.LeaveEventUseCase
 import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.EsmorgaResult
@@ -62,8 +63,9 @@ class EventDetailsViewModelTest {
         coEvery { userUseCase() } returns EsmorgaResult.failure(Exception())
 
         val joinEventUseCase = mockk<JoinEventUseCase>(relaxed = true)
+        val leaveEventUseCase = mockk<LeaveEventUseCase>(relaxed = true)
 
-        val sut = EventDetailsViewModel(useCase, userUseCase, joinEventUseCase, "eventId")
+        val sut = EventDetailsViewModel(useCase, userUseCase, joinEventUseCase, leaveEventUseCase, "eventId")
 
         val uiState = sut.uiState.value
         Assert.assertEquals(domainEventName, uiState.title)
@@ -81,8 +83,9 @@ class EventDetailsViewModelTest {
         coEvery { userUseCase() } returns EsmorgaResult.success(User("", "", ""))
 
         val joinEventUseCase = mockk<JoinEventUseCase>(relaxed = true)
+        val leaveEventUseCase = mockk<LeaveEventUseCase>(relaxed = true)
 
-        val sut = EventDetailsViewModel(useCase, userUseCase, joinEventUseCase, "eventId")
+        val sut = EventDetailsViewModel(useCase, userUseCase, joinEventUseCase, leaveEventUseCase, "eventId")
 
         val uiState = sut.uiState.value
         Assert.assertEquals(domainEventName, uiState.title)
@@ -100,8 +103,9 @@ class EventDetailsViewModelTest {
         coEvery { userUseCase() } returns EsmorgaResult.success(User("", "", ""))
 
         val joinEventUseCase = mockk<JoinEventUseCase>(relaxed = true)
+        val leaveEventUseCase = mockk<LeaveEventUseCase>(relaxed = true)
 
-        val sut = EventDetailsViewModel(useCase, userUseCase, joinEventUseCase, "eventId")
+        val sut = EventDetailsViewModel(useCase, userUseCase, joinEventUseCase, leaveEventUseCase, "eventId")
 
         val uiState = sut.uiState.value
         Assert.assertEquals(domainEventName, uiState.title)
@@ -121,12 +125,14 @@ class EventDetailsViewModelTest {
         val joinEventUseCase = mockk<JoinEventUseCase>(relaxed = true)
         coEvery { joinEventUseCase("eventId") } returns EsmorgaResult.success(Unit)
 
-        val sut = EventDetailsViewModel(useCase, userUseCase, joinEventUseCase, "eventId")
+        val leaveEventUseCase = mockk<LeaveEventUseCase>(relaxed = true)
+
+        val sut = EventDetailsViewModel(useCase, userUseCase, joinEventUseCase, leaveEventUseCase, "eventId")
         sut.effect.test {
             sut.onPrimaryButtonClicked()
 
             val effect = awaitItem()
-            Assert.assertTrue(effect is EventDetailsEffect.ShowJoinEventSuccessSnackbar)
+            Assert.assertTrue(effect is EventDetailsEffect.ShowJoinEventSuccess)
         }
     }
 
@@ -143,7 +149,9 @@ class EventDetailsViewModelTest {
         val joinEventUseCase = mockk<JoinEventUseCase>(relaxed = true)
         coEvery { joinEventUseCase("eventId") } returns EsmorgaResult.failure(Exception())
 
-        val sut = EventDetailsViewModel(useCase, userUseCase, joinEventUseCase, "eventId")
+        val leaveEventUseCase = mockk<LeaveEventUseCase>(relaxed = true)
+
+        val sut = EventDetailsViewModel(useCase, userUseCase, joinEventUseCase, leaveEventUseCase, "eventId")
         sut.effect.test {
             sut.onPrimaryButtonClicked()
 
@@ -165,7 +173,9 @@ class EventDetailsViewModelTest {
         val joinEventUseCase = mockk<JoinEventUseCase>(relaxed = true)
         coEvery { joinEventUseCase("eventId") } returns EsmorgaResult.failure(EsmorgaException("No Connection", Source.REMOTE, ErrorCodes.NO_CONNECTION))
 
-        val sut = EventDetailsViewModel(useCase, userUseCase, joinEventUseCase, "eventId")
+        val leaveEventUseCase = mockk<LeaveEventUseCase>(relaxed = true)
+
+        val sut = EventDetailsViewModel(useCase, userUseCase, joinEventUseCase, leaveEventUseCase, "eventId")
         sut.effect.test {
             sut.onPrimaryButtonClicked()
 
@@ -192,7 +202,79 @@ class EventDetailsViewModelTest {
         val joinEventUseCase = mockk<JoinEventUseCase>(relaxed = true)
         coEvery { joinEventUseCase("") } returns EsmorgaResult.success(Unit)
 
-        val sut = EventDetailsViewModel(useCase, userUseCase, joinEventUseCase, "eventId")
+        val leaveEventUseCase = mockk<LeaveEventUseCase>(relaxed = true)
+
+        val sut = EventDetailsViewModel(useCase, userUseCase, joinEventUseCase, leaveEventUseCase, "eventId")
+        sut.onPrimaryButtonClicked()
+
+        val uiState = sut.uiState.value
+        Assert.assertTrue(uiState.primaryButtonLoading)
+    }
+
+    @Test
+    fun `given a failure usecase when leave event is called then full screen error is shown`() = runTest {
+        val domainEventName = "DomainEvent"
+
+        val useCase = mockk<GetEventDetailsUseCase>(relaxed = true)
+        coEvery { useCase(any()) } returns EsmorgaResult.success(EventViewMock.provideEvent(domainEventName, userJoined = true))
+
+        val userUseCase = mockk<GetSavedUserUseCase>(relaxed = true)
+        coEvery { userUseCase() } returns EsmorgaResult.success(User("", "", ""))
+
+        val joinEventUseCase = mockk<JoinEventUseCase>(relaxed = true)
+
+        val leaveEventUseCase = mockk<LeaveEventUseCase>(relaxed = true)
+        coEvery { leaveEventUseCase("eventId") } returns EsmorgaResult.failure(Exception())
+
+        val sut = EventDetailsViewModel(useCase, userUseCase, joinEventUseCase, leaveEventUseCase, "eventId")
+        sut.effect.test {
+            sut.onPrimaryButtonClicked()
+
+            val effect = awaitItem()
+            Assert.assertTrue(effect is EventDetailsEffect.ShowFullScreenError)
+        }
+    }
+
+    @Test
+    fun `given a successful usecase when leave event is called then leave event success snackbar is shown`() = runTest {
+        val domainEventName = "DomainEvent"
+
+        val useCase = mockk<GetEventDetailsUseCase>(relaxed = true)
+        coEvery { useCase(any()) } returns EsmorgaResult.success(EventViewMock.provideEvent(domainEventName, userJoined = true))
+
+        val userUseCase = mockk<GetSavedUserUseCase>(relaxed = true)
+        coEvery { userUseCase() } returns EsmorgaResult.success(User("", "", ""))
+
+        val joinEventUseCase = mockk<JoinEventUseCase>(relaxed = true)
+
+        val leaveEventUseCase = mockk<LeaveEventUseCase>(relaxed = true)
+        coEvery { leaveEventUseCase("eventId") } returns EsmorgaResult.success(Unit)
+
+        val sut = EventDetailsViewModel(useCase, userUseCase, joinEventUseCase, leaveEventUseCase, "eventId")
+        sut.effect.test {
+            sut.onPrimaryButtonClicked()
+
+            val effect = awaitItem()
+            Assert.assertTrue(effect is EventDetailsEffect.ShowLeaveEventSuccess)
+        }
+    }
+
+    @Test
+    fun `given a successful usecase when leave event is called then loading button state is shown`() = runTest {
+        val domainEventName = "DomainEvent"
+
+        val useCase = mockk<GetEventDetailsUseCase>(relaxed = true)
+        coEvery { useCase(any()) } returns EsmorgaResult.success(EventViewMock.provideEvent(domainEventName, userJoined = true))
+
+        val userUseCase = mockk<GetSavedUserUseCase>(relaxed = true)
+        coEvery { userUseCase() } returns EsmorgaResult.success(User("", "", ""))
+
+        val joinEventUseCase = mockk<JoinEventUseCase>(relaxed = true)
+
+        val leaveEventUseCase = mockk<LeaveEventUseCase>(relaxed = true)
+        coEvery { leaveEventUseCase("") } returns EsmorgaResult.success(Unit)
+
+        val sut = EventDetailsViewModel(useCase, userUseCase, joinEventUseCase, leaveEventUseCase, "eventId")
         sut.onPrimaryButtonClicked()
 
         val uiState = sut.uiState.value

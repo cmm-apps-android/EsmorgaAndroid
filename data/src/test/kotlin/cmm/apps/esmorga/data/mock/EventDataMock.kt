@@ -10,14 +10,14 @@ object EventDataMock {
 
     fun provideEventDataModelList(nameList: List<String>): List<EventDataModel> = nameList.map { name -> provideEventDataModel(name) }
 
-    fun provideEventDataModel(name: String): EventDataModel = EventDataModel(
+    fun provideEventDataModel(name: String, userJoined: Boolean = false): EventDataModel = EventDataModel(
         dataId = "$name-${System.currentTimeMillis()}",
         dataName = name,
         dataDate = ZonedDateTime.now(),
         dataDescription = "description",
         dataType = EventType.SPORT,
         dataLocation = EventLocationDataModel("Location"),
-        dataUserJoined = false
+        dataUserJoined = userJoined
     )
 
 }

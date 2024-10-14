@@ -163,4 +163,35 @@ class EventRemoteDatasourceImplTest {
         Assert.assertTrue(exception is EsmorgaException)
         Assert.assertEquals(errorCode, (exception as EsmorgaException).code)
     }
+
+    @Test
+    fun `given a working api when leave event requested successfully then return Unit`() = runTest {
+        val api = mockk<EsmorgaApi>(relaxed = true)
+        val guestApi = mockk<EsmorgaGuestApi>(relaxed = true)
+        coEvery { api.leaveEvent(any()) } returns Unit
+
+        val sut = EventRemoteDatasourceImpl(api, guestApi)
+        val result = sut.leaveEvent("eventId")
+
+        coVerify { api.leaveEvent(any()) }
+        Assert.assertEquals(Unit, result)
+    }
+
+    @Test
+    fun `given an api returning a 400 when leave event requested then Exception is thrown`() = runTest {
+        val errorCode = 400
+        val api = mockk<EsmorgaApi>(relaxed = true)
+        val guestApi = mockk<EsmorgaGuestApi>(relaxed = true)
+        coEvery { api.leaveEvent(any()) } throws HttpException(Response.error<ResponseBody>(errorCode, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
+
+        val sut = EventRemoteDatasourceImpl(api, guestApi)
+        val exception = try {
+            sut.leaveEvent("eventId")
+        } catch (exception: RuntimeException) {
+            exception
+        }
+
+        Assert.assertTrue(exception is EsmorgaException)
+        Assert.assertEquals(errorCode, (exception as EsmorgaException).code)
+    }
 }

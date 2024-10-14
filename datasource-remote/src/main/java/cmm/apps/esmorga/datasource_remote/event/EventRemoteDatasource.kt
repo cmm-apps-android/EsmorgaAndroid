@@ -36,4 +36,13 @@ class EventRemoteDatasourceImpl(private val eventApi: EsmorgaApi, private val gu
             throw manageApiException(e)
         }
     }
+
+    override suspend fun leaveEvent(eventId: String) {
+        try {
+            val eventBody = mapOf("eventId" to eventId)
+            eventApi.leaveEvent(eventBody)
+        } catch (e: Exception) {
+            throw manageApiException(e)
+        }
+    }
 }
