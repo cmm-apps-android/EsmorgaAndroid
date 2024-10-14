@@ -60,7 +60,6 @@ fun EventDetailsScreen(
     val uiState: EventDetailsUiState by edvm.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val message = stringResource(R.string.snackbar_event_joined)
-    val noNetworkMessage = stringResource(R.string.snackbar_no_internet)
     val snackbarHostState = remember { SnackbarHostState() }
 
     val localCoroutineScope = rememberCoroutineScope()
