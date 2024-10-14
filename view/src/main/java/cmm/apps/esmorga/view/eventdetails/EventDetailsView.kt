@@ -88,7 +88,7 @@ fun EventDetailsScreen(
                     onJoinEventError(eff.esmorgaErrorScreenArguments)
                 }
 
-                is EventDetailsEffect.ShowNoNetworkScreenError -> {
+                is EventDetailsEffect.ShowNoNetworkError -> {
                     onNoNetworkError(eff.esmorgaNoNetworkArguments)
                 }
             }

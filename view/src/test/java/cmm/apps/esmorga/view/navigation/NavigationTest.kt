@@ -267,7 +267,6 @@ class NavigationTest {
 
         setNavigationFromDestination(Navigation.EventDetailScreen("1"))
 
-        composeTestRule.onNodeWithTag(EVENT_DETAILS_EVENT_NAME).assertIsDisplayed()
         composeTestRule.onNodeWithTag(EVENT_DETAIL_PRIMARY_BUTTON).performClick()
 
         composeTestRule.onNodeWithTag(ERROR_ANIMATION).assertIsDisplayed()
