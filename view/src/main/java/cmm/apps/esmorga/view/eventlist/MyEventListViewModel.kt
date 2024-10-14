@@ -29,7 +29,7 @@ class MyEventListViewModel(private val getMyEventListUseCase: GetMyEventListUseC
         loadMyEvents()
     }
 
-    private fun loadMyEvents() {
+    fun loadMyEvents() {
         _uiState.value = MyEventListUiState(loading = true)
         viewModelScope.launch {
             val result = getMyEventListUseCase()
@@ -62,7 +62,4 @@ class MyEventListViewModel(private val getMyEventListUseCase: GetMyEventListUseC
         _effect.tryEmit(MyEventListEffect.NavigateToSignIn)
     }
 
-    fun onRetryClick() {
-        loadMyEvents()
-    }
 }

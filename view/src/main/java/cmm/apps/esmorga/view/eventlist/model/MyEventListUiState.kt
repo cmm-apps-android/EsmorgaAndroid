@@ -8,7 +8,6 @@ data class MyEventListUiState(
 
 enum class MyEventListError {
     NOT_LOGGED_IN,
-    NO_CONNECTION,
     EMPTY_LIST,
     UNKNOWN
 }
