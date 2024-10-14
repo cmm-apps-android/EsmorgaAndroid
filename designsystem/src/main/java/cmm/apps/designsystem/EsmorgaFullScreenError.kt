@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_ANIMATION
 import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_RETRY_BUTTON
 import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_SUBTITLE
 import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_TITLE
@@ -49,7 +50,7 @@ fun EsmorgaFullScreenError(
                         composition = composition,
                         iterations = LottieConstants.IterateForever,
                         contentScale = ContentScale.Inside,
-                        modifier = Modifier.size(150.dp)
+                        modifier = Modifier.size(150.dp).testTag(ERROR_ANIMATION)
                     )
                 } ?: run {
                     Image(
@@ -82,6 +83,7 @@ fun EsmorgaFullScreenError(
 }
 
 object ErrorScreenTestTags {
+    const val ERROR_ANIMATION = "error animation"
     const val ERROR_TITLE = "error screen title"
     const val ERROR_RETRY_BUTTON = "error screen retry button"
     const val ERROR_SUBTITLE = "error screen subtitle"

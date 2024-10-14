@@ -85,7 +85,7 @@ class EventDetailsViewModel(
             }.onFailure { error ->
                 _uiState.value = _uiState.value.copy(primaryButtonLoading = false)
                 if (error.code == ErrorCodes.NO_CONNECTION) {
-                    _effect.tryEmit(EventDetailsEffect.ShowNoNetworkSnackbar)
+                    _effect.tryEmit(EventDetailsEffect.ShowNoNetworkError())
                 } else {
                     _effect.tryEmit(EventDetailsEffect.ShowFullScreenError())
                 }

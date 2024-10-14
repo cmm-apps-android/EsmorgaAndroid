@@ -55,11 +55,11 @@ fun EventDetailsScreen(
     onBackPressed: () -> Unit,
     onLoginClicked: () -> Unit,
     onJoinEventError: (EsmorgaErrorScreenArguments) -> Unit,
+    onNoNetworkError: (EsmorgaErrorScreenArguments) -> Unit
 ) {
     val uiState: EventDetailsUiState by edvm.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val message = stringResource(R.string.snackbar_event_joined)
-    val noNetworkMessage = stringResource(R.string.snackbar_no_internet)
     val snackbarHostState = remember { SnackbarHostState() }
 
     val localCoroutineScope = rememberCoroutineScope()
@@ -88,10 +88,8 @@ fun EventDetailsScreen(
                     onJoinEventError(eff.esmorgaErrorScreenArguments)
                 }
 
-                EventDetailsEffect.ShowNoNetworkSnackbar -> {
-                    localCoroutineScope.launch {
-                        snackbarHostState.showSnackbar(message = noNetworkMessage)
-                    }
+                is EventDetailsEffect.ShowNoNetworkError -> {
+                    onNoNetworkError(eff.esmorgaNoNetworkArguments)
                 }
             }
         }

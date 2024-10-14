@@ -153,7 +153,7 @@ class EventDetailsViewModelTest {
     }
 
     @Test
-    fun `given no internet connection when joint event is called then no internet snackbar is shown`() = runTest {
+    fun `given no internet connection when joint event is called then no internet error screen is shown`() = runTest {
         val domainEventName = "DomainEvent"
 
         val useCase = mockk<GetEventDetailsUseCase>(relaxed = true)
@@ -170,7 +170,12 @@ class EventDetailsViewModelTest {
             sut.onPrimaryButtonClicked()
 
             val effect = awaitItem()
-            Assert.assertTrue(effect is EventDetailsEffect.ShowNoNetworkSnackbar)
+            Assert.assertTrue(effect is EventDetailsEffect.ShowNoNetworkError)
+            val noNetworkArguments = (effect as EventDetailsEffect.ShowNoNetworkError).esmorgaNoNetworkArguments
+            Assert.assertEquals(R.raw.no_connection_anim, noNetworkArguments.animation)
+            Assert.assertEquals(mockContext.getString(R.string.screen_no_connection_title), noNetworkArguments.title)
+            Assert.assertEquals(mockContext.getString(R.string.screen_no_connection_body), noNetworkArguments.subtitle)
+            Assert.assertEquals(mockContext.getString(R.string.button_ok), noNetworkArguments.buttonText)
         }
     }
 
