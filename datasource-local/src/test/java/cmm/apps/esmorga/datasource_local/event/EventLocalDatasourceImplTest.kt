@@ -6,6 +6,7 @@ import cmm.apps.esmorga.datasource_local.event.mapper.toEventDataModelList
 import cmm.apps.esmorga.datasource_local.event.model.EventLocalModel
 import cmm.apps.esmorga.datasource_local.mock.EventLocalMock
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.slot
 import kotlinx.coroutines.test.runTest
@@ -107,6 +108,34 @@ class EventLocalDatasourceImplTest {
         sut.deleteCacheEvents()
         result = sut.getEvents()
         Assert.assertEquals(emptyList<List<EventLocalModel>>(), result)
+    }
+
+    @Test
+    fun `given a storage with events when events join event is called then old events are updated with new value and are stored successfully`() = runTest {
+        val localEventName = "LocalEvent"
+        val localEvents = EventLocalMock.provideEventList(listOf(localEventName))
+        val eventId = localEvents.first().localId
+        val dao = mockk<EventDao>(relaxed = true)
+        coEvery { dao.getEvents() } returns localEvents
+
+        val sut = EventLocalDatasourceImpl(dao)
+        sut.joinEvent(eventId)
+
+        coVerify { dao.insertEvent(localEvents.map { it.copy(localUserJoined = true) }) }
+    }
+
+    @Test
+    fun `given a storage with events when events leave event is called then old events are updated with new value and are stored successfully`() = runTest {
+        val localEventName = "LocalEvent"
+        val localEvents = listOf(EventLocalMock.provideEvent(localEventName, true))
+        val dao = mockk<EventDao>(relaxed = true)
+        coEvery { dao.getEvents() } returns localEvents
+        val eventId = localEvents.first().localId
+
+        val sut = EventLocalDatasourceImpl(dao)
+        sut.leaveEvent(eventId)
+
+        coVerify { dao.insertEvent(localEvents.map { it.copy(localUserJoined = false) }) }
     }
 
 }

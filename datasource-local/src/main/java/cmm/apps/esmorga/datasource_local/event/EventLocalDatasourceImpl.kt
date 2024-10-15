@@ -26,4 +26,26 @@ class EventLocalDatasourceImpl(private val eventDao: EventDao) : EventDatasource
     override suspend fun deleteCacheEvents() {
         eventDao.deleteAll()
     }
+
+    override suspend fun joinEvent(eventId: String) {
+        val events = eventDao.getEvents().map {
+            if (it.localId == eventId) {
+                it.copy(localUserJoined = true)
+            } else {
+                it
+            }
+        }
+        eventDao.insertEvent(events)
+    }
+
+    override suspend fun leaveEvent(eventId: String) {
+        val events = eventDao.getEvents().map {
+            if (it.localId == eventId) {
+                it.copy(localUserJoined = false)
+            } else {
+                it
+            }
+        }
+        eventDao.insertEvent(events)
+    }
 }

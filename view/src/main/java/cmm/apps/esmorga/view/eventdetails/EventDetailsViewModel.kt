@@ -84,7 +84,7 @@ class EventDetailsViewModel(
             val result = joinEventUseCase(eventId)
             result.onSuccess {
                 userJoined = true
-                _uiState.value = _uiState.value.copy(primaryButtonLoading = false, primaryButtonTitle = getPrimaryButtonTitle(true, true))
+                _uiState.value = _uiState.value.copy(primaryButtonLoading = false, primaryButtonTitle = getPrimaryButtonTitle(isAuthenticated = true, userJoined = true))
                 _effect.tryEmit(EventDetailsEffect.ShowJoinEventSuccess)
             }.onFailure { error ->
                 showErrorScreen(error)
@@ -98,7 +98,7 @@ class EventDetailsViewModel(
             val result = leaveEventUseCase(eventId)
             result.onSuccess {
                 userJoined = false
-                _uiState.value = _uiState.value.copy(primaryButtonLoading = false, primaryButtonTitle = getPrimaryButtonTitle(true, false))
+                _uiState.value = _uiState.value.copy(primaryButtonLoading = false, primaryButtonTitle = getPrimaryButtonTitle(isAuthenticated = true, userJoined = false))
                 _effect.tryEmit(EventDetailsEffect.ShowLeaveEventSuccess)
             }.onFailure { error ->
                 showErrorScreen(error)

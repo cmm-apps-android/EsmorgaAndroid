@@ -127,8 +127,7 @@ class EventRepositoryImplTest {
         sut.joinEvent(eventId)
 
         coVerify { remoteDS.joinEvent(eventId) }
-        coVerify { localDS.getEvents() }
-        coVerify { localDS.cacheEvents(localEvent.map { it.copy(dataUserJoined = true) }) }
+        coVerify { localDS.joinEvent(eventId) }
     }
 
     @Test
@@ -143,8 +142,7 @@ class EventRepositoryImplTest {
         sut.leaveEvent(eventId)
 
         coVerify { remoteDS.leaveEvent(eventId) }
-        coVerify { localDS.getEvents() }
-        coVerify { localDS.cacheEvents(localEvent.map { it.copy(dataUserJoined = false) }) }
+        coVerify { localDS.leaveEvent(eventId) }
     }
 
 }
