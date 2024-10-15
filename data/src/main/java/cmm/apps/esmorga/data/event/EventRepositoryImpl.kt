@@ -28,21 +28,18 @@ class EventRepositoryImpl(private val localUserDs: UserDatasource, private val l
 
     override suspend fun joinEvent(eventId: String) {
         remoteEventDs.joinEvent(eventId)
-        val localEvents = localEventDs.getEvents().map {
-            if (it.dataId == eventId) {
-                it.copy(dataUserJoined = true)
-            } else {
-                it
-            }
-        }
-        localEventDs.cacheEvents(localEvents)
+        updateCacheEvents(eventId, true)
     }
 
     override suspend fun leaveEvent(eventId: String) {
         remoteEventDs.leaveEvent(eventId)
+        updateCacheEvents(eventId, false)
+    }
+
+    private suspend fun updateCacheEvents(eventId: String, userJoined: Boolean) {
         val localEvents = localEventDs.getEvents().map {
             if (it.dataId == eventId) {
-                it.copy(dataUserJoined = false)
+                it.copy(dataUserJoined = userJoined)
             } else {
                 it
             }
