@@ -5,6 +5,7 @@ import cmm.apps.esmorga.data.event.model.EventDataModel
 import cmm.apps.esmorga.datasource_local.database.dao.EventDao
 import cmm.apps.esmorga.datasource_local.event.mapper.toEventDataModel
 import cmm.apps.esmorga.datasource_local.event.mapper.toEventDataModelList
+import cmm.apps.esmorga.datasource_local.event.mapper.toEventLocalModel
 import cmm.apps.esmorga.datasource_local.event.mapper.toEventLocalModelList
 
 
@@ -27,11 +28,11 @@ class EventLocalDatasourceImpl(private val eventDao: EventDao) : EventDatasource
         eventDao.deleteAll()
     }
 
-    override suspend fun joinEvent(eventId: String) {
-        eventDao.updateEventJoinedById(eventId, true)
+    override suspend fun joinEvent(event: EventDataModel) {
+        eventDao.updateEvent(event.toEventLocalModel())
     }
 
-    override suspend fun leaveEvent(eventId: String) {
-        eventDao.updateEventJoinedById(eventId, false)
+    override suspend fun leaveEvent(event: EventDataModel) {
+        eventDao.updateEvent(event.toEventLocalModel())
     }
 }

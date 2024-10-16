@@ -2,7 +2,9 @@ package cmm.apps.esmorga.datasource_local.event
 
 import cmm.apps.esmorga.data.event.model.EventDataModel
 import cmm.apps.esmorga.datasource_local.database.dao.EventDao
+import cmm.apps.esmorga.datasource_local.event.mapper.toEventDataModel
 import cmm.apps.esmorga.datasource_local.event.mapper.toEventDataModelList
+import cmm.apps.esmorga.datasource_local.event.mapper.toEventLocalModel
 import cmm.apps.esmorga.datasource_local.event.model.EventLocalModel
 import cmm.apps.esmorga.datasource_local.mock.EventLocalMock
 import io.mockk.coEvery
@@ -114,14 +116,14 @@ class EventLocalDatasourceImplTest {
     fun `given a storage with events when events join event is called then old events are updated with new value`() = runTest {
         val localEventName = "LocalEvent"
         val localEvents = EventLocalMock.provideEventList(listOf(localEventName))
-        val eventId = localEvents.first().localId
+        val localEvent = localEvents.first().toEventDataModel()
         val dao = mockk<EventDao>(relaxed = true)
         coEvery { dao.getEvents() } returns localEvents
 
         val sut = EventLocalDatasourceImpl(dao)
-        sut.joinEvent(eventId)
+        sut.joinEvent(localEvent)
 
-        coVerify { dao.updateEventJoinedById(eventId = eventId, userJoined = true) }
+        coVerify { dao.updateEvent(localEvent.toEventLocalModel()) }
     }
 
     @Test
@@ -130,12 +132,12 @@ class EventLocalDatasourceImplTest {
         val localEvents = listOf(EventLocalMock.provideEvent(localEventName, true))
         val dao = mockk<EventDao>(relaxed = true)
         coEvery { dao.getEvents() } returns localEvents
-        val eventId = localEvents.first().localId
+        val localEvent = localEvents.first().toEventDataModel()
 
         val sut = EventLocalDatasourceImpl(dao)
-        sut.leaveEvent(eventId)
+        sut.leaveEvent(localEvent)
 
-        coVerify { dao.updateEventJoinedById(eventId = eventId, userJoined = false) }
+        coVerify { dao.updateEvent(localEvent.toEventLocalModel()) }
     }
 
 }

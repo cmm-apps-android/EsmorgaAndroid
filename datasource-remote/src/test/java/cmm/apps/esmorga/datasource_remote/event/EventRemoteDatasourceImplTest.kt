@@ -2,8 +2,10 @@ package cmm.apps.esmorga.datasource_remote.event
 
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaApi
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaGuestApi
+import cmm.apps.esmorga.datasource_remote.event.mapper.toEventDataModel
 import cmm.apps.esmorga.datasource_remote.event.model.EventListWrapperRemoteModel
 import cmm.apps.esmorga.datasource_remote.mock.EventRemoteMock
+import cmm.apps.esmorga.datasource_remote.mock.EventRemoteMock.provideEvent
 import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import io.mockk.coEvery
@@ -140,7 +142,7 @@ class EventRemoteDatasourceImplTest {
         coEvery { api.joinEvent(any()) } returns Unit
 
         val sut = EventRemoteDatasourceImpl(api, guestApi)
-        val result = sut.joinEvent("eventId")
+        val result = sut.joinEvent(provideEvent("Remote Event").toEventDataModel())
 
         coVerify { api.joinEvent(any()) }
         Assert.assertEquals(Unit, result)
@@ -155,7 +157,7 @@ class EventRemoteDatasourceImplTest {
 
         val sut = EventRemoteDatasourceImpl(api, guestApi)
         val exception = try {
-            sut.joinEvent("eventId")
+            sut.joinEvent(provideEvent("Remote Event").toEventDataModel())
         } catch (exception: RuntimeException) {
             exception
         }
@@ -171,7 +173,7 @@ class EventRemoteDatasourceImplTest {
         coEvery { api.leaveEvent(any()) } returns Unit
 
         val sut = EventRemoteDatasourceImpl(api, guestApi)
-        val result = sut.leaveEvent("eventId")
+        val result = sut.leaveEvent(provideEvent("Remote Event").toEventDataModel())
 
         coVerify { api.leaveEvent(any()) }
         Assert.assertEquals(Unit, result)
@@ -186,7 +188,7 @@ class EventRemoteDatasourceImplTest {
 
         val sut = EventRemoteDatasourceImpl(api, guestApi)
         val exception = try {
-            sut.leaveEvent("eventId")
+            sut.leaveEvent(provideEvent("Remote Event").toEventDataModel())
         } catch (exception: RuntimeException) {
             exception
         }

@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import cmm.apps.esmorga.datasource_local.event.model.EventLocalModel
 
 
@@ -22,6 +23,6 @@ interface EventDao {
     @Query("SELECT * FROM EventLocalModel WHERE localId = :eventId")
     suspend fun getEventById(eventId: String): EventLocalModel
 
-    @Query("UPDATE EventLocalModel SET localUserJoined = :userJoined WHERE localId = :eventId")
-    suspend fun updateEventJoinedById(eventId: String, userJoined: Boolean)
+    @Update
+    suspend fun updateEvent(event: EventLocalModel)
 }
