@@ -86,8 +86,7 @@ fun MyEventListView(
     ) { innerPadding ->
         Column(
             modifier = Modifier.padding(
-                top = innerPadding.calculateTopPadding(),
-                bottom = innerPadding.calculateBottomPadding(),
+                top = innerPadding.calculateTopPadding()
             )
         ) {
             EsmorgaText(
