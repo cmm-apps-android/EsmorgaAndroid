@@ -11,7 +11,7 @@ import cmm.apps.esmorga.datasource_local.event.model.EventLocalModel
 interface EventDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertEvent(event: List<EventLocalModel>)
+    suspend fun insertEvents(event: List<EventLocalModel>)
 
     @Query("SELECT * FROM EventLocalModel")
     suspend fun getEvents(): List<EventLocalModel>
@@ -19,6 +19,9 @@ interface EventDao {
     @Query("DELETE FROM EventLocalModel")
     suspend fun deleteAll()
 
-    @Query( "SELECT * FROM EventLocalModel WHERE localId = :eventId")
+    @Query("SELECT * FROM EventLocalModel WHERE localId = :eventId")
     suspend fun getEventById(eventId: String): EventLocalModel
+
+    @Query("UPDATE EventLocalModel SET localUserJoined = :userJoined WHERE localId = :eventId")
+    suspend fun updateEventById(eventId: String, userJoined: Boolean)
 }

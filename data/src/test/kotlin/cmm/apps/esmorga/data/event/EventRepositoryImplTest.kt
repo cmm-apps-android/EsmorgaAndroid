@@ -116,7 +116,7 @@ class EventRepositoryImplTest {
     }
 
     @Test
-    fun `given events locally cached when join event is requested then local events are cached`() = runTest {
+    fun `given events locally cached when join event is requested then local events are updated`() = runTest {
         val localEvent = listOf(EventDataMock.provideEventDataModel("localName"))
         val eventId = localEvent.first().dataId
 
@@ -131,7 +131,7 @@ class EventRepositoryImplTest {
     }
 
     @Test
-    fun `given events locally cached when leave event is requested then local events are cached`() = runTest {
+    fun `given events locally cached when leave event is requested then local events are updated`() = runTest {
         val localEvent = listOf(EventDataMock.provideEventDataModel("localName", userJoined = true))
         val eventId = localEvent.first().dataId
 

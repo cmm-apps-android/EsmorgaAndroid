@@ -27,7 +27,7 @@ class EventLocalDatasourceImplTest {
                 EventLocalMock.provideEvent(name)
             }
         }
-        coEvery { dao.insertEvent(capture(eventListSlot)) } coAnswers {
+        coEvery { dao.insertEvents(capture(eventListSlot)) } coAnswers {
             fakeStorage.addAll(eventListSlot.captured.map { event -> event.localName })
         }
         coEvery { dao.deleteAll() } coAnswers {
@@ -111,7 +111,7 @@ class EventLocalDatasourceImplTest {
     }
 
     @Test
-    fun `given a storage with events when events join event is called then old events are updated with new value and are stored successfully`() = runTest {
+    fun `given a storage with events when events join event is called then old events are updated with new value`() = runTest {
         val localEventName = "LocalEvent"
         val localEvents = EventLocalMock.provideEventList(listOf(localEventName))
         val eventId = localEvents.first().localId
@@ -121,11 +121,11 @@ class EventLocalDatasourceImplTest {
         val sut = EventLocalDatasourceImpl(dao)
         sut.joinEvent(eventId)
 
-        coVerify { dao.insertEvent(localEvents.map { it.copy(localUserJoined = true) }) }
+        coVerify { dao.updateEventById(eventId = eventId, userJoined = true) }
     }
 
     @Test
-    fun `given a storage with events when events leave event is called then old events are updated with new value and are stored successfully`() = runTest {
+    fun `given a storage with events when events leave event is called then old events are updated with new value`() = runTest {
         val localEventName = "LocalEvent"
         val localEvents = listOf(EventLocalMock.provideEvent(localEventName, true))
         val dao = mockk<EventDao>(relaxed = true)
@@ -135,7 +135,7 @@ class EventLocalDatasourceImplTest {
         val sut = EventLocalDatasourceImpl(dao)
         sut.leaveEvent(eventId)
 
-        coVerify { dao.insertEvent(localEvents.map { it.copy(localUserJoined = false) }) }
+        coVerify { dao.updateEventById(eventId = eventId, userJoined = false) }
     }
 
 }
