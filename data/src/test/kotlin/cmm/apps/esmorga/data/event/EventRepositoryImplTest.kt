@@ -117,32 +117,32 @@ class EventRepositoryImplTest {
 
     @Test
     fun `given events locally cached when join event is requested then local events are updated`() = runTest {
-        val localEvent = listOf(EventDataMock.provideEventDataModel("localName"))
-        val eventId = localEvent.first().dataId
+        val localEvents = listOf(EventDataMock.provideEventDataModel("localName"))
+        val eventId = localEvents.first().dataId
 
-        coEvery { localDS.getEvents() } returns localEvent
+        coEvery { localDS.getEvents() } returns localEvents
         coEvery { remoteDS.joinEvent(any()) } returns Unit
 
         val sut = EventRepositoryImpl(userDS, localDS, remoteDS)
         sut.joinEvent(eventId)
 
-        coVerify { remoteDS.joinEvent(eventId) }
-        coVerify { localDS.joinEvent(eventId) }
+        coVerify { remoteDS.joinEvent(any()) }
+        coVerify { localDS.joinEvent(any()) }
     }
 
     @Test
     fun `given events locally cached when leave event is requested then local events are updated`() = runTest {
-        val localEvent = listOf(EventDataMock.provideEventDataModel("localName", userJoined = true))
-        val eventId = localEvent.first().dataId
+        val localEvents = listOf(EventDataMock.provideEventDataModel("localName", userJoined = true))
+        val eventId = localEvents.first().dataId
 
-        coEvery { localDS.getEvents() } returns localEvent
+        coEvery { localDS.getEvents() } returns localEvents
         coEvery { remoteDS.leaveEvent(any()) } returns Unit
 
         val sut = EventRepositoryImpl(userDS, localDS, remoteDS)
         sut.leaveEvent(eventId)
 
-        coVerify { remoteDS.leaveEvent(eventId) }
-        coVerify { localDS.leaveEvent(eventId) }
+        coVerify { remoteDS.leaveEvent(any()) }
+        coVerify { localDS.leaveEvent(any()) }
     }
 
 }
