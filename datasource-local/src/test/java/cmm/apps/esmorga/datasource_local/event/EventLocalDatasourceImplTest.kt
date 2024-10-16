@@ -121,7 +121,7 @@ class EventLocalDatasourceImplTest {
         val sut = EventLocalDatasourceImpl(dao)
         sut.joinEvent(eventId)
 
-        coVerify { dao.updateEventById(eventId = eventId, userJoined = true) }
+        coVerify { dao.updateEventJoinedById(eventId = eventId, userJoined = true) }
     }
 
     @Test
@@ -135,7 +135,7 @@ class EventLocalDatasourceImplTest {
         val sut = EventLocalDatasourceImpl(dao)
         sut.leaveEvent(eventId)
 
-        coVerify { dao.updateEventById(eventId = eventId, userJoined = false) }
+        coVerify { dao.updateEventJoinedById(eventId = eventId, userJoined = false) }
     }
 
 }

@@ -28,10 +28,10 @@ class EventLocalDatasourceImpl(private val eventDao: EventDao) : EventDatasource
     }
 
     override suspend fun joinEvent(eventId: String) {
-        eventDao.updateEventById(eventId, true)
+        eventDao.updateEventJoinedById(eventId, true)
     }
 
     override suspend fun leaveEvent(eventId: String) {
-        eventDao.updateEventById(eventId, false)
+        eventDao.updateEventJoinedById(eventId, false)
     }
 }

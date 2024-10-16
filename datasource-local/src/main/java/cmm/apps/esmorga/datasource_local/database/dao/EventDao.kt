@@ -23,5 +23,5 @@ interface EventDao {
     suspend fun getEventById(eventId: String): EventLocalModel
 
     @Query("UPDATE EventLocalModel SET localUserJoined = :userJoined WHERE localId = :eventId")
-    suspend fun updateEventById(eventId: String, userJoined: Boolean)
+    suspend fun updateEventJoinedById(eventId: String, userJoined: Boolean)
 }
