@@ -6,7 +6,6 @@ plugins {
     alias(libs.plugins.kover)
     alias(libs.plugins.paparazzi)
     alias(libs.plugins.jetbrains.kotlin.serialization)
-    alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.compose.compiler)
 }
 
