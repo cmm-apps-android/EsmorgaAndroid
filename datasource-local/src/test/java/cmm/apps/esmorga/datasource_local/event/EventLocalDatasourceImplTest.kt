@@ -113,7 +113,7 @@ class EventLocalDatasourceImplTest {
     }
 
     @Test
-    fun `given a storage with events when events join event is called then old events are updated with new value`() = runTest {
+    fun `given a storage with events when join event is called then old event are updated with new value`() = runTest {
         val localEventName = "LocalEvent"
         val localEvents = EventLocalMock.provideEventList(listOf(localEventName))
         val localEvent = localEvents.first().toEventDataModel()

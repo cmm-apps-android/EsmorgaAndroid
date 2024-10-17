@@ -167,8 +167,7 @@ class EventDetailsViewModelTest {
 
     @Test
     fun `given a failure usecase when leave event is called then full screen error is shown`() = runTest {
-        val domainEventName = "DomainEvent"
-        val event = EventViewMock.provideEvent(domainEventName, userJoined = true)
+        val event = EventViewMock.provideEvent("DomainEvent", userJoined = true)
 
         val useCase = mockk<GetEventDetailsUseCase>(relaxed = true)
         coEvery { useCase(any()) } returns EsmorgaResult.success(event)
@@ -187,8 +186,7 @@ class EventDetailsViewModelTest {
 
     @Test
     fun `given a successful usecase when leave event is called then leave event success snackbar is shown`() = runTest {
-        val domainEventName = "DomainEvent"
-        val event = EventViewMock.provideEvent(domainEventName, userJoined = true)
+        val event = EventViewMock.provideEvent("DomainEvent", userJoined = true)
 
         val useCase = mockk<GetEventDetailsUseCase>(relaxed = true)
         coEvery { useCase(any()) } returns EsmorgaResult.success(event)

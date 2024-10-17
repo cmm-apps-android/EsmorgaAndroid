@@ -17,11 +17,10 @@ class JoinEventUseCaseTest {
     @Test
     fun `given a successful repository when join event requested then return success`() = runTest {
         val repo = mockk<EventRepository>(relaxed = true)
-        val event = EventDomainMock.provideEvent("Event Name")
         coEvery { repo.joinEvent(any()) } returns Unit
 
         val sut = JoinEventUseCaseImpl(repo)
-        val result = sut.invoke(event)
+        val result = sut.invoke(EventDomainMock.provideEvent("Event Name"))
 
         Assert.assertEquals(EsmorgaResult.success(Unit), result)
     }
@@ -29,11 +28,10 @@ class JoinEventUseCaseTest {
     @Test
     fun `given a failure repository when join event requested then return exception`() = runTest {
         val repo = mockk<EventRepository>(relaxed = true)
-        val event = EventDomainMock.provideEvent("Event Name")
         coEvery { repo.joinEvent(any()) } throws EsmorgaException("Unknown error", Source.REMOTE, ErrorCodes.UNKNOWN_ERROR)
 
         val sut = JoinEventUseCaseImpl(repo)
-        val result = sut.invoke(event)
+        val result = sut.invoke(EventDomainMock.provideEvent("Event Name"))
 
         Assert.assertTrue(result.error is EsmorgaException)
     }
