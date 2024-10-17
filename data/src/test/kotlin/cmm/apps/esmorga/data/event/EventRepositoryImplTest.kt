@@ -2,6 +2,7 @@ package cmm.apps.esmorga.data.event
 
 import cmm.apps.esmorga.data.CacheHelper
 import cmm.apps.esmorga.data.event.datasource.EventDatasource
+import cmm.apps.esmorga.data.event.mapper.toEvent
 import cmm.apps.esmorga.data.mock.EventDataMock
 import cmm.apps.esmorga.data.mock.UserDataMock
 import cmm.apps.esmorga.data.user.datasource.UserDatasource
@@ -118,13 +119,13 @@ class EventRepositoryImplTest {
     @Test
     fun `given events locally cached when join event is requested then local events are updated`() = runTest {
         val localEvents = listOf(EventDataMock.provideEventDataModel("localName"))
-        val eventId = localEvents.first().dataId
+        val event = localEvents.first()
 
         coEvery { localDS.getEvents() } returns localEvents
         coEvery { remoteDS.joinEvent(any()) } returns Unit
 
         val sut = EventRepositoryImpl(userDS, localDS, remoteDS)
-        sut.joinEvent(eventId)
+        sut.joinEvent(event.toEvent())
 
         coVerify { remoteDS.joinEvent(any()) }
         coVerify { localDS.joinEvent(any()) }
@@ -133,13 +134,13 @@ class EventRepositoryImplTest {
     @Test
     fun `given events locally cached when leave event is requested then local events are updated`() = runTest {
         val localEvents = listOf(EventDataMock.provideEventDataModel("localName", userJoined = true))
-        val eventId = localEvents.first().dataId
+        val event = localEvents.first()
 
         coEvery { localDS.getEvents() } returns localEvents
         coEvery { remoteDS.leaveEvent(any()) } returns Unit
 
         val sut = EventRepositoryImpl(userDS, localDS, remoteDS)
-        sut.leaveEvent(eventId)
+        sut.leaveEvent(event.toEvent())
 
         coVerify { remoteDS.leaveEvent(any()) }
         coVerify { localDS.leaveEvent(any()) }
