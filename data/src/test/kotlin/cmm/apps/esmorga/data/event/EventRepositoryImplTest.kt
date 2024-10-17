@@ -2,6 +2,7 @@ package cmm.apps.esmorga.data.event
 
 import cmm.apps.esmorga.data.CacheHelper
 import cmm.apps.esmorga.data.event.datasource.EventDatasource
+import cmm.apps.esmorga.data.event.mapper.toEvent
 import cmm.apps.esmorga.data.mock.EventDataMock
 import cmm.apps.esmorga.data.mock.UserDataMock
 import cmm.apps.esmorga.data.user.datasource.UserDatasource
@@ -116,19 +117,33 @@ class EventRepositoryImplTest {
     }
 
     @Test
-    fun `given events locally cached when join event is requested then local events are cached`() = runTest {
-        val localEvent = listOf(EventDataMock.provideEventDataModel("localName"))
-        val eventId = localEvent.first().dataId
+    fun `given events locally cached when join event is requested then local events are updated`() = runTest {
+        val localEvents = listOf(EventDataMock.provideEventDataModel("localName"))
+        val event = localEvents.first()
 
-        coEvery { localDS.getEvents() } returns localEvent
+        coEvery { localDS.getEvents() } returns localEvents
         coEvery { remoteDS.joinEvent(any()) } returns Unit
 
         val sut = EventRepositoryImpl(userDS, localDS, remoteDS)
-        sut.joinEvent(eventId)
+        sut.joinEvent(event.toEvent())
 
-        coVerify { remoteDS.joinEvent(eventId) }
-        coVerify { localDS.getEvents() }
-        coVerify { localDS.cacheEvents(localEvent.map { it.copy(dataUserJoined = true) }) }
+        coVerify { remoteDS.joinEvent(any()) }
+        coVerify { localDS.joinEvent(any()) }
+    }
+
+    @Test
+    fun `given events locally cached when leave event is requested then local events are updated`() = runTest {
+        val localEvents = listOf(EventDataMock.provideEventDataModel("localName", userJoined = true))
+        val event = localEvents.first()
+
+        coEvery { localDS.getEvents() } returns localEvents
+        coEvery { remoteDS.leaveEvent(any()) } returns Unit
+
+        val sut = EventRepositoryImpl(userDS, localDS, remoteDS)
+        sut.leaveEvent(event.toEvent())
+
+        coVerify { remoteDS.leaveEvent(any()) }
+        coVerify { localDS.leaveEvent(any()) }
     }
 
 }

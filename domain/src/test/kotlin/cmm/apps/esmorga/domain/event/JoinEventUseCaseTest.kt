@@ -1,6 +1,7 @@
 package cmm.apps.esmorga.domain.event
 
 import cmm.apps.esmorga.domain.event.repository.EventRepository
+import cmm.apps.esmorga.domain.mock.EventDomainMock
 import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.EsmorgaResult
@@ -19,7 +20,7 @@ class JoinEventUseCaseTest {
         coEvery { repo.joinEvent(any()) } returns Unit
 
         val sut = JoinEventUseCaseImpl(repo)
-        val result = sut.invoke("")
+        val result = sut.invoke(EventDomainMock.provideEvent("Event Name"))
 
         Assert.assertEquals(EsmorgaResult.success(Unit), result)
     }
@@ -30,7 +31,7 @@ class JoinEventUseCaseTest {
         coEvery { repo.joinEvent(any()) } throws EsmorgaException("Unknown error", Source.REMOTE, ErrorCodes.UNKNOWN_ERROR)
 
         val sut = JoinEventUseCaseImpl(repo)
-        val result = sut.invoke("")
+        val result = sut.invoke(EventDomainMock.provideEvent("Event Name"))
 
         Assert.assertTrue(result.error is EsmorgaException)
     }

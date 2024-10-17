@@ -59,7 +59,8 @@ fun EventDetailsScreen(
 ) {
     val uiState: EventDetailsUiState by edvm.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    val message = stringResource(R.string.snackbar_event_joined)
+    val joinEventSuccessMessage = stringResource(R.string.snackbar_event_joined)
+    val leaveEventSuccessMessage = stringResource(R.string.snackbar_event_left)
     val snackbarHostState = remember { SnackbarHostState() }
 
     val localCoroutineScope = rememberCoroutineScope()
@@ -78,9 +79,9 @@ fun EventDetailsScreen(
                     onLoginClicked()
                 }
 
-                EventDetailsEffect.ShowJoinEventSuccessSnackbar -> {
+                EventDetailsEffect.ShowJoinEventSuccess -> {
                     localCoroutineScope.launch {
-                        snackbarHostState.showSnackbar(message = message)
+                        snackbarHostState.showSnackbar(message = joinEventSuccessMessage)
                     }
                 }
 
@@ -90,6 +91,12 @@ fun EventDetailsScreen(
 
                 is EventDetailsEffect.ShowNoNetworkError -> {
                     onNoNetworkError(eff.esmorgaNoNetworkArguments)
+                }
+
+                EventDetailsEffect.ShowLeaveEventSuccess -> {
+                    localCoroutineScope.launch {
+                        snackbarHostState.showSnackbar(leaveEventSuccessMessage)
+                    }
                 }
             }
         }

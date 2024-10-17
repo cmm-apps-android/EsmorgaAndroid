@@ -4,7 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cmm.apps.esmorga.domain.event.GetEventDetailsUseCase
 import cmm.apps.esmorga.domain.event.JoinEventUseCase
+import cmm.apps.esmorga.domain.event.LeaveEventUseCase
+import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.domain.result.ErrorCodes
+import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.view.eventdetails.mapper.EventDetailsUiMapper.toEventUiDetails
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsEffect
@@ -23,6 +26,7 @@ class EventDetailsViewModel(
     private val getEventDetailsUseCase: GetEventDetailsUseCase,
     private val getSavedUserUseCase: GetSavedUserUseCase,
     private val joinEventUseCase: JoinEventUseCase,
+    private val leaveEventUseCase: LeaveEventUseCase,
     private val eventId: String
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(EventDetailsUiState())
@@ -33,6 +37,7 @@ class EventDetailsViewModel(
 
     private var isAuthenticated: Boolean = false
     private var userJoined: Boolean = false
+    private lateinit var event: Event
 
     init {
         getEventDetails()
@@ -54,7 +59,7 @@ class EventDetailsViewModel(
     fun onPrimaryButtonClicked() {
         if (isAuthenticated) {
             if (userJoined) {
-                // TODO Leave event
+                leaveEvent()
             } else {
                 joinEvent()
             }
@@ -69,6 +74,7 @@ class EventDetailsViewModel(
             val result = getEventDetailsUseCase(eventId)
             isAuthenticated = user.data != null
             result.onSuccess {
+                event = it
                 userJoined = it.userJoined
                 _uiState.value = it.toEventUiDetails(isAuthenticated, userJoined)
             }
@@ -78,18 +84,37 @@ class EventDetailsViewModel(
     private fun joinEvent() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(primaryButtonLoading = true)
-            val result = joinEventUseCase(eventId)
+            val result = joinEventUseCase(event)
             result.onSuccess {
-                _uiState.value = _uiState.value.copy(primaryButtonLoading = false, primaryButtonTitle = getPrimaryButtonTitle(true, true))
-                _effect.tryEmit(EventDetailsEffect.ShowJoinEventSuccessSnackbar)
+                userJoined = true
+                _uiState.value = _uiState.value.copy(primaryButtonLoading = false, primaryButtonTitle = getPrimaryButtonTitle(isAuthenticated = true, userJoined = true))
+                _effect.tryEmit(EventDetailsEffect.ShowJoinEventSuccess)
             }.onFailure { error ->
-                _uiState.value = _uiState.value.copy(primaryButtonLoading = false)
-                if (error.code == ErrorCodes.NO_CONNECTION) {
-                    _effect.tryEmit(EventDetailsEffect.ShowNoNetworkError())
-                } else {
-                    _effect.tryEmit(EventDetailsEffect.ShowFullScreenError())
-                }
+                showErrorScreen(error)
             }
+        }
+    }
+
+    private fun leaveEvent() {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(primaryButtonLoading = true)
+            val result = leaveEventUseCase(event)
+            result.onSuccess {
+                userJoined = false
+                _uiState.value = _uiState.value.copy(primaryButtonLoading = false, primaryButtonTitle = getPrimaryButtonTitle(isAuthenticated = true, userJoined = false))
+                _effect.tryEmit(EventDetailsEffect.ShowLeaveEventSuccess)
+            }.onFailure { error ->
+                showErrorScreen(error)
+            }
+        }
+    }
+
+    private fun showErrorScreen(error: EsmorgaException) {
+        _uiState.value = _uiState.value.copy(primaryButtonLoading = false)
+        if (error.code == ErrorCodes.NO_CONNECTION) {
+            _effect.tryEmit(EventDetailsEffect.ShowNoNetworkError())
+        } else {
+            _effect.tryEmit(EventDetailsEffect.ShowFullScreenError())
         }
     }
 

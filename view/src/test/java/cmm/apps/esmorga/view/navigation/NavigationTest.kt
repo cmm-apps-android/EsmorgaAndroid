@@ -19,6 +19,7 @@ import cmm.apps.esmorga.domain.event.GetEventDetailsUseCase
 import cmm.apps.esmorga.domain.event.GetEventListUseCase
 import cmm.apps.esmorga.domain.event.GetMyEventListUseCase
 import cmm.apps.esmorga.domain.event.JoinEventUseCase
+import cmm.apps.esmorga.domain.event.LeaveEventUseCase
 import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.EsmorgaResult
@@ -92,6 +93,10 @@ class NavigationTest {
         coEvery { useCase(any()) } returns EsmorgaResult.success(Unit)
     }
 
+    private val leaveEventUseCase = mockk<LeaveEventUseCase>(relaxed = true).also { useCase ->
+        coEvery { useCase(any()) } returns EsmorgaResult.success(Unit)
+    }
+
     private val getMyEventListUseCase = mockk<GetMyEventListUseCase>(relaxed = true).also { useCase ->
         coEvery { useCase() } returns EsmorgaResult.success(EventViewMock.provideEventList(listOf("event")))
     }
@@ -114,6 +119,7 @@ class NavigationTest {
                     factory<GetSavedUserUseCase> { getSavedUserUseCase }
                     factory<JoinEventUseCase> { joinEventUseCase }
                     factory<GetMyEventListUseCase> { getMyEventListUseCase }
+                    factory<LeaveEventUseCase> { leaveEventUseCase }
                 }
             )
         }
