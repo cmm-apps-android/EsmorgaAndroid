@@ -3,6 +3,7 @@ package cmm.apps.esmorga.data.event
 import cmm.apps.esmorga.data.CacheHelper
 import cmm.apps.esmorga.data.event.datasource.EventDatasource
 import cmm.apps.esmorga.data.event.mapper.toEvent
+import cmm.apps.esmorga.data.event.mapper.toEventDataModel
 import cmm.apps.esmorga.data.event.mapper.toEventList
 import cmm.apps.esmorga.data.event.model.EventDataModel
 import cmm.apps.esmorga.data.user.datasource.UserDatasource
@@ -26,16 +27,14 @@ class EventRepositoryImpl(private val localUserDs: UserDatasource, private val l
         return localEventDs.getEventById(eventId).toEvent()
     }
 
-    override suspend fun joinEvent(eventId: String) {
-        val localEvent = localEventDs.getEventById(eventId).copy(dataUserJoined = true)
-        remoteEventDs.joinEvent(localEvent)
-        localEventDs.joinEvent(localEvent)
+    override suspend fun joinEvent(event: Event) {
+        remoteEventDs.joinEvent(event.copy(userJoined = true).toEventDataModel())
+        localEventDs.joinEvent(event.copy(userJoined = true).toEventDataModel())
     }
 
-    override suspend fun leaveEvent(eventId: String) {
-        val localEvent = localEventDs.getEventById(eventId).copy(dataUserJoined = false)
-        remoteEventDs.leaveEvent(localEvent)
-        localEventDs.leaveEvent(localEvent)
+    override suspend fun leaveEvent(event: Event) {
+        remoteEventDs.leaveEvent(event.copy(userJoined = false).toEventDataModel())
+        localEventDs.leaveEvent(event.copy(userJoined = false).toEventDataModel())
     }
 
     private suspend fun getEventsFromRemote(): List<EventDataModel> {

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import cmm.apps.esmorga.domain.event.GetEventDetailsUseCase
 import cmm.apps.esmorga.domain.event.JoinEventUseCase
 import cmm.apps.esmorga.domain.event.LeaveEventUseCase
+import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
@@ -36,6 +37,7 @@ class EventDetailsViewModel(
 
     private var isAuthenticated: Boolean = false
     private var userJoined: Boolean = false
+    private lateinit var event: Event
 
     init {
         getEventDetails()
@@ -72,6 +74,7 @@ class EventDetailsViewModel(
             val result = getEventDetailsUseCase(eventId)
             isAuthenticated = user.data != null
             result.onSuccess {
+                event = it
                 userJoined = it.userJoined
                 _uiState.value = it.toEventUiDetails(isAuthenticated, userJoined)
             }
@@ -81,7 +84,7 @@ class EventDetailsViewModel(
     private fun joinEvent() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(primaryButtonLoading = true)
-            val result = joinEventUseCase(eventId)
+            val result = joinEventUseCase(event)
             result.onSuccess {
                 userJoined = true
                 _uiState.value = _uiState.value.copy(primaryButtonLoading = false, primaryButtonTitle = getPrimaryButtonTitle(isAuthenticated = true, userJoined = true))
@@ -95,7 +98,7 @@ class EventDetailsViewModel(
     private fun leaveEvent() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(primaryButtonLoading = true)
-            val result = leaveEventUseCase(eventId)
+            val result = leaveEventUseCase(event)
             result.onSuccess {
                 userJoined = false
                 _uiState.value = _uiState.value.copy(primaryButtonLoading = false, primaryButtonTitle = getPrimaryButtonTitle(isAuthenticated = true, userJoined = false))
