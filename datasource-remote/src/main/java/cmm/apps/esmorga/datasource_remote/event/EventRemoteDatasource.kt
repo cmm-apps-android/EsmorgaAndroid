@@ -28,10 +28,19 @@ class EventRemoteDatasourceImpl(private val eventApi: EsmorgaApi, private val gu
         }
     }
 
-    override suspend fun joinEvent(eventId: String) {
+    override suspend fun joinEvent(event: EventDataModel) {
         try {
-            val eventBody = mapOf("eventId" to eventId)
+            val eventBody = mapOf("eventId" to event.dataId)
             eventApi.joinEvent(eventBody)
+        } catch (e: Exception) {
+            throw manageApiException(e)
+        }
+    }
+
+    override suspend fun leaveEvent(event: EventDataModel) {
+        try {
+            val eventBody = mapOf("eventId" to event.dataId)
+            eventApi.leaveEvent(eventBody)
         } catch (e: Exception) {
             throw manageApiException(e)
         }

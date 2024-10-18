@@ -25,7 +25,7 @@ interface EventDatasource {
         throw EsmorgaException(message = "Unsupported operation", source = Source.UNSUPPORTED, code = ErrorCodes.UNSUPPORTED_OPERATION)
     }
 
-    suspend fun joinEvent(eventId: String) {
-        throw EsmorgaException(message = "Unsupported operation", source = Source.UNSUPPORTED, code = ErrorCodes.UNSUPPORTED_OPERATION)
-    }
+    suspend fun joinEvent(event: EventDataModel)
+
+    suspend fun leaveEvent(event: EventDataModel)
 }
