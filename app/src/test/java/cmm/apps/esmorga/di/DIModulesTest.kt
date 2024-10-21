@@ -3,9 +3,9 @@ package cmm.apps.esmorga.di
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import cmm.apps.esmorga.domain.event.model.EventType
-import cmm.apps.esmorga.view.eventlist.model.EventListUiModel
-import cmm.apps.esmorga.view.eventlist.model.EventUILocation
+import cmm.apps.esmorga.component.mock.EventDataMock
+import cmm.apps.esmorga.data.event.mapper.toEvent
+import cmm.apps.esmorga.view.eventlist.mapper.EventListUiMapper.toEventUi
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -28,16 +28,7 @@ class DIModulesTest {
     fun verifyKoinApp() {
         koinApplication {
             MockProvider.register {
-                EventListUiModel(
-                    id = "123",
-                    name = "Event Name",
-                    date = "2025-03-08T10:05:30.915Z",
-                    dateFormatted = "11 de Marzo de 2024",
-                    description = "description",
-                    type = EventType.SPORT,
-                    location = EventUILocation("Location"),
-                    userJoined = false
-                )
+                EventDataMock.provideEventDataModel("Event Name").toEvent().toEventUi()
             }
             androidContext(mockContext)
             modules(AppDIModules.modules)

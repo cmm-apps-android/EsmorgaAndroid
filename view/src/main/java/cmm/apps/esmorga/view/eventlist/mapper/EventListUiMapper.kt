@@ -17,7 +17,7 @@ object EventListUiMapper {
         return date.format(DateTimeFormatter.ofPattern("d' de 'MMMM' a las 'HH:mm").withZone(TimeZone.getDefault().toZoneId()))
     }
 
-    private fun Event.toEventUi(): EventListUiModel {
+    fun Event.toEventUi(): EventListUiModel {
 
         return EventListUiModel(
             id = this.id,
