@@ -76,7 +76,7 @@ class EventListViewModelComponentTest : KoinTest {
 
     @Test
     fun `given a successful API and an empty DB when screen is shown then UI state with events is returned`() = runTest {
-        val remoteEventName = "RemoteEvent"
+        val remoteEventName = "Event Name"
         remoteDatasource = mockk<EventDatasource>()
         coEvery { remoteDatasource.getEvents() } returns EventDataMock.provideEventDataModelList(listOf(remoteEventName))
         startDI()
@@ -88,6 +88,6 @@ class EventListViewModelComponentTest : KoinTest {
         sut.loadEvents()
 
         val uiState = sut.uiState.value
-        Assert.assertTrue(uiState.eventList[0].cardTitle.contains(remoteEventName))
+        Assert.assertTrue(uiState.eventList[0].name.contains(remoteEventName))
     }
 }

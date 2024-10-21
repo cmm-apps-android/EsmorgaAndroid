@@ -14,6 +14,6 @@ enum class MyEventListError {
 
 sealed class MyEventListEffect {
     data object ShowNoNetworkPrompt : MyEventListEffect()
-    data class NavigateToEventDetail(val eventId: String) : MyEventListEffect()
+    data class NavigateToEventDetail(val event: EventListUiModel) : MyEventListEffect()
     data object NavigateToSignIn : MyEventListEffect()
 }

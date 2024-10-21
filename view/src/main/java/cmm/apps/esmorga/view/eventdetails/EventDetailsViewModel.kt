@@ -2,10 +2,8 @@ package cmm.apps.esmorga.view.eventdetails
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cmm.apps.esmorga.domain.event.GetEventDetailsUseCase
 import cmm.apps.esmorga.domain.event.JoinEventUseCase
 import cmm.apps.esmorga.domain.event.LeaveEventUseCase
-import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
@@ -13,6 +11,8 @@ import cmm.apps.esmorga.view.eventdetails.mapper.EventDetailsUiMapper.toEventUiD
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsEffect
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiState
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiStateHelper.getPrimaryButtonTitle
+import cmm.apps.esmorga.view.eventlist.mapper.EventListUiMapper.toEvent
+import cmm.apps.esmorga.view.eventlist.model.EventListUiModel
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,11 +23,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class EventDetailsViewModel(
-    private val getEventDetailsUseCase: GetEventDetailsUseCase,
     private val getSavedUserUseCase: GetSavedUserUseCase,
     private val joinEventUseCase: JoinEventUseCase,
     private val leaveEventUseCase: LeaveEventUseCase,
-    private val eventId: String
+    private val event: EventListUiModel
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(EventDetailsUiState())
     val uiState: StateFlow<EventDetailsUiState> = _uiState.asStateFlow()
@@ -37,7 +36,6 @@ class EventDetailsViewModel(
 
     private var isAuthenticated: Boolean = false
     private var userJoined: Boolean = false
-    private lateinit var event: Event
 
     init {
         getEventDetails()
@@ -71,20 +69,16 @@ class EventDetailsViewModel(
     private fun getEventDetails() {
         viewModelScope.launch {
             val user = getSavedUserUseCase()
-            val result = getEventDetailsUseCase(eventId)
             isAuthenticated = user.data != null
-            result.onSuccess {
-                event = it
-                userJoined = it.userJoined
-                _uiState.value = it.toEventUiDetails(isAuthenticated, userJoined)
-            }
+            userJoined = event.userJoined
+            _uiState.value = event.toEventUiDetails(isAuthenticated, userJoined)
         }
     }
 
     private fun joinEvent() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(primaryButtonLoading = true)
-            val result = joinEventUseCase(event)
+            val result = joinEventUseCase(event.toEvent())
             result.onSuccess {
                 userJoined = true
                 _uiState.value = _uiState.value.copy(primaryButtonLoading = false, primaryButtonTitle = getPrimaryButtonTitle(isAuthenticated = true, userJoined = true))
@@ -98,7 +92,7 @@ class EventDetailsViewModel(
     private fun leaveEvent() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(primaryButtonLoading = true)
-            val result = leaveEventUseCase(event)
+            val result = leaveEventUseCase(event.toEvent())
             result.onSuccess {
                 userJoined = false
                 _uiState.value = _uiState.value.copy(primaryButtonLoading = false, primaryButtonTitle = getPrimaryButtonTitle(isAuthenticated = true, userJoined = false))

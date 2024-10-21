@@ -20,7 +20,7 @@ class ZonedDateTimeConverter {
 
     @TypeConverter
     fun toTimestamp(date: ZonedDateTime): String {
-        return date.format(DateTimeFormatter.ofPattern(DATE_FORMAT).withZone(TimeZone.getDefault().toZoneId()))
+        return date.format(DateTimeFormatter.ofPattern(DATE_FORMAT))
     }
 
     @TypeConverter

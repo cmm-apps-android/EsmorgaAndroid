@@ -38,6 +38,7 @@ import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAILS_BACK_BUTTON
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsEffect
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiState
+import cmm.apps.esmorga.view.eventlist.model.EventListUiModel
 import cmm.apps.esmorga.view.navigation.openNavigationApp
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import coil.compose.AsyncImage
@@ -50,8 +51,8 @@ import org.koin.core.parameter.parametersOf
 @Screen
 @Composable
 fun EventDetailsScreen(
-    eventId: String,
-    edvm: EventDetailsViewModel = koinViewModel(parameters = { parametersOf(eventId) }),
+    event: EventListUiModel,
+    edvm: EventDetailsViewModel = koinViewModel(parameters = { parametersOf(event) }),
     onBackPressed: () -> Unit,
     onLoginClicked: () -> Unit,
     onJoinEventError: (EsmorgaErrorScreenArguments) -> Unit,
