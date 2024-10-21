@@ -33,9 +33,10 @@ class MyEventListViewModelTest {
         coEvery { useCase() } returns EsmorgaResult.success(EventViewMock.provideEventList(listOf(domainEventName)))
 
         val sut = MyEventListViewModel(useCase)
+        sut.loadMyEvents()
 
         val uiState = sut.uiState.value
-        Assert.assertEquals(domainEventName, uiState.eventList[0].cardTitle)
+        Assert.assertEquals(domainEventName, uiState.eventList[0].name)
     }
 
     @Test
@@ -44,6 +45,7 @@ class MyEventListViewModelTest {
         coEvery { useCase() } returns EsmorgaResult.success(EventViewMock.provideEventList(listOf()))
 
         val sut = MyEventListViewModel(useCase)
+        sut.loadMyEvents()
 
         val uiState = sut.uiState.value
         Assert.assertEquals(MyEventListError.EMPTY_LIST, uiState.error)
@@ -55,6 +57,7 @@ class MyEventListViewModelTest {
         coEvery { useCase() } returns EsmorgaResult.failure(EsmorgaException(message = "Mock error", source = Source.LOCAL, code = ErrorCodes.NOT_LOGGED_IN))
 
         val sut = MyEventListViewModel(useCase)
+        sut.loadMyEvents()
 
         val uiState = sut.uiState.value
         Assert.assertEquals(MyEventListError.NOT_LOGGED_IN, uiState.error)
@@ -66,6 +69,7 @@ class MyEventListViewModelTest {
         coEvery { useCase() } returns EsmorgaResult.failure(EsmorgaException(message = "Mock error", source = Source.REMOTE, code = ErrorCodes.UNKNOWN_ERROR))
 
         val sut = MyEventListViewModel(useCase)
+        sut.loadMyEvents()
 
         val uiState = sut.uiState.value
         Assert.assertEquals(MyEventListError.UNKNOWN, uiState.error)
@@ -83,7 +87,7 @@ class MyEventListViewModelTest {
             sut.loadMyEvents()
 
             val uiState = sut.uiState.value
-            Assert.assertEquals(domainEventName, uiState.eventList[0].cardTitle)
+            Assert.assertEquals(domainEventName, uiState.eventList[0].name)
 
             val effect = awaitItem()
             Assert.assertTrue(effect is MyEventListEffect.ShowNoNetworkPrompt)

@@ -4,6 +4,7 @@ import cmm.apps.esmorga.view.MainViewModel
 import cmm.apps.esmorga.view.eventdetails.EventDetailsViewModel
 import cmm.apps.esmorga.view.eventlist.EventListViewModel
 import cmm.apps.esmorga.view.eventlist.MyEventListViewModel
+import cmm.apps.esmorga.view.eventlist.model.EventListUiModel
 import cmm.apps.esmorga.view.login.LoginViewModel
 import cmm.apps.esmorga.view.registration.RegistrationViewModel
 import cmm.apps.esmorga.view.welcome.WelcomeViewModel
@@ -23,8 +24,8 @@ object ViewDIModule {
         viewModel {
             MyEventListViewModel(get())
         }
-        viewModel { (eventId: String) ->
-            EventDetailsViewModel(get(), get(), get(), get(), eventId)
+        viewModel { (event: EventListUiModel) ->
+            EventDetailsViewModel(get(), get(), get(), event)
         }
         viewModel {
             WelcomeViewModel()
