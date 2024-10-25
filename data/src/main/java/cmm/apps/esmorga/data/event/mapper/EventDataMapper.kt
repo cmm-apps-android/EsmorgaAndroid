@@ -20,8 +20,8 @@ fun EventDataModel.toEvent(): Event = Event(
 
 fun List<EventDataModel>.toEventList(): List<Event> = map { edm -> edm.toEvent() }
 
-fun Event.toEventDataModel(): EventDataModel {
-    return EventDataModel(
+fun Event.toEventDataModel(): EventDataModel =
+    EventDataModel(
         dataId = this.id,
         dataName = this.name,
         dataDate = this.date,
@@ -32,4 +32,3 @@ fun Event.toEventDataModel(): EventDataModel {
         dataTags = this.tags,
         dataUserJoined = this.userJoined
     )
-}
