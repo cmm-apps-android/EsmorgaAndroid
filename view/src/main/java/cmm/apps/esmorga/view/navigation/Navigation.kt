@@ -18,6 +18,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextStyle
+import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.view.errors.EsmorgaErrorScreen
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreen
@@ -41,7 +42,7 @@ sealed class Navigation {
     data object EventListScreen : Navigation()
 
     @Serializable
-    data class EventDetailScreen(val event: EventListUiModel) : Navigation()
+    data class EventDetailScreen(val event: Event) : Navigation()
 
     @Serializable
     data object LoginScreen : Navigation()
@@ -82,14 +83,14 @@ internal fun EsmorgaNavHost(navigationController: NavHostController, startDestin
 
 private fun NavGraphBuilder.homeFlow(navigationController: NavHostController) {
     composable<Navigation.EventListScreen>(
-        typeMap = mapOf(typeOf<EventListUiModel>() to serializableType<EventListUiModel>())
+        typeMap = mapOf(typeOf<Event>() to serializableType<Event>())
     ) {
         EventListScreen(onEventClick = { event ->
             navigationController.navigate(Navigation.EventDetailScreen(event))
         })
     }
     composable<Navigation.EventDetailScreen>(
-        typeMap = mapOf(typeOf<EventListUiModel>() to serializableType<EventListUiModel>())
+        typeMap = mapOf(typeOf<Event>() to serializableType<Event>())
     ) { backStackEntry ->
         EventDetailsScreen(
             event = backStackEntry.toRoute<Navigation.EventDetailScreen>().event,
@@ -100,7 +101,7 @@ private fun NavGraphBuilder.homeFlow(navigationController: NavHostController) {
         )
     }
     composable<Navigation.MyEventsScreen>(
-        typeMap = mapOf(typeOf<EventListUiModel>() to serializableType<EventListUiModel>())
+        typeMap = mapOf(typeOf<Event>() to serializableType<Event>())
     ) {
         MyEventListScreen(onEventClick = { event ->
             navigationController.navigate(Navigation.EventDetailScreen(event))

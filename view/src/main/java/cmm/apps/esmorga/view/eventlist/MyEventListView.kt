@@ -30,6 +30,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmm.apps.designsystem.EsmorgaButton
 import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextStyle
+import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.eventlist.MyEventListScreenTestTags.MY_EVENT_LIST_TITLE
@@ -46,7 +47,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Screen
 @Composable
-fun MyEventListScreen(elvm: MyEventListViewModel = koinViewModel(), onEventClick: (event: EventListUiModel) -> Unit, onSignInClick: () -> Unit) {
+fun MyEventListScreen(elvm: MyEventListViewModel = koinViewModel(), onEventClick: (event: Event) -> Unit, onSignInClick: () -> Unit) {
     val uiState: MyEventListUiState by elvm.uiState.collectAsStateWithLifecycle()
 
     val message = stringResource(R.string.snackbar_no_internet)

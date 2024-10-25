@@ -1,11 +1,9 @@
 package cmm.apps.esmorga.view.screenshot.eventList
 
 import androidx.compose.material3.SnackbarHostState
-import cmm.apps.esmorga.domain.event.model.EventType
 import cmm.apps.esmorga.view.eventlist.EventListView
-import cmm.apps.esmorga.view.eventlist.model.EventListUiState
 import cmm.apps.esmorga.view.eventlist.model.EventListUiModel
-import cmm.apps.esmorga.view.eventlist.model.EventUILocation
+import cmm.apps.esmorga.view.eventlist.model.EventListUiState
 import cmm.apps.esmorga.view.screenshot.BaseScreenshotTest
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import org.junit.Test
@@ -32,13 +30,9 @@ class EventListViewScreenshotTest : BaseScreenshotTest() {
         val event = EventListUiModel(
             id = "1",
             imageUrl = "test.png",
-            name = "Card Title",
-            dateFormatted = "Card subtitle 1",
-            location = EventUILocation("Card subtitle 2"),
-            date = "",
-            description = "",
-            type = EventType.FOOD,
-            userJoined = false
+            cardTitle = "Card Title",
+            cardSubtitle1 = "Card subtitle 1",
+            cardSubtitle2 = "Card subtitle 2",
         )
 
         snapshotWithState(loading = false, eventList = listOf(event, event), error = null)

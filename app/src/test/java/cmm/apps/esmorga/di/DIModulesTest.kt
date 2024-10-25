@@ -5,7 +5,6 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import cmm.apps.esmorga.component.mock.EventDataMock
 import cmm.apps.esmorga.data.event.mapper.toEvent
-import cmm.apps.esmorga.view.eventlist.mapper.EventListUiMapper.toEventUi
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -28,7 +27,7 @@ class DIModulesTest {
     fun verifyKoinApp() {
         koinApplication {
             MockProvider.register {
-                EventDataMock.provideEventDataModel("Event Name").toEvent().toEventUi()
+                EventDataMock.provideEventDataModel("Event Name").toEvent()
             }
             androidContext(mockContext)
             modules(AppDIModules.modules)

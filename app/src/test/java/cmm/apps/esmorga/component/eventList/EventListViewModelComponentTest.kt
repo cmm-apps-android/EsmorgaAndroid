@@ -88,6 +88,6 @@ class EventListViewModelComponentTest : KoinTest {
         sut.loadEvents()
 
         val uiState = sut.uiState.value
-        Assert.assertTrue(uiState.eventList[0].name.contains(remoteEventName))
+        Assert.assertTrue(uiState.eventList[0].cardTitle.contains(remoteEventName))
     }
 }

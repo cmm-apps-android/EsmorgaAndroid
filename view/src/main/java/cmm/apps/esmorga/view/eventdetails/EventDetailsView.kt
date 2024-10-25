@@ -32,6 +32,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmm.apps.designsystem.EsmorgaButton
 import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextStyle
+import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
@@ -51,7 +52,7 @@ import org.koin.core.parameter.parametersOf
 @Screen
 @Composable
 fun EventDetailsScreen(
-    event: EventListUiModel,
+    event: Event,
     edvm: EventDetailsViewModel = koinViewModel(parameters = { parametersOf(event) }),
     onBackPressed: () -> Unit,
     onLoginClicked: () -> Unit,

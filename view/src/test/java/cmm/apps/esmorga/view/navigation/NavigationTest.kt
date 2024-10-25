@@ -15,7 +15,6 @@ import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_ANIMATION
 import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_RETRY_BUTTON
 import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_SUBTITLE
 import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_TITLE
-import cmm.apps.esmorga.domain.event.GetEventDetailsUseCase
 import cmm.apps.esmorga.domain.event.GetEventListUseCase
 import cmm.apps.esmorga.domain.event.GetMyEventListUseCase
 import cmm.apps.esmorga.domain.event.JoinEventUseCase
@@ -34,7 +33,6 @@ import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAI
 import cmm.apps.esmorga.view.eventlist.EventListScreenTestTags.EVENT_LIST_EVENT_NAME
 import cmm.apps.esmorga.view.eventlist.EventListScreenTestTags.EVENT_LIST_TITLE
 import cmm.apps.esmorga.view.eventlist.MyEventListScreenTestTags.MY_EVENT_LIST_TITLE
-import cmm.apps.esmorga.view.eventlist.mapper.EventListUiMapper.toEvent
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_EMAIL_INPUT
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_LOGIN_BUTTON
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_PASSWORD_INPUT
@@ -71,11 +69,7 @@ class NavigationTest {
     private lateinit var navController: NavHostController
 
     private val getEventListUseCase = mockk<GetEventListUseCase>(relaxed = true).also { useCase ->
-        coEvery { useCase() } returns EsmorgaResult.success(EventViewMock.provideEventUiList(listOf("event")).map { it.toEvent() })
-    }
-
-    private val getEventDetailsUseCase = mockk<GetEventDetailsUseCase>(relaxed = true).also { useCase ->
-        coEvery { useCase(any()) } returns EsmorgaResult.success(EventViewMock.provideEvent("event"))
+        coEvery { useCase() } returns EsmorgaResult.success(EventViewMock.provideEventList(listOf("event")))
     }
 
     private val performLoginUseCase = mockk<PerformLoginUseCase>(relaxed = true).also { useCase ->
@@ -114,7 +108,6 @@ class NavigationTest {
                 ViewDIModule.module,
                 module {
                     factory<GetEventListUseCase> { getEventListUseCase }
-                    factory<GetEventDetailsUseCase> { getEventDetailsUseCase }
                     factory<PerformLoginUseCase> { performLoginUseCase }
                     factory<PerformRegistrationUserCase> { performRegistrationUserCase }
                     factory<GetSavedUserUseCase> { getSavedUserUseCase }
@@ -240,7 +233,7 @@ class NavigationTest {
         }
         loadKoinModules(module { factory<GetSavedUserUseCase> { getSavedUserUseCaseFailure } })
 
-        setNavigationFromDestination(Navigation.EventDetailScreen(EventViewMock.provideEventUiModel("EventName")))
+        setNavigationFromDestination(Navigation.EventDetailScreen(EventViewMock.provideEvent("EventName")))
 
         composeTestRule.onNodeWithTag(EVENT_DETAILS_EVENT_NAME).assertIsDisplayed()
         composeTestRule.onNodeWithTag(EVENT_DETAIL_PRIMARY_BUTTON, true).performClick()
@@ -254,7 +247,7 @@ class NavigationTest {
         }
         loadKoinModules(module { factory<JoinEventUseCase> { failureJoinEventUseCase } })
 
-        setNavigationFromDestination(Navigation.EventDetailScreen(EventViewMock.provideEventUiModel("EventName")))
+        setNavigationFromDestination(Navigation.EventDetailScreen(EventViewMock.provideEvent("EventName")))
 
         composeTestRule.onNodeWithTag(EVENT_DETAILS_EVENT_NAME).assertIsDisplayed()
         composeTestRule.onNodeWithTag(EVENT_DETAIL_PRIMARY_BUTTON).performClick()
@@ -272,7 +265,7 @@ class NavigationTest {
         }
         loadKoinModules(module { factory<JoinEventUseCase> { failureJoinEventUseCase } })
 
-        setNavigationFromDestination(Navigation.EventDetailScreen(EventViewMock.provideEventUiModel("Event Name")))
+        setNavigationFromDestination(Navigation.EventDetailScreen(EventViewMock.provideEvent("Event Name")))
 
         composeTestRule.onNodeWithTag(EVENT_DETAIL_PRIMARY_BUTTON).performClick()
 

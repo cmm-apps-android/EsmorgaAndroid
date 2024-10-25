@@ -28,6 +28,6 @@ class EventListViewModelTest {
         sut.loadEvents()
 
         val uiState = sut.uiState.value
-        Assert.assertEquals(domainEventName, uiState.eventList[0].name)
+        Assert.assertEquals(domainEventName, uiState.eventList[0].cardTitle)
     }
 }

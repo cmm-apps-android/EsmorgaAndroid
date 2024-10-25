@@ -3,6 +3,7 @@ package cmm.apps.esmorga.view.eventlist
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cmm.apps.esmorga.domain.event.GetMyEventListUseCase
+import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.view.eventlist.mapper.EventListUiMapper.toEventUiList
 import cmm.apps.esmorga.view.eventlist.model.EventListUiModel
@@ -26,17 +27,20 @@ class MyEventListViewModel(private val getMyEventListUseCase: GetMyEventListUseC
     private val _effect: MutableSharedFlow<MyEventListEffect> = MutableSharedFlow(extraBufferCapacity = 2, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val effect: SharedFlow<MyEventListEffect> = _effect.asSharedFlow()
 
+    private lateinit var events: List<Event>
+
     fun loadMyEvents() {
         _uiState.value = MyEventListUiState(loading = true)
         viewModelScope.launch {
             val result = getMyEventListUseCase()
 
             result.onSuccess { myEventList ->
+                events = myEventList
                 if (myEventList.isEmpty()) {
                     _uiState.value = MyEventListUiState(error = MyEventListError.EMPTY_LIST)
                 } else {
                     _uiState.value = MyEventListUiState(
-                        eventList = myEventList.toEventUiList(),
+                        eventList = myEventList.toEventUiList()
                     )
                 }
             }.onFailure { error ->
@@ -52,7 +56,10 @@ class MyEventListViewModel(private val getMyEventListUseCase: GetMyEventListUseC
     }
 
     fun onEventClick(event: EventListUiModel) {
-        _effect.tryEmit(MyEventListEffect.NavigateToEventDetail(event))
+        val eventFound = events.find { it.id == event.id }
+        eventFound?.let {
+            _effect.tryEmit(MyEventListEffect.NavigateToEventDetail(it))
+        }
     }
 
     fun onSignInClick() {

@@ -36,7 +36,7 @@ class MyEventListViewModelTest {
         sut.loadMyEvents()
 
         val uiState = sut.uiState.value
-        Assert.assertEquals(domainEventName, uiState.eventList[0].name)
+        Assert.assertEquals(domainEventName, uiState.eventList[0].cardTitle)
     }
 
     @Test
@@ -87,7 +87,7 @@ class MyEventListViewModelTest {
             sut.loadMyEvents()
 
             val uiState = sut.uiState.value
-            Assert.assertEquals(domainEventName, uiState.eventList[0].name)
+            Assert.assertEquals(domainEventName, uiState.eventList[0].cardTitle)
 
             val effect = awaitItem()
             Assert.assertTrue(effect is MyEventListEffect.ShowNoNetworkPrompt)

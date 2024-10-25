@@ -42,6 +42,7 @@ import cmm.apps.designsystem.EsmorgaButton
 import cmm.apps.designsystem.EsmorgaLinearLoader
 import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextStyle
+import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.eventlist.EventListScreenTestTags.EVENT_LIST_EVENT_NAME
@@ -57,7 +58,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Screen
 @Composable
-fun EventListScreen(elvm: EventListViewModel = koinViewModel(), onEventClick: (event: EventListUiModel) -> Unit) {
+fun EventListScreen(elvm: EventListViewModel = koinViewModel(), onEventClick: (event: Event) -> Unit) {
     val uiState: EventListUiState by elvm.uiState.collectAsStateWithLifecycle()
 
     val message = stringResource(R.string.snackbar_no_internet)
@@ -136,9 +137,11 @@ fun EventListView(uiState: EventListUiState, snackbarHostState: SnackbarHostStat
 
 @Composable
 fun EventListLoading() {
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(horizontal = 16.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp)
+    ) {
         EsmorgaText(text = stringResource(R.string.screen_event_list_loading), style = EsmorgaTextStyle.HEADING_1, modifier = Modifier.padding(vertical = 16.dp))
         EsmorgaLinearLoader(modifier = Modifier.fillMaxWidth())
     }
@@ -146,9 +149,11 @@ fun EventListLoading() {
 
 @Composable
 fun EventListEmpty() {
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(horizontal = 16.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp)
+    ) {
         Image(
             painter = painterResource(id = R.drawable.img_event_list_empty),
             contentDescription = stringResource(id = R.string.screen_event_list_empty_text),
@@ -170,9 +175,11 @@ fun EventListEmpty() {
 
 @Composable
 fun EventListError(onRetryClick: () -> Unit) {
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(horizontal = 16.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp)
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
@@ -225,7 +232,7 @@ fun EventList(events: List<EventListUiModel>, onEventClick: (event: EventListUiM
                         .build(),
                     placeholder = painterResource(R.drawable.img_event_list_empty),
                     error = painterResource(R.drawable.img_event_list_empty),
-                    contentDescription = stringResource(id = R.string.content_description_event_image).format(event.name),
+                    contentDescription = stringResource(id = R.string.content_description_event_image).format(event.cardTitle),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -234,14 +241,14 @@ fun EventList(events: List<EventListUiModel>, onEventClick: (event: EventListUiM
                 )
 
                 EsmorgaText(
-                    text = event.name,
+                    text = event.cardTitle,
                     style = EsmorgaTextStyle.HEADING_2,
                     modifier = Modifier
                         .padding(vertical = 4.dp)
                         .testTag(EVENT_LIST_EVENT_NAME)
                 )
-                EsmorgaText(text = event.dateFormatted, style = EsmorgaTextStyle.BODY_1_ACCENT, modifier = Modifier.padding(vertical = 4.dp))
-                EsmorgaText(text = event.location.name, style = EsmorgaTextStyle.BODY_1_ACCENT, modifier = Modifier.padding(vertical = 4.dp))
+                EsmorgaText(text = event.cardSubtitle1, style = EsmorgaTextStyle.BODY_1_ACCENT, modifier = Modifier.padding(vertical = 4.dp))
+                EsmorgaText(text = event.cardSubtitle2, style = EsmorgaTextStyle.BODY_1_ACCENT, modifier = Modifier.padding(vertical = 4.dp))
             }
         }
     }

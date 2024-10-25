@@ -1,5 +1,7 @@
 package cmm.apps.esmorga.view.eventlist.model
 
+import cmm.apps.esmorga.domain.event.model.Event
+
 data class MyEventListUiState(
     val loading: Boolean = false,
     val eventList: List<EventListUiModel> = emptyList(),
@@ -14,6 +16,6 @@ enum class MyEventListError {
 
 sealed class MyEventListEffect {
     data object ShowNoNetworkPrompt : MyEventListEffect()
-    data class NavigateToEventDetail(val event: EventListUiModel) : MyEventListEffect()
+    data class NavigateToEventDetail(val event: Event) : MyEventListEffect()
     data object NavigateToSignIn : MyEventListEffect()
 }

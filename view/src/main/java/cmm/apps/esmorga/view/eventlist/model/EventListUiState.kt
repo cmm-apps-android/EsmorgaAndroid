@@ -1,6 +1,6 @@
 package cmm.apps.esmorga.view.eventlist.model
 
-import cmm.apps.esmorga.domain.event.model.EventType
+import cmm.apps.esmorga.domain.event.model.Event
 import kotlinx.serialization.Serializable
 
 data class EventListUiState(
@@ -12,25 +12,13 @@ data class EventListUiState(
 @Serializable
 data class EventListUiModel(
     val id: String,
-    val name: String,
-    val date: String,
-    val dateFormatted: String,
-    val description: String,
-    val type: EventType,
-    val imageUrl: String? = null,
-    val location: EventUILocation,
-    val tags: List<String> = listOf(),
-    val userJoined: Boolean
-)
-
-@Serializable
-data class EventUILocation(
-    val name: String,
-    val lat: Double? = null,
-    val long: Double? = null
+    val imageUrl: String?,
+    val cardTitle: String,
+    val cardSubtitle1: String,
+    val cardSubtitle2: String
 )
 
 sealed class EventListEffect {
     data object ShowNoNetworkPrompt : EventListEffect()
-    data class NavigateToEventDetail(val event: EventListUiModel) : EventListEffect()
+    data class NavigateToEventDetail(val event: Event) : EventListEffect()
 }
