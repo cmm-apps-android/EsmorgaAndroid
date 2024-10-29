@@ -34,8 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmm.apps.designsystem.EsmorgaButton
@@ -64,20 +63,9 @@ fun EventListScreen(elvm: EventListViewModel = koinViewModel(), onEventClick: (e
     val message = stringResource(R.string.snackbar_no_internet)
     val snackbarHostState = remember { SnackbarHostState() }
     val localCoroutineScope = rememberCoroutineScope()
-    val lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
-    DisposableEffect(lifecycleOwner) {
-        val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_START) {
-                elvm.loadEvents()
-            }
-        }
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
 
-        lifecycleOwner.lifecycle.addObserver(observer)
-
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
-        }
-    }
+    elvm.observeLifecycleEvents(lifecycle)
     LaunchedEffect(Unit) {
         elvm.effect.collect { eff ->
             when (eff) {
@@ -250,6 +238,16 @@ fun EventList(events: List<EventListUiModel>, onEventClick: (event: EventListUiM
                 EsmorgaText(text = event.cardSubtitle1, style = EsmorgaTextStyle.BODY_1_ACCENT, modifier = Modifier.padding(vertical = 4.dp))
                 EsmorgaText(text = event.cardSubtitle2, style = EsmorgaTextStyle.BODY_1_ACCENT, modifier = Modifier.padding(vertical = 4.dp))
             }
+        }
+    }
+}
+
+@Composable
+fun <viewModel : LifecycleObserver> viewModel.observeLifecycleEvents(lifecycle: Lifecycle) {
+    DisposableEffect(lifecycle) {
+        lifecycle.addObserver(this@observeLifecycleEvents)
+        onDispose {
+            lifecycle.removeObserver(this@observeLifecycleEvents)
         }
     }
 }

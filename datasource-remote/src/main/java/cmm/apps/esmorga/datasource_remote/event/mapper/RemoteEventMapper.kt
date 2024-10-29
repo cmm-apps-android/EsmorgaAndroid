@@ -29,7 +29,7 @@ fun EventRemoteModel.toEventDataModel(): EventDataModel {
     return EventDataModel(
         dataId = this.remoteId,
         dataName = this.remoteName,
-        dataDate = parsedDate,
+        dataDate = parsedDate.toInstant().toEpochMilli(),
         dataDescription = this.remoteDescription,
         dataType = parsedType,
         dataImageUrl = this.remoteImageUrl,

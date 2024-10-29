@@ -1,13 +1,12 @@
 package cmm.apps.esmorga.data.event.model
 
 import cmm.apps.esmorga.domain.event.model.EventType
-import java.time.ZonedDateTime
 
 
 data class EventDataModel(
     val dataId: String,
     val dataName: String,
-    val dataDate: ZonedDateTime,
+    val dataDate: Long,
     val dataDescription: String,
     val dataType: EventType,
     val dataImageUrl: String? = null,

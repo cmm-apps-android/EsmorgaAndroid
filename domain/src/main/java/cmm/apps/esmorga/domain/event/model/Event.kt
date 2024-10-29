@@ -1,6 +1,5 @@
 package cmm.apps.esmorga.domain.event.model
 
-import java.time.ZonedDateTime
 import kotlinx.serialization.Serializable
 
 enum class EventType {
@@ -11,7 +10,7 @@ enum class EventType {
 data class Event(
     val id: String,
     val name: String,
-    @Serializable(KZonedDateTimeSerializer::class) val date: ZonedDateTime,
+    val date: Long,
     val description: String,
     val type: EventType,
     val imageUrl: String? = null,

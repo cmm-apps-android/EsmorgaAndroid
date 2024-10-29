@@ -1,5 +1,7 @@
 package cmm.apps.esmorga.view.eventlist
 
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cmm.apps.esmorga.domain.event.GetMyEventListUseCase
@@ -19,7 +21,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class MyEventListViewModel(private val getMyEventListUseCase: GetMyEventListUseCase) : ViewModel() {
+class MyEventListViewModel(private val getMyEventListUseCase: GetMyEventListUseCase) : ViewModel(), DefaultLifecycleObserver {
 
     private val _uiState = MutableStateFlow(MyEventListUiState())
     val uiState: StateFlow<MyEventListUiState> = _uiState.asStateFlow()
@@ -27,7 +29,12 @@ class MyEventListViewModel(private val getMyEventListUseCase: GetMyEventListUseC
     private val _effect: MutableSharedFlow<MyEventListEffect> = MutableSharedFlow(extraBufferCapacity = 2, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val effect: SharedFlow<MyEventListEffect> = _effect.asSharedFlow()
 
-    private lateinit var events: List<Event>
+    private var events: List<Event> = emptyList()
+
+    override fun onStart(owner: LifecycleOwner) {
+        super.onStart(owner)
+        loadMyEvents()
+    }
 
     fun loadMyEvents() {
         _uiState.value = MyEventListUiState(loading = true)
