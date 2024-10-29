@@ -12,7 +12,7 @@ object EventViewMock {
     fun provideEvent(name: String, userJoined: Boolean = false): Event = Event(
         id = "$name-${System.currentTimeMillis()}",
         name = name,
-        date = 9834758L,
+        date = System.currentTimeMillis(),
         description = "description",
         type = EventType.SPORT,
         location = EventLocation("Location"),

@@ -13,7 +13,7 @@ object EventDomainMock {
     fun provideEvent(name: String): Event = Event(
         id = "$name-${System.currentTimeMillis()}",
         name = name,
-        date = ZonedDateTime.now(),
+        date = System.currentTimeMillis(),
         description = "description",
         type = EventType.SPORT,
         location = EventLocation("Location"),
