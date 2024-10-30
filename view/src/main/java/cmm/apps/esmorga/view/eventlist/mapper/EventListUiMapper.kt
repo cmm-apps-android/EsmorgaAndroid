@@ -11,7 +11,7 @@ import java.util.TimeZone
 object EventListUiMapper {
 
     fun formatDate(date: Long): String {
-        val zonedDateTime: ZonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), ZoneId.of(TimeZone.getDefault().toZoneId().id))
+        val zonedDateTime: ZonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), TimeZone.getDefault().toZoneId())
         return zonedDateTime.format(DateTimeFormatter.ofPattern("d' de 'MMMM' a las 'HH:mm").withZone(TimeZone.getDefault().toZoneId()))
     }
 

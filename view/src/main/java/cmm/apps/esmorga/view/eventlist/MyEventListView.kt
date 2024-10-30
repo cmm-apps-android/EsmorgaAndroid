@@ -34,6 +34,7 @@ import cmm.apps.esmorga.view.eventlist.model.EventListUiModel
 import cmm.apps.esmorga.view.eventlist.model.MyEventListEffect
 import cmm.apps.esmorga.view.eventlist.model.MyEventListError
 import cmm.apps.esmorga.view.eventlist.model.MyEventListUiState
+import cmm.apps.esmorga.view.extensions.observeLifecycleEvents
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
