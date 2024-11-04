@@ -32,11 +32,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmm.apps.designsystem.EsmorgaButton
 import cmm.apps.designsystem.EsmorgaLinearLoader
 import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextStyle
+import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.eventlist.EventListScreenTestTags.EVENT_LIST_EVENT_NAME
@@ -44,6 +46,7 @@ import cmm.apps.esmorga.view.eventlist.EventListScreenTestTags.EVENT_LIST_TITLE
 import cmm.apps.esmorga.view.eventlist.model.EventListEffect
 import cmm.apps.esmorga.view.eventlist.model.EventListUiModel
 import cmm.apps.esmorga.view.eventlist.model.EventListUiState
+import cmm.apps.esmorga.view.extensions.observeLifecycleEvents
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -52,12 +55,15 @@ import org.koin.androidx.compose.koinViewModel
 
 @Screen
 @Composable
-fun EventListScreen(elvm: EventListViewModel = koinViewModel(), onEventClick: (eventId: String) -> Unit) {
+fun EventListScreen(elvm: EventListViewModel = koinViewModel(), onEventClick: (event: Event) -> Unit) {
     val uiState: EventListUiState by elvm.uiState.collectAsStateWithLifecycle()
 
     val message = stringResource(R.string.snackbar_no_internet)
     val snackbarHostState = remember { SnackbarHostState() }
     val localCoroutineScope = rememberCoroutineScope()
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+
+    elvm.observeLifecycleEvents(lifecycle)
     LaunchedEffect(Unit) {
         elvm.effect.collect { eff ->
             when (eff) {
@@ -67,7 +73,7 @@ fun EventListScreen(elvm: EventListViewModel = koinViewModel(), onEventClick: (e
                     }
                 }
 
-                is EventListEffect.NavigateToEventDetail -> onEventClick(eff.eventId)
+                is EventListEffect.NavigateToEventDetail -> onEventClick(eff.event)
             }
         }
     }
@@ -83,7 +89,7 @@ fun EventListScreen(elvm: EventListViewModel = koinViewModel(), onEventClick: (e
 }
 
 @Composable
-fun EventListView(uiState: EventListUiState, snackbarHostState: SnackbarHostState, onRetryClick: () -> Unit, onEventClick: (eventId: String) -> Unit) {
+fun EventListView(uiState: EventListUiState, snackbarHostState: SnackbarHostState, onRetryClick: () -> Unit, onEventClick: (event: EventListUiModel) -> Unit) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         snackbarHost = { SnackbarHost(snackbarHostState) }
@@ -117,7 +123,11 @@ fun EventListView(uiState: EventListUiState, snackbarHostState: SnackbarHostStat
 
 @Composable
 fun EventListLoading() {
-    Column(modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp)
+    ) {
         EsmorgaText(text = stringResource(R.string.screen_event_list_loading), style = EsmorgaTextStyle.HEADING_1, modifier = Modifier.padding(vertical = 16.dp))
         EsmorgaLinearLoader(modifier = Modifier.fillMaxWidth())
     }
@@ -125,7 +135,11 @@ fun EventListLoading() {
 
 @Composable
 fun EventListEmpty() {
-    Column(modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp)
+    ) {
         Image(
             painter = painterResource(id = R.drawable.img_event_list_empty),
             contentDescription = stringResource(id = R.string.screen_event_list_empty_text),
@@ -147,7 +161,11 @@ fun EventListEmpty() {
 
 @Composable
 fun EventListError(onRetryClick: () -> Unit) {
-    Column(modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp)
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
@@ -183,7 +201,7 @@ fun EventListError(onRetryClick: () -> Unit) {
 }
 
 @Composable
-fun EventList(events: List<EventListUiModel>, onEventClick: (eventId: String) -> Unit, modifier: Modifier = Modifier) {
+fun EventList(events: List<EventListUiModel>, onEventClick: (event: EventListUiModel) -> Unit, modifier: Modifier = Modifier) {
     LazyColumn {
         items(events.size) { pos ->
             val event = events[pos]
@@ -191,7 +209,7 @@ fun EventList(events: List<EventListUiModel>, onEventClick: (eventId: String) ->
             Column(modifier = modifier
                 .padding(bottom = 32.dp)
                 .clickable {
-                    onEventClick(event.id)
+                    onEventClick(event)
                 }) {
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)

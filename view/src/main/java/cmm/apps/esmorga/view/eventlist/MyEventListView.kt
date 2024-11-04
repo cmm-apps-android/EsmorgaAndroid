@@ -21,16 +21,20 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmm.apps.designsystem.EsmorgaButton
 import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextStyle
+import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.eventlist.MyEventListScreenTestTags.MY_EVENT_LIST_TITLE
+import cmm.apps.esmorga.view.eventlist.model.EventListUiModel
 import cmm.apps.esmorga.view.eventlist.model.MyEventListEffect
 import cmm.apps.esmorga.view.eventlist.model.MyEventListError
 import cmm.apps.esmorga.view.eventlist.model.MyEventListUiState
+import cmm.apps.esmorga.view.extensions.observeLifecycleEvents
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
@@ -40,12 +44,15 @@ import org.koin.androidx.compose.koinViewModel
 
 @Screen
 @Composable
-fun MyEventListScreen(elvm: MyEventListViewModel = koinViewModel(), onEventClick: (eventId: String) -> Unit, onSignInClick: () -> Unit) {
+fun MyEventListScreen(elvm: MyEventListViewModel = koinViewModel(), onEventClick: (event: Event) -> Unit, onSignInClick: () -> Unit) {
     val uiState: MyEventListUiState by elvm.uiState.collectAsStateWithLifecycle()
 
     val message = stringResource(R.string.snackbar_no_internet)
     val snackbarHostState = remember { SnackbarHostState() }
     val localCoroutineScope = rememberCoroutineScope()
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+
+    elvm.observeLifecycleEvents(lifecycle)
     LaunchedEffect(Unit) {
         elvm.effect.collect { eff ->
             when (eff) {
@@ -55,7 +62,7 @@ fun MyEventListScreen(elvm: MyEventListViewModel = koinViewModel(), onEventClick
                     }
                 }
 
-                is MyEventListEffect.NavigateToEventDetail -> onEventClick(eff.eventId)
+                is MyEventListEffect.NavigateToEventDetail -> onEventClick(eff.event)
                 is MyEventListEffect.NavigateToSignIn -> onSignInClick()
             }
         }
@@ -77,7 +84,7 @@ fun MyEventListView(
     uiState: MyEventListUiState,
     snackbarHostState: SnackbarHostState,
     onSignInClick: () -> Unit,
-    onEventClick: (eventId: String) -> Unit,
+    onEventClick: (event: EventListUiModel) -> Unit,
     onRetryClick: () -> Unit
 ) {
     Scaffold(
@@ -101,7 +108,11 @@ fun MyEventListView(
             } else {
                 when (uiState.error) {
                     MyEventListError.EMPTY_LIST -> MyEventsEmptyView()
-                    MyEventListError.NOT_LOGGED_IN -> MyEventGuestError(stringResource(R.string.unauthenticated_error_title), stringResource(R.string.button_login)) { onSignInClick() }
+                    MyEventListError.NOT_LOGGED_IN -> MyEventGuestError(
+                        stringResource(R.string.unauthenticated_error_title),
+                        stringResource(R.string.button_login)
+                    ) { onSignInClick() }
+
                     MyEventListError.UNKNOWN -> MyEventGuestError(stringResource(R.string.default_error_title), stringResource(R.string.button_retry)) { onRetryClick() }
                     null -> EventList(uiState.eventList, onEventClick, modifier = Modifier.padding(horizontal = 16.dp))
                 }

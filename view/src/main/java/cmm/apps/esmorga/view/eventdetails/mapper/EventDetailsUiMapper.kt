@@ -7,11 +7,11 @@ import cmm.apps.esmorga.view.eventlist.mapper.EventListUiMapper.formatDate
 
 object EventDetailsUiMapper {
 
-    fun Event.toEventUiDetails(isAuthenticated: Boolean, userJoined: Boolean): EventDetailsUiState = EventDetailsUiState(
+    fun Event.toEventUiDetails(isAuthenticated: Boolean, userJoined: Boolean) = EventDetailsUiState(
         id = this.id,
         image = this.imageUrl,
         title = this.name,
-        subtitle = formatDate(date),
+        subtitle = formatDate(this.date),
         description = this.description,
         locationName = this.location.name,
         locationLat = this.location.lat,

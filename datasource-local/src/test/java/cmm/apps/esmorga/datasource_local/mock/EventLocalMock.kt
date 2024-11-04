@@ -12,7 +12,7 @@ object EventLocalMock {
     fun provideEvent(name: String, localUserJoined: Boolean = false): EventLocalModel = EventLocalModel(
         localId = "$name-${System.currentTimeMillis()}",
         localName = name,
-        localDate = ZonedDateTime.now(),
+        localDate = System.currentTimeMillis(),
         localDescription = "Description",
         localType = EventType.SPORT.name,
         localLocationName = "Location",

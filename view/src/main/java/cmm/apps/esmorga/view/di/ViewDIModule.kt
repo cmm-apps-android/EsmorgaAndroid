@@ -1,5 +1,6 @@
 package cmm.apps.esmorga.view.di
 
+import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.view.MainViewModel
 import cmm.apps.esmorga.view.eventdetails.EventDetailsViewModel
 import cmm.apps.esmorga.view.eventlist.EventListViewModel
@@ -23,8 +24,8 @@ object ViewDIModule {
         viewModel {
             MyEventListViewModel(get())
         }
-        viewModel { (eventId: String) ->
-            EventDetailsViewModel(get(), get(), get(), get(), eventId)
+        viewModel { (event: Event) ->
+            EventDetailsViewModel(get(), get(), get(), event)
         }
         viewModel {
             WelcomeViewModel()

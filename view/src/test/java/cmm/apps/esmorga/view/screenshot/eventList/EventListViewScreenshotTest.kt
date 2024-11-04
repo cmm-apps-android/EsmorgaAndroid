@@ -2,8 +2,8 @@ package cmm.apps.esmorga.view.screenshot.eventList
 
 import androidx.compose.material3.SnackbarHostState
 import cmm.apps.esmorga.view.eventlist.EventListView
-import cmm.apps.esmorga.view.eventlist.model.EventListUiState
 import cmm.apps.esmorga.view.eventlist.model.EventListUiModel
+import cmm.apps.esmorga.view.eventlist.model.EventListUiState
 import cmm.apps.esmorga.view.screenshot.BaseScreenshotTest
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import org.junit.Test

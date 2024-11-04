@@ -3,7 +3,6 @@ package cmm.apps.esmorga.view.viewmodel.mock
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.domain.event.model.EventLocation
 import cmm.apps.esmorga.domain.event.model.EventType
-import java.time.ZonedDateTime
 
 
 object EventViewMock {
@@ -13,7 +12,7 @@ object EventViewMock {
     fun provideEvent(name: String, userJoined: Boolean = false): Event = Event(
         id = "$name-${System.currentTimeMillis()}",
         name = name,
-        date = ZonedDateTime.now(),
+        date = System.currentTimeMillis(),
         description = "description",
         type = EventType.SPORT,
         location = EventLocation("Location"),

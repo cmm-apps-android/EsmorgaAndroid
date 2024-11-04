@@ -13,7 +13,7 @@ object EventDataMock {
     fun provideEventDataModel(name: String): EventDataModel = EventDataModel(
         dataId = "$name-${System.currentTimeMillis()}",
         dataName = name,
-        dataDate = ZonedDateTime.now(),
+        dataDate = System.currentTimeMillis(),
         dataDescription = "description",
         dataType = EventType.SPORT,
         dataLocation = EventLocationDataModel("Location"),

@@ -15,7 +15,6 @@ import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_ANIMATION
 import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_RETRY_BUTTON
 import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_SUBTITLE
 import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_TITLE
-import cmm.apps.esmorga.domain.event.GetEventDetailsUseCase
 import cmm.apps.esmorga.domain.event.GetEventListUseCase
 import cmm.apps.esmorga.domain.event.GetMyEventListUseCase
 import cmm.apps.esmorga.domain.event.JoinEventUseCase
@@ -73,10 +72,6 @@ class NavigationTest {
         coEvery { useCase() } returns EsmorgaResult.success(EventViewMock.provideEventList(listOf("event")))
     }
 
-    private val getEventDetailsUseCase = mockk<GetEventDetailsUseCase>(relaxed = true).also { useCase ->
-        coEvery { useCase(any()) } returns EsmorgaResult.success(EventViewMock.provideEvent("event"))
-    }
-
     private val performLoginUseCase = mockk<PerformLoginUseCase>(relaxed = true).also { useCase ->
         coEvery { useCase(any(), any()) } returns EsmorgaResult.success(LoginViewMock.provideUser())
     }
@@ -113,7 +108,6 @@ class NavigationTest {
                 ViewDIModule.module,
                 module {
                     factory<GetEventListUseCase> { getEventListUseCase }
-                    factory<GetEventDetailsUseCase> { getEventDetailsUseCase }
                     factory<PerformLoginUseCase> { performLoginUseCase }
                     factory<PerformRegistrationUserCase> { performRegistrationUserCase }
                     factory<GetSavedUserUseCase> { getSavedUserUseCase }
@@ -239,7 +233,7 @@ class NavigationTest {
         }
         loadKoinModules(module { factory<GetSavedUserUseCase> { getSavedUserUseCaseFailure } })
 
-        setNavigationFromDestination(Navigation.EventDetailScreen("1"))
+        setNavigationFromDestination(Navigation.EventDetailScreen(EventViewMock.provideEvent("EventName")))
 
         composeTestRule.onNodeWithTag(EVENT_DETAILS_EVENT_NAME).assertIsDisplayed()
         composeTestRule.onNodeWithTag(EVENT_DETAIL_PRIMARY_BUTTON, true).performClick()
@@ -253,7 +247,7 @@ class NavigationTest {
         }
         loadKoinModules(module { factory<JoinEventUseCase> { failureJoinEventUseCase } })
 
-        setNavigationFromDestination(Navigation.EventDetailScreen("1"))
+        setNavigationFromDestination(Navigation.EventDetailScreen(EventViewMock.provideEvent("EventName")))
 
         composeTestRule.onNodeWithTag(EVENT_DETAILS_EVENT_NAME).assertIsDisplayed()
         composeTestRule.onNodeWithTag(EVENT_DETAIL_PRIMARY_BUTTON).performClick()
@@ -271,7 +265,7 @@ class NavigationTest {
         }
         loadKoinModules(module { factory<JoinEventUseCase> { failureJoinEventUseCase } })
 
-        setNavigationFromDestination(Navigation.EventDetailScreen("1"))
+        setNavigationFromDestination(Navigation.EventDetailScreen(EventViewMock.provideEvent("Event Name")))
 
         composeTestRule.onNodeWithTag(EVENT_DETAIL_PRIMARY_BUTTON).performClick()
 

@@ -18,18 +18,20 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextStyle
+import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.view.errors.EsmorgaErrorScreen
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreen
 import cmm.apps.esmorga.view.eventlist.EventListScreen
 import cmm.apps.esmorga.view.eventlist.MyEventListScreen
+import cmm.apps.esmorga.view.eventlist.model.EventListUiModel
 import cmm.apps.esmorga.view.login.LoginScreen
 import cmm.apps.esmorga.view.navigation.HomeScreenTestTags.PROFILE__TITLE
 import cmm.apps.esmorga.view.registration.RegistrationScreen
 import cmm.apps.esmorga.view.welcome.WelcomeScreen
+import kotlin.reflect.typeOf
 import kotlinx.serialization.Serializable
 import org.jetbrains.annotations.VisibleForTesting
-import kotlin.reflect.typeOf
 
 sealed class Navigation {
 
@@ -40,7 +42,7 @@ sealed class Navigation {
     data object EventListScreen : Navigation()
 
     @Serializable
-    data class EventDetailScreen(val eventId: String) : Navigation()
+    data class EventDetailScreen(val event: Event) : Navigation()
 
     @Serializable
     data object LoginScreen : Navigation()
@@ -80,23 +82,29 @@ internal fun EsmorgaNavHost(navigationController: NavHostController, startDestin
 }
 
 private fun NavGraphBuilder.homeFlow(navigationController: NavHostController) {
-    composable<Navigation.EventListScreen> {
-        EventListScreen(onEventClick = { eventId ->
-            navigationController.navigate(Navigation.EventDetailScreen(eventId))
+    composable<Navigation.EventListScreen>(
+        typeMap = mapOf(typeOf<Event>() to serializableType<Event>())
+    ) {
+        EventListScreen(onEventClick = { event ->
+            navigationController.navigate(Navigation.EventDetailScreen(event))
         })
     }
-    composable<Navigation.EventDetailScreen> { backStackEntry ->
+    composable<Navigation.EventDetailScreen>(
+        typeMap = mapOf(typeOf<Event>() to serializableType<Event>())
+    ) { backStackEntry ->
         EventDetailsScreen(
-            eventId = backStackEntry.toRoute<Navigation.EventDetailScreen>().eventId,
+            event = backStackEntry.toRoute<Navigation.EventDetailScreen>().event,
             onBackPressed = { navigationController.popBackStack() },
             onLoginClicked = { navigationController.navigate(Navigation.LoginScreen) },
             onJoinEventError = { navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = it)) },
             onNoNetworkError = { navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = it)) }
         )
     }
-    composable<Navigation.MyEventsScreen> {
-        MyEventListScreen(onEventClick = { eventId ->
-            navigationController.navigate(Navigation.EventDetailScreen(eventId))
+    composable<Navigation.MyEventsScreen>(
+        typeMap = mapOf(typeOf<Event>() to serializableType<Event>())
+    ) {
+        MyEventListScreen(onEventClick = { event ->
+            navigationController.navigate(Navigation.EventDetailScreen(event))
         }, onSignInClick = {
             navigationController.navigate(Navigation.LoginScreen)
         })

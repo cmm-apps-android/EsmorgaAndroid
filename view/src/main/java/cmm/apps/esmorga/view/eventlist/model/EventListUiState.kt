@@ -1,5 +1,7 @@
 package cmm.apps.esmorga.view.eventlist.model
 
+import cmm.apps.esmorga.domain.event.model.Event
+
 data class EventListUiState(
     val loading: Boolean = false,
     val eventList: List<EventListUiModel> = emptyList(),
@@ -16,5 +18,5 @@ data class EventListUiModel(
 
 sealed class EventListEffect {
     data object ShowNoNetworkPrompt : EventListEffect()
-    data class NavigateToEventDetail(val eventId: String) : EventListEffect()
+    data class NavigateToEventDetail(val event: Event) : EventListEffect()
 }
