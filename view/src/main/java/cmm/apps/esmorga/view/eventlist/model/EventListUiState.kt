@@ -1,7 +1,6 @@
 package cmm.apps.esmorga.view.eventlist.model
 
 import cmm.apps.esmorga.domain.event.model.Event
-import kotlinx.serialization.Serializable
 
 data class EventListUiState(
     val loading: Boolean = false,
@@ -9,7 +8,6 @@ data class EventListUiState(
     val error: String? = null
 )
 
-@Serializable
 data class EventListUiModel(
     val id: String,
     val imageUrl: String?,
