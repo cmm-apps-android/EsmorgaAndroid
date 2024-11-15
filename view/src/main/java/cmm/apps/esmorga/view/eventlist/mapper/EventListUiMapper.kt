@@ -2,8 +2,9 @@ package cmm.apps.esmorga.view.eventlist.mapper
 
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.view.eventlist.model.EventListUiModel
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 import java.time.Instant
-import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.TimeZone
@@ -19,7 +20,7 @@ object EventListUiMapper {
 
         return EventListUiModel(
             id = this.id,
-            imageUrl = this.imageUrl,
+            imageUrl = this.imageUrl?.let { URLDecoder.decode(it, StandardCharsets.UTF_8.toString()) },
             cardTitle = this.name,
             cardSubtitle1 = formatDate(this.date),
             cardSubtitle2 = this.location.name
