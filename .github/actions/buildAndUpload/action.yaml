@@ -95,7 +95,7 @@ runs:
       if: ${{ inputs.Build-ENVL }} == "qa"
       shell: bash
       run: |
-        echo ${{steps.otashare_file_url.outputs.*}}
+        echo ${{steps.otashare_file_url.outputs.stdout}}
 
         curl -L \
         -X POST \
