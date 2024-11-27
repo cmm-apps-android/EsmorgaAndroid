@@ -77,18 +77,23 @@ runs:
         BuildENVL="$(echo ${{ inputs.Build-ENVL }} | tr a-z A-Z )"
         buildType="$BuildENVL"
         name="Esmorga [$BuildENVL]"
-        
-        curl -vvv -F "buiFile=@${file}" \
-            -F "buiName=${name}" \
-            -F "buiVersion=${versionName}" \
-            -F "buiBuildNum=${versionCode}" \
-            -F "buiBuildType=${buildType}" \
-            -F "buiTemplate=0" \
-            -F "buiHash=${buildHash}" \
-            -F "buiVisibleClient=${visibleClient}" \
-            -F "buiChangeLog=none" \
-            -F "buiUser=${{ inputs.Build-USER }}" -F "buiPassword=${{ inputs.Build-PASSWORD }}" \
-            "https://otashare-api.mobgen.com/v1/builds/registernewbuild/${project_id}/${api_key}/${api_key_build}"
+        function main
+        {
+          curl -vvv -F "buiFile=@${file}" \
+              -F "buiName=${name}" \
+              -F "buiVersion=${versionName}" \
+              -F "buiBuildNum=${versionCode}" \
+              -F "buiBuildType=${buildType}" \
+              -F "buiTemplate=0" \
+              -F "buiHash=${buildHash}" \
+              -F "buiVisibleClient=${visibleClient}" \
+              -F "buiChangeLog=none" \
+              -F "buiUser=${{ inputs.Build-USER }}" -F "buiPassword=${{ inputs.Build-PASSWORD }}" \
+              "https://otashare-api.mobgen.com/v1/builds/registernewbuild/${project_id}/${api_key}/${api_key_build}"
+        }
+        OUT=$(main)
+        echo "$OUT" | grep https
+         
     - name: Trigger Workflow
       env:
         github-token: ${{ inputs.E2E-Github-Token }}
