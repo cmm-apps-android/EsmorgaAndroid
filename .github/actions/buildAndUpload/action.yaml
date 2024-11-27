@@ -95,8 +95,8 @@ runs:
       if: ${{ inputs.Build-ENVL }} == "qa"
       shell: bash
       run: |
-        echo ${{steps.otashare_file_url.outputs}}
-        
+        echo ${{steps.otashare_file_url.outputs.*}}
+
         curl -L \
         -X POST \
         -H "Accept: application/vnd.github+json" \
