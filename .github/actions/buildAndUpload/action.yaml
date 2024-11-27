@@ -89,8 +89,6 @@ runs:
             -F "buiUser=${{ inputs.Build-USER }}" -F "buiPassword=${{ inputs.Build-PASSWORD }}" \
             "https://otashare-api.mobgen.com/v1/builds/registernewbuild/${project_id}/${api_key}/${api_key_build}"
     - name: Trigger Workflow
-      env:
-        github-token: ${{ inputs.E2E-Github-Token }}
       uses: actions/github-script@v6
       if: ${{ inputs.Build-ENVL }} == "qa"
       with:
@@ -100,4 +98,8 @@ runs:
               repo: 'E2E-APP-Tests',
               workflow_id: 'RunTest.yml',
               ref: 'main',
+              github-token: '${{ inputs.E2E-Github-Token }}',
             })
+#            env:
+#              github-token: ${{ inputs.E2E-Github-Token }}
+                    
