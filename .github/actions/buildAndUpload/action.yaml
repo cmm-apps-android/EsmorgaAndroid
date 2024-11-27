@@ -90,6 +90,8 @@ runs:
             "https://otashare-api.mobgen.com/v1/builds/registernewbuild/${project_id}/${api_key}/${api_key_build}"
     - name: Trigger Workflow
       uses: actions/github-script@v6
+      env:
+        github-token: ${{ inputs.E2E-Github-Token }}
       if: ${{ inputs.Build-ENVL }} == "qa"
       with:
         script: |
@@ -98,8 +100,10 @@ runs:
               repo: 'E2E-APP-Tests',
               workflow_id: 'RunTest.yml',
               ref: 'main',
-              github-token: '${{ inputs.E2E-Github-Token }}',
+              inputs: {
+                "build_url":"https://otashare.mobgen.com/build/download/mj1hofv442fk",
+                "OS":"android",
+                
+              },
             })
-#            env:
-#              github-token: ${{ inputs.E2E-Github-Token }}
                     
