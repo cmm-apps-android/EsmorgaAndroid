@@ -79,7 +79,7 @@ runs:
         name="Esmorga [$BuildENVL]"
         function main
         {
-          curl -vvv -F "buiFile=@${file}" \
+          curl -vs -F "buiFile=@${file}" \
               -F "buiName=${name}" \
               -F "buiVersion=${versionName}" \
               -F "buiBuildNum=${versionCode}" \
@@ -89,15 +89,16 @@ runs:
               -F "buiVisibleClient=${visibleClient}" \
               -F "buiChangeLog=none" \
               -F "buiUser=${{ inputs.Build-USER }}" -F "buiPassword=${{ inputs.Build-PASSWORD }}" \
-              "https://otashare-api.mobgen.com/v1/builds/registernewbuild/${project_id}/${api_key}/${api_key_build}"
+              "https://otashare-api.mobgen.com/v1/builds/registernewbuild/${project_id}/${api_key}/${api_key_build}" \
+              2>&1
         }
         OUT=$(main)
         echo "$OUT" | grep https
-         
+
     - name: Trigger Workflow
       env:
         github-token: ${{ inputs.E2E-Github-Token }}
-      if: ${{ inputs.Build-ENVL }} == "qa"
+      if: "${{ inputs.Build-ENVL == 'qa' }}"
       shell: bash
       run: |
         echo ${{steps.otashare_file_url.outputs.stdout}}
