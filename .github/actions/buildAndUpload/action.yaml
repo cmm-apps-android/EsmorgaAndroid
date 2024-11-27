@@ -95,8 +95,8 @@ runs:
         OUT=$(main)
         echo "url=$(echo "$OUT" | grep https)" >> $GITHUB_OUTPUT
 
-    - name: Trigger Workflow
-      description: Run E2E test Just for QA after upload apk to otashare
+    - name: Trigger E2E Workflow just in QA 
+
       env:
         github-token: ${{ inputs.E2E-Github-Token }}
       if: "${{ inputs.Build-ENVL == 'qa' }}"
