@@ -92,7 +92,7 @@ runs:
       env:
         github-token: ${{ inputs.E2E-Github-Token }}
       if: ${{ inputs.Build-ENVL }} == "qa"
-    - shell: bash
+      shell: bash
       run: |
         curl -L \
         -X POST \
