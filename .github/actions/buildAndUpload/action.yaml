@@ -28,6 +28,9 @@ inputs:
   Build-STORE-PASSWORD:
     description: secrets.BUILD_STORE_PASSWORD
     required: true
+  E2E-Github-Token:
+    description: secrets.E2E_Github_Token
+    required: true
 
 runs:
   using: "composite"
@@ -86,7 +89,10 @@ runs:
             -F "buiUser=${{ inputs.Build-USER }}" -F "buiPassword=${{ inputs.Build-PASSWORD }}" \
             "https://otashare-api.mobgen.com/v1/builds/registernewbuild/${project_id}/${api_key}/${api_key_build}"
     - name: Trigger Workflow
+      env:
+        github-token: ${{ inputs.E2E-Github-Token }}
       uses: actions/github-script@v6
+      if: ${{ inputs.Build-ENVL }} == "qa"
       with:
         script: |
             github.rest.actions.createWorkflowDispatch({
