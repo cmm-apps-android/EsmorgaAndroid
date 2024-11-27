@@ -93,7 +93,7 @@ runs:
               2>&1
         }
         OUT=$(main)
-        echo "$OUT" | grep https
+        echo "url=$(echo "$OUT" | grep https)" >> $GITHUB_OUTPUT
 
     - name: Trigger Workflow
       env:
@@ -101,7 +101,7 @@ runs:
       if: "${{ inputs.Build-ENVL == 'qa' }}"
       shell: bash
       run: |
-        echo ${{steps.otashare_file_url.outputs.stdout}}
+        echo ${{steps.otashare_file_url.outputs.url}}
 
         curl -L \
         -X POST \
