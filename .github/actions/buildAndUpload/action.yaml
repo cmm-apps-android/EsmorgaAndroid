@@ -85,3 +85,13 @@ runs:
             -F "buiChangeLog=none" \
             -F "buiUser=${{ inputs.Build-USER }}" -F "buiPassword=${{ inputs.Build-PASSWORD }}" \
             "https://otashare-api.mobgen.com/v1/builds/registernewbuild/${project_id}/${api_key}/${api_key_build}"
+    - name: Trigger Workflow
+      uses: actions/github-script@v6
+      with:
+        script: |
+            github.rest.actions.createWorkflowDispatch({
+              owner: 'Esmorga-E2E',
+              repo: 'E2E-APP-Tests',
+              workflow_id: 'RunTest.yml',
+              ref: 'main',
+            })
