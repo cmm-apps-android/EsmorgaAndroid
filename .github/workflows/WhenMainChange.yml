@@ -31,3 +31,4 @@ jobs:
           Build-KEY-ALIAS: ${{ secrets.BUILD_KEY_ALIAS }}
           Build-KEY-PASSWORD: ${{ secrets.BUILD_KEY_PASSWORD }}
           Build-STORE-PASSWORD: ${{ secrets.BUILD_STORE_PASSWORD }}
+          E2E-Github-Token: ${{secrets.E2E_Github_Token}}

@@ -28,6 +28,9 @@ inputs:
   Build-STORE-PASSWORD:
     description: secrets.BUILD_STORE_PASSWORD
     required: true
+  E2E-Github-Token:
+    description: secrets.E2E_Github_Token
+    required: true
 
 runs:
   using: "composite"
@@ -55,6 +58,7 @@ runs:
         BUILD_STORE_PASSWORD: ${{ inputs.Build-STORE-PASSWORD }}
       run: ./gradlew :app:assemble${{ inputs.Build-ENVL }}Release
     - shell: bash
+      id: otashare_file_url 
       run: |
         
         rootDir="./"
@@ -73,15 +77,38 @@ runs:
         BuildENVL="$(echo ${{ inputs.Build-ENVL }} | tr a-z A-Z )"
         buildType="$BuildENVL"
         name="Esmorga [$BuildENVL]"
-        
-        curl -vvv -F "buiFile=@${file}" \
-            -F "buiName=${name}" \
-            -F "buiVersion=${versionName}" \
-            -F "buiBuildNum=${versionCode}" \
-            -F "buiBuildType=${buildType}" \
-            -F "buiTemplate=0" \
-            -F "buiHash=${buildHash}" \
-            -F "buiVisibleClient=${visibleClient}" \
-            -F "buiChangeLog=none" \
-            -F "buiUser=${{ inputs.Build-USER }}" -F "buiPassword=${{ inputs.Build-PASSWORD }}" \
-            "https://otashare-api.mobgen.com/v1/builds/registernewbuild/${project_id}/${api_key}/${api_key_build}"
+        function main
+        {
+          curl -vs -F "buiFile=@${file}" \
+              -F "buiName=${name}" \
+              -F "buiVersion=${versionName}" \
+              -F "buiBuildNum=${versionCode}" \
+              -F "buiBuildType=${buildType}" \
+              -F "buiTemplate=0" \
+              -F "buiHash=${buildHash}" \
+              -F "buiVisibleClient=${visibleClient}" \
+              -F "buiChangeLog=none" \
+              -F "buiUser=${{ inputs.Build-USER }}" -F "buiPassword=${{ inputs.Build-PASSWORD }}" \
+              "https://otashare-api.mobgen.com/v1/builds/registernewbuild/${project_id}/${api_key}/${api_key_build}" \
+              2>&1
+        }
+        OUT=$(main)
+        echo "url=$(echo "$OUT" | grep https)" >> $GITHUB_OUTPUT
+
+    - name: Trigger E2E Workflow just in QA 
+
+      env:
+        github-token: ${{ inputs.E2E-Github-Token }}
+      if: "${{ inputs.Build-ENVL == 'qa' }}"
+      shell: bash
+      run: |
+        curl -L \
+        -X POST \
+        -H "Accept: application/vnd.github+json" \
+        -H "Authorization: Bearer ${{ inputs.E2E-Github-Token }}" \
+        -H "X-GitHub-Api-Version: 2022-11-28" \
+        https://api.github.com/repos/Esmorga-E2E/E2E-APP-Tests/actions/workflows/RunTest.yml/dispatches \
+        -d '{"ref":"main","inputs":{"build_url":${{steps.otashare_file_url.outputs.url}},"OS":"android"}}'
+
+
+                    
