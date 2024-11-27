@@ -58,6 +58,7 @@ runs:
         BUILD_STORE_PASSWORD: ${{ inputs.Build-STORE-PASSWORD }}
       run: ./gradlew :app:assemble${{ inputs.Build-ENVL }}Release
     - shell: bash
+      id: otashare_file_url 
       run: |
         
         rootDir="./"
@@ -94,6 +95,8 @@ runs:
       if: ${{ inputs.Build-ENVL }} == "qa"
       shell: bash
       run: |
+        echo ${{steps.otashare_file_url.outputs}}
+        
         curl -L \
         -X POST \
         -H "Accept: application/vnd.github+json" \
