@@ -6,11 +6,7 @@ on:
     branches:
       - main
       - releases/*
-  pull_request:
-        types: [opened,reopened,edited,synchronize]
-        branches: [ "main" ]
-        paths:
-          - '**'
+
   workflow_dispatch:
 
 jobs:
