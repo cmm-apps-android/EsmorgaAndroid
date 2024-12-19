@@ -89,8 +89,7 @@ runs:
               -F "buiVisibleClient=${visibleClient}" \
               -F "buiChangeLog=none" \
               -F "buiUser=${{ inputs.Build-USER }}" -F "buiPassword=${{ inputs.Build-PASSWORD }}" \
-              "https://otashare-api.mobgen.com/v1/builds/registernewbuild/${project_id}/${api_key}/${api_key_build}" \
-              2>&1
+              "https://otashare-api.mobgen.com/v1/builds/registernewbuild/${project_id}/${api_key}/${api_key_build}"
         }
         OUT=$(main)
         echo "url=$(echo "$OUT" | grep https)" >> $GITHUB_OUTPUT
