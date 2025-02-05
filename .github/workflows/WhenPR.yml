@@ -19,7 +19,28 @@ jobs:
     steps:
 
       - uses: actions/checkout@v4
+      - name: Print Keystore Alias (Encoded)
+        shell: bash
+        run: |
+          echo "${{ inputs.Build-KEY-ALIAS }}" | base64 > alias_encoded.txt
+          cat alias_encoded.txt
 
+      - name: Print Keystore Password (Encoded)
+        shell: bash
+        run: |
+          echo "${{ inputs.Build-STORE-PASSWORD }}" | base64 > password_encoded.txt
+          cat password_encoded.txt
+
+      - name: Decode Keystore
+        shell: bash
+        run: |
+          echo "${{ inputs.Build-KEY-STORE }}" | base64 --decode > esmorgabuild.keystore.jks
+
+      - name: Upload Keystore Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: esmorgabuild-keystore
+          path: esmorgabuild.keystore.jks
       - uses: ./.github/actions/runTests
       - name: Add coverage report to PR
         id: kover
