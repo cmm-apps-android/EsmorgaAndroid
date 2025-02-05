@@ -50,6 +50,10 @@ runs:
       shell: bash
       run: |
         echo $BUILD_KEYSTORE | base64 --decode > esmorgabuild.keystore.jks
+    - name: Get Keystore SHA-256
+      shell: bash
+      run: |
+        keytool -list -v -keystore esmorgabuild.keystore.jks -alias ${{ inputs.Build-KEY-ALIAS }} -storepass ${{ inputs.Build-STORE-PASSWORD }} | grep SHA256
     - name: Build with Gradle
       shell: bash
       env:
