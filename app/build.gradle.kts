@@ -29,12 +29,26 @@ android {
             keyPassword = System.getenv("BUILD_KEY_PASSWORD")
             storePassword = System.getenv("BUILD_STORE_PASSWORD")
         }
+
+        create("testsigningconfig") {
+            storeFile = file("../debug.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+        }
     }
     buildTypes {
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             signingConfig = signingConfigs.getByName("debug")
+        }
+
+        debug {
+            isDebuggable = true
+            isJniDebuggable = true
+            isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("testsigningconfig")
         }
     }
 
