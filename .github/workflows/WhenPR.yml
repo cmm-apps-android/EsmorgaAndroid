@@ -23,7 +23,7 @@ jobs:
       - name: OAS
         uses: ./.github/actions/OAS
         with:
-          PAT: ${{ secrets.PAT }}
+          PAT: ${{ secrets.E2E_Github_Token }}
           
       - uses: ./.github/actions/runTests
       - name: Add coverage report to PR
