@@ -23,7 +23,7 @@ runs:
           
       - name: Push branch name if needed to github
         shell: bash
-          
+        run: |          
           echo "${{ github.head_ref }}" > /tmp/branch.txt
           if ! cmp -s "/tmp/branch.txt" ".github/tmp/branch.txt" ; then
           cp /tmp/branch.txt .github/tmp/branch.txt
