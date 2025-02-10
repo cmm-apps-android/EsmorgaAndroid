@@ -1,5 +1,5 @@
 name: Run Test Android 
-run-name: ${{ github.actor }} Run PR Test ${{ github.event_name }} on ${{ github.ref }}
+run-name: ${{ github.actor }} is testing ${{ github.event.pull_request.title }}
 
 on:
   pull_request:
