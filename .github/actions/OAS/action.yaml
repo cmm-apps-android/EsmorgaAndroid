@@ -13,19 +13,20 @@ runs:
           token: ${{ inputs.PAT }}
           ref: ${{ github.head_ref }}
 
-      - name: Push OAS to github
+      - name: Check branch name
         shell: bash
         run: |
+          if ! echo "${{ github.head_ref }}" | | egrep '^((feature|bugfix|hotfix)/MOB-[0-9]*(\(\.*\))*|release/[\.0-9]*)$' ; 
+          then 
+          exit 1
+          fi
+          
+      - name: Push branch name if needed to github
+        shell: bash
+          
           echo "${{ github.head_ref }}" > /tmp/branch.txt
           if ! cmp -s "/tmp/branch.txt" ".github/tmp/branch.txt" ; then
           cp /tmp/branch.txt .github/tmp/branch.txt
-          exit 1
-          fi
-
-      - name: Update Git
-        if: failure()
-        shell: bash
-        run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "Github Actions"
           git fetch
@@ -33,3 +34,5 @@ runs:
           git add .github/tmp/branch.txt
           git commit -m "Update BranchReference from GitHub Actions"
           git push origin "${{ github.head_ref }}"
+          exit 1
+          fi
