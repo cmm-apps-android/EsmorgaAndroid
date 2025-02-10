@@ -31,5 +31,5 @@ runs:
           git fetch
           git pull
           git add .github/tmp/branch.txt
-          git commit -m "Update Swagger/BranchReference from GitHub Actions"
+          git commit -m "Update BranchReference from GitHub Actions"
           git push origin "${{ github.head_ref }}"
