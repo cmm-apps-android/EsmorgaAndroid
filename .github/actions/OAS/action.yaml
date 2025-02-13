@@ -16,7 +16,7 @@ runs:
       - name: Check branch name
         shell: bash
         run: |
-          if ! echo "${{ github.head_ref }}" | egrep '^((feature|bugfix|hotfix)/MOB-[0-9]*(\(\.*\))*|release/[\.0-9]*)$' ; 
+          if ! echo "${{ github.head_ref }}" | egrep '^((feature|bugfix|hotfix)/MOB-[0-9]*(\(.*\))*|release/[\.0-9]*)$' ; 
           then 
           exit 1
           fi
