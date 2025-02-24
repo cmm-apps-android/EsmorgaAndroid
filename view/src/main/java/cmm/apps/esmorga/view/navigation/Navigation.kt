@@ -27,6 +27,7 @@ import cmm.apps.esmorga.view.eventlist.MyEventListScreen
 import cmm.apps.esmorga.view.eventlist.model.EventListUiModel
 import cmm.apps.esmorga.view.login.LoginScreen
 import cmm.apps.esmorga.view.navigation.HomeScreenTestTags.PROFILE__TITLE
+import cmm.apps.esmorga.view.profile.ProfileScreen
 import cmm.apps.esmorga.view.registration.RegistrationScreen
 import cmm.apps.esmorga.view.welcome.WelcomeScreen
 import kotlin.reflect.typeOf
@@ -110,10 +111,9 @@ private fun NavGraphBuilder.homeFlow(navigationController: NavHostController) {
         })
     }
     composable<Navigation.ProfileScreen> {
-        //TODO to be done
-        Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-            EsmorgaText(text = "To be done in other US", style = EsmorgaTextStyle.HEADING_1, modifier = Modifier.testTag(PROFILE__TITLE))
-        }
+        ProfileScreen(navigateLogIn = {
+            navigationController.navigate(Navigation.LoginScreen)
+        } )
     }
 }
 
