@@ -7,6 +7,7 @@
    <string name="button_register">Registrarme</string>
    <string name="button_retry">Reintentar</string>
    <string name="content_description_back_icon">Icon atrás</string>
+   <string name="content_description_forward_icon">Icono adelante</string>
    <string name="content_description_event_image">Imagen del evento %s</string>
    <string name="date_formatter">dd\&apos; de \&apos;MMMM\&apos; a las \&apos;HH:mm</string>
    <string name="default_error_body">Inténtalo de nuevo más tarde</string>
@@ -53,4 +54,15 @@
    <string name="screen_no_connection_body">Por favor, revisa tu conexión e inténtelo de nuevo</string>
    <string name="button_ok">OK</string>
    <string name="snackbar_event_left">Buuuuu! Rajao!</string>
+   <string name="my_profile_title">Perfil</string>
+   <string name="my_profile_name">Nombre</string>
+   <string name="my_profile_email">Email</string>
+   <string name="my_profile_options">Opciones</string>
+   <string name="my_profile_changue_password">Cambiar contraseña</string>
+   <string name="my_profile_logout">Cerrar sesion</string>
+   <string name="my_profile_logout_pop_up_title">¿Seguro que quieres cerrar sesión?</string>
+   <string name="my_profile_logout_pop_up_confirm">Sí, cerrar sesión</string>
+   <string name="my_profile_logout_pop_up_cancel">No, cancelar</string>
+   <string name="unauthenticated_error_message">Oh no! No estás logueado</string>
+   <string name="unauthenticated_error_login_button">Login</string>
 </resources>

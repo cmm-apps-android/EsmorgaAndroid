@@ -7,6 +7,7 @@
    <string name="button_register">Register</string>
    <string name="button_retry">Retry</string>
    <string name="content_description_back_icon">Back icon</string>
+   <string name="content_description_forward_icon">Forward icon</string>
    <string name="content_description_event_image">Event %s image</string>
    <string name="date_formatter">dd\&apos; of \&apos;MMMM\&apos; at \&apos;HH:mm</string>
    <string name="default_error_body">Please retry later</string>
@@ -53,4 +54,15 @@
    <string name="screen_no_connection_body">Please, check your connection and try again.</string>
    <string name="button_ok">OK</string>
    <string name="snackbar_event_left">Booooo! quitter!</string>
+   <string name="my_profile_title">Profile</string>
+   <string name="my_profile_name">Name</string>
+   <string name="my_profile_email">Email</string>
+   <string name="my_profile_options">Options</string>
+   <string name="my_profile_changue_password">Changue password</string>
+   <string name="my_profile_logout">Log out</string>
+   <string name="my_profile_logout_pop_up_title">Are you sure you want to log out?</string>
+   <string name="my_profile_logout_pop_up_confirm">Yes, log out</string>
+   <string name="my_profile_logout_pop_up_cancel">No, cancel</string>
+   <string name="unauthenticated_error_message">Oh no! You are not logged in</string>
+   <string name="unauthenticated_error_login_button">Login</string>
 </resources>
