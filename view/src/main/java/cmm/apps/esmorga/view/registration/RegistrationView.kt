@@ -51,7 +51,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun RegistrationScreen(
     rvm: RegistrationViewModel = koinViewModel(),
-    onRegistrationSuccess: () -> Unit,
+    onRegistrationSuccess: (String) -> Unit,
     onRegistrationError: (EsmorgaErrorScreenArguments) -> Unit,
     onBackClicked: () -> Unit
 ) {
@@ -64,7 +64,7 @@ fun RegistrationScreen(
             when (eff) {
                 is RegistrationEffect.ShowNoNetworkSnackbar -> localCoroutineScope.launch { snackbarHostState.showSnackbar(message = message) }
                 is RegistrationEffect.ShowFullScreenError -> onRegistrationError(eff.esmorgaErrorScreenArguments)
-                is RegistrationEffect.NavigateToEventList -> onRegistrationSuccess()
+                is RegistrationEffect.NavigateToEmailConfirmation -> onRegistrationSuccess(eff.email)
             }
         }
     }

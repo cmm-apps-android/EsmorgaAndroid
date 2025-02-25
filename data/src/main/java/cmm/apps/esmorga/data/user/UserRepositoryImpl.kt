@@ -14,14 +14,17 @@ class UserRepositoryImpl(private val localDs: UserDatasource, private val remote
         return userDataModel.toUser()
     }
 
-    override suspend fun register(name: String, lastName: String, email: String, password: String): User {
-        val userDataModel = remoteDs.register(name, lastName, email, password)
-        localDs.saveUser(userDataModel)
-        return userDataModel.toUser()
+    override suspend fun register(name: String, lastName: String, email: String, password: String) {
+        remoteDs.register(name, lastName, email, password)
     }
 
     override suspend fun getUser(): User {
         val userDataModel = localDs.getUser()
         return userDataModel.toUser()
     }
+
+    override suspend fun emailVerification(email: String) {
+        remoteDs.emailVerification(email)
+    }
+
 }
