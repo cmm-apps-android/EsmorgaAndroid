@@ -10,7 +10,7 @@ interface UserDatasource {
         throw EsmorgaException(message = "Unsupported operation", source = Source.UNSUPPORTED, code = ErrorCodes.UNSUPPORTED_OPERATION)
     }
 
-    suspend fun register(name: String, lastName: String, email: String, password: String): UserDataModel {
+    suspend fun register(name: String, lastName: String, email: String, password: String) {
         throw EsmorgaException(message = "Unsupported operation", source = Source.UNSUPPORTED, code = ErrorCodes.UNSUPPORTED_OPERATION)
     }
 
@@ -19,6 +19,10 @@ interface UserDatasource {
     }
 
     suspend fun getUser(): UserDataModel {
+        throw EsmorgaException(message = "Unsupported operation", source = Source.UNSUPPORTED, code = ErrorCodes.UNSUPPORTED_OPERATION)
+    }
+
+    suspend fun emailVerification(email: String) {
         throw EsmorgaException(message = "Unsupported operation", source = Source.UNSUPPORTED, code = ErrorCodes.UNSUPPORTED_OPERATION)
     }
 }

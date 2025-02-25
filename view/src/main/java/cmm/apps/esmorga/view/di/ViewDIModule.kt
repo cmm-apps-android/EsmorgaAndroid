@@ -6,6 +6,8 @@ import cmm.apps.esmorga.view.eventdetails.EventDetailsViewModel
 import cmm.apps.esmorga.view.eventlist.EventListViewModel
 import cmm.apps.esmorga.view.eventlist.MyEventListViewModel
 import cmm.apps.esmorga.view.login.LoginViewModel
+import cmm.apps.esmorga.view.registration.RegistrationConfirmationScreen
+import cmm.apps.esmorga.view.registration.RegistrationConfirmationViewModel
 import cmm.apps.esmorga.view.registration.RegistrationViewModel
 import cmm.apps.esmorga.view.welcome.WelcomeViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -35,6 +37,10 @@ object ViewDIModule {
         }
         viewModel {
             RegistrationViewModel(get())
+        }
+
+        viewModel {
+            RegistrationConfirmationViewModel(get())
         }
     }
 }

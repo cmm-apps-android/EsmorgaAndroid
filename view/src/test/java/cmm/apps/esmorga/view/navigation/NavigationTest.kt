@@ -77,7 +77,7 @@ class NavigationTest {
     }
 
     private val performRegistrationUserCase = mockk<PerformRegistrationUserCase>(relaxed = true).also { useCase ->
-        coEvery { useCase(any(), any(), any(), any()) } returns EsmorgaResult.success(LoginViewMock.provideUser())
+        coEvery { useCase(any(), any(), any(), any()) } returns EsmorgaResult.success(Unit)
     }
 
     private val getSavedUserUseCase = mockk<GetSavedUserUseCase>(relaxed = true).also { useCase ->

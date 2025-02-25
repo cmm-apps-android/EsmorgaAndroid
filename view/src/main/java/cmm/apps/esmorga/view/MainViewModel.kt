@@ -19,6 +19,7 @@ class MainViewModel(private val getSavedUserUseCase: GetSavedUserUseCase) : View
             val result = getSavedUserUseCase.invoke()
             result.onSuccess {
                 _uiState.value = MainUiState(loading = false, loggedIn = true)
+                it
             }.onFailure { _ ->
                 _uiState.value = MainUiState(loading = false, loggedIn = false)
             }
