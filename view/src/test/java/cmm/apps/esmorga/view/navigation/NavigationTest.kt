@@ -5,6 +5,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.printToLog
 import androidx.navigation.NavHostController
@@ -25,6 +26,7 @@ import cmm.apps.esmorga.domain.result.EsmorgaResult
 import cmm.apps.esmorga.domain.result.Source
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.domain.user.PerformLoginUseCase
+import cmm.apps.esmorga.domain.user.PerformRegistrationConfirmationUseCase
 import cmm.apps.esmorga.domain.user.PerformRegistrationUserCase
 import cmm.apps.esmorga.view.di.ViewDIModule
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAILS_BACK_BUTTON
@@ -39,7 +41,17 @@ import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_PASSWORD_INPUT
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_REGISTER_BUTTON
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_TITLE
 import cmm.apps.esmorga.view.navigation.HomeScreenTestTags.PROFILE__TITLE
+import cmm.apps.esmorga.view.registration.RegistrationConfirmationScreenTestTags.REGISTRATION_CONFIRMATION_OPEN_BUTTON
+import cmm.apps.esmorga.view.registration.RegistrationConfirmationScreenTestTags.REGISTRATION_CONFIRMATION_RESEND_BUTTON
+import cmm.apps.esmorga.view.registration.RegistrationConfirmationScreenTestTags.REGISTRATION_CONFIRMATION_SHOW_SNACKBAR
+import cmm.apps.esmorga.view.registration.RegistrationConfirmationScreenTestTags.REGISTRATION_CONFIRMATION_TITLE
 import cmm.apps.esmorga.view.registration.RegistrationScreenTestTags.REGISTRATION_BACK_BUTTON
+import cmm.apps.esmorga.view.registration.RegistrationScreenTestTags.REGISTRATION_EMAIL_INPUT
+import cmm.apps.esmorga.view.registration.RegistrationScreenTestTags.REGISTRATION_LAST_NAME_INPUT
+import cmm.apps.esmorga.view.registration.RegistrationScreenTestTags.REGISTRATION_LOGIN_BUTTON
+import cmm.apps.esmorga.view.registration.RegistrationScreenTestTags.REGISTRATION_NAME_INPUT
+import cmm.apps.esmorga.view.registration.RegistrationScreenTestTags.REGISTRATION_PASSWORD_INPUT
+import cmm.apps.esmorga.view.registration.RegistrationScreenTestTags.REGISTRATION_REPEAT_PASSWORD_INPUT
 import cmm.apps.esmorga.view.registration.RegistrationScreenTestTags.REGISTRATION_TITLE
 import cmm.apps.esmorga.view.viewmodel.mock.EventViewMock
 import cmm.apps.esmorga.view.viewmodel.mock.LoginViewMock
@@ -95,6 +107,9 @@ class NavigationTest {
     private val getMyEventListUseCase = mockk<GetMyEventListUseCase>(relaxed = true).also { useCase ->
         coEvery { useCase() } returns EsmorgaResult.success(EventViewMock.provideEventList(listOf("event")))
     }
+    private val performRegistrationConfirmationUseCase = mockk<PerformRegistrationConfirmationUseCase>(relaxed = true).also { useCase ->
+        coEvery { useCase(any()) } returns EsmorgaResult.success(Unit)
+    }
 
     @Before
     @Throws(Exception::class)
@@ -114,6 +129,7 @@ class NavigationTest {
                     factory<JoinEventUseCase> { joinEventUseCase }
                     factory<GetMyEventListUseCase> { getMyEventListUseCase }
                     factory<LeaveEventUseCase> { leaveEventUseCase }
+                    factory<PerformRegistrationConfirmationUseCase> { performRegistrationConfirmationUseCase }
                 }
             )
         }
@@ -290,6 +306,47 @@ class NavigationTest {
         composeTestRule.onNodeWithTag(PROFILE__TITLE).assertIsDisplayed()
     }
 
+    @Test
+    fun `given user not logged, when register visited and register is clicked, then registration confirmation screen is shown`() {
+        setNavigationFromDestination(Navigation.RegistrationScreen)
+
+        composeTestRule.onNodeWithTag(REGISTRATION_NAME_INPUT).performTextInput("Name")
+        composeTestRule.onNodeWithTag(REGISTRATION_LAST_NAME_INPUT).performTextInput("Last Name")
+        composeTestRule.onNodeWithTag(REGISTRATION_EMAIL_INPUT).performTextInput("email@email.com")
+        composeTestRule.onNodeWithTag(REGISTRATION_PASSWORD_INPUT).performTextInput("Test@123")
+        composeTestRule.onNodeWithTag(REGISTRATION_REPEAT_PASSWORD_INPUT).performTextInput("Test@123")
+
+        composeTestRule.onNodeWithTag(REGISTRATION_LOGIN_BUTTON).performScrollTo()
+        composeTestRule.onNodeWithTag(REGISTRATION_LOGIN_BUTTON).performClick()
+
+        composeTestRule.onNodeWithTag(REGISTRATION_CONFIRMATION_TITLE).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(REGISTRATION_CONFIRMATION_OPEN_BUTTON).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(REGISTRATION_CONFIRMATION_RESEND_BUTTON).assertIsDisplayed()
+    }
+
+    @Test
+    fun `given user not logged, when register confirmation visited and resend email is clicked, then snackBar is shown`() {
+        setNavigationFromDestination(Navigation.RegistrationConfirmationScreen(email = "email@email.com"))
+        composeTestRule.onNodeWithTag(REGISTRATION_CONFIRMATION_RESEND_BUTTON).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(REGISTRATION_CONFIRMATION_RESEND_BUTTON).performClick()
+
+        composeTestRule.onNodeWithTag(REGISTRATION_CONFIRMATION_SHOW_SNACKBAR).assertIsDisplayed()
+    }
+
+    @Test
+    fun `given user not logged, when register confirmation visited and resend email is clicked and call fail, then snackBar is shown`() {
+        val failurePerformRegistrationConfirmationUseCase = mockk<PerformRegistrationConfirmationUseCase>(relaxed = true).also { useCase ->
+            coEvery { useCase(any()) } returns EsmorgaResult.failure(EsmorgaException("call Fail", Source.REMOTE, 500))
+        }
+        loadKoinModules(module { factory<PerformRegistrationConfirmationUseCase> { failurePerformRegistrationConfirmationUseCase } })
+
+        setNavigationFromDestination(Navigation.RegistrationConfirmationScreen(email = "email@email.com"))
+        composeTestRule.onNodeWithTag(REGISTRATION_CONFIRMATION_RESEND_BUTTON).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(REGISTRATION_CONFIRMATION_RESEND_BUTTON).performClick()
+
+        composeTestRule.onNodeWithTag(REGISTRATION_CONFIRMATION_SHOW_SNACKBAR).assertIsDisplayed()
+    }
+
     private fun setNavigationFromAppLaunch(loggedIn: Boolean) {
         composeTestRule.setContent {
             KoinContext {
@@ -307,7 +364,6 @@ class NavigationTest {
             }
         }
     }
-
 
     private fun printComposeUiTreeToLog(testTag: String? = null) {
         if (testTag.isNullOrEmpty()) {

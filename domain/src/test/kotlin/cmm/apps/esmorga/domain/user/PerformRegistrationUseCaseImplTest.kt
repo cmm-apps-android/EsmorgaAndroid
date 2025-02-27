@@ -17,11 +17,11 @@ class PerformRegistrationUseCaseImplTest {
         val repoUserName = "Io"
         val repoUser = UserDomainMock.provideUser(name = repoUserName)
         val repo = mockk<UserRepository>(relaxed = true)
-        coEvery { repo.register(any(), any(), any(), any()) } returns repoUser
+        coEvery { repo.register(any(), any(), any(), any()) } returns Unit
 
         val sut = PerformRegistrationUserCaseImpl(repo)
         val result = sut.invoke(repoUser.name, repoUser.lastName, repoUser.email, "password")
-        Assert.assertEquals(repoUserName, result.data!!.name)
+        Assert.assertEquals(Unit, result.data!!)
     }
 
     @Test
