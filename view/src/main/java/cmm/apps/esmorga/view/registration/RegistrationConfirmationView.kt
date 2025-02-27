@@ -40,6 +40,7 @@ import cmm.apps.esmorga.view.registration.RegistrationConfirmationScreenTestTags
 import cmm.apps.esmorga.view.registration.RegistrationConfirmationScreenTestTags.REGISTRATION_CONFIRMATION_OPEN_BUTTON
 import cmm.apps.esmorga.view.registration.RegistrationConfirmationScreenTestTags.REGISTRATION_CONFIRMATION_RESEND_BUTTON
 import cmm.apps.esmorga.view.registration.RegistrationConfirmationScreenTestTags.REGISTRATION_CONFIRMATION_TITLE
+import cmm.apps.esmorga.view.registration.RegistrationConfirmationScreenTestTags.REGISTRATION_CONFIRMATION_SHOW_SNACKBAR
 import cmm.apps.esmorga.view.registration.model.RegistrationConfirmationEffect
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import kotlinx.coroutines.launch
@@ -93,7 +94,7 @@ fun RegistrationConfirmationView(
     onResendEmailClicked: () -> Unit,
 ) {
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
+        snackbarHost = { SnackbarHost(snackbarHostState, modifier = Modifier.testTag(REGISTRATION_CONFIRMATION_SHOW_SNACKBAR))},
         topBar = {
             Box(
                 modifier = Modifier
@@ -174,4 +175,5 @@ object RegistrationConfirmationScreenTestTags {
     const val REGISTRATION_CONFIRMATION_RESEND_BUTTON =
         "registration confirmation screen resend button"
     const val REGISTRATION_CONFIRMATION_BACK_BUTTON = "registration confirmation screen back button"
+    const val REGISTRATION_CONFIRMATION_SHOW_SNACKBAR = "registration confirmation screen show snackBar"
 }

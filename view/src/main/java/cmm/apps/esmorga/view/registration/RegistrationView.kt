@@ -38,7 +38,12 @@ import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.registration.RegistrationScreenTestTags.REGISTRATION_BACK_BUTTON
+import cmm.apps.esmorga.view.registration.RegistrationScreenTestTags.REGISTRATION_EMAIL_INPUT
+import cmm.apps.esmorga.view.registration.RegistrationScreenTestTags.REGISTRATION_LAST_NAME_INPUT
 import cmm.apps.esmorga.view.registration.RegistrationScreenTestTags.REGISTRATION_LOGIN_BUTTON
+import cmm.apps.esmorga.view.registration.RegistrationScreenTestTags.REGISTRATION_NAME_INPUT
+import cmm.apps.esmorga.view.registration.RegistrationScreenTestTags.REGISTRATION_PASSWORD_INPUT
+import cmm.apps.esmorga.view.registration.RegistrationScreenTestTags.REGISTRATION_REPEAT_PASSWORD_INPUT
 import cmm.apps.esmorga.view.registration.RegistrationScreenTestTags.REGISTRATION_TITLE
 import cmm.apps.esmorga.view.registration.model.RegistrationEffect
 import cmm.apps.esmorga.view.registration.model.RegistrationUiState
@@ -149,7 +154,7 @@ fun RegistrationView(
                     if (!focusState.isFocused) {
                         validateField(RegistrationField.NAME, name, null)
                     }
-                },
+                }.testTag(REGISTRATION_NAME_INPUT),
                 imeAction = ImeAction.Next
             )
             EsmorgaTextField(
@@ -166,7 +171,7 @@ fun RegistrationView(
                     if (!focusState.isFocused) {
                         validateField(RegistrationField.LAST_NAME, lastName, null)
                     }
-                },
+                }.testTag(REGISTRATION_LAST_NAME_INPUT),
                 imeAction = ImeAction.Next
             )
             EsmorgaTextField(
@@ -183,7 +188,7 @@ fun RegistrationView(
                     if (!focusState.isFocused) {
                         validateField(RegistrationField.EMAIL, email, null)
                     }
-                },
+                }.testTag(REGISTRATION_EMAIL_INPUT),
                 imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Email
             )
@@ -201,7 +206,7 @@ fun RegistrationView(
                     if (!focusState.isFocused) {
                         validateField(RegistrationField.PASS, password, null)
                     }
-                },
+                }.testTag(REGISTRATION_PASSWORD_INPUT),
                 imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Password
             )
@@ -219,7 +224,7 @@ fun RegistrationView(
                     if (!focusState.isFocused) {
                         validateField(RegistrationField.REPEAT_PASS, password, repeatedPassword)
                     }
-                },
+                }.testTag(REGISTRATION_REPEAT_PASSWORD_INPUT),
                 imeAction = ImeAction.Done,
                 keyboardType = KeyboardType.Password,
                 onDonePressed = {
@@ -244,4 +249,9 @@ object RegistrationScreenTestTags {
     const val REGISTRATION_TITLE = "registration screen title"
     const val REGISTRATION_LOGIN_BUTTON = "registration screen button"
     const val REGISTRATION_BACK_BUTTON = "registration screen back button"
+    const val REGISTRATION_NAME_INPUT = "registration screen name input"
+    const val REGISTRATION_LAST_NAME_INPUT = "registration screen last name input"
+    const val REGISTRATION_EMAIL_INPUT = "registration screen email input"
+    const val REGISTRATION_PASSWORD_INPUT = "registration screen password input"
+    const val REGISTRATION_REPEAT_PASSWORD_INPUT = "registration screen repeat password input"
 }
