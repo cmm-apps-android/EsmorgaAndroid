@@ -332,7 +332,7 @@ class NavigationTest {
 
         composeTestRule.onNodeWithTag(REGISTRATION_CONFIRMATION_SHOW_SNACKBAR).assertIsDisplayed()
     }
-    
+
     private fun setNavigationFromAppLaunch(loggedIn: Boolean) {
         composeTestRule.setContent {
             KoinContext {
