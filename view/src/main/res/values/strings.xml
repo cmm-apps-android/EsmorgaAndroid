@@ -53,4 +53,10 @@
    <string name="screen_no_connection_body">Please, check your connection and try again.</string>
    <string name="button_ok">OK</string>
    <string name="snackbar_event_left">Booooo! quitter!</string>
+   <string name="register_confirmation_email_title">Confirm your account</string>
+   <string name="register_confirmation_email_subtitle">We have sent a confirmation link to your email. Please check your inbox and follow the link to activate your account.</string>
+   <string name="register_confirmation_email_button_email_app">Open mail app</string>
+   <string name="register_confirmation_email_button_resend">Resend mail</string>
+   <string name="register_resend_code_success">A new confirmation email has been sent</string>
+   <string name="register_resend_code_error">Unable to send a new confirmation e-mail</string>
 </resources>
