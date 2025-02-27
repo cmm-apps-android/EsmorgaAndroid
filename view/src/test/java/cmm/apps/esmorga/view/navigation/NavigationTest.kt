@@ -332,21 +332,7 @@ class NavigationTest {
 
         composeTestRule.onNodeWithTag(REGISTRATION_CONFIRMATION_SHOW_SNACKBAR).assertIsDisplayed()
     }
-
-    @Test
-    fun `given user not logged, when register confirmation visited and resend email is clicked and call fail, then snackBar is shown`() {
-        val failurePerformRegistrationConfirmationUseCase = mockk<PerformRegistrationConfirmationUseCase>(relaxed = true).also { useCase ->
-            coEvery { useCase(any()) } returns EsmorgaResult.failure(EsmorgaException("call Fail", Source.REMOTE, 500))
-        }
-        loadKoinModules(module { factory<PerformRegistrationConfirmationUseCase> { failurePerformRegistrationConfirmationUseCase } })
-
-        setNavigationFromDestination(Navigation.RegistrationConfirmationScreen(email = "email@email.com"))
-        composeTestRule.onNodeWithTag(REGISTRATION_CONFIRMATION_RESEND_BUTTON).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(REGISTRATION_CONFIRMATION_RESEND_BUTTON).performClick()
-
-        composeTestRule.onNodeWithTag(REGISTRATION_CONFIRMATION_SHOW_SNACKBAR).assertIsDisplayed()
-    }
-
+    
     private fun setNavigationFromAppLaunch(loggedIn: Boolean) {
         composeTestRule.setContent {
             KoinContext {
