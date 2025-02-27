@@ -43,12 +43,12 @@ class UserRemoteDatasourceImplTest {
         val remoteUserName = "Barbus"
 
         val api = mockk<EsmorgaAuthApi>(relaxed = true)
-        coEvery { api.register(any()) } returns UserRemoteMock.provideUser(remoteUserName)
+        coEvery { api.register(any()) } returns Unit
 
         val sut = UserRemoteDatasourceImpl(api)
         val result = sut.register(remoteUserName, "lastName", "email", "password")
 
-        Assert.assertEquals(remoteUserName, result.dataName)
+        Assert.assertEquals(Unit, result)
     }
 
     @Test
