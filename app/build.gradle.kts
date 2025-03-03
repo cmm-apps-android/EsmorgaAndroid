@@ -90,5 +90,8 @@ dependencies {
     testImplementation(libs.robolectric)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
-
+    testImplementation(libs.mockwebserver)
+    testImplementation(libs.gson)
+    testImplementation(libs.retrofit)
+    testImplementation(libs.retrofit.converter.gson)
 }
