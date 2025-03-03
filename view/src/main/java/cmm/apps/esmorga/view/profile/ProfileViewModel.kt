@@ -56,7 +56,7 @@ class ProfileViewModel(private val getSavedUserUseCase: GetSavedUserUseCase) : V
         viewModelScope.launch {
             getSavedUserUseCase.clearUser()
             _uiState.value = ProfileUiState(user = null)
-            _effect.tryEmit(ProfileEffect.NavigateToLogOut)
+            _effect.tryEmit(ProfileEffect.NavigateToLogIn)
         }
     }
 }

@@ -32,4 +32,10 @@ class UserRemoteDatasourceImpl(private val api: EsmorgaAuthApi) : UserDatasource
         }
     }
 
+    override suspend fun deleteUser() {
+        try {
+        } catch (e: Exception) {
+            throw manageApiException(e)
+        }
+    }
 }
