@@ -6,22 +6,49 @@ import cmm.apps.esmorga.data.user.mapper.toUser
 import cmm.apps.esmorga.domain.user.model.User
 import cmm.apps.esmorga.domain.user.repository.UserRepository
 
-class UserRepositoryImpl(private val localDs: UserDatasource, private val remoteDs: UserDatasource, private val localEventDs: EventDatasource) : UserRepository {
+class UserRepositoryImpl(
+    private val localUserDs: UserDatasource,
+    private val remoteUserDs: UserDatasource,
+    private val localEventDs: EventDatasource
+) : UserRepository {
+
     override suspend fun login(email: String, password: String): User {
-        val userDataModel = remoteDs.login(email, password)
-        localDs.saveUser(userDataModel)
-        localEventDs.deleteCacheEvents()
-        return userDataModel.toUser()
+        return try {
+            val userDataModel = remoteUserDs.login(email, password)
+            localUserDs.saveUser(userDataModel)
+            localEventDs.deleteCacheEvents()
+            userDataModel.toUser()
+        } catch (e: Exception) {
+            throw Exception("Error al iniciar sesión: ${e.message}", e)
+        }
     }
 
     override suspend fun register(name: String, lastName: String, email: String, password: String): User {
-        val userDataModel = remoteDs.register(name, lastName, email, password)
-        localDs.saveUser(userDataModel)
-        return userDataModel.toUser()
+        return try {
+            val userDataModel = remoteUserDs.register(name, lastName, email, password)
+            localUserDs.saveUser(userDataModel)
+            userDataModel.toUser()
+        } catch (e: Exception) {
+            throw Exception("Error al registrar usuario: ${e.message}", e)
+        }
     }
 
     override suspend fun getUser(): User {
-        val userDataModel = localDs.getUser()
-        return userDataModel.toUser()
+        return try {
+            val userDataModel = localUserDs.getUser()
+                ?: throw Exception("No se encontró un usuario almacenado localmente")
+            userDataModel.toUser()
+        } catch (e: Exception) {
+            throw Exception("Error al obtener usuario: ${e.message}", e)
+        }
+    }
+
+    override suspend fun logout() {
+        try {
+            localUserDs.deleteUser() // Elimina los datos del usuario almacenados localmente
+            localEventDs.deleteCacheEvents() // Borra los eventos en caché
+        } catch (e: Exception) {
+            throw Exception("Error al cerrar sesión: ${e.message}", e)
+        }
     }
 }

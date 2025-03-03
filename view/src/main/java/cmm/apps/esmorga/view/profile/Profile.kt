@@ -55,12 +55,13 @@ fun ProfileScreen(
             when (eff) {
                 ProfileEffect.NavigateToChangePassword -> TODO()
                 ProfileEffect.NavigateToLogOut -> {
-                    rvm.clearUserData()  // Esto limpia los datos del usuario
-                    // Después de eliminar los datos, navegas a la pantalla de login
+                    rvm.clearUserData()
                     navigateLogIn()
                 }
                 is ProfileEffect.ShowNoNetworkError -> TODO()
-                ProfileEffect.NavigateToLogIn -> navigateLogIn()
+                ProfileEffect.NavigateToLogIn -> {
+                    navigateLogIn()
+                }
             }
         }
     }
@@ -74,6 +75,7 @@ fun ProfileScreen(
         )
     }
 }
+
 
 @Composable
 fun ProfileView( uiState: ProfileUiState, shownLogOutDialog: () -> Unit, onChangePassword: () -> Unit, onNavigateLogin: () -> Unit) {

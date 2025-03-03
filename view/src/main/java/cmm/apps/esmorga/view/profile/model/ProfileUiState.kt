@@ -18,6 +18,7 @@ sealed class ProfileEffect {
     data object NavigateToChangePassword : ProfileEffect()
     data object NavigateToLogOut : ProfileEffect()
     data object NavigateToLogIn : ProfileEffect()
+
 }
 
 object ProfileViewHelper : KoinComponent {

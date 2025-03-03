@@ -10,13 +10,17 @@ import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.Source
 
-class UserLocalDatasourceImpl(private val userDao: UserDao, private val sharedPreferences: SharedPreferences) : UserDatasource {
+class UserLocalDatasourceImpl(
+    private val userDao: UserDao,
+    private val sharedPreferences: SharedPreferences
+) : UserDatasource {
 
     override suspend fun saveUser(user: UserDataModel) {
         sharedPreferences.edit().run {
             putString("access_token", user.dataAccessToken)
-            putString("refresh_token",  user.dataRefreshToken)
-        }.apply()
+            putString("refresh_token", user.dataRefreshToken)
+            apply()
+        }
         userDao.insertUser(user.toUserLocalModel())
     }
 
@@ -26,6 +30,15 @@ class UserLocalDatasourceImpl(private val userDao: UserDao, private val sharedPr
             val accessToken = sharedPreferences.getString("access_token", null)
             val refreshToken = sharedPreferences.getString("refresh_token", null)
             return it.toUserDataModel(accessToken, refreshToken)
-        } ?: throw EsmorgaException(message = "User not found", source = Source.LOCAL, code = ErrorCodes.NOT_LOGGED_IN)
+        } ?: throw EsmorgaException(
+            message = "User not found",
+            source = Source.LOCAL,
+            code = ErrorCodes.NOT_LOGGED_IN
+        )
+    }
+
+    override suspend fun deleteUser() {
+        sharedPreferences.edit().clear().apply()
+        userDao.deleteUser()
     }
 }
