@@ -1,6 +1,5 @@
 package cmm.apps.esmorga.view.profile
 
-import android.app.Dialog
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,7 +24,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmm.apps.designsystem.EsmorgaGuestError
 import cmm.apps.designsystem.EsmorgaText
@@ -33,6 +34,7 @@ import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.eventlist.MyEventListScreenTestTags.MY_EVENT_LIST_TITLE
+import cmm.apps.esmorga.view.extensions.observeLifecycleEvents
 import cmm.apps.esmorga.view.profile.model.ProfileEffect
 import cmm.apps.esmorga.view.profile.model.ProfileUiState
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
@@ -46,11 +48,17 @@ fun ProfileScreen(
     navigateLogIn : () -> Unit
 ) {
     val uiState: ProfileUiState by rvm.uiState.collectAsStateWithLifecycle()
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    rvm.observeLifecycleEvents(lifecycle)
     LaunchedEffect(Unit) {
         rvm.effect.collect { eff ->
             when (eff) {
                 ProfileEffect.NavigateToChangePassword -> TODO()
-                ProfileEffect.NavigateToLogOut -> TODO()
+                ProfileEffect.NavigateToLogOut -> {
+                    rvm.clearUserData()  // Esto limpia los datos del usuario
+                    // Después de eliminar los datos, navegas a la pantalla de login
+                    navigateLogIn()
+                }
                 is ProfileEffect.ShowNoNetworkError -> TODO()
                 ProfileEffect.NavigateToLogIn -> navigateLogIn()
             }
@@ -100,7 +108,6 @@ fun ProfileView( uiState: ProfileUiState, shownLogOutDialog: () -> Unit, onChang
         }
     }
 }
-
 @Composable
 fun LoguedView(name: String, email: String, onLogout: () -> Unit, onChangePassword: () -> Unit,) {
     var shownDialog by remember { mutableStateOf(false) }
@@ -168,7 +175,7 @@ fun LogoutDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
                 style = EsmorgaTextStyle.BODY_1,
                 modifier = Modifier
                     .clickable {
-                        //onDismiss()
+                        onDismiss()
                         onConfirm()
                     }
                     .padding(start = 10.dp)

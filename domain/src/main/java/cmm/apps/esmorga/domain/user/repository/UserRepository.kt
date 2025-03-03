@@ -6,4 +6,5 @@ interface UserRepository {
     suspend fun login(email: String, password: String): User
     suspend fun register(name: String, lastName: String, email: String, password: String): User
     suspend fun getUser(): User
+    suspend fun logout()
 }

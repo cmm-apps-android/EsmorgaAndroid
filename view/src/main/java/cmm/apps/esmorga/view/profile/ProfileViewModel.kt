@@ -5,7 +5,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
-import cmm.apps.esmorga.view.MainUiState
 import cmm.apps.esmorga.view.profile.model.ProfileEffect
 import cmm.apps.esmorga.view.profile.model.ProfileUiState
 import kotlinx.coroutines.channels.BufferOverflow
@@ -31,25 +30,33 @@ class ProfileViewModel(private val getSavedUserUseCase: GetSavedUserUseCase) : V
     }
 
     fun logout() {
-        //_userProfile.value = null
+        clearUserData()
     }
 
-    fun changePassword(){
+    fun changePassword() {
         _effect.tryEmit(ProfileEffect.NavigateToChangePassword)
     }
 
-    fun loadUser(){
+    fun loadUser() {
         viewModelScope.launch {
             val result = getSavedUserUseCase.invoke()
             result.onSuccess { user ->
                 _uiState.value = ProfileUiState(user = user)
-            }.onFailure { _ ->
+            }.onFailure {
                 _uiState.value = ProfileUiState(user = null)
             }
         }
     }
 
-    fun logIn(){
+    fun logIn() {
         _effect.tryEmit(ProfileEffect.NavigateToLogIn)
+    }
+
+    internal fun clearUserData() {
+        viewModelScope.launch {
+            getSavedUserUseCase.clearUser()
+            _uiState.value = ProfileUiState(user = null)
+            _effect.tryEmit(ProfileEffect.NavigateToLogOut)
+        }
     }
 }
