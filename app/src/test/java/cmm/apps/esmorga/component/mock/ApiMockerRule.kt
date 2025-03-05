@@ -15,15 +15,16 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 
-class MockedOkHttpRule<T : Any>(
+class ApiMockerRule<T : Any>(
     private val clazz: Class<T>,
     private val testDispatcher: CoroutineDispatcher = StandardTestDispatcher(),
     private val okHttpClient: OkHttpClient = OkHttpClient.Builder().build(),
     private val gson: Gson = Gson()
 ) : ExternalResource() {
     private val server: MockWebServer = MockWebServer()
-    lateinit var apiService: T
+    lateinit var api: T
     private lateinit var retrofit: Retrofit
+
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun before() {
         Dispatchers.setMain(testDispatcher)
@@ -41,7 +42,7 @@ class MockedOkHttpRule<T : Any>(
                 )
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build()
-            apiService = retrofit.create(clazz)
+            api = retrofit.create(clazz)
         } catch (e: IOException) {
             throw RuntimeException(e)
         }
@@ -62,12 +63,10 @@ class MockedOkHttpRule<T : Any>(
     }
 }
 
-fun mockResponseSuccess(data: String): MockResponse = MockResponse()
-    .setBody(data)
-    .setResponseCode(200)
-
-fun Any.loadRawFile(fileName: String): String {
-    return javaClass.getResourceAsStream(fileName)?.bufferedReader()
-        .use { it?.readText() } ?: ""
+fun Any.mockResponseSuccess(filePath: String): MockResponse {
+    return MockResponse()
+        .setBody(javaClass.getResourceAsStream(filePath)?.bufferedReader()
+            .use { it?.readText() } ?: "")
+        .setResponseCode(200)
 }
 

@@ -4,9 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import cmm.apps.esmorga.component.mock.ApiMockerRule
 import cmm.apps.esmorga.component.mock.MockApplication
-import cmm.apps.esmorga.component.mock.MockedOkHttpRule
-import cmm.apps.esmorga.component.mock.loadRawFile
 import cmm.apps.esmorga.component.mock.mockResponseSuccess
 import cmm.apps.esmorga.datasource_local.database.EsmorgaDatabase
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaGuestApi
@@ -39,15 +38,13 @@ class EventListViewModelComponentTest : KoinTest {
     private val testDispatcher = UnconfinedTestDispatcher()
 
     @get:Rule
-    val okHttpRule = MockedOkHttpRule(EsmorgaGuestApi::class.java, testDispatcher)
+    val apiMocker = ApiMockerRule(EsmorgaGuestApi::class.java, testDispatcher)
 
     private lateinit var mockContext: Context
-    private lateinit var api: EsmorgaGuestApi
     private lateinit var mockDatabase: EsmorgaDatabase
 
     @Before
     fun init() {
-        api = okHttpRule.apiService
         mockContext = ApplicationProvider.getApplicationContext()
         mockDatabase = Room
             .inMemoryDatabaseBuilder(mockContext, EsmorgaDatabase::class.java)
@@ -70,7 +67,7 @@ class EventListViewModelComponentTest : KoinTest {
                 AppDIModules.modules,
                 module {
                     single<EsmorgaDatabase> { mockDatabase }
-                    single<EsmorgaGuestApi> { api }
+                    single<EsmorgaGuestApi> { apiMocker.api }
                 }
             )
         }
@@ -79,8 +76,7 @@ class EventListViewModelComponentTest : KoinTest {
     @Test
     fun `given a successful API and an empty DB when screen is shown then UI state with events is returned`() = runTest {
         val remoteEventName = "Mocked Event from events.json"
-        val raw = loadRawFile("/events.json")
-        okHttpRule.enqueue { mockResponseSuccess(raw) }
+        apiMocker.enqueue { mockResponseSuccess("/events.json") }
         startDI()
 
         val useCase: GetEventListUseCase by inject()
