@@ -4,29 +4,28 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import cmm.apps.esmorga.component.mock.EventDataMock
+import cmm.apps.esmorga.component.mock.ApiMockerRule
 import cmm.apps.esmorga.component.mock.MockApplication
-import cmm.apps.esmorga.data.di.DataDIModule.REMOTE_DATASOURCE_INSTANCE_NAME
-import cmm.apps.esmorga.data.event.datasource.EventDatasource
+import cmm.apps.esmorga.component.mock.mockResponseSuccess
 import cmm.apps.esmorga.datasource_local.database.EsmorgaDatabase
+import cmm.apps.esmorga.datasource_remote.api.EsmorgaGuestApi
 import cmm.apps.esmorga.di.AppDIModules
 import cmm.apps.esmorga.domain.event.GetEventListUseCase
 import cmm.apps.esmorga.view.eventlist.EventListViewModel
-import io.mockk.coEvery
-import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.asExecutor
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
-import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.koin.test.KoinTest
 import org.koin.test.inject
@@ -36,12 +35,13 @@ import org.robolectric.annotation.Config
 @RunWith(AndroidJUnit4::class)
 @Config(application = MockApplication::class)
 class EventListViewModelComponentTest : KoinTest {
+    private val testDispatcher = UnconfinedTestDispatcher()
+
+    @get:Rule
+    val apiMocker = ApiMockerRule(EsmorgaGuestApi::class.java, testDispatcher)
 
     private lateinit var mockContext: Context
     private lateinit var mockDatabase: EsmorgaDatabase
-    private lateinit var remoteDatasource: EventDatasource
-
-    private val testDispatcher = UnconfinedTestDispatcher()
 
     @Before
     fun init() {
@@ -57,7 +57,6 @@ class EventListViewModelComponentTest : KoinTest {
     @After
     fun shutDown() {
         mockDatabase.close()
-
         stopKoin()
     }
 
@@ -68,7 +67,7 @@ class EventListViewModelComponentTest : KoinTest {
                 AppDIModules.modules,
                 module {
                     single<EsmorgaDatabase> { mockDatabase }
-                    factory<EventDatasource>(named(REMOTE_DATASOURCE_INSTANCE_NAME)) { remoteDatasource }
+                    single<EsmorgaGuestApi> { apiMocker.api }
                 }
             )
         }
@@ -76,9 +75,8 @@ class EventListViewModelComponentTest : KoinTest {
 
     @Test
     fun `given a successful API and an empty DB when screen is shown then UI state with events is returned`() = runTest {
-        val remoteEventName = "Event Name"
-        remoteDatasource = mockk<EventDatasource>()
-        coEvery { remoteDatasource.getEvents() } returns EventDataMock.provideEventDataModelList(listOf(remoteEventName))
+        val remoteEventName = "Mocked Event from events.json"
+        apiMocker.enqueue { mockResponseSuccess("/events.json") }
         startDI()
 
         val useCase: GetEventListUseCase by inject()
@@ -86,6 +84,8 @@ class EventListViewModelComponentTest : KoinTest {
         val sut = EventListViewModel(useCase)
 
         sut.loadEvents()
+
+        advanceUntilIdle()
 
         val uiState = sut.uiState.value
         Assert.assertTrue(uiState.eventList[0].cardTitle.contains(remoteEventName))
