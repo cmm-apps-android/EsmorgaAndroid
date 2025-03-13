@@ -111,9 +111,10 @@ private fun NavGraphBuilder.homeFlow(navigationController: NavHostController) {
         })
     }
     composable<Navigation.ProfileScreen> {
-        ProfileScreen(navigateLogIn = {
-            navigationController.navigate(Navigation.LoginScreen)
-        } )
+        ProfileScreen(
+            navigateLogIn = { navigationController.navigate(Navigation.LoginScreen) },
+            onNoNetworkError = { navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = it))}
+        )
     }
 }
 

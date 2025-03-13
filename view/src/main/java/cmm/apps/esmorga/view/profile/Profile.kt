@@ -19,12 +19,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -33,6 +33,8 @@ import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
+import cmm.apps.esmorga.view.errors.EsmorgaErrorScreen
+import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.eventlist.MyEventListScreenTestTags.MY_EVENT_LIST_TITLE
 import cmm.apps.esmorga.view.extensions.observeLifecycleEvents
 import cmm.apps.esmorga.view.profile.model.ProfileEffect
@@ -45,20 +47,33 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun ProfileScreen(
     rvm: ProfileViewModel = koinViewModel(),
-    navigateLogIn : () -> Unit
+    navigateLogIn: () -> Unit,
+    onNoNetworkError: (EsmorgaErrorScreenArguments) -> Unit
+
 ) {
     val uiState: ProfileUiState by rvm.uiState.collectAsStateWithLifecycle()
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     rvm.observeLifecycleEvents(lifecycle)
+
+    var showError by remember { mutableStateOf(false) }
+    var errorArguments by remember { mutableStateOf<EsmorgaErrorScreenArguments?>(null) }
+
     LaunchedEffect(Unit) {
         rvm.effect.collect { eff ->
             when (eff) {
-                ProfileEffect.NavigateToChangePassword -> TODO()
+                ProfileEffect.NavigateToChangePassword -> {
+                    // navegar a la pantalla de cambio de contraseña.
+                }
                 ProfileEffect.NavigateToLogOut -> {
                     rvm.clearUserData()
                     navigateLogIn()
                 }
-                is ProfileEffect.ShowNoNetworkError -> TODO()
+                is ProfileEffect.ShowNoNetworkError -> {
+                    onNoNetworkError(eff.esmorgaNoNetworkArguments)
+
+                    //errorArguments = eff.esmorgaNoNetworkArguments
+                    //showError = true
+                }
                 ProfileEffect.NavigateToLogIn -> {
                     navigateLogIn()
                 }
@@ -67,23 +82,33 @@ fun ProfileScreen(
     }
 
     EsmorgaTheme {
-        ProfileView(
-            uiState = uiState,
-            shownLogOutDialog = { rvm.logout() },
-            onChangePassword = { rvm.changePassword() },
-            onNavigateLogin = { rvm.logIn() }
-        )
+        if (showError && errorArguments != null) {
+            EsmorgaErrorScreen(
+                esmorgaErrorScreenArguments = errorArguments!!,
+                onButtonPressed = { showError = false }
+            )
+        } else {
+            ProfileView(
+                uiState = uiState,
+                shownLogOutDialog = { rvm.logout() },
+                onChangePassword = { rvm.changePassword() },
+                onNavigateLogin = { rvm.logIn() }
+            )
+        }
     }
 }
 
-
 @Composable
-fun ProfileView( uiState: ProfileUiState, shownLogOutDialog: () -> Unit, onChangePassword: () -> Unit, onNavigateLogin: () -> Unit) {
-
+fun ProfileView(
+    uiState: ProfileUiState,
+    shownLogOutDialog: () -> Unit,
+    onChangePassword: () -> Unit,
+    onNavigateLogin: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Lavender)//Igual se borra
+            .background(Lavender)
             .padding(16.dp)
     ) {
         EsmorgaText(
@@ -97,7 +122,7 @@ fun ProfileView( uiState: ProfileUiState, shownLogOutDialog: () -> Unit, onChang
             EsmorgaGuestError(
                 stringResource(R.string.unauthenticated_error_message),
                 stringResource(R.string.unauthenticated_error_login_button),
-                {onNavigateLogin()},
+                { onNavigateLogin() },
                 R.raw.oops
             )
         } else {
@@ -105,17 +130,23 @@ fun ProfileView( uiState: ProfileUiState, shownLogOutDialog: () -> Unit, onChang
                 name = uiState.user.name,
                 email = uiState.user.email,
                 onLogout = { shownLogOutDialog() },
-                onChangePassword = { onChangePassword() }
+                onChangePassword = { onChangePassword() },
             )
         }
     }
 }
+
 @Composable
-fun LoguedView(name: String, email: String, onLogout: () -> Unit, onChangePassword: () -> Unit,) {
+fun LoguedView(
+    name: String,
+    email: String,
+    onLogout: () -> Unit,
+    onChangePassword: () -> Unit
+) {
     var shownDialog by remember { mutableStateOf(false) }
 
     if (shownDialog) {
-        LogoutDialog(onConfirm = onLogout, onDismiss = { shownDialog = false} )
+        LogoutDialog(onConfirm = onLogout, onDismiss = { shownDialog = false })
     }
 
     Column(
@@ -139,7 +170,9 @@ fun LoguedView(name: String, email: String, onLogout: () -> Unit, onChangePasswo
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp)
-                .clickable { onChangePassword() }
+                .clickable {
+                    onChangePassword()
+                }
         ) {
             EsmorgaText(text = stringResource(R.string.my_profile_changue_password), style = EsmorgaTextStyle.HEADING_2)
 

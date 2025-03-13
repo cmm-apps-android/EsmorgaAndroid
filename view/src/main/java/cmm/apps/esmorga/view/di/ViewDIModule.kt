@@ -11,6 +11,7 @@ import cmm.apps.esmorga.view.registration.RegistrationViewModel
 import cmm.apps.esmorga.view.welcome.WelcomeViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
+import org.koin.android.ext.koin.androidContext
 
 
 object ViewDIModule {
@@ -37,8 +38,6 @@ object ViewDIModule {
         viewModel {
             RegistrationViewModel(get())
         }
-        viewModel {
-            ProfileViewModel(get())
-        }
+        viewModel { ProfileViewModel(get(), androidContext()) }
     }
 }
