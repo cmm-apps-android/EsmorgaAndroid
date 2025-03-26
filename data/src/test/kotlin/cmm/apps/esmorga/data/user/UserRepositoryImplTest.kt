@@ -12,6 +12,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
+import kotlin.jvm.Throws
 
 class UserRepositoryImplTest {
     @Test
@@ -114,5 +115,33 @@ class UserRepositoryImplTest {
         sut.login("email", "password")
 
         coVerify { localEventDS.deleteCacheEvents() }
+    }
+
+    @Test
+    fun `given a log out when user request then user data is deleted`() = runTest {
+        val localDS = mockk<UserDatasource>(relaxed = true)
+        val remoteDS = mockk<UserDatasource>(relaxed = true)
+        val localEventDS = mockk<EventDatasource>(relaxed = true)
+        coEvery { localDS.deleteUser() } returns Unit
+        coEvery { localEventDS.deleteCacheEvents() }  returns Unit
+
+        val sut = UserRepositoryImpl(localDS, remoteDS, localEventDS)
+        sut.logout()
+        coVerify { localDS.deleteUser() }
+        coVerify { localEventDS.deleteCacheEvents() }
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun `given a log out when user request then error is expected`() = runTest {
+        val localDS = mockk<UserDatasource>(relaxed = true)
+        val remoteDS = mockk<UserDatasource>(relaxed = true)
+        val localEventDS = mockk<EventDatasource>(relaxed = true)
+        coEvery { localDS.deleteUser() } throws Exception()
+        coEvery { localEventDS.deleteCacheEvents() }  returns Unit
+
+        val sut = UserRepositoryImpl(localDS, remoteDS, localEventDS)
+        sut.logout()
+        coVerify { localDS.deleteUser() }
     }
 }

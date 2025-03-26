@@ -17,7 +17,12 @@ class UserRemoteDatasourceImpl(private val api: EsmorgaAuthApi) : UserDatasource
         }
     }
 
-    override suspend fun register(name: String, lastName: String, email: String, password: String): UserDataModel {
+    override suspend fun register(
+        name: String,
+        lastName: String,
+        email: String,
+        password: String
+    ): UserDataModel {
         try {
             val registerBody = mapOf(
                 "name" to name,
@@ -33,9 +38,6 @@ class UserRemoteDatasourceImpl(private val api: EsmorgaAuthApi) : UserDatasource
     }
 
     override suspend fun deleteUser() {
-        try {
-        } catch (e: Exception) {
-            throw manageApiException(e)
-        }
+        //Only local
     }
 }

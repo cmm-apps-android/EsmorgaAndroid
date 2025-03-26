@@ -38,6 +38,6 @@ object ViewDIModule {
         viewModel {
             RegistrationViewModel(get())
         }
-        viewModel { ProfileViewModel(get(), androidContext()) }
+        viewModel { ProfileViewModel(get(), get(), androidContext()) }
     }
 }
