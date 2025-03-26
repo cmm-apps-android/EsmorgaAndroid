@@ -8,6 +8,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
+import cmm.apps.esmorga.domain.user.LogOutUseCase
 import cmm.apps.esmorga.view.profile.model.ProfileEffect
 import cmm.apps.esmorga.view.profile.model.ProfileUiState
 import kotlinx.coroutines.channels.BufferOverflow
@@ -16,6 +17,7 @@ import kotlinx.coroutines.launch
 
 class ProfileViewModel(
     private val getSavedUserUseCase: GetSavedUserUseCase,
+    private val logOutUseCase: LogOutUseCase,
     private val context: Context
 ) : ViewModel(), DefaultLifecycleObserver {
 
@@ -66,7 +68,7 @@ class ProfileViewModel(
 
     internal fun clearUserData() {
         viewModelScope.launch {
-            getSavedUserUseCase.clearUser()
+            logOutUseCase.invoke()
             _uiState.value = ProfileUiState(user = null)
             _effect.emit(ProfileEffect.NavigateToLogIn)
         }

@@ -6,7 +6,6 @@ import cmm.apps.esmorga.domain.user.repository.UserRepository
 
 interface GetSavedUserUseCase {
     suspend operator fun invoke(): EsmorgaResult<User>
-    suspend fun clearUser()
 }
 
 class GetSavedUserUseCaseImpl(private val repo: UserRepository) : GetSavedUserUseCase {
@@ -16,13 +15,6 @@ class GetSavedUserUseCaseImpl(private val repo: UserRepository) : GetSavedUserUs
             EsmorgaResult.success(result)
         } catch (e: Exception) {
             EsmorgaResult.failure(e)
-        }
-    }
-
-    override suspend fun clearUser() {
-        try {
-            repo.logout()
-        } catch (e: Exception) {
         }
     }
 }

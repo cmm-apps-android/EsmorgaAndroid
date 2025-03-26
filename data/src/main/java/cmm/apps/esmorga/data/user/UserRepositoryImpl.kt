@@ -45,8 +45,8 @@ class UserRepositoryImpl(
 
     override suspend fun logout() {
         try {
-            localUserDs.deleteUser() // Elimina los datos del usuario almacenados localmente
-            localEventDs.deleteCacheEvents() // Borra los eventos en caché
+            localUserDs.deleteUser()
+            localEventDs.deleteCacheEvents()
         } catch (e: Exception) {
             throw Exception("Error al cerrar sesión: ${e.message}", e)
         }
