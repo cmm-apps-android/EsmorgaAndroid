@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.kover)
+    alias(libs.plugins.firebase)
 }
 
 android {
@@ -80,6 +81,8 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.android)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockk)

@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.jvm) apply false
     alias(libs.plugins.kover)
     alias(libs.plugins.compose.compiler) apply false
+    alias(libs.plugins.firebase) apply false
 }
 
 dependencies {
