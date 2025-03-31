@@ -66,6 +66,7 @@ dependencies {
     implementation(libs.coil)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.gson)
+    implementation(libs.play.services.measurement.api)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
