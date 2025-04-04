@@ -32,11 +32,15 @@ hamcrest = "1.3"
 lottie = "6.5.2"
 google = "4.4.2"
 playServicesMeasurementApi = "22.4.0"
+crashlyticsVersion = "3.0.3"
 
 [libraries]
-#Kotlin Core
+#Firebase
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
+
+#Kotlin Core
 kotlinx-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
 
 #Android Core
@@ -93,8 +97,8 @@ coil-test = { group = "io.coil-kt", name = "coil-test", version.ref = "coil" }
 turbine = {group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 compose-ui-junit = {group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "uiTestJunit" }
 compose-ui-test-manifest = {group = "androidx.compose.ui", name = "ui-test-manifest", version.ref = "uiTestJunit" }
-hamcrest = {group = "org.hamcrest", name = "hamcrest-core", version.ref = "hamcrest" }
-play-services-measurement-api = { group = "com.google.android.gms", name = "play-services-measurement-api", version.ref = "playServicesMeasurementApi" } #Needed for Navigation testing: https://github.com/cashapp/paparazzi/issues/622
+hamcrest = {group = "org.hamcrest", name = "hamcrest-core", version.ref = "hamcrest" } #Needed for Navigation testing: https://github.com/cashapp/paparazzi/issues/622
+play-services-measurement-api = { group = "com.google.android.gms", name = "play-services-measurement-api", version.ref = "playServicesMeasurementApi" }
 
 [plugins]
 java-library = { id = "java-library" }
@@ -108,3 +112,4 @@ paparazzi = { id = "app.cash.paparazzi", version.ref = "paparazzi" }
 jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 firebase = {id = "com.google.gms.google-services", version.ref = "google"}
+crashlytics = {id = "com.google.firebase.crashlytics", version.ref = "crashlyticsVersion"}
