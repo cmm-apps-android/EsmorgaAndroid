@@ -4,6 +4,10 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.provider.Settings
+import cmm.apps.esmorga.domain.result.ErrorCodes
+import cmm.apps.esmorga.domain.result.EsmorgaException
+import cmm.apps.esmorga.domain.result.Source
+import com.google.firebase.crashlytics.CustomKeysAndValues
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 
 object ConnectivityUtils {
@@ -24,10 +28,24 @@ object ConnectivityUtils {
     }
 
     fun reportNoConnectivityIfNeeded(context: Context) {
-        if (!isNetworkAvailable(context) && !isAirplaneModeOn(context)) {
+        if (!isNetworkAvailable(context)) {
             FirebaseCrashlytics.getInstance().log("No connectivity during backend call")
-                FirebaseCrashlytics.getInstance()
-                    .recordException(Exception("Connectivity lost unexpectedly"))
+            val esmorgaError = EsmorgaException(
+                message = "No internet connection",
+                source = Source.REMOTE,
+                code = ErrorCodes.NO_CONNECTION
+            )
+
+            val extraDescription = if (isAirplaneModeOn(context)) "with having airplane mode activated" else "without having airplane mode activated"
+            val keys = CustomKeysAndValues.Builder()
+                .putString("Connection status", "offline")
+                .putInt("Error Code", ErrorCodes.NO_CONNECTION)
+                .putString("Error Domain", "com.esmorga")
+                .putString("Error Description", "Loss of internet connection $extraDescription.")
+                .putBoolean("Flight mode", isAirplaneModeOn(context))
+                .build()
+
+            FirebaseCrashlytics.getInstance().recordException(esmorgaError, keys)
         }
     }
 }

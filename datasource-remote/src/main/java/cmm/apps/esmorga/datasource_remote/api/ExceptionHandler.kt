@@ -1,11 +1,10 @@
 package cmm.apps.esmorga.datasource_remote.api
 
 import android.content.Context
+import cmm.apps.esmorga.datasource_remote.util.ConnectivityUtils
 import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.Source
-import cmm.apps.esmorga.datasource_remote.util.ConnectivityUtils
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import retrofit2.HttpException
 import java.net.ConnectException
 import java.net.UnknownHostException
@@ -16,7 +15,6 @@ object ExceptionHandler {
     fun manageApiException(e: Exception, context: Context): EsmorgaException {
         return when (e) {
             is HttpException -> {
-                FirebaseCrashlytics.getInstance().recordException(e)
                 EsmorgaException(
                     message = e.response()?.message().orEmpty(),
                     source = Source.REMOTE,
@@ -25,7 +23,6 @@ object ExceptionHandler {
             }
 
             is DateTimeParseException -> {
-                FirebaseCrashlytics.getInstance().recordException(e)
                 EsmorgaException(
                     message = "Date parse error: ${e.message.orEmpty()}",
                     source = Source.REMOTE,
@@ -46,7 +43,6 @@ object ExceptionHandler {
             is EsmorgaException -> e
 
             else -> {
-                FirebaseCrashlytics.getInstance().recordException(e)
                 EsmorgaException(
                     message = "Unexpected error: ${e.message.orEmpty()}",
                     source = Source.REMOTE,
