@@ -1,19 +1,20 @@
 package cmm.apps.esmorga.datasource_remote.user
 
+import android.content.Context
 import cmm.apps.esmorga.data.user.datasource.UserDatasource
 import cmm.apps.esmorga.data.user.model.UserDataModel
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaAuthApi
 import cmm.apps.esmorga.datasource_remote.api.ExceptionHandler.manageApiException
 import cmm.apps.esmorga.datasource_remote.user.mapper.toUserDataModel
 
-class UserRemoteDatasourceImpl(private val api: EsmorgaAuthApi) : UserDatasource {
+class UserRemoteDatasourceImpl(private val api: EsmorgaAuthApi, private val context: Context) : UserDatasource {
     override suspend fun login(email: String, password: String): UserDataModel {
         try {
             val loginBody = mapOf("email" to email, "password" to password)
             val user = api.login(loginBody)
             return user.toUserDataModel()
         } catch (e: Exception) {
-            throw manageApiException(e)
+            throw manageApiException(e, context)
         }
     }
 
@@ -27,7 +28,7 @@ class UserRemoteDatasourceImpl(private val api: EsmorgaAuthApi) : UserDatasource
             )
             api.register(registerBody)
         } catch (e: Exception) {
-            throw manageApiException(e)
+            throw manageApiException(e, context)
         }
     }
 
@@ -38,7 +39,7 @@ class UserRemoteDatasourceImpl(private val api: EsmorgaAuthApi) : UserDatasource
             )
             api.emailVerification(emailBody)
         } catch (e: Exception) {
-            throw manageApiException(e)
+            throw manageApiException(e, context)
         }
     }
 

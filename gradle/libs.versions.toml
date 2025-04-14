@@ -33,6 +33,7 @@ lottie = "6.5.2"
 google = "4.4.2"
 playServicesMeasurementApi = "22.4.0"
 crashlyticsVersion = "3.0.3"
+firebaseCrashlyticsKtx = "19.4.2"
 
 [libraries]
 #Firebase
@@ -99,6 +100,7 @@ compose-ui-junit = {group = "androidx.compose.ui", name = "ui-test-junit4", vers
 compose-ui-test-manifest = {group = "androidx.compose.ui", name = "ui-test-manifest", version.ref = "uiTestJunit" }
 hamcrest = {group = "org.hamcrest", name = "hamcrest-core", version.ref = "hamcrest" } #Needed for Navigation testing: https://github.com/cashapp/paparazzi/issues/622
 play-services-measurement-api = { group = "com.google.android.gms", name = "play-services-measurement-api", version.ref = "playServicesMeasurementApi" }
+firebase-crashlytics-ktx = { group = "com.google.firebase", name = "firebase-crashlytics-ktx", version.ref = "firebaseCrashlyticsKtx" }
 
 [plugins]
 java-library = { id = "java-library" }

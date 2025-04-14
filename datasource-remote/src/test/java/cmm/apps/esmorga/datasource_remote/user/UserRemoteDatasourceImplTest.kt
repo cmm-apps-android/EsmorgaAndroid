@@ -1,5 +1,6 @@
 package cmm.apps.esmorga.datasource_remote.user
 
+import android.content.Context
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaAuthApi
 import cmm.apps.esmorga.datasource_remote.mock.UserRemoteMock
 import cmm.apps.esmorga.domain.result.EsmorgaException
@@ -20,10 +21,11 @@ class UserRemoteDatasourceImplTest {
     fun `given valid credentials when login succeeds then user is returned`() = runTest {
         val remoteUserName = "Albus"
 
+        val context = mockk<Context>(relaxed = true)
         val api = mockk<EsmorgaAuthApi>(relaxed = true)
         coEvery { api.login(any()) } returns UserRemoteMock.provideUser(remoteUserName)
 
-        val sut = UserRemoteDatasourceImpl(api)
+        val sut = UserRemoteDatasourceImpl(api, context)
         val result = sut.login("email", "password")
 
         Assert.assertEquals(remoteUserName, result.dataName)
@@ -31,10 +33,11 @@ class UserRemoteDatasourceImplTest {
 
     @Test(expected = Exception::class)
     fun `given invalid credentials when login fails then exception is thrown`() = runTest {
+        val context = mockk<Context>(relaxed = true)
         val api = mockk<EsmorgaAuthApi>(relaxed = true)
         coEvery { api.login(any()) } throws HttpException(Response.error<ResponseBody>(401, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
 
-        val sut = UserRemoteDatasourceImpl(api)
+        val sut = UserRemoteDatasourceImpl(api, context)
         sut.login("email", "password")
     }
 
@@ -42,10 +45,11 @@ class UserRemoteDatasourceImplTest {
     fun `given valid data when registration succeeds then user is returned`() = runTest {
         val remoteUserName = "Barbus"
 
+        val context = mockk<Context>(relaxed = true)
         val api = mockk<EsmorgaAuthApi>(relaxed = true)
         coEvery { api.register(any()) } returns Unit
 
-        val sut = UserRemoteDatasourceImpl(api)
+        val sut = UserRemoteDatasourceImpl(api, context)
         val result = sut.register(remoteUserName, "lastName", "email", "password")
 
         Assert.assertEquals(Unit, result)
@@ -55,10 +59,12 @@ class UserRemoteDatasourceImplTest {
     fun `given invalid data when registration fails then exception is thrown`() = runTest {
         val errorCode = 400
 
+        val context = mockk<Context>(relaxed = true)
         val api = mockk<EsmorgaAuthApi>(relaxed = true)
         coEvery { api.register(any()) } throws HttpException(Response.error<ResponseBody>(errorCode, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
+        coEvery { context.getSystemService(Context.CONNECTIVITY_SERVICE) }
 
-        val sut = UserRemoteDatasourceImpl(api)
+        val sut = UserRemoteDatasourceImpl(api, context)
 
         val exception = try {
             sut.register("name", "lastName", "email", "password")
