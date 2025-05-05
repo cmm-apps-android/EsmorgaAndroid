@@ -34,8 +34,8 @@ import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
-import cmm.apps.esmorga.view.eventlist.MyEventListScreenTestTags.MY_EVENT_LIST_TITLE
 import cmm.apps.esmorga.view.extensions.observeLifecycleEvents
+import cmm.apps.esmorga.view.profile.HomeScreenTestTags.PROFILE_TITLE
 import cmm.apps.esmorga.view.profile.model.ProfileEffect
 import cmm.apps.esmorga.view.profile.model.ProfileUiState
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
@@ -106,7 +106,7 @@ fun ProfileView(
             style = EsmorgaTextStyle.HEADING_1,
             modifier = Modifier
                 .padding(vertical = 32.dp)
-                .testTag(MY_EVENT_LIST_TITLE)
+                .testTag(PROFILE_TITLE)
         )
         if (uiState.user == null) {
             EsmorgaGuestError(
@@ -215,4 +215,8 @@ fun LogoutDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
         },
         title = { EsmorgaText(text = stringResource(R.string.my_profile_logout_pop_up_title), style = EsmorgaTextStyle.TITLE) }
     )
+}
+
+object HomeScreenTestTags {
+    const val PROFILE_TITLE = "profile screen title"
 }
