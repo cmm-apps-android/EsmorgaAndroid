@@ -21,7 +21,7 @@ data class RegistrationUiState(
 
 sealed class RegistrationEffect {
     data object ShowNoNetworkSnackbar : RegistrationEffect()
-    data object NavigateToEventList : RegistrationEffect()
+    data class NavigateToEmailConfirmation(val email: String) : RegistrationEffect()
     data class ShowFullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments = getEsmorgaErrorScreenArguments()) : RegistrationEffect()
 }
 

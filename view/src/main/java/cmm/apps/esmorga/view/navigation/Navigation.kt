@@ -24,15 +24,15 @@ import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreen
 import cmm.apps.esmorga.view.eventlist.EventListScreen
 import cmm.apps.esmorga.view.eventlist.MyEventListScreen
-import cmm.apps.esmorga.view.eventlist.model.EventListUiModel
 import cmm.apps.esmorga.view.login.LoginScreen
 import cmm.apps.esmorga.view.navigation.HomeScreenTestTags.PROFILE__TITLE
 import cmm.apps.esmorga.view.profile.ProfileScreen
+import cmm.apps.esmorga.view.registration.RegistrationConfirmationScreen
 import cmm.apps.esmorga.view.registration.RegistrationScreen
 import cmm.apps.esmorga.view.welcome.WelcomeScreen
-import kotlin.reflect.typeOf
 import kotlinx.serialization.Serializable
 import org.jetbrains.annotations.VisibleForTesting
+import kotlin.reflect.typeOf
 
 sealed class Navigation {
 
@@ -50,6 +50,9 @@ sealed class Navigation {
 
     @Serializable
     data object RegistrationScreen : Navigation()
+
+    @Serializable
+    data class RegistrationConfirmationScreen(val email: String) : Navigation()
 
     @Serializable
     data class FullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments) : Navigation()
@@ -153,12 +156,8 @@ private fun NavGraphBuilder.loginFlow(navigationController: NavHostController) {
     }
     composable<Navigation.RegistrationScreen> {
         RegistrationScreen(
-            onRegistrationSuccess = {
-                navigationController.navigate(Navigation.EventListScreen) {
-                    popUpTo(Navigation.WelcomeScreen) {
-                        inclusive = true
-                    }
-                }
+            onRegistrationSuccess = { email->
+                navigationController.navigate(Navigation.RegistrationConfirmationScreen(email = email))
             },
             onRegistrationError = { esmorgaFullScreenArguments ->
                 navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = esmorgaFullScreenArguments))
@@ -166,6 +165,13 @@ private fun NavGraphBuilder.loginFlow(navigationController: NavHostController) {
             onBackClicked = {
                 navigationController.popBackStack()
             }
+        )
+    }
+    composable<Navigation.RegistrationConfirmationScreen> { backStackEntry ->
+        val email = backStackEntry.toRoute<Navigation.RegistrationConfirmationScreen>().email
+        RegistrationConfirmationScreen(
+            onBackClicked = { navigationController.popBackStack() },
+            email = email
         )
     }
 }
@@ -192,6 +198,13 @@ fun openNavigationApp(context: Context, latitude: Double, longitude: Double) {
     } else {
         // do nothing
     }
+}
+
+fun openEmailApp(context: Context) {
+    val intent = Intent(Intent.ACTION_MAIN)
+    intent.addCategory(Intent.CATEGORY_APP_EMAIL)
+    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+    context.startActivity(intent)
 }
 
 private fun isPackageAvailable(context: Context, appPackage: String) = try {

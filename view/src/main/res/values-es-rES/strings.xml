@@ -65,4 +65,10 @@
    <string name="my_profile_logout_pop_up_cancel">No, cancelar</string>
    <string name="unauthenticated_error_message">Oh no! No estás logueado</string>
    <string name="unauthenticated_error_login_button">Login</string>
+   <string name="register_confirmation_email_title">Confirma tu cuenta</string>
+   <string name="register_confirmation_email_subtitle">Hemos enviado un enlace de confirmación a tu correo electrónico. Por favor, revisa tu bandeja de entrada y sigue el enlace para activar tu cuenta.</string>
+   <string name="register_confirmation_email_button_email_app">Abrir app de correo</string>
+   <string name="register_confirmation_email_button_resend">Reenviar correo</string>
+   <string name="register_resend_code_success">Un nuevo email de confirmación ha sido enviado</string>
+   <string name="register_resend_code_error">No se ha podido enviar un nuevo email de confirmación</string>
 </resources>

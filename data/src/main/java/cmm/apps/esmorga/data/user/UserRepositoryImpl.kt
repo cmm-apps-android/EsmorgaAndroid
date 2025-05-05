@@ -6,46 +6,30 @@ import cmm.apps.esmorga.data.user.mapper.toUser
 import cmm.apps.esmorga.domain.user.model.User
 import cmm.apps.esmorga.domain.user.repository.UserRepository
 
-class UserRepositoryImpl(
-    private val localUserDs: UserDatasource,
-    private val remoteUserDs: UserDatasource,
-    private val localEventDs: EventDatasource
-) : UserRepository {
-
+class UserRepositoryImpl(private val localDs: UserDatasource, private val remoteDs: UserDatasource, private val localEventDs: EventDatasource) : UserRepository {
     override suspend fun login(email: String, password: String): User {
-        return try {
-            val userDataModel = remoteUserDs.login(email, password)
-            localUserDs.saveUser(userDataModel)
-            localEventDs.deleteCacheEvents()
-            userDataModel.toUser()
-        } catch (e: Exception) {
-            throw Exception("Error al iniciar sesión: ${e.message}", e)
-        }
+        val userDataModel = remoteDs.login(email, password)
+        localDs.saveUser(userDataModel)
+        localEventDs.deleteCacheEvents()
+        return userDataModel.toUser()
     }
 
-    override suspend fun register(name: String, lastName: String, email: String, password: String): User {
-        return try {
-            val userDataModel = remoteUserDs.register(name, lastName, email, password)
-            localUserDs.saveUser(userDataModel)
-            userDataModel.toUser()
-        } catch (e: Exception) {
-            throw Exception("Error al registrar usuario: ${e.message}", e)
-        }
+    override suspend fun register(name: String, lastName: String, email: String, password: String) {
+        remoteDs.register(name, lastName, email, password)
     }
 
     override suspend fun getUser(): User {
-        return try {
-            val userDataModel = localUserDs.getUser()
-                ?: throw Exception("No se encontró un usuario almacenado localmente")
-            userDataModel.toUser()
-        } catch (e: Exception) {
-            throw Exception("Error al obtener usuario: ${e.message}", e)
-        }
+        val userDataModel = localDs.getUser()
+        return userDataModel.toUser()
+    }
+
+    override suspend fun emailVerification(email: String) {
+        remoteDs.emailVerification(email)
     }
 
     override suspend fun logout() {
         try {
-            localUserDs.deleteUser()
+            localDs.deleteUser()
             localEventDs.deleteCacheEvents()
         } catch (e: Exception) {
             throw Exception("Error al cerrar sesión: ${e.message}", e)

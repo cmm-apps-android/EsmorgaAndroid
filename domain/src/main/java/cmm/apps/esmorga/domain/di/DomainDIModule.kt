@@ -16,6 +16,8 @@ import cmm.apps.esmorga.domain.user.LogOutUseCase
 import cmm.apps.esmorga.domain.user.LogOutUseCaseImpl
 import cmm.apps.esmorga.domain.user.PerformLoginUseCase
 import cmm.apps.esmorga.domain.user.PerformLoginUseCaseImpl
+import cmm.apps.esmorga.domain.user.PerformRegistrationConfirmationUseCase
+import cmm.apps.esmorga.domain.user.PerformRegistrationConfirmationUseCaseImpl
 import cmm.apps.esmorga.domain.user.PerformRegistrationUserCase
 import cmm.apps.esmorga.domain.user.PerformRegistrationUserCaseImpl
 import org.koin.dsl.module
@@ -28,6 +30,7 @@ object DomainDIModule {
         factory<GetEventDetailsUseCase> { GetEventDetailsUseCaseImpl(get()) }
         factory<PerformLoginUseCase> { PerformLoginUseCaseImpl(get()) }
         factory<PerformRegistrationUserCase> { PerformRegistrationUserCaseImpl(get()) }
+        factory<PerformRegistrationConfirmationUseCase> { PerformRegistrationConfirmationUseCaseImpl(get()) }
         factory<GetSavedUserUseCase> { GetSavedUserUseCaseImpl(get()) }
         factory<JoinEventUseCase> { JoinEventUseCaseImpl(get()) }
         factory<GetMyEventListUseCase> { GetMyEventListUseCaseImpl(get(), get()) }

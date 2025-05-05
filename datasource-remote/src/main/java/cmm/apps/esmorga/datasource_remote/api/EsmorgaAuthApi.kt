@@ -10,9 +10,11 @@ interface EsmorgaAuthApi {
     suspend fun login(@Body body: Map<String, String>): UserRemoteModel
 
     @POST("account/register")
-    suspend fun register(@Body body: Map<String, String>): UserRemoteModel
+    suspend fun register(@Body body: Map<String, String>)
 
     @POST("account/refresh")
     suspend fun refreshAccessToken(@Body body: Map<String, String>): UserRemoteModel
 
+    @POST("account/email/verification")
+    suspend fun emailVerification(@Body body: Map<String, String>)
 }
