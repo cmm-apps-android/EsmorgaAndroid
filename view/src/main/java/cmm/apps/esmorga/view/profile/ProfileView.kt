@@ -19,10 +19,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -33,7 +33,6 @@ import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
-import cmm.apps.esmorga.view.errors.EsmorgaErrorScreen
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.eventlist.MyEventListScreenTestTags.MY_EVENT_LIST_TITLE
 import cmm.apps.esmorga.view.extensions.observeLifecycleEvents
@@ -51,29 +50,27 @@ fun ProfileScreen(
     onNoNetworkError: (EsmorgaErrorScreenArguments) -> Unit
 
 ) {
+    val context = LocalContext.current
     val uiState: ProfileUiState by rvm.uiState.collectAsStateWithLifecycle()
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     rvm.observeLifecycleEvents(lifecycle)
-
-    var showError by remember { mutableStateOf(false) }
-    var errorArguments by remember { mutableStateOf<EsmorgaErrorScreenArguments?>(null) }
 
     LaunchedEffect(Unit) {
         rvm.effect.collect { eff ->
             when (eff) {
                 ProfileEffect.NavigateToChangePassword -> {
-                    // navegar a la pantalla de cambio de contraseña.
+                    //TODO to be done in MOB-27
                 }
+
                 ProfileEffect.NavigateToLogOut -> {
                     rvm.clearUserData()
                     navigateLogIn()
                 }
+
                 is ProfileEffect.ShowNoNetworkError -> {
                     onNoNetworkError(eff.esmorgaNoNetworkArguments)
-
-                    //errorArguments = eff.esmorgaNoNetworkArguments
-                    //showError = true
                 }
+
                 ProfileEffect.NavigateToLogIn -> {
                     navigateLogIn()
                 }
@@ -82,19 +79,12 @@ fun ProfileScreen(
     }
 
     EsmorgaTheme {
-        if (showError && errorArguments != null) {
-            EsmorgaErrorScreen(
-                esmorgaErrorScreenArguments = errorArguments!!,
-                onButtonPressed = { showError = false }
-            )
-        } else {
-            ProfileView(
-                uiState = uiState,
-                shownLogOutDialog = { rvm.logout() },
-                onChangePassword = { rvm.changePassword() },
-                onNavigateLogin = { rvm.logIn() }
-            )
-        }
+        ProfileView(
+            uiState = uiState,
+            shownLogOutDialog = { rvm.logout() },
+            onChangePassword = { rvm.changePassword(context) },
+            onNavigateLogin = { rvm.logIn() }
+        )
     }
 }
 
@@ -126,7 +116,7 @@ fun ProfileView(
                 R.raw.oops
             )
         } else {
-            LoguedView(
+            LoggedProfileView(
                 name = uiState.user.name,
                 email = uiState.user.email,
                 onLogout = { shownLogOutDialog() },
@@ -137,7 +127,7 @@ fun ProfileView(
 }
 
 @Composable
-fun LoguedView(
+private fun LoggedProfileView(
     name: String,
     email: String,
     onLogout: () -> Unit,

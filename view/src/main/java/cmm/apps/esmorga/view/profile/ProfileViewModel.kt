@@ -12,14 +12,18 @@ import cmm.apps.esmorga.domain.user.LogOutUseCase
 import cmm.apps.esmorga.view.profile.model.ProfileEffect
 import cmm.apps.esmorga.view.profile.model.ProfileUiState
 import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
     private val getSavedUserUseCase: GetSavedUserUseCase,
-    private val logOutUseCase: LogOutUseCase,
-    private val context: Context
-) : ViewModel(), DefaultLifecycleObserver {
+    private val logOutUseCase: LogOutUseCase
+    ) : ViewModel(), DefaultLifecycleObserver {
 
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
@@ -39,9 +43,9 @@ class ProfileViewModel(
         clearUserData()
     }
 
-    fun changePassword() {
+    fun changePassword(context: Context) {
         viewModelScope.launch {
-            val effect = if (isInternetAvailable()) {
+            val effect = if (isInternetAvailable(context)) {
                 ProfileEffect.NavigateToChangePassword
             } else {
                 ProfileEffect.ShowNoNetworkError()
@@ -74,7 +78,7 @@ class ProfileViewModel(
         }
     }
 
-    private fun isInternetAvailable(): Boolean {
+    private fun isInternetAvailable(context: Context): Boolean {
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val network = connectivityManager.activeNetwork ?: return false
         val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
