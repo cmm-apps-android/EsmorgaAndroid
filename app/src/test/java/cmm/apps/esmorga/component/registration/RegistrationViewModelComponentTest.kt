@@ -79,7 +79,7 @@ class RegistrationViewModelComponentTest : KoinTest {
     @Test
     fun `given a successful API when user clicks on register then UI navigates to event list`() = runTest {
         remoteDatasource = mockk<UserDatasource>()
-        coEvery { remoteDatasource.register(any(), any(), any(), any()) } returns UserDataMock.provideUserDataModel()
+        coEvery { remoteDatasource.register(any(), any(), any(), any()) } returns Unit
         startDI()
 
         val useCase: PerformRegistrationUserCase by inject()
@@ -90,7 +90,7 @@ class RegistrationViewModelComponentTest : KoinTest {
             sut.onRegisterClicked("User", "test", "test@test.com", "Test@123", "Test@123")
 
             val effect = awaitItem()
-            Assert.assertTrue(effect is RegistrationEffect.NavigateToEventList)
+            Assert.assertTrue(effect is RegistrationEffect.NavigateToEmailConfirmation)
         }
     }
 }

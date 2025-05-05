@@ -74,30 +74,16 @@ class UserRepositoryImplTest {
     }
 
     @Test
-    fun `given valid data when registration succeeds then user is returned`() = runTest {
+    fun `given valid data when registration succeeds then success is returned`() = runTest {
         val name = "Mezcal"
         val localDS = mockk<UserDatasource>(relaxed = true)
         val remoteDS = mockk<UserDatasource>(relaxed = true)
         val localEventDS = mockk<EventDatasource>(relaxed = true)
-        coEvery { remoteDS.register(any(), any(), any(), any()) } returns UserDataMock.provideUserDataModel(name = name)
+        coEvery { remoteDS.register(any(), any(), any(), any()) } returns Unit
         val sut = UserRepositoryImpl(localDS, remoteDS, localEventDS)
         val result = sut.register(name, "lastName", "email", "password")
 
-        Assert.assertEquals(name, result.name)
-    }
-
-    @Test
-    fun `given valid data when registration succeeds then user is stored in local`() = runTest {
-        val user = UserDataMock.provideUserDataModel(name = "Dirty Harry")
-
-        val localDS = mockk<UserDatasource>(relaxed = true)
-        val remoteDS = mockk<UserDatasource>(relaxed = true)
-        val localEventDS = mockk<EventDatasource>(relaxed = true)
-        coEvery { remoteDS.register(any(), any(), any(), any()) } returns user
-        val sut = UserRepositoryImpl(localDS, remoteDS, localEventDS)
-        sut.register("name", "lastName", "email", "password")
-
-        coVerify { localDS.saveUser(user) }
+        Assert.assertEquals(Unit, result)
     }
 
     @Test
@@ -115,6 +101,28 @@ class UserRepositoryImplTest {
         sut.login("email", "password")
 
         coVerify { localEventDS.deleteCacheEvents() }
+    }
+
+    @Test
+    fun `given valid data when resend email succeeds then success is returned`() = runTest {
+        val localDS = mockk<UserDatasource>(relaxed = true)
+        val remoteDS = mockk<UserDatasource>(relaxed = true)
+        val localEventDS = mockk<EventDatasource>(relaxed = true)
+        coEvery { remoteDS.emailVerification(any()) } returns Unit
+        val sut = UserRepositoryImpl(localDS, remoteDS, localEventDS)
+        val result = sut.emailVerification("email")
+
+        Assert.assertEquals(Unit, result)
+    }
+
+    @Test(expected = EsmorgaException::class)
+    fun `given valid data when resend email succeeds then error is returned`() = runTest {
+        val localDS = mockk<UserDatasource>(relaxed = true)
+        val remoteDS = mockk<UserDatasource>(relaxed = true)
+        val localEventDS = mockk<EventDatasource>(relaxed = true)
+        coEvery { remoteDS.emailVerification(any()) } throws EsmorgaException("error", Source.REMOTE, 500)
+        val sut = UserRepositoryImpl(localDS, remoteDS, localEventDS)
+        sut.emailVerification("email")
     }
 
     @Test

@@ -2,8 +2,6 @@ package cmm.apps.esmorga.view.registration
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cmm.apps.esmorga.domain.result.ErrorCodes
-import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.user.PerformRegistrationUserCase
 import cmm.apps.esmorga.domain.user.model.User.Companion.EMAIL_REGEX
 import cmm.apps.esmorga.domain.user.model.User.Companion.NAME_REGEX
@@ -46,7 +44,8 @@ class RegistrationViewModel(private val performRegistrationUserCase: PerformRegi
                 _uiState.value = RegistrationUiState(loading = true)
                 val result = performRegistrationUserCase(name.trim(), lastName.trim(), email.trim(), password.trim())
                 result.onSuccess {
-                    _effect.tryEmit(RegistrationEffect.NavigateToEventList)
+                    _uiState.value = _uiState.value.copy(loading = false)
+                    _effect.tryEmit(RegistrationEffect.NavigateToEmailConfirmation(email))
                 }.onFailure { error ->
                     _uiState.value = _uiState.value.copy(loading = false)
                     when {
