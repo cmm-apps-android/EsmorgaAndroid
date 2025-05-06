@@ -20,11 +20,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Create google-services.json (QA by default)
+      - name: Create google-services.json (ProdDebug)
         run: |
           mkdir -p app/src/prod/debug
           echo "${{ secrets.GOOGLE_SERVICES_JSON }}" > app/src/prod/debug/google-services.json
-          
+
+      - name: Verify google-services.json (ProdDebug)
+        run: ls -la app/src/prod/debug
+
+      - name: Invalidate Gradle Cache
+        run: |
+          rm -rf ~/.gradle/caches/
+
+      - name: Clean project
+        run: ./gradlew clean
+
       - name: OAS
         uses: ./.github/actions/OAS
         with:
