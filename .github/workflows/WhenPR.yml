@@ -22,9 +22,9 @@ jobs:
 
       - name: Create google-services.json (QA by default)
         run: |
-          mkdir -p app
-          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" > /home/runner/work/EsmorgaAndroid/EsmorgaAndroid/app/google-services.json
-
+          mkdir -p app/src/prod/debug
+          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" > app/src/prod/debug/google-services.json
+          
       - name: OAS
         uses: ./.github/actions/OAS
         with:
