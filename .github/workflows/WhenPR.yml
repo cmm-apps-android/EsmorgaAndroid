@@ -22,11 +22,11 @@ jobs:
 
       - name: Create google-services.json (ProdDebug)
         run: |
-          mkdir -p app/src/prod/debug
-          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" > app/src/prod/debug/google-services.json
+          mkdir -p app/src/prodDebug
+          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" > app/src/prodDebug/google-services.json
 
       - name: Verify google-services.json (ProdDebug)
-        run: ls -la app/src/prod/debug
+        run: ls -la app/src/prodDebug
 
       - name: Invalidate Gradle Cache
         run: |
