@@ -20,13 +20,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Create google-services.json (ProdDebug)
+      - name: Create google-services.json
         run: |
-          mkdir -p app/src/prodDebug
-          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" > app/src/prodDebug/google-services.json
+          mkdir -p app
+          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" > app/google-services.json
 
-      - name: Verify google-services.json (ProdDebug)
-        run: ls -la app/src/prodDebug
+      - name: Verify google-services.json
+        run: ls -la app
 
       - name: Invalidate Gradle Cache
         run: |
