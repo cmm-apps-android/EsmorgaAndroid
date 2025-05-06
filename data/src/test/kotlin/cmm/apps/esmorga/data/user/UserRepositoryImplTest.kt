@@ -9,6 +9,8 @@ import cmm.apps.esmorga.domain.result.Source
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import junit.framework.TestCase.assertTrue
+import junit.framework.TestCase.fail
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
@@ -140,16 +142,24 @@ class UserRepositoryImplTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun `given a log out when user request then error is expected`() = runTest {
         val localDS = mockk<UserDatasource>(relaxed = true)
         val remoteDS = mockk<UserDatasource>(relaxed = true)
         val localEventDS = mockk<EventDatasource>(relaxed = true)
-        coEvery { localDS.deleteUser() } throws Exception()
-        coEvery { localEventDS.deleteCacheEvents() }  returns Unit
+
+        coEvery { localDS.deleteUser() } throws Exception("fallo deleteUser")
+        coEvery { localEventDS.deleteCacheEvents() } returns Unit
 
         val sut = UserRepositoryImpl(localDS, remoteDS, localEventDS)
-        sut.logout()
+
+        try {
+            sut.logout()
+            fail("Se esperaba una excepción y no se lanzó")
+        } catch (e: Exception) {
+            assertTrue(e.message!!.contains("Error al cerrar sesión"))
+        }
+
         coVerify { localDS.deleteUser() }
     }
+
 }

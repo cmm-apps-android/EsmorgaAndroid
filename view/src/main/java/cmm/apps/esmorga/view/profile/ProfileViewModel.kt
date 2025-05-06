@@ -22,8 +22,14 @@ import kotlinx.coroutines.launch
 
 class ProfileViewModel(
     private val getSavedUserUseCase: GetSavedUserUseCase,
-    private val logOutUseCase: LogOutUseCase
-    ) : ViewModel(), DefaultLifecycleObserver {
+    private val logOutUseCase: LogOutUseCase,
+    private val isInternetAvailable: (Context) -> Boolean = isInternetAvailable@{ context ->
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = connectivityManager.activeNetwork ?: return@isInternetAvailable false
+        val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return@isInternetAvailable false
+        capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
+    }
+) : ViewModel(), DefaultLifecycleObserver {
 
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
@@ -54,7 +60,7 @@ class ProfileViewModel(
         }
     }
 
-    private fun loadUser() {
+    fun loadUser() {
         viewModelScope.launch {
             getSavedUserUseCase.invoke()
                 .onSuccess { user ->
@@ -78,7 +84,7 @@ class ProfileViewModel(
         }
     }
 
-    private fun isInternetAvailable(context: Context): Boolean {
+    open fun isInternetAvailable(context: Context): Boolean {
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val network = connectivityManager.activeNetwork ?: return false
         val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false

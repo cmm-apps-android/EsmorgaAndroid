@@ -42,7 +42,4 @@ class UserRemoteDatasourceImpl(private val api: EsmorgaAuthApi, private val cont
             throw manageApiException(e, context)
         }
     }
-//    override suspend fun deleteUser() {
-//        //Only local
-//    }
 }
