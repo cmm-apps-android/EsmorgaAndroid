@@ -1,4 +1,4 @@
-name: Run Test Android 
+name: Run Test Android
 run-name: ${{ github.actor }} is testing ${{ github.event.pull_request.title }}
 
 on:
@@ -8,9 +8,9 @@ on:
     paths:
       - '**'
   workflow_dispatch:
+
 jobs:
   Test:
-
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
@@ -18,15 +18,20 @@ jobs:
       issues: write
 
     steps:
-
       - uses: actions/checkout@v4
+
+      - name: Create google-services.json (QA by default)
+        run: |
+          mkdir -p app/src/qa
+          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" > app/src/qa/google-services.json
 
       - name: OAS
         uses: ./.github/actions/OAS
         with:
           PAT: ${{ secrets.E2E_Github_Token }}
-          
+
       - uses: ./.github/actions/runTests
+
       - name: Add coverage report to PR
         id: kover
         uses: mi-kas/kover-report@v1
@@ -38,4 +43,3 @@ jobs:
           min-coverage-overall: 75
           min-coverage-changed-files: 75
           coverage-counter-type: LINE
-  
