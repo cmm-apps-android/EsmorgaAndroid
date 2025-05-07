@@ -1,5 +1,10 @@
 name: Run Tests
 
+inputs:
+  Build-GOOGLE-SERVICES:
+    description: secrets.GOOGLE_SERVICES_JSON
+    required: true
+
 runs:
   using: composite
   steps:
@@ -9,7 +14,11 @@ runs:
         distribution: 'temurin' # See 'Supported distributions' for available options
         java-version: '17'
         cache: gradle
-
+    - name: Putting data
+      shell: bash
+      env:
+        DATA: ${{ inputs.Build-GOOGLE-SERVICES }}
+      run: echo $DATA > /home/runner/work/EsmorgaAndroid/EsmorgaAndroid/app/google-services.json
     - name: Grant execute permission for gradlew
       shell: bash
       run: chmod +x gradlew
