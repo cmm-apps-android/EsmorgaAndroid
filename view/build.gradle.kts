@@ -11,7 +11,7 @@ plugins {
 
 android {
     namespace = "cmm.apps.esmorga.view"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 28
