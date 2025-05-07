@@ -32,12 +32,9 @@ jobs:
         with:
           PAT: ${{ secrets.E2E_Github_Token }}
 
-      - name: Putting data
-        env:
-          DATA: ${{ secrets.GOOGLE_SERVICES_JSON }}
-        run: echo $DATA > /home/runner/work/EsmorgaAndroid/EsmorgaAndroid/app/google-services.json
-
       - uses: ./.github/actions/runTests
+        with:
+          Build-GOOGLE-SERVICES: ${{ secrets.GOOGLE_SERVICES_JSON }}
 
       - name: Add coverage report to PR
         id: kover
