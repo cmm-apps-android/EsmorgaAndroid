@@ -20,17 +20,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Create file
-        run: cat /home/runner/work/EsmorgaAndroid/EsmorgaAndroid/app/google-services.json | base64
-
-      - name: Putting data
-        env:
-          DATA: ${{ secrets.GOOGLE_SERVICES_JSON }}
-        run: echo $DATA > /home/runner/work/EsmorgaAndroid/EsmorgaAndroid/app/google-services.json
-
-      - name: Verify google-services.json
-        run: ls -la /home/runner/work/EsmorgaAndroid/EsmorgaAndroid/app
-
       - name: Invalidate Gradle Cache
         run: |
           rm -rf ~/.gradle/caches/
@@ -44,6 +33,9 @@ jobs:
           PAT: ${{ secrets.E2E_Github_Token }}
 
       - uses: ./.github/actions/runTests
+
+        with:
+          Build-GOOGLE-SERVICES: ${{ secrets.GOOGLE_SERVICES_JSON }}
 
       - name: Add coverage report to PR
         id: kover
