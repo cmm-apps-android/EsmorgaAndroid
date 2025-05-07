@@ -25,6 +25,7 @@ import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.EsmorgaResult
 import cmm.apps.esmorga.domain.result.Source
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
+import cmm.apps.esmorga.domain.user.LogOutUseCase
 import cmm.apps.esmorga.domain.user.PerformLoginUseCase
 import cmm.apps.esmorga.domain.user.PerformRegistrationConfirmationUseCase
 import cmm.apps.esmorga.domain.user.PerformRegistrationUserCase
@@ -40,7 +41,7 @@ import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_LOGIN_BUTTON
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_PASSWORD_INPUT
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_REGISTER_BUTTON
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_TITLE
-import cmm.apps.esmorga.view.navigation.HomeScreenTestTags.PROFILE__TITLE
+import cmm.apps.esmorga.view.profile.HomeScreenTestTags.PROFILE_TITLE
 import cmm.apps.esmorga.view.registration.RegistrationConfirmationScreenTestTags.REGISTRATION_CONFIRMATION_OPEN_BUTTON
 import cmm.apps.esmorga.view.registration.RegistrationConfirmationScreenTestTags.REGISTRATION_CONFIRMATION_RESEND_BUTTON
 import cmm.apps.esmorga.view.registration.RegistrationConfirmationScreenTestTags.REGISTRATION_CONFIRMATION_SHOW_SNACKBAR
@@ -107,8 +108,13 @@ class NavigationTest {
     private val getMyEventListUseCase = mockk<GetMyEventListUseCase>(relaxed = true).also { useCase ->
         coEvery { useCase() } returns EsmorgaResult.success(EventViewMock.provideEventList(listOf("event")))
     }
+
     private val performRegistrationConfirmationUseCase = mockk<PerformRegistrationConfirmationUseCase>(relaxed = true).also { useCase ->
         coEvery { useCase(any()) } returns EsmorgaResult.success(Unit)
+    }
+
+    private val logOutUseCase = mockk<LogOutUseCase>(relaxed = true).also { useCase ->
+        coEvery { useCase() } returns EsmorgaResult.success(false)
     }
 
     @Before
@@ -130,6 +136,7 @@ class NavigationTest {
                     factory<GetMyEventListUseCase> { getMyEventListUseCase }
                     factory<LeaveEventUseCase> { leaveEventUseCase }
                     factory<PerformRegistrationConfirmationUseCase> { performRegistrationConfirmationUseCase }
+                    factory<LogOutUseCase> { logOutUseCase }
                 }
             )
         }
@@ -299,11 +306,10 @@ class NavigationTest {
         composeTestRule.onNodeWithTag(MY_EVENT_LIST_TITLE).assertIsDisplayed()
     }
 
-    //TODO Modify this last test with the correct screen when profile screen is done
     @Test
     fun `given main screen, when clicks on profile nav item, then profile screen is shown`() {
         setNavigationFromDestination(Navigation.ProfileScreen)
-        composeTestRule.onNodeWithTag(PROFILE__TITLE).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(PROFILE_TITLE).assertIsDisplayed()
     }
 
     @Test
