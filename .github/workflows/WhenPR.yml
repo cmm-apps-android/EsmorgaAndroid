@@ -20,13 +20,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Create google-services.json
-        run: |
-          mkdir -p app
-          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" > app/google-services.json
+      - name: Create file
+        run: cat /home/runner/work/EsmorgaAndroid/EsmorgaAndroid/app/google-services.json | base64
 
-      - name: Verify google-services.json (ProdDebug)
-        run: ls -la app
+      - name: Putting data
+        env:
+          DATA: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: echo $DATA > /home/runner/work/EsmorgaAndroid/EsmorgaAndroid/app/google-services.json
+
+      - name: Verify google-services.json
+        run: ls -la /home/runner/work/EsmorgaAndroid/EsmorgaAndroid/app
 
       - name: Invalidate Gradle Cache
         run: |
