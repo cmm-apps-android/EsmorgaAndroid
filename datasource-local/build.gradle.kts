@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "cmm.apps.datasource_local"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 28
