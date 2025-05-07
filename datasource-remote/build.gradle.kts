@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "cmm.apps.esmorga.datasource_remote"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 28
