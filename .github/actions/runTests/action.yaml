@@ -14,11 +14,10 @@ runs:
         distribution: 'temurin' # See 'Supported distributions' for available options
         java-version: '17'
         cache: gradle
-    - name: Putting data
+    - name: Create google-services.json
       shell: bash
-      env:
-        DATA: ${{ inputs.Build-GOOGLE-SERVICES }}
-      run: echo $DATA > /home/runner/work/EsmorgaAndroid/EsmorgaAndroid/app/google-services.json
+      run: |
+        echo "${{ inputs.Build-GOOGLE-SERVICES }}" > /home/runner/work/EsmorgaAndroid/EsmorgaAndroid/app/google-services.json
     - name: Grant execute permission for gradlew
       shell: bash
       run: chmod +x gradlew
