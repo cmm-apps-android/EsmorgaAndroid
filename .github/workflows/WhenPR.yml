@@ -33,7 +33,6 @@ jobs:
           PAT: ${{ secrets.E2E_Github_Token }}
 
       - uses: ./.github/actions/runTests
-
         with:
           Build-GOOGLE-SERVICES: ${{ secrets.GOOGLE_SERVICES_JSON }}
 
