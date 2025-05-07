@@ -10,7 +10,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -19,9 +18,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: Build & Upload to OTA
         uses: ./.github/actions/buildAndUpload
         with:
+          Build-GOOGLE-SERVICES: ${{ secrets.GOOGLE_SERVICES_JSON }}
           Build-ENVL: ${{ matrix.Build-ENVL }}
           Build-USER: ${{ secrets.BUIUSER }}
           Build-PASSWORD: ${{ secrets.BUIPASSWORD }}
@@ -31,4 +32,4 @@ jobs:
           Build-KEY-ALIAS: ${{ secrets.BUILD_KEY_ALIAS }}
           Build-KEY-PASSWORD: ${{ secrets.BUILD_KEY_PASSWORD }}
           Build-STORE-PASSWORD: ${{ secrets.BUILD_STORE_PASSWORD }}
-          E2E-Github-Token: ${{secrets.E2E_Github_Token}}
+          E2E-Github-Token: ${{ secrets.E2E_Github_Token }}

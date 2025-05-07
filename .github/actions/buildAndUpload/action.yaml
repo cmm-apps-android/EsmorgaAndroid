@@ -1,6 +1,9 @@
 name: Build And Upload to OTA
 
 inputs:
+  Build-GOOGLE-SERVICES:
+    description: secrets.GOOGLE_SERVICES_JSON
+    required: true
   Build-ENVL:
     description: matrix.Build-ENV
     required: true
@@ -44,6 +47,11 @@ runs:
     - name: Grant execute permission for gradlew
       shell: bash
       run: chmod +x gradlew
+    - name: Create google-services.json
+      shell: bash
+      run: |
+        echo "${{ inputs.Build-GOOGLE-SERVICES }}" > /home/runner/work/EsmorgaAndroid/EsmorgaAndroid/app/google-services.json
+
     - name: Decode Keystore
       env:
         BUILD_KEYSTORE: ${{ inputs.Build-KEY-STORE }}
