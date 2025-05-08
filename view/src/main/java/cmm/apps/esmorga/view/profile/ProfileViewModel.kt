@@ -11,6 +11,7 @@ import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.domain.user.LogOutUseCase
 import cmm.apps.esmorga.view.profile.model.ProfileEffect
 import cmm.apps.esmorga.view.profile.model.ProfileUiState
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -48,6 +49,10 @@ open class ProfileViewModel(
             val effect = if (isInternetAvailable(context)) {
                 ProfileEffect.NavigateToChangePassword
             } else {
+                FirebaseCrashlytics.getInstance().log("No internet connection when trying to change password.")
+                FirebaseCrashlytics.getInstance().recordException(
+                    Exception("No internet connection available.")
+                )
                 ProfileEffect.ShowNoNetworkError()
             }
             _effect.emit(effect)
