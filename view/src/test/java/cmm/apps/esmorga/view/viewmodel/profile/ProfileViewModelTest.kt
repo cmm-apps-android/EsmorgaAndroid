@@ -35,11 +35,12 @@ class ProfileViewModelTest {
     @Before
     fun setUp() {
         context = ApplicationProvider.getApplicationContext()
-        sut = ProfileViewModel(
+        sut = object : ProfileViewModel(
             getSavedUserUseCase = getSavedUserUseCase,
-            logOutUseCase = logOutUseCase,
-            isInternetAvailable = { false } // Simula no tener internet
-        )
+            logOutUseCase = logOutUseCase
+        ) {
+            override fun isInternetAvailable(context: Context): Boolean = false
+        }
     }
 
     @Test
@@ -50,7 +51,6 @@ class ProfileViewModelTest {
 
         sut.loadUser()
 
-        // Verifica que el estado de UI contiene al usuario
         assertEquals(user, sut.uiState.value.user)
     }
 
@@ -61,10 +61,8 @@ class ProfileViewModelTest {
         sut.effect.test {
             sut.logout()
 
-            // Verifica que el usuario ha sido borrado
             assertNull(sut.uiState.value.user)
 
-            // Verifica que el efecto de navegación a Login se ha emitido
             val effect = awaitItem()
             assertTrue(effect is ProfileEffect.NavigateToLogIn)
         }
@@ -75,7 +73,6 @@ class ProfileViewModelTest {
         sut.effect.test {
             sut.logIn()
 
-            // Verifica que el efecto de navegación a Login se emite
             val effect = awaitItem()
             assertTrue(effect is ProfileEffect.NavigateToLogIn)
         }
@@ -83,17 +80,16 @@ class ProfileViewModelTest {
 
     @Test
     fun `given internet is available when changePassword is called then NavigateToChangePassword effect is emitted`() = runTest {
-        // Usamos un isInternetAvailable que devuelve true (simula que hay internet)
-        sut = ProfileViewModel(
+        val viewModelWithInternet = object : ProfileViewModel(
             getSavedUserUseCase = getSavedUserUseCase,
-            logOutUseCase = logOutUseCase,
-            isInternetAvailable = { true } // Simula que hay internet
-        )
+            logOutUseCase = logOutUseCase
+        ) {
+            override fun isInternetAvailable(context: Context): Boolean = true
+        }
 
-        sut.effect.test {
-            sut.changePassword(context)
+        viewModelWithInternet.effect.test {
+            viewModelWithInternet.changePassword(context)
 
-            // Verifica que el efecto de navegación a Change Password se emite
             val effect = awaitItem()
             assertTrue(effect is ProfileEffect.NavigateToChangePassword)
         }
