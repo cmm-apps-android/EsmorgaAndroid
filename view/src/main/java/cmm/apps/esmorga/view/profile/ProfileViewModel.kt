@@ -20,15 +20,9 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class ProfileViewModel(
+open class ProfileViewModel(
     private val getSavedUserUseCase: GetSavedUserUseCase,
     private val logOutUseCase: LogOutUseCase,
-    private val isInternetAvailable: (Context) -> Boolean = isInternetAvailable@{ context ->
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val network = connectivityManager.activeNetwork ?: return@isInternetAvailable false
-        val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return@isInternetAvailable false
-        capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
-    }
 ) : ViewModel(), DefaultLifecycleObserver {
 
     private val _uiState = MutableStateFlow(ProfileUiState())

@@ -28,6 +28,5 @@ interface UserDatasource {
 
     suspend fun deleteUser(){
         throw EsmorgaException(message = "Unsupported operation", source = Source.UNSUPPORTED, code = ErrorCodes.UNSUPPORTED_OPERATION)
-
     }
 }
