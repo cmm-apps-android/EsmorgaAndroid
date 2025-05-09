@@ -7,6 +7,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cmm.apps.esmorga.common.util.ConnectivityUtils
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.domain.user.LogOutUseCase
 import cmm.apps.esmorga.view.profile.model.ProfileEffect
@@ -46,13 +47,11 @@ open class ProfileViewModel(
 
     fun changePassword(context: Context) {
         viewModelScope.launch {
-            val effect = if (isInternetAvailable(context)) {
+            ConnectivityUtils.reportNoConnectivityIfNeeded(context)
+
+            val effect = if (ConnectivityUtils.isNetworkAvailable(context)) {
                 ProfileEffect.NavigateToChangePassword
             } else {
-                FirebaseCrashlytics.getInstance().log("No internet connection when trying to change password.")
-                FirebaseCrashlytics.getInstance().recordException(
-                    Exception("No internet connection available.")
-                )
                 ProfileEffect.ShowNoNetworkError()
             }
             _effect.emit(effect)

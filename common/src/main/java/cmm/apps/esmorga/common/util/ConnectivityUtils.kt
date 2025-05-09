@@ -1,4 +1,4 @@
-package cmm.apps.esmorga.datasource_remote.util
+package cmm.apps.esmorga.common.util
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -28,7 +28,7 @@ object ConnectivityUtils {
     }
 
     fun reportNoConnectivityIfNeeded(context: Context) {
-        if (!isNetworkAvailable(context)) {
+        if (!isNetworkAvailable(context) && !isAirplaneModeOn(context)) {
             FirebaseCrashlytics.getInstance().log("No connectivity during backend call")
             val esmorgaError = EsmorgaException(
                 message = "No internet connection",
@@ -36,7 +36,7 @@ object ConnectivityUtils {
                 code = ErrorCodes.NO_CONNECTION
             )
 
-            val extraDescription = if (isAirplaneModeOn(context)) "with having airplane mode activated" else "without having airplane mode activated"
+            val extraDescription = "without having airplane mode activated"
             val keys = CustomKeysAndValues.Builder()
                 .putString("Connection status", "offline")
                 .putInt("Error Code", ErrorCodes.NO_CONNECTION)
