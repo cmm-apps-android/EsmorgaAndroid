@@ -42,5 +42,4 @@ class UserRemoteDatasourceImpl(private val api: EsmorgaAuthApi, private val cont
             throw manageApiException(e, context)
         }
     }
-
 }

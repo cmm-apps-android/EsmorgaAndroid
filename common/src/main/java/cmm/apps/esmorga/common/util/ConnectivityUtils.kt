@@ -1,4 +1,4 @@
-package cmm.apps.esmorga.datasource_remote.util
+package cmm.apps.esmorga.common.util
 
 import android.content.Context
 import android.net.ConnectivityManager

@@ -4,20 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.testTag
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import cmm.apps.designsystem.EsmorgaText
-import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.view.errors.EsmorgaErrorScreen
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
@@ -25,7 +17,7 @@ import cmm.apps.esmorga.view.eventdetails.EventDetailsScreen
 import cmm.apps.esmorga.view.eventlist.EventListScreen
 import cmm.apps.esmorga.view.eventlist.MyEventListScreen
 import cmm.apps.esmorga.view.login.LoginScreen
-import cmm.apps.esmorga.view.navigation.HomeScreenTestTags.PROFILE__TITLE
+import cmm.apps.esmorga.view.profile.ProfileScreen
 import cmm.apps.esmorga.view.registration.RegistrationConfirmationScreen
 import cmm.apps.esmorga.view.registration.RegistrationScreen
 import cmm.apps.esmorga.view.welcome.WelcomeScreen
@@ -113,10 +105,10 @@ private fun NavGraphBuilder.homeFlow(navigationController: NavHostController) {
         })
     }
     composable<Navigation.ProfileScreen> {
-        //TODO to be done
-        Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-            EsmorgaText(text = "To be done in other US", style = EsmorgaTextStyle.HEADING_1, modifier = Modifier.testTag(PROFILE__TITLE))
-        }
+        ProfileScreen(
+            navigateLogIn = { navigationController.navigate(Navigation.LoginScreen) },
+            onNoNetworkError = { navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = it)) }
+        )
     }
 }
 
@@ -155,7 +147,7 @@ private fun NavGraphBuilder.loginFlow(navigationController: NavHostController) {
     }
     composable<Navigation.RegistrationScreen> {
         RegistrationScreen(
-            onRegistrationSuccess = { email->
+            onRegistrationSuccess = { email ->
                 navigationController.navigate(Navigation.RegistrationConfirmationScreen(email = email))
             },
             onRegistrationError = { esmorgaFullScreenArguments ->
@@ -211,8 +203,4 @@ private fun isPackageAvailable(context: Context, appPackage: String) = try {
     appInfo != null && appInfo.enabled
 } catch (e: PackageManager.NameNotFoundException) {
     false
-}
-
-object HomeScreenTestTags {
-    const val PROFILE__TITLE = "profile event name"
 }

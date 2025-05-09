@@ -10,11 +10,11 @@ interface GetSavedUserUseCase {
 
 class GetSavedUserUseCaseImpl(private val repo: UserRepository) : GetSavedUserUseCase {
     override suspend fun invoke(): EsmorgaResult<User> {
-        try {
+        return try {
             val result = repo.getUser()
-            return EsmorgaResult.success(result)
+            EsmorgaResult.success(result)
         } catch (e: Exception) {
-            return EsmorgaResult.failure(e)
+            EsmorgaResult.failure(e)
         }
     }
 }

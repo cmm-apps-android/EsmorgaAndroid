@@ -23,7 +23,7 @@ data class EventDetailsUiState(
 )
 
 object EventDetailsUiStateHelper : KoinComponent {
-    private val context: Context by inject()
+    val context: Context by inject()
     fun getPrimaryButtonTitle(isAuthenticated: Boolean, userJoined: Boolean): String {
         return if (isAuthenticated) {
             if (userJoined) {
