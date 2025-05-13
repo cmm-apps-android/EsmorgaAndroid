@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import app.cash.turbine.test
+import cmm.apps.esmorga.common.util.ConnectivityUtils
 import cmm.apps.esmorga.domain.result.EsmorgaResult
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.domain.user.LogOutUseCase
@@ -19,6 +20,9 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.GlobalContext.startKoin
+import org.koin.core.context.GlobalContext.stopKoin
 
 @RunWith(AndroidJUnit4::class)
 class ProfileViewModelTest {
@@ -31,16 +35,21 @@ class ProfileViewModelTest {
 
     private val getSavedUserUseCase = mockk<GetSavedUserUseCase>(relaxed = true)
     private val logOutUseCase = mockk<LogOutUseCase>(relaxed = true)
+    private val connectivityUtils = mockk<ConnectivityUtils>(relaxed = true)
 
     @Before
     fun setUp() {
+        stopKoin()
+
         context = ApplicationProvider.getApplicationContext()
-        sut = object : ProfileViewModel(
-            getSavedUserUseCase = getSavedUserUseCase,
-            logOutUseCase = logOutUseCase
-        ) {
-            override fun isInternetAvailable(context: Context): Boolean = false
+        startKoin {
+            androidContext(context)
         }
+        sut = ProfileViewModel(
+            getSavedUserUseCase = getSavedUserUseCase,
+            logOutUseCase = logOutUseCase,
+            connectivityUtils = connectivityUtils
+        )
     }
 
     @Test
@@ -80,18 +89,25 @@ class ProfileViewModelTest {
 
     @Test
     fun `given internet is available when changePassword is called then NavigateToChangePassword effect is emitted`() = runTest {
-        val viewModelWithInternet = object : ProfileViewModel(
-            getSavedUserUseCase = getSavedUserUseCase,
-            logOutUseCase = logOutUseCase
-        ) {
-            override fun isInternetAvailable(context: Context): Boolean = true
-        }
+        coEvery { connectivityUtils.isNetworkAvailable(context) } returns true
 
-        viewModelWithInternet.effect.test {
-            viewModelWithInternet.changePassword(context)
+        sut.effect.test {
+            sut.changePassword(context)
 
             val effect = awaitItem()
             assertTrue(effect is ProfileEffect.NavigateToChangePassword)
+        }
+    }
+
+    @Test
+    fun `given no internet available when changePassword is called then not network screen is showed`() = runTest {
+        coEvery { connectivityUtils.isNetworkAvailable(context) } returns false
+
+        sut.effect.test {
+            sut.changePassword(context)
+
+            val effect = awaitItem()
+            assertTrue(effect is ProfileEffect.ShowNoNetworkError)
         }
     }
 }
