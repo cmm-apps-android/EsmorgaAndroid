@@ -12,6 +12,8 @@ import cmm.apps.esmorga.domain.event.LeaveEventUseCase
 import cmm.apps.esmorga.domain.event.LeaveEventUseCaseImpl
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCaseImpl
+import cmm.apps.esmorga.domain.user.LogOutUseCase
+import cmm.apps.esmorga.domain.user.LogOutUseCaseImpl
 import cmm.apps.esmorga.domain.user.PerformLoginUseCase
 import cmm.apps.esmorga.domain.user.PerformLoginUseCaseImpl
 import cmm.apps.esmorga.domain.user.PerformRegistrationConfirmationUseCase
@@ -33,6 +35,7 @@ object DomainDIModule {
         factory<JoinEventUseCase> { JoinEventUseCaseImpl(get()) }
         factory<GetMyEventListUseCase> { GetMyEventListUseCaseImpl(get(), get()) }
         factory<LeaveEventUseCase> { LeaveEventUseCaseImpl(get()) }
+        factory<LogOutUseCase> { LogOutUseCaseImpl(get()) }
     }
 
 }

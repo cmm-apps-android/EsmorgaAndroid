@@ -1,7 +1,7 @@
 package cmm.apps.esmorga.datasource_remote.api
 
 import android.content.Context
-import cmm.apps.esmorga.datasource_remote.util.ConnectivityUtils
+import cmm.apps.esmorga.common.util.ConnectivityUtils
 import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.Source
