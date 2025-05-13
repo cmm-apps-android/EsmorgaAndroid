@@ -15,7 +15,10 @@ import cmm.apps.esmorga.view.viewmodel.util.MainDispatcherRule
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.*
+import org.junit.After
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -39,8 +42,6 @@ class ProfileViewModelTest {
 
     @Before
     fun setUp() {
-        stopKoin()
-
         context = ApplicationProvider.getApplicationContext()
         startKoin {
             androidContext(context)
@@ -51,6 +52,12 @@ class ProfileViewModelTest {
             connectivityUtils = connectivityUtils
         )
     }
+
+    @After
+    fun shutDown() {
+        stopKoin()
+    }
+
 
     @Test
     fun `given a successful usecase when loadUser is called then uiState is updated with the user`() = runTest {
