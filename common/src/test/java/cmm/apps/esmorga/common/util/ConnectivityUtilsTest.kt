@@ -1,11 +1,10 @@
-package cmm.apps.esmorga.datasource_remote.util
+package cmm.apps.esmorga.common.util
 
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.provider.Settings
-import cmm.apps.esmorga.common.util.ConnectivityUtils
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import io.mockk.every
 import io.mockk.mockk

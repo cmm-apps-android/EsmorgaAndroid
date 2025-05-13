@@ -1,8 +1,6 @@
 package cmm.apps.esmorga.view.profile
 
 import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
@@ -12,7 +10,6 @@ import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.domain.user.LogOutUseCase
 import cmm.apps.esmorga.view.profile.model.ProfileEffect
 import cmm.apps.esmorga.view.profile.model.ProfileUiState
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,6 +22,7 @@ import kotlinx.coroutines.launch
 open class ProfileViewModel(
     private val getSavedUserUseCase: GetSavedUserUseCase,
     private val logOutUseCase: LogOutUseCase,
+    private val connectivityUtils: ConnectivityUtils = ConnectivityUtils
 ) : ViewModel(), DefaultLifecycleObserver {
 
     private val _uiState = MutableStateFlow(ProfileUiState())
@@ -47,14 +45,15 @@ open class ProfileViewModel(
 
     fun changePassword(context: Context) {
         viewModelScope.launch {
-            ConnectivityUtils.reportNoConnectivityIfNeeded(context)
+            connectivityUtils.reportNoConnectivityIfNeeded(context)
 
-            val effect = if (ConnectivityUtils.isNetworkAvailable(context)) {
+            val effect = if (connectivityUtils.isNetworkAvailable(context)) {
                 ProfileEffect.NavigateToChangePassword
             } else {
                 ProfileEffect.ShowNoNetworkError()
             }
             _effect.emit(effect)
+
         }
     }
 
@@ -80,12 +79,5 @@ open class ProfileViewModel(
             _uiState.value = ProfileUiState(user = null)
             _effect.emit(ProfileEffect.NavigateToLogIn)
         }
-    }
-
-    open fun isInternetAvailable(context: Context): Boolean {
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val network = connectivityManager.activeNetwork ?: return false
-        val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
-        return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
     }
 }

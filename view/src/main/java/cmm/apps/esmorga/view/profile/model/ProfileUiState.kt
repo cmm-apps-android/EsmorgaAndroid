@@ -15,19 +15,18 @@ data class ProfileUiState(
 
 object ProfileViewHelper : KoinComponent {
     val context: Context by inject()
-
     fun getEsmorgaNoNetworkScreenArguments() = EsmorgaErrorScreenArguments(
         animation = R.raw.no_connection_anim,
-        title = EventDetailsUiStateHelper.context.getString(R.string.screen_no_connection_title),
-        subtitle = EventDetailsUiStateHelper.context.getString(R.string.screen_no_connection_body),
-        buttonText = EventDetailsUiStateHelper.context.getString(R.string.button_ok)
+        title = context.getString(R.string.screen_no_connection_title),
+        subtitle =context.getString(R.string.screen_no_connection_body),
+        buttonText = context.getString(R.string.button_ok)
     )
 }
 
 sealed class ProfileEffect {
 
     data class ShowNoNetworkError(val esmorgaNoNetworkArguments: EsmorgaErrorScreenArguments = getEsmorgaNoNetworkScreenArguments()) : ProfileEffect()
-    object NavigateToChangePassword : ProfileEffect()
-    object NavigateToLogOut : ProfileEffect()
-    object NavigateToLogIn : ProfileEffect()
+    data object NavigateToChangePassword : ProfileEffect()
+    data object NavigateToLogOut : ProfileEffect()
+    data object NavigateToLogIn : ProfileEffect()
 }
