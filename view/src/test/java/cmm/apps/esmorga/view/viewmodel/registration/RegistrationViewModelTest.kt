@@ -18,6 +18,7 @@ import cmm.apps.esmorga.view.viewmodel.util.MainDispatcherRule
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
+import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -38,11 +39,15 @@ class RegistrationViewModelTest : KoinTest {
 
     @Before
     fun init() {
-        stopKoin()
         mockContext = ApplicationProvider.getApplicationContext()
         startKoin {
             androidContext(mockContext)
         }
+    }
+
+    @After
+    fun shutDown() {
+        stopKoin()
     }
 
     @Test
