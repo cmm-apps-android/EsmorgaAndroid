@@ -36,15 +36,11 @@ class RegistrationConfirmationViewModelTest : KoinTest {
 
     @Before
     fun init() {
+        stopKoin()
         mockContext = ApplicationProvider.getApplicationContext()
         startKoin {
             androidContext(mockContext)
         }
-    }
-
-    @After
-    fun shutDown() {
-        stopKoin()
     }
 
     @Test
