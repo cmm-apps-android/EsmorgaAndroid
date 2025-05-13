@@ -58,7 +58,6 @@ class ProfileViewModelTest {
         stopKoin()
     }
 
-
     @Test
     fun `given a successful usecase when loadUser is called then uiState is updated with the user`() = runTest {
         val user = User("1", "User", "email@example.com")
