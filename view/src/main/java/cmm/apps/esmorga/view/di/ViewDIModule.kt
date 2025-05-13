@@ -6,6 +6,7 @@ import cmm.apps.esmorga.view.eventdetails.EventDetailsViewModel
 import cmm.apps.esmorga.view.eventlist.EventListViewModel
 import cmm.apps.esmorga.view.eventlist.MyEventListViewModel
 import cmm.apps.esmorga.view.login.LoginViewModel
+import cmm.apps.esmorga.view.profile.ProfileViewModel
 import cmm.apps.esmorga.view.registration.RegistrationConfirmationViewModel
 import cmm.apps.esmorga.view.registration.RegistrationViewModel
 import cmm.apps.esmorga.view.welcome.WelcomeViewModel
@@ -41,5 +42,7 @@ object ViewDIModule {
         viewModel {
             RegistrationConfirmationViewModel(get())
         }
+
+        viewModel { ProfileViewModel(get(),get()) }
     }
 }

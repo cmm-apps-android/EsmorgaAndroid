@@ -1,0 +1,45 @@
+package cmm.apps.designsystem
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.unit.dp
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.rememberLottieComposition
+
+@Composable
+fun EsmorgaGuestError(errorMessage: String, buttonText: String, onButtonClicked: () -> Unit, errorImage: Int) {
+    val lottieAnimation by rememberLottieComposition(LottieCompositionSpec.RawRes(errorImage))
+    Column(
+        modifier = Modifier
+            .padding(
+                start = 16.dp,
+                end = 16.dp
+            )
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(modifier = Modifier.weight(1f))
+        LottieAnimation(
+            composition = lottieAnimation,
+            iterations = Int.MAX_VALUE,
+            contentScale = ContentScale.Inside,
+            modifier = Modifier.fillMaxHeight(0.3f)
+        )
+        EsmorgaText(errorMessage, style = EsmorgaTextStyle.HEADING_2)
+        Spacer(modifier = Modifier.weight(1f))
+        EsmorgaButton(buttonText) {
+            onButtonClicked.invoke()
+        }
+    }
+}
