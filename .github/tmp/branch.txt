@@ -1,1 +1,1 @@
-feature/MOB-244
+bugfix/MOB-245
