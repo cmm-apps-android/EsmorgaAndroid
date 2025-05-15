@@ -77,7 +77,6 @@ open class ProfileViewModel(
         viewModelScope.launch {
             logOutUseCase.invoke()
             _uiState.value = ProfileUiState(user = null)
-            _effect.emit(ProfileEffect.NavigateToLogIn)
         }
     }
 }

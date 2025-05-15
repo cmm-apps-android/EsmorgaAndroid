@@ -1,1 +1,1 @@
-bugfix/MOB-245
+bugfix/MOB-247
