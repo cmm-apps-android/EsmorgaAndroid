@@ -2,5 +2,6 @@
 <resources>
 
     <color name="splash_background">#FF1F0D59</color>
-
+    <color name="primary">#641C34</color>
+    <color name="secondary">#E8CFD6</color>
 </resources>
