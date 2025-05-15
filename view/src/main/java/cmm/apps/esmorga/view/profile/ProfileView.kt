@@ -118,6 +118,7 @@ fun ProfileView(
         } else {
             LoggedProfileView(
                 name = uiState.user.name,
+                lastName = uiState.user.lastName,
                 email = uiState.user.email,
                 onLogout = { shownLogOutDialog() },
                 onChangePassword = { onChangePassword() },
@@ -129,6 +130,7 @@ fun ProfileView(
 @Composable
 private fun LoggedProfileView(
     name: String,
+    lastName: String,
     email: String,
     onLogout: () -> Unit,
     onChangePassword: () -> Unit
@@ -144,7 +146,7 @@ private fun LoggedProfileView(
             .fillMaxSize()
     ) {
         EsmorgaText(text = stringResource(R.string.my_profile_name), style = EsmorgaTextStyle.HEADING_1)
-        EsmorgaText(text = name, style = EsmorgaTextStyle.BODY_1)
+        EsmorgaText(text = "$name $lastName", style = EsmorgaTextStyle.BODY_1)
         Spacer(modifier = Modifier.height(52.dp))
 
         EsmorgaText(text = stringResource(R.string.my_profile_email), style = EsmorgaTextStyle.HEADING_1)
