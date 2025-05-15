@@ -70,18 +70,18 @@ class ProfileViewModelTest {
     }
 
     @Test
-    fun `given a successful logout usecase when logout is called then uiState is cleared and NavigateToLogIn effect is emitted`() = runTest {
+    fun `given a successful logout usecase when logout is called then uiState is cleared`() = runTest {
         coEvery { logOutUseCase() } returns EsmorgaResult.success(true)
 
+        sut.logout()
+
+        assertNull(sut.uiState.value.user)
+
         sut.effect.test {
-            sut.logout()
-
-            assertNull(sut.uiState.value.user)
-
-            val effect = awaitItem()
-            assertTrue(effect is ProfileEffect.NavigateToLogIn)
+            expectNoEvents()
         }
     }
+
 
     @Test
     fun `given logIn is called then NavigateToLogIn effect is emitted`() = runTest {
