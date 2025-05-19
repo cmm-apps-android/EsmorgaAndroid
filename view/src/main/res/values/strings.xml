@@ -71,4 +71,7 @@
    <string name="register_confirmation_email_button_resend">Resend mail</string>
    <string name="register_resend_code_success">A new confirmation email has been sent</string>
    <string name="register_resend_code_error">Unable to send a new confirmation e-mail</string>
+   <string name="activate_account_title">We\'re almost there…</string>
+   <string name="activate_account_description">We\'re verifying your account. Please wait a moment.</string>
+   <string name="activate_account_continue">Continue</string>
 </resources>

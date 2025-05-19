@@ -71,4 +71,7 @@
    <string name="register_confirmation_email_button_resend">Reenviar correo</string>
    <string name="register_resend_code_success">Un nuevo email de confirmación ha sido enviado</string>
    <string name="register_resend_code_error">No se ha podido enviar un nuevo email de confirmación</string>
+   <string name="activate_account_title">Ya casi estamos…</string>
+   <string name="activate_account_description">Estamos verificando tu cuenta. Por favor, espera un momento.</string>
+   <string name="activate_account_continue">Continuar</string>
 </resources>
