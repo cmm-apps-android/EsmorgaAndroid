@@ -71,4 +71,5 @@
    <string name="register_confirmation_email_button_resend">Reenviar correo</string>
    <string name="register_resend_code_success">Un nuevo email de confirmación ha sido enviado</string>
    <string name="register_resend_code_error">No se ha podido enviar un nuevo email de confirmación</string>
+   <string name="login_forgot_password">¿Olvidaste tu contraseña?</string>
 </resources>
