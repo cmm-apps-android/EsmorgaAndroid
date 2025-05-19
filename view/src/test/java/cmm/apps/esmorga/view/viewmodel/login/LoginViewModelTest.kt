@@ -189,4 +189,28 @@ class LoginViewModelTest {
         val state = sut.uiState.value
         Assert.assertTrue(state.loading)
     }
+
+    @Test
+    fun `given LoginViewModel when onRegisterClicked is called then NavigateToRegistration effect is emitted`() = runTest {
+        val useCase = mockk<PerformLoginUseCase>(relaxed = true)
+        val sut = LoginViewModel(useCase)
+
+        sut.effect.test {
+            sut.onRegisterClicked()
+            val effect = awaitItem()
+            Assert.assertTrue(effect is LoginEffect.NavigateToRegistration)
+        }
+    }
+
+    @Test
+    fun `given LoginViewModel when onForgotPasswordClicked is called then NavigateToForgotPassword effect is emitted`() = runTest {
+        val useCase = mockk<PerformLoginUseCase>(relaxed = true)
+        val sut = LoginViewModel(useCase)
+
+        sut.effect.test {
+            sut.onForgotPasswordClicked()
+            val effect = awaitItem()
+            Assert.assertTrue(effect is LoginEffect.NavigateToForgotPassword)
+        }
+    }
 }

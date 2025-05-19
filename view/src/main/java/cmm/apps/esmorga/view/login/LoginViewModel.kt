@@ -50,6 +50,10 @@ class LoginViewModel(private val performLoginUseCase: PerformLoginUseCase) : Vie
         _effect.tryEmit(LoginEffect.NavigateToRegistration)
     }
 
+    fun onForgotPasswordClicked() {
+        _effect.tryEmit(LoginEffect.NavigateToForgotPassword)
+    }
+
     fun validateEmail(email: String, acceptsEmpty: Boolean = true) {
         _uiState.value = _uiState.value.copy(emailError = getFieldErrorText(email, LoginViewHelper.getEmailErrorText(), acceptsEmpty, email.matches(EMAIL_REGEX.toRegex())))
     }
