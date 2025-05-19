@@ -131,6 +131,9 @@ private fun NavGraphBuilder.loginFlow(navigationController: NavHostController) {
             onRegisterClicked = {
                 navigationController.navigate(Navigation.RegistrationScreen)
             },
+            onForgotPasswordClicked = {
+                //TODO: to be implemented in MOB-13
+            },
             onLoginSuccess = {
                 navigationController.navigate(Navigation.EventListScreen) {
                     popUpTo(Navigation.WelcomeScreen) {

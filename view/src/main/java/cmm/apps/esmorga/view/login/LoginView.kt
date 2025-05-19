@@ -1,7 +1,7 @@
 package cmm.apps.esmorga.view.login
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -26,6 +26,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.layout.ContentScale
@@ -60,6 +61,7 @@ import org.koin.androidx.compose.koinViewModel
 fun LoginScreen(
     lvm: LoginViewModel = koinViewModel(),
     onRegisterClicked: () -> Unit,
+    onForgotPasswordClicked: () -> Unit,
     onLoginSuccess: () -> Unit,
     onLoginError: (EsmorgaErrorScreenArguments) -> Unit,
     onBackClicked: () -> Unit
@@ -75,6 +77,7 @@ fun LoginScreen(
                 is LoginEffect.NavigateToRegistration -> onRegisterClicked()
                 is LoginEffect.ShowFullScreenError -> onLoginError(eff.esmorgaErrorScreenArguments)
                 is LoginEffect.NavigateToEventList -> onLoginSuccess()
+                is LoginEffect.NavigateToForgotPassword -> onForgotPasswordClicked()
             }
         }
     }
@@ -86,6 +89,7 @@ fun LoginScreen(
             onBackClicked = onBackClicked,
             onLoginClicked = { email, password -> lvm.onLoginClicked(email, password) },
             onRegisterClicked = { lvm.onRegisterClicked() },
+            onForgotPasswordClicked = { lvm.onForgotPasswordClicked() },
             onEmailChanged = { lvm.onEmailChanged() },
             onPassChanged = { lvm.onPassChanged() },
             validateEmail = { email -> lvm.validateEmail(email) },
@@ -102,6 +106,7 @@ fun LoginView(
     onBackClicked: () -> Unit,
     onLoginClicked: (String, String) -> Unit,
     onRegisterClicked: () -> Unit,
+    onForgotPasswordClicked: () -> Unit,
     onEmailChanged: () -> Unit,
     onPassChanged: () -> Unit,
     validateEmail: (String) -> Unit,
@@ -207,6 +212,16 @@ fun LoginView(
                 EsmorgaButton(text = stringResource(id = R.string.button_login), isLoading = uiState.loading, modifier = Modifier.testTag(LOGIN_LOGIN_BUTTON)) {
                     onLoginClicked(email, password)
                 }
+                Spacer(modifier = Modifier.height(16.dp))
+                EsmorgaText(
+                    text = stringResource(id = R.string.login_forgot_password),
+                    style = EsmorgaTextStyle.BODY_1_ACCENT,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .align(Alignment.CenterHorizontally)
+                        .clickable { onForgotPasswordClicked() }
+                )
+                Spacer(modifier = Modifier.height(16.dp))
                 EsmorgaButton(
                     text = stringResource(id = R.string.button_create_account),
                     isEnabled = !uiState.loading,
@@ -217,7 +232,6 @@ fun LoginView(
                 }
             }
         }
-
     }
 }
 
