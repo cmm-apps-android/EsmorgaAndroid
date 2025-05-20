@@ -17,4 +17,7 @@ interface EsmorgaAuthApi {
 
     @POST("account/email/verification")
     suspend fun emailVerification(@Body body: Map<String, String>)
+
+    @POST("account/password/forgot-init")
+    suspend fun recoverPassword(@Body body: Map<String, String>)
 }
