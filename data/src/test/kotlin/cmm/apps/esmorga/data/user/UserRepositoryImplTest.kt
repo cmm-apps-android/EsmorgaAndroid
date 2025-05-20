@@ -162,4 +162,25 @@ class UserRepositoryImplTest {
         coVerify { localDS.deleteUser() }
     }
 
+    @Test
+    fun `given valid data when recover password succeeds then success is returned`() = runTest {
+        val localDS = mockk<UserDatasource>(relaxed = true)
+        val remoteDS = mockk<UserDatasource>(relaxed = true)
+        val localEventDS = mockk<EventDatasource>(relaxed = true)
+        coEvery { remoteDS.recoverPassword(any()) } returns Unit
+        val sut = UserRepositoryImpl(localDS, remoteDS, localEventDS)
+        val result = sut.recoverPassword("test@example.com")
+
+        Assert.assertEquals(Unit, result)
+    }
+
+    @Test(expected = EsmorgaException::class)
+    fun `given valid data when recover password succeeds then error is returned`() = runTest {
+        val localDS = mockk<UserDatasource>(relaxed = true)
+        val remoteDS = mockk<UserDatasource>(relaxed = true)
+        val localEventDS = mockk<EventDatasource>(relaxed = true)
+        coEvery { remoteDS.recoverPassword(any()) } throws EsmorgaException("error", Source.REMOTE, 500)
+        val sut = UserRepositoryImpl(localDS, remoteDS, localEventDS)
+        sut.recoverPassword("test@example.com")
+    }
 }

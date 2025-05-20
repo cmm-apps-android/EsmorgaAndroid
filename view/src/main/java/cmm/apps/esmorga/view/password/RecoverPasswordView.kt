@@ -67,6 +67,7 @@ fun RecoverPasswordScreen(
                         message = eff.message
                     )
                 }
+
                 is RecoverPasswordEffect.ShowFullScreenError -> onRecoverPasswordError(eff.esmorgaErrorScreenArguments)
             }
         }
@@ -166,17 +167,4 @@ object RecoverPasswordScreenTestTags {
     const val RECOVER_PASSWORD_TITLE = "recover password screen title"
     const val RECOVER_PASSWORD_BACK_BUTTON = "recover password screen back button"
     const val RECOVER_PASSWORD_SEND_EMAIL_BUTTON = "recover password screen send email button"
-}
-
-
-@Preview
-@Composable
-fun RecoverPasswordScreenPreview() {
-    RecoverPasswordView(
-        snackbarHostState = SnackbarHostState(),
-        onBackClicked = {},
-        onSendEmailClicked = {},
-        validateEmail = {},
-        uiState = RecoverPasswordUiState()
-    )
 }
