@@ -77,4 +77,47 @@ class UserRemoteDatasourceImplTest {
         Assert.assertEquals(errorCode, (exception as EsmorgaException).code)
     }
 
+    @Test
+    fun `given valid data when email verification succeeds then Unit is returned`() = runTest {
+        val context = mockk<Context>(relaxed = true)
+        val api = mockk<EsmorgaAuthApi>(relaxed = true)
+        coEvery { api.emailVerification(any()) } returns Unit
+
+        val sut = UserRemoteDatasourceImpl(api, context)
+        val result = sut.emailVerification("test@example.com")
+
+        Assert.assertEquals(Unit, result)
+    }
+
+    @Test(expected = Exception::class)
+    fun `given api call fails when emailVerification is invoked then Exception is thrown(`() = runTest {
+        val context = mockk<Context>(relaxed = true)
+        val api = mockk<EsmorgaAuthApi>(relaxed = true)
+        coEvery { api.emailVerification(any()) } throws HttpException(Response.error<ResponseBody>(400, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
+
+        val sut = UserRemoteDatasourceImpl(api, context)
+        sut.emailVerification("test@example.com")
+    }
+
+    @Test
+    fun `given valid data when recover password succeeds then Unit is returned`() = runTest {
+        val context = mockk<Context>(relaxed = true)
+        val api = mockk<EsmorgaAuthApi>(relaxed = true)
+        coEvery { api.recoverPassword(any()) } returns Unit
+
+        val sut = UserRemoteDatasourceImpl(api, context)
+        val result = sut.recoverPassword("test@example.com")
+
+        Assert.assertEquals(Unit, result)
+    }
+
+    @Test(expected = Exception::class)
+    fun `given api call fails when recoverPassword is invoked then Exception is thrown`() = runTest {
+        val context = mockk<Context>(relaxed = true)
+        val api = mockk<EsmorgaAuthApi>(relaxed = true)
+        coEvery { api.recoverPassword(any()) } throws HttpException(Response.error<ResponseBody>(400, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
+
+        val sut = UserRemoteDatasourceImpl(api, context)
+        sut.recoverPassword("test@example.com")
+    }
 }

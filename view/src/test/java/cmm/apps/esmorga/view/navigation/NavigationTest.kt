@@ -27,6 +27,7 @@ import cmm.apps.esmorga.domain.result.Source
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.domain.user.LogOutUseCase
 import cmm.apps.esmorga.domain.user.PerformLoginUseCase
+import cmm.apps.esmorga.domain.user.PerformRecoverPasswordUseCase
 import cmm.apps.esmorga.domain.user.PerformRegistrationConfirmationUseCase
 import cmm.apps.esmorga.domain.user.PerformRegistrationUserCase
 import cmm.apps.esmorga.view.di.ViewDIModule
@@ -37,10 +38,16 @@ import cmm.apps.esmorga.view.eventlist.EventListScreenTestTags.EVENT_LIST_EVENT_
 import cmm.apps.esmorga.view.eventlist.EventListScreenTestTags.EVENT_LIST_TITLE
 import cmm.apps.esmorga.view.eventlist.MyEventListScreenTestTags.MY_EVENT_LIST_TITLE
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_EMAIL_INPUT
+import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_FORGOT_PASSWORD_BUTTON
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_LOGIN_BUTTON
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_PASSWORD_INPUT
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_REGISTER_BUTTON
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_TITLE
+import cmm.apps.esmorga.view.password.RecoverPasswordScreenTestTags.RECOVER_PASSWORD_BACK_BUTTON
+import cmm.apps.esmorga.view.password.RecoverPasswordScreenTestTags.RECOVER_PASSWORD_EMAIL_INPUT
+import cmm.apps.esmorga.view.password.RecoverPasswordScreenTestTags.RECOVER_PASSWORD_SEND_EMAIL_BUTTON
+import cmm.apps.esmorga.view.password.RecoverPasswordScreenTestTags.RECOVER_PASSWORD_SHOW_SNACKBAR
+import cmm.apps.esmorga.view.password.RecoverPasswordScreenTestTags.RECOVER_PASSWORD_TITLE
 import cmm.apps.esmorga.view.profile.HomeScreenTestTags.PROFILE_TITLE
 import cmm.apps.esmorga.view.registration.RegistrationConfirmationScreenTestTags.REGISTRATION_CONFIRMATION_OPEN_BUTTON
 import cmm.apps.esmorga.view.registration.RegistrationConfirmationScreenTestTags.REGISTRATION_CONFIRMATION_RESEND_BUTTON
@@ -117,6 +124,10 @@ class NavigationTest {
         coEvery { useCase() } returns EsmorgaResult.success(false)
     }
 
+    private val performRecoverPasswordUseCase = mockk<PerformRecoverPasswordUseCase>(relaxed = true).also { useCase ->
+        coEvery { useCase(any()) } returns EsmorgaResult.success(Unit)
+    }
+
     @Before
     @Throws(Exception::class)
     fun setUp() {
@@ -137,6 +148,7 @@ class NavigationTest {
                     factory<LeaveEventUseCase> { leaveEventUseCase }
                     factory<PerformRegistrationConfirmationUseCase> { performRegistrationConfirmationUseCase }
                     factory<LogOutUseCase> { logOutUseCase }
+                    factory<PerformRecoverPasswordUseCase> { performRecoverPasswordUseCase }
                 }
             )
         }
@@ -337,6 +349,39 @@ class NavigationTest {
         composeTestRule.onNodeWithTag(REGISTRATION_CONFIRMATION_RESEND_BUTTON).performClick()
 
         composeTestRule.onNodeWithTag(REGISTRATION_CONFIRMATION_SHOW_SNACKBAR).assertIsDisplayed()
+    }
+
+    @Test
+    fun `given user is on LoginScreen when forgot password button is clicked then RecoverPasswordScreen is displayed`() {
+        setNavigationFromDestination(Navigation.LoginScreen)
+
+        composeTestRule.onNodeWithTag(LOGIN_FORGOT_PASSWORD_BUTTON).performClick()
+
+        composeTestRule.onNodeWithTag(RECOVER_PASSWORD_TITLE).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(RECOVER_PASSWORD_SEND_EMAIL_BUTTON).assertIsDisplayed()
+
+    }
+
+    @Test
+    fun `given user is on RecoverPasswordScreen when back button is clicked then LoginScreen is displayed`() {
+        setNavigationFromDestination(Navigation.LoginScreen)
+
+        composeTestRule.onNodeWithTag(LOGIN_FORGOT_PASSWORD_BUTTON).performClick()
+
+        composeTestRule.onNodeWithTag(RECOVER_PASSWORD_TITLE).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(RECOVER_PASSWORD_BACK_BUTTON).performClick()
+
+        composeTestRule.onNodeWithTag(LOGIN_TITLE).assertIsDisplayed()
+    }
+
+    @Test
+    fun `given user is on RecoverPasswordScreen when send button is clicked then Snackbar is displayed`() {
+        setNavigationFromDestination(Navigation.RecoverPasswordScreen)
+        composeTestRule.onNodeWithTag(RECOVER_PASSWORD_BACK_BUTTON).performClick()
+
+        composeTestRule.onNodeWithTag(RECOVER_PASSWORD_EMAIL_INPUT).performTextInput("email@email.com")
+        composeTestRule.onNodeWithTag(RECOVER_PASSWORD_SEND_EMAIL_BUTTON).performClick()
+        composeTestRule.onNodeWithTag(RECOVER_PASSWORD_SHOW_SNACKBAR).assertIsDisplayed()
     }
 
     private fun setNavigationFromAppLaunch(loggedIn: Boolean) {

@@ -46,6 +46,7 @@ import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAILS_BACK_BUTTON
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_EMAIL_INPUT
+import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_FORGOT_PASSWORD_BUTTON
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_LOGIN_BUTTON
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_PASSWORD_INPUT
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_REGISTER_BUTTON
@@ -220,6 +221,7 @@ fun LoginView(
                         .padding(horizontal = 16.dp)
                         .align(Alignment.CenterHorizontally)
                         .clickable { onForgotPasswordClicked() }
+                        .testTag(LOGIN_FORGOT_PASSWORD_BUTTON)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 EsmorgaButton(
@@ -241,4 +243,5 @@ object LoginScreenTestTags {
     const val LOGIN_PASSWORD_INPUT = "login screen password input"
     const val LOGIN_LOGIN_BUTTON = "login screen login button"
     const val LOGIN_REGISTER_BUTTON = "login screen register button"
+    const val LOGIN_FORGOT_PASSWORD_BUTTON = "login screen forgot password button"
 }

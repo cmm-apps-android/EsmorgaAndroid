@@ -72,4 +72,8 @@
    <string name="register_resend_code_success">A new confirmation email has been sent</string>
    <string name="register_resend_code_error">Unable to send a new confirmation e-mail</string>
    <string name="login_forgot_password">Forgot your password?</string>
+   <string name="forgot_password_screen_title">Recover your password</string>
+   <string name="forgot_password_button">Send</string>
+   <string name="forgot_password_snackbar_success">Recovery Email sent</string>
+   <string name="invalid_credentials_error">Incorrect data, try again!</string>
 </resources>
