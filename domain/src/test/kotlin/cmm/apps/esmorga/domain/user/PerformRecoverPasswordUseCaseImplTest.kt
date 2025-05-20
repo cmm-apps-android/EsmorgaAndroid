@@ -22,7 +22,7 @@ class PerformRecoverPasswordUseCaseImplTest {
     }
 
     @Test
-    fun `given UserRepository successfully recovers password when use case is invoked then it returns failure`() = runTest {
+    fun `given password recovery fails in repository when use case is invoked then it returns failure()`() = runTest {
         val repo = mockk<UserRepository>(relaxed = true)
         coEvery { repo.recoverPassword(any()) } throws EsmorgaException("error", Source.REMOTE, 500)
 

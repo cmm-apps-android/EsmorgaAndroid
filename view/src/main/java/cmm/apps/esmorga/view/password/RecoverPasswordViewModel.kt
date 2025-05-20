@@ -2,6 +2,7 @@ package cmm.apps.esmorga.view.password
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cmm.apps.esmorga.common.util.ValidateTextFieldUtils.getFieldErrorText
 import cmm.apps.esmorga.domain.user.PerformRecoverPasswordUseCase
 import cmm.apps.esmorga.domain.user.model.User.Companion.EMAIL_REGEX
 import cmm.apps.esmorga.view.login.model.LoginViewHelper.getEmptyFieldErrorText
@@ -41,22 +42,6 @@ class RecoverPasswordViewModel(val performRecoverPasswordUseCase: PerformRecover
     }
 
     fun validateEmail(email: String, acceptsEmpty: Boolean = true) {
-        _uiState.value = _uiState.value.copy(emailError = getFieldErrorText(email, getEmailErrorText(), acceptsEmpty, email.matches(EMAIL_REGEX.toRegex())))
-    }
-
-    private fun getFieldErrorText(
-        value: String,
-        errorTextProvider: String,
-        acceptsEmpty: Boolean,
-        nonEmptyCondition: Boolean
-    ): String? {
-        val isBlank = value.isBlank()
-        val isValid = value.isEmpty() || nonEmptyCondition
-
-        return when {
-            !acceptsEmpty && isBlank -> getEmptyFieldErrorText()
-            !isValid -> errorTextProvider
-            else -> null
-        }
+        _uiState.value = _uiState.value.copy(emailError = getFieldErrorText(email, getEmailErrorText(), getEmptyFieldErrorText(), acceptsEmpty, email.matches(EMAIL_REGEX.toRegex())))
     }
 }

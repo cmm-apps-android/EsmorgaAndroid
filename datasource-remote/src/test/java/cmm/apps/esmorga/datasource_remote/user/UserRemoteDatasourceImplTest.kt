@@ -90,7 +90,7 @@ class UserRemoteDatasourceImplTest {
     }
 
     @Test(expected = Exception::class)
-    fun `given valid data when email verification succeeds then Exception is returned`() = runTest {
+    fun `given api call fails when emailVerification is invoked then Exception is thrown(`() = runTest {
         val context = mockk<Context>(relaxed = true)
         val api = mockk<EsmorgaAuthApi>(relaxed = true)
         coEvery { api.emailVerification(any()) } throws HttpException(Response.error<ResponseBody>(400, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
@@ -112,7 +112,7 @@ class UserRemoteDatasourceImplTest {
     }
 
     @Test(expected = Exception::class)
-    fun `given valid data when recover password succeeds then Exception is returned`() = runTest {
+    fun `given api call fails when recoverPassword is invoked then Exception is thrown`() = runTest {
         val context = mockk<Context>(relaxed = true)
         val api = mockk<EsmorgaAuthApi>(relaxed = true)
         coEvery { api.recoverPassword(any()) } throws HttpException(Response.error<ResponseBody>(400, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
