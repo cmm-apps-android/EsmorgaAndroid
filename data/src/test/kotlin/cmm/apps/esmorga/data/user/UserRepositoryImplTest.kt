@@ -175,7 +175,7 @@ class UserRepositoryImplTest {
     }
 
     @Test(expected = EsmorgaException::class)
-    fun `given valid data when recover password succeeds then error is returned`() = runTest {
+    fun `given remote datasource fails to recover password when recoverPassword is called then EsmorgaException is thrown`() = runTest {
         val localDS = mockk<UserDatasource>(relaxed = true)
         val remoteDS = mockk<UserDatasource>(relaxed = true)
         val localEventDS = mockk<EventDatasource>(relaxed = true)
