@@ -28,7 +28,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmm.apps.designsystem.EsmorgaButton
@@ -39,11 +38,12 @@ import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.password.RecoverPasswordScreenTestTags.RECOVER_PASSWORD_BACK_BUTTON
+import cmm.apps.esmorga.view.password.RecoverPasswordScreenTestTags.RECOVER_PASSWORD_EMAIL_INPUT
 import cmm.apps.esmorga.view.password.RecoverPasswordScreenTestTags.RECOVER_PASSWORD_SEND_EMAIL_BUTTON
+import cmm.apps.esmorga.view.password.RecoverPasswordScreenTestTags.RECOVER_PASSWORD_SHOW_SNACKBAR
 import cmm.apps.esmorga.view.password.RecoverPasswordScreenTestTags.RECOVER_PASSWORD_TITLE
 import cmm.apps.esmorga.view.password.model.RecoverPasswordEffect
 import cmm.apps.esmorga.view.password.model.RecoverPasswordUiState
-import cmm.apps.esmorga.view.registration.RegistrationConfirmationScreenTestTags.REGISTRATION_CONFIRMATION_SHOW_SNACKBAR
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -94,7 +94,7 @@ fun RecoverPasswordView(
 ) {
     var email by remember { mutableStateOf("") }
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState, modifier = Modifier.testTag(REGISTRATION_CONFIRMATION_SHOW_SNACKBAR)) },
+        snackbarHost = { SnackbarHost(snackbarHostState, modifier = Modifier.testTag(RECOVER_PASSWORD_SHOW_SNACKBAR)) },
         topBar = {
             Box(
                 modifier = Modifier
@@ -146,7 +146,8 @@ fun RecoverPasswordView(
                         if (!focusState.isFocused) {
                             validateEmail(email)
                         }
-                    },
+                    }
+                    .testTag(RECOVER_PASSWORD_EMAIL_INPUT),
                 imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Email
             )
@@ -167,4 +168,6 @@ object RecoverPasswordScreenTestTags {
     const val RECOVER_PASSWORD_TITLE = "recover password screen title"
     const val RECOVER_PASSWORD_BACK_BUTTON = "recover password screen back button"
     const val RECOVER_PASSWORD_SEND_EMAIL_BUTTON = "recover password screen send email button"
+    const val RECOVER_PASSWORD_SHOW_SNACKBAR = "recover password screen show snackBar"
+    const val RECOVER_PASSWORD_EMAIL_INPUT = "recover password screen email input"
 }
