@@ -3,15 +3,11 @@ package cmm.apps.esmorga.view.password
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cmm.apps.esmorga.domain.user.PerformRecoverPasswordUseCase
-import cmm.apps.esmorga.domain.user.PerformRegistrationConfirmationUseCase
 import cmm.apps.esmorga.domain.user.model.User.Companion.EMAIL_REGEX
-import cmm.apps.esmorga.view.login.model.LoginUiState
-import cmm.apps.esmorga.view.login.model.LoginViewHelper
 import cmm.apps.esmorga.view.login.model.LoginViewHelper.getEmptyFieldErrorText
 import cmm.apps.esmorga.view.password.model.RecoverPasswordEffect
 import cmm.apps.esmorga.view.password.model.RecoverPasswordUiState
 import cmm.apps.esmorga.view.password.model.RecoverPasswordViewHelper.getEmailErrorText
-import cmm.apps.esmorga.view.registration.model.RegistrationConfirmationEffect
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

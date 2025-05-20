@@ -21,13 +21,10 @@ sealed class RecoverPasswordEffect {
 
 object RecoverPasswordViewHelper : KoinComponent {
     private val context: Context by inject()
-    fun getEsmorgaMessageSnackBarSuccess() =
-        context.getString(R.string.forgot_password_snackbar_success)
+    fun getEsmorgaMessageSnackBarSuccess() = context.getString(R.string.forgot_password_snackbar_success)
     fun getEmailErrorText() = context.getString(R.string.invalid_credentials_error)
     fun getEsmorgaErrorScreenArguments() = EsmorgaErrorScreenArguments(
         title = context.getString(R.string.default_error_title_expanded),
         buttonText = context.getString(R.string.button_retry)
     )
-
-
 }
