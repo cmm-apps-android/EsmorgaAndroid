@@ -2,6 +2,7 @@ package cmm.apps.esmorga.view.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cmm.apps.esmorga.common.util.ValidateTextFieldUtils.getFieldErrorText
 import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.user.PerformLoginUseCase
@@ -55,28 +56,12 @@ class LoginViewModel(private val performLoginUseCase: PerformLoginUseCase) : Vie
     }
 
     fun validateEmail(email: String, acceptsEmpty: Boolean = true) {
-        _uiState.value = _uiState.value.copy(emailError = getFieldErrorText(email, LoginViewHelper.getEmailErrorText(), acceptsEmpty, email.matches(EMAIL_REGEX.toRegex())))
+        _uiState.value = _uiState.value.copy(emailError = getFieldErrorText(email, LoginViewHelper.getEmailErrorText(), getEmptyFieldErrorText(), acceptsEmpty, email.matches(EMAIL_REGEX.toRegex())))
     }
 
     fun validatePass(pass: String, acceptsEmpty: Boolean = true) {
         _uiState.value =
-            _uiState.value.copy(passwordError = getFieldErrorText(pass, LoginViewHelper.getPasswordErrorText(), acceptsEmpty, pass.matches(PASSWORD_REGEX.toRegex())))
-    }
-
-    private fun getFieldErrorText(
-        value: String,
-        errorTextProvider: String,
-        acceptsEmpty: Boolean,
-        nonEmptyCondition: Boolean
-    ): String? {
-        val isBlank = value.isBlank()
-        val isValid = value.isEmpty() || nonEmptyCondition
-
-        return when {
-            !acceptsEmpty && isBlank -> getEmptyFieldErrorText()
-            !isValid -> errorTextProvider
-            else -> null
-        }
+            _uiState.value.copy(passwordError = getFieldErrorText(pass, LoginViewHelper.getPasswordErrorText(), getEmptyFieldErrorText(), acceptsEmpty, pass.matches(PASSWORD_REGEX.toRegex())))
     }
 
     fun onEmailChanged() {
