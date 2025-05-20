@@ -2,6 +2,7 @@ package cmm.apps.esmorga.view.registration
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cmm.apps.esmorga.common.util.ValidateTextFieldUtils.getFieldErrorText
 import cmm.apps.esmorga.domain.user.PerformRegistrationUserCase
 import cmm.apps.esmorga.domain.user.model.User.Companion.EMAIL_REGEX
 import cmm.apps.esmorga.domain.user.model.User.Companion.NAME_REGEX
@@ -62,35 +63,19 @@ class RegistrationViewModel(private val performRegistrationUserCase: PerformRegi
     fun validateField(field: RegistrationField, value: String, comparisonField: String? = null, acceptsEmpty: Boolean = true) {
         when (field) {
             RegistrationField.NAME -> _uiState.value =
-                _uiState.value.copy(nameError = getFieldErrorText(value, getNameErrorText(), acceptsEmpty, value.matches(NAME_REGEX.toRegex())))
+                _uiState.value.copy(nameError = getFieldErrorText(value, getNameErrorText(), getEmptyFieldErrorText(), acceptsEmpty, value.matches(NAME_REGEX.toRegex())))
 
             RegistrationField.LAST_NAME -> _uiState.value =
-                _uiState.value.copy(lastNameError = getFieldErrorText(value, getLastNameErrorText(), acceptsEmpty, value.matches(NAME_REGEX.toRegex())))
+                _uiState.value.copy(lastNameError = getFieldErrorText(value, getLastNameErrorText(), getEmptyFieldErrorText(), acceptsEmpty, value.matches(NAME_REGEX.toRegex())))
 
             RegistrationField.EMAIL -> _uiState.value =
-                _uiState.value.copy(emailError = getFieldErrorText(value, getEmailErrorText(), acceptsEmpty, value.matches(EMAIL_REGEX.toRegex())))
+                _uiState.value.copy(emailError = getFieldErrorText(value, getEmailErrorText(), getEmptyFieldErrorText(), acceptsEmpty, value.matches(EMAIL_REGEX.toRegex())))
 
             RegistrationField.PASS -> _uiState.value =
-                _uiState.value.copy(passError = getFieldErrorText(value, getPasswordErrorText(), acceptsEmpty, value.matches(PASSWORD_REGEX.toRegex())))
+                _uiState.value.copy(passError = getFieldErrorText(value, getPasswordErrorText(), getEmptyFieldErrorText(), acceptsEmpty, value.matches(PASSWORD_REGEX.toRegex())))
 
             RegistrationField.REPEAT_PASS -> _uiState.value =
-                _uiState.value.copy(repeatPassError = getFieldErrorText(value, getRepeatPasswordErrorText(), acceptsEmpty, value == comparisonField))
-        }
-    }
-
-    private fun getFieldErrorText(
-        value: String,
-        errorTextProvider: String,
-        acceptsEmpty: Boolean,
-        nonEmptyCondition: Boolean
-    ): String? {
-        val isBlank = value.isBlank()
-        val isValid = value.isEmpty() || nonEmptyCondition
-
-        return when {
-            !acceptsEmpty && isBlank -> getEmptyFieldErrorText()
-            !isValid -> errorTextProvider
-            else -> null
+                _uiState.value.copy(repeatPassError = getFieldErrorText(value, getRepeatPasswordErrorText(), getEmptyFieldErrorText(), acceptsEmpty, value == comparisonField))
         }
     }
 
