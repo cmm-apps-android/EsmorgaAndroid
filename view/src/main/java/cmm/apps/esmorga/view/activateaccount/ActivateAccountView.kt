@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
-@Preview(showBackground = true)
+
 @Screen
 @Composable
 fun ActivateAccountScreen(
@@ -49,10 +49,10 @@ fun ActivateAccountContent(
         Image(
             painter = painterResource(id = R.drawable.activate_account_image),
             contentDescription = null,
-            contentScale = ContentScale.FillWidth,
+            contentScale = ContentScale.FillHeight,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(240.dp)
+                .height(320.dp)
         )
 
         Spacer(modifier = Modifier.height(24.dp))
