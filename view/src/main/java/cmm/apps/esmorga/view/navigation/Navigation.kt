@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import cmm.apps.esmorga.domain.event.model.Event
+import cmm.apps.esmorga.view.activateaccount.ActivateAccountScreen
 import cmm.apps.esmorga.view.errors.EsmorgaErrorScreen
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreen
@@ -53,13 +54,20 @@ sealed class Navigation {
 
     @Serializable
     data object ProfileScreen : Navigation()
+
+    @Serializable
+    data object AccountActivationScreen : Navigation()
 }
 
 const val GOOGLE_MAPS_PACKAGE = "com.google.android.apps.maps"
 
 @Composable
-fun EsmorgaNavigationGraph(navigationController: NavHostController, loggedIn: Boolean) {
-    val startDestination = if (loggedIn) Navigation.EventListScreen else Navigation.WelcomeScreen
+fun EsmorgaNavigationGraph(navigationController: NavHostController, loggedIn: Boolean, isDeepLink: Boolean) {
+    val startDestination = if (isDeepLink) {
+        Navigation.AccountActivationScreen
+    } else {
+        if (loggedIn) Navigation.EventListScreen else Navigation.WelcomeScreen
+    }
     EsmorgaNavHost(navigationController, startDestination)
 }
 
@@ -73,6 +81,15 @@ internal fun EsmorgaNavHost(navigationController: NavHostController, startDestin
         loginFlow(navigationController)
         homeFlow(navigationController)
         errorFlow(navigationController)
+        accountActivationFlow(navigationController)
+    }
+}
+
+private fun NavGraphBuilder.accountActivationFlow(navigationController: NavHostController) {
+    composable<Navigation.AccountActivationScreen> {
+        ActivateAccountScreen {
+
+        }
     }
 }
 
