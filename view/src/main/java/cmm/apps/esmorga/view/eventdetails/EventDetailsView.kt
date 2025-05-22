@@ -39,7 +39,6 @@ import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAILS_BACK_BUTTON
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsEffect
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiState
-import cmm.apps.esmorga.view.eventlist.model.EventListUiModel
 import cmm.apps.esmorga.view.navigation.openNavigationApp
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import coil.compose.AsyncImage
@@ -153,8 +152,7 @@ fun EventDetailsView(
         Column(
             modifier = Modifier
                 .padding(
-                    top = innerPadding.calculateTopPadding(),
-                    bottom = innerPadding.calculateBottomPadding()
+                    top = innerPadding.calculateTopPadding()
                 )
                 .verticalScroll(state = rememberScrollState())
         ) {

@@ -151,7 +151,6 @@ fun LoginView(
             Column(
                 modifier = Modifier
                     .padding(
-                        bottom = innerPadding.calculateBottomPadding(),
                         start = 16.dp,
                         end = 16.dp
                     )
