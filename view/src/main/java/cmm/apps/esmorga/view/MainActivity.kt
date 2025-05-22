@@ -1,5 +1,6 @@
 package cmm.apps.esmorga.view
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -43,12 +44,14 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
 
+        val data: Uri? = intent?.data
+
         var uiState: MainUiState by mutableStateOf(MainUiState())
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.CREATED) {
                 mvm.uiState.onEach { uiState = it }.collect {
                     if (!it.loading) {
-                        setupNavigation(it.loggedIn)
+                        setupNavigation(it.loggedIn, data)
                     }
                 }
             }
@@ -62,7 +65,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
     }
 
-    private fun setupNavigation(loggedIn: Boolean) {
+    private fun setupNavigation(loggedIn: Boolean, data: Uri?) {
         setContent {
             EsmorgaTheme {
                 val navigationController = rememberNavController()
@@ -73,7 +76,7 @@ class MainActivity : ComponentActivity() {
                 )
 
                 HomeView(bottomNavItems, navigationController) {
-                    EsmorgaNavigationGraph(navigationController = navigationController, loggedIn)
+                    EsmorgaNavigationGraph(navigationController = navigationController, loggedIn, isDeepLink = data != null)
                 }
             }
         }
