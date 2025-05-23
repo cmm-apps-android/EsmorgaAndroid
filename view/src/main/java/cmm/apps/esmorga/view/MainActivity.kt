@@ -22,12 +22,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import cmm.apps.esmorga.view.eventlist.model.EventListUiState
 import cmm.apps.esmorga.view.home.BottomNavItem
 import cmm.apps.esmorga.view.home.BottomNavItemRoute
 import cmm.apps.esmorga.view.home.EsmorgaBottomBar
@@ -44,14 +46,14 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
 
-        val data: Uri? = intent?.data
+        val deeplinkPath: Uri? = intent?.data
 
         var uiState: MainUiState by mutableStateOf(MainUiState())
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.CREATED) {
                 mvm.uiState.onEach { uiState = it }.collect {
                     if (!it.loading) {
-                        setupNavigation(it.loggedIn, data)
+                        setupNavigation(it.loggedIn, deeplinkPath)
                     }
                 }
             }
@@ -65,7 +67,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
     }
 
-    private fun setupNavigation(loggedIn: Boolean, data: Uri?) {
+    private fun setupNavigation(loggedIn: Boolean, deeplinkPath: Uri?) {
         setContent {
             EsmorgaTheme {
                 val navigationController = rememberNavController()
@@ -76,7 +78,7 @@ class MainActivity : ComponentActivity() {
                 )
 
                 HomeView(bottomNavItems, navigationController) {
-                    EsmorgaNavigationGraph(navigationController = navigationController, loggedIn, isDeepLink = data != null)
+                    EsmorgaNavigationGraph(navigationController = navigationController, loggedIn, deeplinkPath = deeplinkPath)
                 }
             }
         }

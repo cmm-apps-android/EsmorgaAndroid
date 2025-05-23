@@ -56,15 +56,17 @@ sealed class Navigation {
     data object ProfileScreen : Navigation()
 
     @Serializable
-    data object AccountActivationScreen : Navigation()
+    data class AccountActivationScreen(val verificationCode: String) : Navigation()
 }
 
 const val GOOGLE_MAPS_PACKAGE = "com.google.android.apps.maps"
+private const val DEEPLINK_ACTIVATE_ACCOUNT_QUERY_PARAM_NAME = "verificationCode"
+private const val DEEPLINK_ACTIVATE_ACCOUNT_SCREEN_NAME = "AccountActivationScreen"
 
 @Composable
-fun EsmorgaNavigationGraph(navigationController: NavHostController, loggedIn: Boolean, isDeepLink: Boolean) {
-    val startDestination = if (isDeepLink) {
-        Navigation.AccountActivationScreen
+fun EsmorgaNavigationGraph(navigationController: NavHostController, loggedIn: Boolean, deeplinkPath: Uri?) {
+    val startDestination = if (deeplinkPath != null) {
+        navigateFromDeeplink(deeplinkPath)
     } else {
         if (loggedIn) Navigation.EventListScreen else Navigation.WelcomeScreen
     }
@@ -86,8 +88,9 @@ internal fun EsmorgaNavHost(navigationController: NavHostController, startDestin
 }
 
 private fun NavGraphBuilder.accountActivationFlow(navigationController: NavHostController) {
-    composable<Navigation.AccountActivationScreen> {
+    composable<Navigation.AccountActivationScreen> { backStackEntry ->
         ActivateAccountScreen(
+            backStackEntry.toRoute<Navigation.AccountActivationScreen>().verificationCode,
             onContinueClick = {},
             onError = { navigationController.navigate(Navigation.FullScreenError(it)) }
         )
@@ -221,4 +224,18 @@ private fun isPackageAvailable(context: Context, appPackage: String) = try {
     appInfo != null && appInfo.enabled
 } catch (e: PackageManager.NameNotFoundException) {
     false
+}
+
+private fun deeplinkScreenName(deeplinkData: String): String {
+    return when (deeplinkData) {
+        DEEPLINK_ACTIVATE_ACCOUNT_QUERY_PARAM_NAME -> DEEPLINK_ACTIVATE_ACCOUNT_SCREEN_NAME
+        else -> ""
+    }
+}
+
+private fun navigateFromDeeplink(deeplinkPath: Uri): Navigation {
+    return when (deeplinkScreenName(deeplinkPath.queryParameterNames.first())) {
+        DEEPLINK_ACTIVATE_ACCOUNT_SCREEN_NAME -> Navigation.AccountActivationScreen(deeplinkPath.getQueryParameter(deeplinkPath.queryParameterNames.first()).orEmpty())
+        else -> Navigation.WelcomeScreen
+    }
 }
