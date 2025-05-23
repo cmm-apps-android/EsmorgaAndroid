@@ -28,6 +28,7 @@ import cmm.apps.esmorga.view.Screen
 @Screen
 @Composable
 fun ActivateAccountScreen(
+    verificationCode: String,
     onContinueClick: () -> Unit = {}
 ) {
     ActivateAccountContent(
