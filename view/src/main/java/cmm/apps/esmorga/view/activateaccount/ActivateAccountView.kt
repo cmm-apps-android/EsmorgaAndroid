@@ -29,6 +29,7 @@ import org.koin.androidx.compose.koinViewModel
 @Screen
 @Composable
 fun ActivateAccountScreen(
+    verificationCode: String,
     viewModel: ActivateAccountViewModel = koinViewModel(),
     onContinueClick: () -> Unit = {},
     onError: (EsmorgaErrorScreenArguments) -> Unit
