@@ -2,41 +2,59 @@ package cmm.apps.esmorga.view.activateaccount
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import cmm.apps.designsystem.EsmorgaButton
+import cmm.apps.designsystem.EsmorgaText
+import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
+import cmm.apps.esmorga.view.activateaccount.model.ActivateAccountEffect
+import cmm.apps.esmorga.view.activateaccount.model.ActivateAccountUiState
+import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
+import cmm.apps.esmorga.view.theme.EsmorgaTheme
+import org.koin.androidx.compose.koinViewModel
 
 @Screen
 @Composable
 fun ActivateAccountScreen(
-    onContinueClick: () -> Unit = {}
+    viewModel: ActivateAccountViewModel = koinViewModel(),
+    onContinueClick: () -> Unit = {},
+    onError: (EsmorgaErrorScreenArguments) -> Unit
 ) {
-    ActivateAccountContent(
-        onContinueClick = onContinueClick
-    )
+    val uiState: ActivateAccountUiState by viewModel.uiState.collectAsStateWithLifecycle()
+    LaunchedEffect(Unit) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                is ActivateAccountEffect.ShowFullScreenError -> {
+                    onError(effect.esmorgaErrorScreenArguments)
+                }
+            }
+        }
+    }
+    EsmorgaTheme {
+        ActivateAccountView(
+            uiState = uiState,
+            onContinueClick = onContinueClick
+        )
+    }
+
 }
 
 @Composable
-fun ActivateAccountContent(
+fun ActivateAccountView(
+    uiState: ActivateAccountUiState,
     onContinueClick: () -> Unit
 ) {
     Column(
@@ -44,7 +62,6 @@ fun ActivateAccountContent(
             .fillMaxWidth(),
         horizontalAlignment = Alignment.Start
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
 
         Image(
             painter = painterResource(id = R.drawable.activate_account_image),
@@ -55,43 +72,28 @@ fun ActivateAccountContent(
                 .height(320.dp)
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
 
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp)
         ) {
-            Text(
+            EsmorgaText(
                 text = stringResource(R.string.activate_account_title),
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold,
-                fontSize = 20.sp
+                style = EsmorgaTextStyle.BODY_1,
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
+            EsmorgaText(
                 text = stringResource(R.string.activate_account_description),
-                style = MaterialTheme.typography.bodyMedium
+                style = EsmorgaTextStyle.BODY_1
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
 
-            Button(
-                onClick = onContinueClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp),
-                shape = RoundedCornerShape(8.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF6D0024)
-                )
+            EsmorgaButton(
+                text = stringResource(R.string.activate_account_continue),
+                isLoading = uiState.isLoading
             ) {
-                Text(
-                    text = stringResource(R.string.activate_account_continue),
-                    color = Color.White
-                )
+                onContinueClick()
             }
         }
     }

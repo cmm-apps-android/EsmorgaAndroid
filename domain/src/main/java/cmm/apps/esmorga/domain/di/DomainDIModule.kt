@@ -1,5 +1,7 @@
 package cmm.apps.esmorga.domain.di
 
+import cmm.apps.esmorga.domain.account.ActivateAccountUseCase
+import cmm.apps.esmorga.domain.account.ActivateAccountUseCaseImpl
 import cmm.apps.esmorga.domain.event.GetEventDetailsUseCase
 import cmm.apps.esmorga.domain.event.GetEventDetailsUseCaseImpl
 import cmm.apps.esmorga.domain.event.GetEventListUseCase
@@ -36,6 +38,7 @@ object DomainDIModule {
         factory<GetMyEventListUseCase> { GetMyEventListUseCaseImpl(get(), get()) }
         factory<LeaveEventUseCase> { LeaveEventUseCaseImpl(get()) }
         factory<LogOutUseCase> { LogOutUseCaseImpl(get()) }
+        factory<ActivateAccountUseCase> { ActivateAccountUseCaseImpl(get()) }
     }
 
 }
