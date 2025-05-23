@@ -25,12 +25,13 @@ import cmm.apps.esmorga.view.activateaccount.model.ActivateAccountUiState
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Screen
 @Composable
 fun ActivateAccountScreen(
     verificationCode: String,
-    viewModel: ActivateAccountViewModel = koinViewModel(),
+    viewModel: ActivateAccountViewModel = koinViewModel(parameters = { parametersOf(verificationCode) }),
     onContinueClick: () -> Unit = {},
     onError: (EsmorgaErrorScreenArguments) -> Unit
 ) {
