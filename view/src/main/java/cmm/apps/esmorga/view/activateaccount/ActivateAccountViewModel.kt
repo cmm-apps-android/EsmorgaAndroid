@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class ActivateAccountViewModel(
+    private val verificationCode: String,
     private val activateAccountUseCase: ActivateAccountUseCase
 ) : ViewModel() {
 
@@ -30,7 +31,7 @@ class ActivateAccountViewModel(
     private var failedAttempts = 0
 
     init {
-        activateAccount("239762")
+        activateAccount(verificationCode)
     }
 
     fun activateAccount(verificationCode: String) {
