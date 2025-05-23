@@ -87,9 +87,10 @@ internal fun EsmorgaNavHost(navigationController: NavHostController, startDestin
 
 private fun NavGraphBuilder.accountActivationFlow(navigationController: NavHostController) {
     composable<Navigation.AccountActivationScreen> {
-        ActivateAccountScreen {
-
-        }
+        ActivateAccountScreen(
+            onContinueClick = {},
+            onError = { navigationController.navigate(Navigation.FullScreenError(it)) }
+        )
     }
 }
 

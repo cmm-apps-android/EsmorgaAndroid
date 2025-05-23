@@ -3,6 +3,7 @@ package cmm.apps.esmorga.datasource_remote.api
 import cmm.apps.esmorga.datasource_remote.user.model.UserRemoteModel
 import retrofit2.http.Body
 import retrofit2.http.POST
+import retrofit2.http.PUT
 
 interface EsmorgaAuthApi {
 
@@ -17,4 +18,7 @@ interface EsmorgaAuthApi {
 
     @POST("account/email/verification")
     suspend fun emailVerification(@Body body: Map<String, String>)
+
+    @PUT("account/activate")
+    suspend fun accountActivation(@Body body: Map<String, String>)
 }

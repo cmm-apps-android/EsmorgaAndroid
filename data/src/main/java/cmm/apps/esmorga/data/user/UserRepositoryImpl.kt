@@ -35,4 +35,8 @@ class UserRepositoryImpl(private val localDs: UserDatasource, private val remote
             throw Exception("Error al cerrar sesión: ${e.message}", e)
         }
     }
+
+    override suspend fun activateAccount(verificationCode: String) {
+        remoteDs.activateAccount(verificationCode)
+    }
 }
