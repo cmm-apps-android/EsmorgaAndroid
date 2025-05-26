@@ -2,9 +2,12 @@ package cmm.apps.esmorga.view.activateaccount
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -59,44 +62,52 @@ fun ActivateAccountView(
     uiState: ActivateAccountUiState,
     onContinueClick: () -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth(),
-        horizontalAlignment = Alignment.Start
-    ) {
-
-        Image(
-            painter = painterResource(id = R.drawable.activate_account_image),
-            contentDescription = null,
-            contentScale = ContentScale.FillHeight,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(320.dp)
-        )
-
-
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+    ) { innerPadding ->
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp)
+                .padding(top = innerPadding.calculateTopPadding())
+                //.fillMaxWidth(),
         ) {
-            EsmorgaText(
-                text = stringResource(R.string.activate_account_title),
-                style = EsmorgaTextStyle.BODY_1,
+
+            Image(
+                painter = painterResource(id = R.drawable.activate_account_image),
+                contentDescription = null,
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(320.dp)
             )
 
-            EsmorgaText(
-                text = stringResource(R.string.activate_account_description),
-                style = EsmorgaTextStyle.BODY_1
-            )
 
-
-            EsmorgaButton(
-                text = stringResource(R.string.activate_account_continue),
-                isLoading = uiState.isLoading
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
             ) {
-                onContinueClick()
+                EsmorgaText(
+                    text = stringResource(R.string.activate_account_title),
+                    style = EsmorgaTextStyle.HEADING_1,
+                    Modifier.padding(top = 20.dp, bottom = 12.dp)
+                )
+
+                EsmorgaText(
+                    text = stringResource(R.string.activate_account_description),
+                    style = EsmorgaTextStyle.BODY_1,
+                    Modifier.padding(top = 20.dp, bottom = 12.dp)
+                )
+
+
+                EsmorgaButton(
+                    text = stringResource(R.string.activate_account_continue),
+                    modifier = Modifier.padding(top = 32.dp, bottom = 16.dp),
+                    isLoading = uiState.isLoading
+                ) {
+                    onContinueClick()
+                }
             }
         }
+
     }
 }
