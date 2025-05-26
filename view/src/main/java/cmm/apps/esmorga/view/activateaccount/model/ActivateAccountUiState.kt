@@ -10,14 +10,8 @@ import org.koin.core.component.inject
 
 data class ActivateAccountUiState(
     val isLoading: Boolean = true,
-    val error: String? = null,
-    val failedAttemps: Int = 0
+    val error: String? = null
 )
-
-enum class ActivateAccountError {
-    INVALUD_OR_EXPIRED,
-    UNKNOWN
-}
 
 object ActivateAccountHelper : KoinComponent {
     private val context: Context by inject()
