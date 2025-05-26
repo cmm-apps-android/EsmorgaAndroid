@@ -54,13 +54,18 @@ fun ActivateAccountScreen(
                 is ActivateAccountEffect.ShowLastTryFullScreenError -> {
                     onLastTryError(effect.esmorgaErrorScreenArguments, effect.redirectToWelcome)
                 }
+                is ActivateAccountEffect.NavigateToWelcomeScreen -> {
+                    onContinueClick()
+                }
             }
         }
     }
     EsmorgaTheme {
         ActivateAccountView(
             uiState = uiState,
-            onContinueClick = onContinueClick
+            onContinueClick = {
+                viewModel.onContinueClicked()
+            }
         )
     }
 
@@ -77,7 +82,7 @@ fun ActivateAccountView(
         Column(
             modifier = Modifier
                 .padding(top = innerPadding.calculateTopPadding())
-                //.fillMaxWidth(),
+                .fillMaxWidth(),
         ) {
 
             Image(
