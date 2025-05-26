@@ -34,4 +34,5 @@ object ActivateAccountHelper : KoinComponent {
 sealed class ActivateAccountEffect {
     data class ShowFullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments = getActivateAccountErrorScreenArguments()) : ActivateAccountEffect()
     data class ShowLastTryFullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments = getActivateAccountLastTryErrorScreenArguments(), val redirectToWelcome: Boolean = true) : ActivateAccountEffect()
+    data object NavigateToWelcomeScreen: ActivateAccountEffect()
 }
