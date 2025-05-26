@@ -11,13 +11,7 @@ import org.koin.core.component.inject
 data class ActivateAccountUiState(
     val isLoading: Boolean = true,
     val error: String? = null,
-    val failedAttemps: Int = 0
 )
-
-enum class ActivateAccountError {
-    INVALUD_OR_EXPIRED,
-    UNKNOWN
-}
 
 object ActivateAccountHelper : KoinComponent {
     private val context: Context by inject()
@@ -40,4 +34,5 @@ object ActivateAccountHelper : KoinComponent {
 sealed class ActivateAccountEffect {
     data class ShowFullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments = getActivateAccountErrorScreenArguments()) : ActivateAccountEffect()
     data class ShowLastTryFullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments = getActivateAccountLastTryErrorScreenArguments(), val redirectToWelcome: Boolean = true) : ActivateAccountEffect()
+    data object NavigateToWelcomeScreen : ActivateAccountEffect()
 }

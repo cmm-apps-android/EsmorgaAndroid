@@ -51,4 +51,8 @@ class ActivateAccountViewModel(
             }
         }
     }
+
+    fun onContinueClicked(){
+        _effect.tryEmit(ActivateAccountEffect.NavigateToWelcomeScreen)
+    }
 }
