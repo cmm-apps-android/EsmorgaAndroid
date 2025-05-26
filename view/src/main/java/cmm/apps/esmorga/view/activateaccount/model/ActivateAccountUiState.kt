@@ -10,7 +10,7 @@ import org.koin.core.component.inject
 
 data class ActivateAccountUiState(
     val isLoading: Boolean = true,
-    val error: String? = null,
+    val error: String? = null
 )
 
 object ActivateAccountHelper : KoinComponent {
@@ -34,5 +34,4 @@ object ActivateAccountHelper : KoinComponent {
 sealed class ActivateAccountEffect {
     data class ShowFullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments = getActivateAccountErrorScreenArguments()) : ActivateAccountEffect()
     data class ShowLastTryFullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments = getActivateAccountLastTryErrorScreenArguments(), val redirectToWelcome: Boolean = true) : ActivateAccountEffect()
-    data object NavigateToWelcomeScreen : ActivateAccountEffect()
 }
