@@ -48,5 +48,6 @@ object ViewDIModule {
 
         viewModel { (verificationCode: String) ->
             ActivateAccountViewModel(verificationCode, get())
-        }    }
+        }
+    }
 }

@@ -47,7 +47,7 @@ sealed class Navigation {
     data class RegistrationConfirmationScreen(val email: String) : Navigation()
 
     @Serializable
-    data class FullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments) : Navigation()
+    data class FullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments, val redirectToWelcome: Boolean = false) : Navigation()
 
     @Serializable
     data object MyEventsScreen : Navigation()
@@ -56,7 +56,7 @@ sealed class Navigation {
     data object ProfileScreen : Navigation()
 
     @Serializable
-    data class AccountActivationScreen(val verificationCode: String) : Navigation()
+    data class ActivateAccountScreen(val verificationCode: String) : Navigation()
 }
 
 const val GOOGLE_MAPS_PACKAGE = "com.google.android.apps.maps"
@@ -88,11 +88,20 @@ internal fun EsmorgaNavHost(navigationController: NavHostController, startDestin
 }
 
 private fun NavGraphBuilder.accountActivationFlow(navigationController: NavHostController) {
-    composable<Navigation.AccountActivationScreen> { backStackEntry ->
+    composable<Navigation.ActivateAccountScreen> { backStackEntry ->
         ActivateAccountScreen(
-            backStackEntry.toRoute<Navigation.AccountActivationScreen>().verificationCode,
+            backStackEntry.toRoute<Navigation.ActivateAccountScreen>().verificationCode,
             onContinueClick = {},
-            onError = { navigationController.navigate(Navigation.FullScreenError(it)) }
+            onError = {
+                navigationController.navigate(Navigation.FullScreenError(it))
+            },
+            onLastTryError = { arguments, redirectToWelcome ->
+                navigationController.navigate(Navigation.FullScreenError(arguments, redirectToWelcome)) {
+                    popUpTo<Navigation.ActivateAccountScreen> {
+                        inclusive = true
+                    }
+                }
+            }
         )
     }
 }
@@ -193,10 +202,19 @@ private fun NavGraphBuilder.errorFlow(navigationController: NavHostController) {
         typeMap = mapOf(typeOf<EsmorgaErrorScreenArguments>() to serializableType<EsmorgaErrorScreenArguments>())
     ) { backStackEntry ->
         val esmorgaErrorScreenArguments = backStackEntry.toRoute<Navigation.FullScreenError>().esmorgaErrorScreenArguments
+        val redirectToWelcome = backStackEntry.toRoute<Navigation.FullScreenError>().redirectToWelcome
         EsmorgaErrorScreen(
             esmorgaErrorScreenArguments = esmorgaErrorScreenArguments,
             onButtonPressed = {
-                navigationController.popBackStack()
+                if (redirectToWelcome) {
+                    navigationController.navigate(Navigation.WelcomeScreen) {
+                        popUpTo<Navigation.FullScreenError> {
+                            inclusive = true
+                        }
+                    }
+                } else {
+                    navigationController.popBackStack()
+                }
             })
     }
 }
@@ -235,7 +253,7 @@ private fun deeplinkScreenName(deeplinkData: String): String {
 
 private fun navigateFromDeeplink(deeplinkPath: Uri): Navigation {
     return when (deeplinkScreenName(deeplinkPath.queryParameterNames.first())) {
-        DEEPLINK_ACTIVATE_ACCOUNT_SCREEN_NAME -> Navigation.AccountActivationScreen(deeplinkPath.getQueryParameter(deeplinkPath.queryParameterNames.first()).orEmpty())
+        DEEPLINK_ACTIVATE_ACCOUNT_SCREEN_NAME -> Navigation.ActivateAccountScreen(deeplinkPath.getQueryParameter(deeplinkPath.queryParameterNames.first()).orEmpty())
         else -> Navigation.WelcomeScreen
     }
 }
