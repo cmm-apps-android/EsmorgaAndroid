@@ -46,6 +46,8 @@ object ViewDIModule {
 
         viewModel { ProfileViewModel(get(), get()) }
 
-        viewModel { ActivateAccountViewModel(get()) }
+        viewModel { (verificationCode: String) ->
+            ActivateAccountViewModel(verificationCode, get())
+        }
     }
 }

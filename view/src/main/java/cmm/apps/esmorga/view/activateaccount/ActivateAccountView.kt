@@ -14,6 +14,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmm.apps.designsystem.EsmorgaButton
 import cmm.apps.designsystem.EsmorgaText
@@ -23,6 +24,7 @@ import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.activateaccount.model.ActivateAccountEffect
 import cmm.apps.esmorga.view.activateaccount.model.ActivateAccountUiState
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
+import cmm.apps.esmorga.view.extensions.observeLifecycleEvents
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -33,14 +35,21 @@ fun ActivateAccountScreen(
     verificationCode: String,
     viewModel: ActivateAccountViewModel = koinViewModel(parameters = { parametersOf(verificationCode) }),
     onContinueClick: () -> Unit = {},
-    onError: (EsmorgaErrorScreenArguments) -> Unit
+    onError: (EsmorgaErrorScreenArguments) -> Unit,
+    onLastTryError: (EsmorgaErrorScreenArguments, Boolean) -> Unit
 ) {
     val uiState: ActivateAccountUiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+
+    viewModel.observeLifecycleEvents(lifecycle)
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
                 is ActivateAccountEffect.ShowFullScreenError -> {
                     onError(effect.esmorgaErrorScreenArguments)
+                }
+                is ActivateAccountEffect.ShowLastTryFullScreenError -> {
+                    onLastTryError(effect.esmorgaErrorScreenArguments, effect.redirectToWelcome)
                 }
             }
         }
