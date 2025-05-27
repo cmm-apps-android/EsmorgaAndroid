@@ -54,8 +54,7 @@ class ActivateAccountViewModelTest {
 
 
         sut.effect.test {
-            //sut.onStart(lifeCycleOwner)
-            sut.activateAccount(verificationCode)
+            sut.onStart(lifeCycleOwner)
             val effect = awaitItem()
             Assert.assertTrue(effect is ActivateAccountEffect.ShowFullScreenError)
         }
