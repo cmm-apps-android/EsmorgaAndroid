@@ -1,6 +1,8 @@
 package cmm.apps.esmorga.view.viewmodel.activateAccount
 
+import android.content.Context
 import androidx.lifecycle.LifecycleOwner
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import app.cash.turbine.test
 import cmm.apps.esmorga.domain.account.ActivateAccountUseCase
@@ -14,10 +16,15 @@ import cmm.apps.esmorga.view.viewmodel.util.MainDispatcherRule
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
+import org.junit.After
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
+import org.koin.core.context.stopKoin
 
 @RunWith(AndroidJUnit4::class)
 class ActivateAccountViewModelTest {
@@ -26,7 +33,20 @@ class ActivateAccountViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     private val lifeCycleOwner = mockk<LifecycleOwner>()
+    private lateinit var mockContext: Context
 
+    @Before
+    fun init() {
+        mockContext = ApplicationProvider.getApplicationContext()
+        startKoin {
+            androidContext(mockContext)
+        }
+    }
+
+    @After
+    fun shutDown() {
+        stopKoin()
+    }
 
     @Test
     fun `given valid verification code when activateAccount is called then UI state is not loading`() = runTest {
@@ -61,7 +81,6 @@ class ActivateAccountViewModelTest {
     }
 
 
-
     @Test
     fun `given multiple failed attempts when activateAccount is called then last try full screen error is shown`() = runTest {
         val verificationCode = "expiredCode"
@@ -73,14 +92,14 @@ class ActivateAccountViewModelTest {
         val sut = ActivateAccountViewModel(verificationCode, activateAccountUseCase)
 
         sut.effect.test {
-            sut.onStart(mockk())
-            awaitItem() // 1
+            sut.onStart(lifeCycleOwner)
+            awaitItem()
 
-            sut.onStart(mockk())
-            awaitItem() // 2
+            sut.onStart(lifeCycleOwner)
+            awaitItem()
 
-            sut.onStart(mockk())
-            val effect = awaitItem() // 3
+            sut.onStart(lifeCycleOwner)
+            val effect = awaitItem()
 
             Assert.assertTrue(effect is ActivateAccountEffect.ShowLastTryFullScreenError)
         }
@@ -98,7 +117,7 @@ class ActivateAccountViewModelTest {
         val sut = ActivateAccountViewModel(verificationCode, activateAccountUseCase)
 
         sut.effect.test {
-            sut.onStart(mockk())
+            sut.onStart(lifeCycleOwner)
 
             val effect = awaitItem()
             Assert.assertTrue(effect is ActivateAccountEffect.ShowFullScreenError)
@@ -118,7 +137,7 @@ class ActivateAccountViewModelTest {
         sut.effect.test {
             sut.onContinueClicked()
             val effect = awaitItem()
-            Assert.assertEquals(ActivateAccountEffect.NavigateToWelcomeScreen, effect)
+            Assert.assertTrue(effect is ActivateAccountEffect.NavigateToWelcomeScreen)
         }
     }
 }
