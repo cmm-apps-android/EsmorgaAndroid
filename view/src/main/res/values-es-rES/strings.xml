@@ -76,4 +76,10 @@
    <string name="forgot_password_button">Enviar</string>
    <string name="forgot_password_snackbar_success">Email de recuperación enviado</string>
    <string name="invalid_credentials_error">¡Datos incorrectos, inténtalo de nuevo!</string>
+   <string name="reset_password_screen_title">Cambio de Contraseña</string>
+   <string name="reset_password_button">Cambiar contraseña</string>
+   <string name="password_set_snackbar">¡Nueva contraseña establecida!</string>
+   <string name="placeholder_new_password">Introduce la nueva contraseña</string>
+   <string name="reset_password_new_password_field">Nueva contraseña</string>
+   <string name="reset_password_repeat_password_field">Repetir contraseña</string>
 </resources>
