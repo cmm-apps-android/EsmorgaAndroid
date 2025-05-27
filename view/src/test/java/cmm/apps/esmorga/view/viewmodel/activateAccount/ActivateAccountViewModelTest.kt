@@ -13,8 +13,10 @@ import cmm.apps.esmorga.domain.result.Source
 import cmm.apps.esmorga.view.activateaccount.ActivateAccountViewModel
 import cmm.apps.esmorga.view.activateaccount.model.ActivateAccountEffect
 import cmm.apps.esmorga.view.viewmodel.util.MainDispatcherRule
+import cmm.apps.esmorga.view.R
 import io.mockk.coEvery
 import io.mockk.mockk
+import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert
@@ -77,6 +79,8 @@ class ActivateAccountViewModelTest {
             sut.onStart(lifeCycleOwner)
             val effect = awaitItem()
             Assert.assertTrue(effect is ActivateAccountEffect.ShowFullScreenError)
+            assertEquals(mockContext.getString(R.string.register_confirmation_error_title), (effect as ActivateAccountEffect.ShowFullScreenError).esmorgaErrorScreenArguments.title)
+            assertEquals(mockContext.getString(R.string.register_confirmation_button_retry), effect.esmorgaErrorScreenArguments.buttonText)
         }
     }
 
@@ -102,6 +106,8 @@ class ActivateAccountViewModelTest {
             val effect = awaitItem()
 
             Assert.assertTrue(effect is ActivateAccountEffect.ShowLastTryFullScreenError)
+            assertEquals(mockContext.getString(R.string.default_error_title), (effect as ActivateAccountEffect.ShowLastTryFullScreenError).esmorgaErrorScreenArguments.title)
+            assertEquals(mockContext.getString(R.string.register_confirmation_button_cancel), effect.esmorgaErrorScreenArguments.buttonText)
         }
     }
 
@@ -121,6 +127,8 @@ class ActivateAccountViewModelTest {
 
             val effect = awaitItem()
             Assert.assertTrue(effect is ActivateAccountEffect.ShowFullScreenError)
+            assertEquals(mockContext.getString(R.string.register_confirmation_error_title), (effect as ActivateAccountEffect.ShowFullScreenError).esmorgaErrorScreenArguments.title)
+            assertEquals(mockContext.getString(R.string.register_confirmation_button_retry), effect.esmorgaErrorScreenArguments.buttonText)
         }
     }
 
