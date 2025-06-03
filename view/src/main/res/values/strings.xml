@@ -71,10 +71,9 @@
    <string name="register_confirmation_email_button_resend">Resend mail</string>
    <string name="register_resend_code_success">A new confirmation email has been sent</string>
    <string name="register_resend_code_error">Unable to send a new confirmation e-mail</string>
-   <string name="activate_account_title">We\'re almost there…</string>
-   <string name="activate_account_description">We\'re verifying your account. Please wait a moment.</string>
-   <string name="activate_account_continue">Continue</string>
-   <string name="register_confirmation_error_title">Expired or invalid code!</string>
-   <string name="register_confirmation_button_retry">Try again</string>
-   <string name="register_confirmation_button_cancel">Cancel</string>
+   <string name="login_forgot_password">Forgot your password?</string>
+   <string name="forgot_password_screen_title">Recover your password</string>
+   <string name="forgot_password_button">Send</string>
+   <string name="forgot_password_snackbar_success">Recovery Email sent</string>
+   <string name="invalid_credentials_error">Incorrect data, try again!</string>
 </resources>

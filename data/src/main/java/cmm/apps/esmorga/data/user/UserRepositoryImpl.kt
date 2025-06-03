@@ -36,7 +36,7 @@ class UserRepositoryImpl(private val localDs: UserDatasource, private val remote
         }
     }
 
-    override suspend fun activateAccount(verificationCode: String) {
-        remoteDs.activateAccount(verificationCode)
+    override suspend fun recoverPassword(email: String) {
+        remoteDs.recoverPassword(email)
     }
 }

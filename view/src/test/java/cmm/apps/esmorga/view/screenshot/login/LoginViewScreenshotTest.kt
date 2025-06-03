@@ -37,6 +37,7 @@ class LoginViewScreenshotTest : BaseScreenshotTest() {
                     onBackClicked = { },
                     onLoginClicked = { _, _ -> },
                     onRegisterClicked = { },
+                    onForgotPasswordClicked = { },
                     onEmailChanged = { },
                     onPassChanged = { },
                     validateEmail = { },

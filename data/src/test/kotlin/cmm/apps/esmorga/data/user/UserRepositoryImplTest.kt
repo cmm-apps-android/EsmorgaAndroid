@@ -117,7 +117,7 @@ class UserRepositoryImplTest {
     }
 
     @Test(expected = EsmorgaException::class)
-    fun `given valid data when resend email succeeds then error is returned`() = runTest {
+    fun `given remote datasource throws error when emailVerification is called then EsmorgaException is thrown()`() = runTest {
         val localDS = mockk<UserDatasource>(relaxed = true)
         val remoteDS = mockk<UserDatasource>(relaxed = true)
         val localEventDS = mockk<EventDatasource>(relaxed = true)
@@ -188,5 +188,26 @@ class UserRepositoryImplTest {
         val sut = UserRepositoryImpl(localDS, remoteDS, localEventDS)
 
         sut.activateAccount("invalid-code")
+    }
+    fun `given valid data when recover password succeeds then success is returned`() = runTest {
+        val localDS = mockk<UserDatasource>(relaxed = true)
+        val remoteDS = mockk<UserDatasource>(relaxed = true)
+        val localEventDS = mockk<EventDatasource>(relaxed = true)
+        coEvery { remoteDS.recoverPassword(any()) } returns Unit
+        val sut = UserRepositoryImpl(localDS, remoteDS, localEventDS)
+        val result = sut.recoverPassword("test@example.com")
+
+        Assert.assertEquals(Unit, result)
+    }
+
+    @Test(expected = EsmorgaException::class)
+    fun `given remote datasource fails to recover password when recoverPassword is called then EsmorgaException is thrown`() = runTest {
+        val localDS = mockk<UserDatasource>(relaxed = true)
+        val remoteDS = mockk<UserDatasource>(relaxed = true)
+        val localEventDS = mockk<EventDatasource>(relaxed = true)
+        coEvery { remoteDS.recoverPassword(any()) } throws EsmorgaException("error", Source.REMOTE, 500)
+        val sut = UserRepositoryImpl(localDS, remoteDS, localEventDS)
+        sut.recoverPassword("test@example.com")
+
     }
 }
