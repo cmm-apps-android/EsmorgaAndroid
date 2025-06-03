@@ -16,7 +16,6 @@ import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_ANIMATION
 import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_RETRY_BUTTON
 import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_SUBTITLE
 import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_TITLE
-import cmm.apps.esmorga.domain.account.ActivateAccountUseCase
 import cmm.apps.esmorga.domain.event.GetEventListUseCase
 import cmm.apps.esmorga.domain.event.GetMyEventListUseCase
 import cmm.apps.esmorga.domain.event.JoinEventUseCase
@@ -28,12 +27,9 @@ import cmm.apps.esmorga.domain.result.Source
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.domain.user.LogOutUseCase
 import cmm.apps.esmorga.domain.user.PerformLoginUseCase
+import cmm.apps.esmorga.domain.user.PerformRecoverPasswordUseCase
 import cmm.apps.esmorga.domain.user.PerformRegistrationConfirmationUseCase
 import cmm.apps.esmorga.domain.user.PerformRegistrationUserCase
-import cmm.apps.esmorga.view.activateaccount.RegistrationConfirmationScreenTestTags.ACTIVATE_ACCOUNT_BUTTON
-import cmm.apps.esmorga.view.activateaccount.RegistrationConfirmationScreenTestTags.ACTIVATE_ACCOUNT_IMAGE
-import cmm.apps.esmorga.view.activateaccount.RegistrationConfirmationScreenTestTags.ACTIVATE_ACCOUNT_SUBTITLE
-import cmm.apps.esmorga.view.activateaccount.RegistrationConfirmationScreenTestTags.ACTIVATE_ACCOUNT_TITLE
 import cmm.apps.esmorga.view.di.ViewDIModule
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAILS_BACK_BUTTON
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAILS_EVENT_NAME
@@ -42,10 +38,16 @@ import cmm.apps.esmorga.view.eventlist.EventListScreenTestTags.EVENT_LIST_EVENT_
 import cmm.apps.esmorga.view.eventlist.EventListScreenTestTags.EVENT_LIST_TITLE
 import cmm.apps.esmorga.view.eventlist.MyEventListScreenTestTags.MY_EVENT_LIST_TITLE
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_EMAIL_INPUT
+import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_FORGOT_PASSWORD_BUTTON
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_LOGIN_BUTTON
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_PASSWORD_INPUT
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_REGISTER_BUTTON
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_TITLE
+import cmm.apps.esmorga.view.password.RecoverPasswordScreenTestTags.RECOVER_PASSWORD_BACK_BUTTON
+import cmm.apps.esmorga.view.password.RecoverPasswordScreenTestTags.RECOVER_PASSWORD_EMAIL_INPUT
+import cmm.apps.esmorga.view.password.RecoverPasswordScreenTestTags.RECOVER_PASSWORD_SEND_EMAIL_BUTTON
+import cmm.apps.esmorga.view.password.RecoverPasswordScreenTestTags.RECOVER_PASSWORD_SHOW_SNACKBAR
+import cmm.apps.esmorga.view.password.RecoverPasswordScreenTestTags.RECOVER_PASSWORD_TITLE
 import cmm.apps.esmorga.view.profile.HomeScreenTestTags.PROFILE_TITLE
 import cmm.apps.esmorga.view.registration.RegistrationConfirmationScreenTestTags.REGISTRATION_CONFIRMATION_OPEN_BUTTON
 import cmm.apps.esmorga.view.registration.RegistrationConfirmationScreenTestTags.REGISTRATION_CONFIRMATION_RESEND_BUTTON
@@ -122,8 +124,8 @@ class NavigationTest {
         coEvery { useCase() } returns EsmorgaResult.success(false)
     }
 
-    private val activateAccountUseCase = mockk<ActivateAccountUseCase>(relaxed = true).also { useCase ->
-        coEvery { useCase(any()) } returns EsmorgaResult(Unit)
+    private val performRecoverPasswordUseCase = mockk<PerformRecoverPasswordUseCase>(relaxed = true).also { useCase ->
+        coEvery { useCase(any()) } returns EsmorgaResult.success(Unit)
     }
 
     @Before
@@ -134,18 +136,21 @@ class NavigationTest {
         startKoin {
             allowOverride(true)
             androidContext(ApplicationProvider.getApplicationContext())
-            modules(ViewDIModule.module, module {
-                factory<GetEventListUseCase> { getEventListUseCase }
-                factory<PerformLoginUseCase> { performLoginUseCase }
-                factory<PerformRegistrationUserCase> { performRegistrationUserCase }
-                factory<GetSavedUserUseCase> { getSavedUserUseCase }
-                factory<JoinEventUseCase> { joinEventUseCase }
-                factory<GetMyEventListUseCase> { getMyEventListUseCase }
-                factory<LeaveEventUseCase> { leaveEventUseCase }
-                factory<PerformRegistrationConfirmationUseCase> { performRegistrationConfirmationUseCase }
-                factory<LogOutUseCase> { logOutUseCase }
-                factory<ActivateAccountUseCase> { activateAccountUseCase }
-            })
+            modules(
+                ViewDIModule.module,
+                module {
+                    factory<GetEventListUseCase> { getEventListUseCase }
+                    factory<PerformLoginUseCase> { performLoginUseCase }
+                    factory<PerformRegistrationUserCase> { performRegistrationUserCase }
+                    factory<GetSavedUserUseCase> { getSavedUserUseCase }
+                    factory<JoinEventUseCase> { joinEventUseCase }
+                    factory<GetMyEventListUseCase> { getMyEventListUseCase }
+                    factory<LeaveEventUseCase> { leaveEventUseCase }
+                    factory<PerformRegistrationConfirmationUseCase> { performRegistrationConfirmationUseCase }
+                    factory<LogOutUseCase> { logOutUseCase }
+                    factory<PerformRecoverPasswordUseCase> { performRecoverPasswordUseCase }
+                }
+            )
         }
     }
 
@@ -347,34 +352,43 @@ class NavigationTest {
     }
 
     @Test
-    fun `given account not activated, when user clicks the email deeplink, then activation screen is shown`() {
-        setNavigationFromDestination(Navigation.ActivateAccountScreen("VerificationCode"))
-        composeTestRule.onNodeWithTag(ACTIVATE_ACCOUNT_IMAGE).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(ACTIVATE_ACCOUNT_TITLE).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(ACTIVATE_ACCOUNT_SUBTITLE).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(ACTIVATE_ACCOUNT_BUTTON).assertIsDisplayed()
+    fun `given user is on LoginScreen when forgot password button is clicked then RecoverPasswordScreen is displayed`() {
+        setNavigationFromDestination(Navigation.LoginScreen)
+
+        composeTestRule.onNodeWithTag(LOGIN_FORGOT_PASSWORD_BUTTON).performClick()
+
+        composeTestRule.onNodeWithTag(RECOVER_PASSWORD_TITLE).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(RECOVER_PASSWORD_SEND_EMAIL_BUTTON).assertIsDisplayed()
+
     }
 
     @Test
-    fun `given account not activated, when activation screen is visited and button clicked, then navigate to WelcomeScreen`() {
-        setNavigationFromDestination(Navigation.ActivateAccountScreen("VerificationCode"))
-        composeTestRule.onNodeWithTag(ACTIVATE_ACCOUNT_BUTTON).performClick()
-        composeTestRule.onNodeWithTag(WELCOME_PRIMARY_BUTTON).assertIsDisplayed()
+    fun `given user is on RecoverPasswordScreen when back button is clicked then LoginScreen is displayed`() {
+        setNavigationFromDestination(Navigation.LoginScreen)
+
+        composeTestRule.onNodeWithTag(LOGIN_FORGOT_PASSWORD_BUTTON).performClick()
+
+        composeTestRule.onNodeWithTag(RECOVER_PASSWORD_TITLE).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(RECOVER_PASSWORD_BACK_BUTTON).performClick()
+
+        composeTestRule.onNodeWithTag(LOGIN_TITLE).assertIsDisplayed()
     }
 
     @Test
-    fun `given invalid activation code, when activation attempted, then navigate to FullScreenError`() {
-        coEvery { activateAccountUseCase(any()) } returns EsmorgaResult.failure(EsmorgaException("Error", Source.REMOTE, 400))
-        setNavigationFromDestination(Navigation.ActivateAccountScreen("VerificationCode"))
+    fun `given user is on RecoverPasswordScreen when send button is clicked then Snackbar is displayed`() {
+        setNavigationFromDestination(Navigation.RecoverPasswordScreen)
+        composeTestRule.onNodeWithTag(RECOVER_PASSWORD_BACK_BUTTON).performClick()
 
-        composeTestRule.onNodeWithTag(ERROR_TITLE).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(RECOVER_PASSWORD_EMAIL_INPUT).performTextInput("email@email.com")
+        composeTestRule.onNodeWithTag(RECOVER_PASSWORD_SEND_EMAIL_BUTTON).performClick()
+        composeTestRule.onNodeWithTag(RECOVER_PASSWORD_SHOW_SNACKBAR).assertIsDisplayed()
     }
 
     private fun setNavigationFromAppLaunch(loggedIn: Boolean) {
         composeTestRule.setContent {
             KoinContext {
                 navController = rememberNavController()
-                EsmorgaNavigationGraph(navigationController = navController, loggedIn = loggedIn, deeplinkPath = null)
+                EsmorgaNavigationGraph(navigationController = navController, loggedIn = loggedIn)
             }
         }
     }

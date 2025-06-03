@@ -1,7 +1,5 @@
 package cmm.apps.esmorga.domain.di
 
-import cmm.apps.esmorga.domain.account.ActivateAccountUseCase
-import cmm.apps.esmorga.domain.account.ActivateAccountUseCaseImpl
 import cmm.apps.esmorga.domain.event.GetEventDetailsUseCase
 import cmm.apps.esmorga.domain.event.GetEventDetailsUseCaseImpl
 import cmm.apps.esmorga.domain.event.GetEventListUseCase
@@ -18,6 +16,8 @@ import cmm.apps.esmorga.domain.user.LogOutUseCase
 import cmm.apps.esmorga.domain.user.LogOutUseCaseImpl
 import cmm.apps.esmorga.domain.user.PerformLoginUseCase
 import cmm.apps.esmorga.domain.user.PerformLoginUseCaseImpl
+import cmm.apps.esmorga.domain.user.PerformRecoverPasswordUseCase
+import cmm.apps.esmorga.domain.user.PerformRecoverPasswordUseCaseImpl
 import cmm.apps.esmorga.domain.user.PerformRegistrationConfirmationUseCase
 import cmm.apps.esmorga.domain.user.PerformRegistrationConfirmationUseCaseImpl
 import cmm.apps.esmorga.domain.user.PerformRegistrationUserCase
@@ -38,7 +38,7 @@ object DomainDIModule {
         factory<GetMyEventListUseCase> { GetMyEventListUseCaseImpl(get(), get()) }
         factory<LeaveEventUseCase> { LeaveEventUseCaseImpl(get()) }
         factory<LogOutUseCase> { LogOutUseCaseImpl(get()) }
-        factory<ActivateAccountUseCase> { ActivateAccountUseCaseImpl(get()) }
+        factory<PerformRecoverPasswordUseCase> { PerformRecoverPasswordUseCaseImpl(get()) }
     }
 
 }

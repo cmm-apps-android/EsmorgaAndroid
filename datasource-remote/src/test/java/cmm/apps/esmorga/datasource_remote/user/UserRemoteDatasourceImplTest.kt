@@ -78,36 +78,46 @@ class UserRemoteDatasourceImplTest {
     }
 
     @Test
-    fun `given valid verificationCode when activateAccount succeeds then no exception is thrown`() = runTest {
+    fun `given valid data when email verification succeeds then Unit is returned`() = runTest {
         val context = mockk<Context>(relaxed = true)
         val api = mockk<EsmorgaAuthApi>(relaxed = true)
-        coEvery { api.accountActivation(any()) } returns Unit
+        coEvery { api.emailVerification(any()) } returns Unit
 
         val sut = UserRemoteDatasourceImpl(api, context)
+        val result = sut.emailVerification("test@example.com")
 
-        sut.activateAccount("verificationCodeValid")
+        Assert.assertEquals(Unit, result)
+    }
+
+    @Test(expected = Exception::class)
+    fun `given api call fails when emailVerification is invoked then Exception is thrown(`() = runTest {
+        val context = mockk<Context>(relaxed = true)
+        val api = mockk<EsmorgaAuthApi>(relaxed = true)
+        coEvery { api.emailVerification(any()) } throws HttpException(Response.error<ResponseBody>(400, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
+
+        val sut = UserRemoteDatasourceImpl(api, context)
+        sut.emailVerification("test@example.com")
     }
 
     @Test
-    fun `given invalid verificationCode when activateAccount fails then EsmorgaException is thrown`() = runTest {
+    fun `given valid data when recover password succeeds then Unit is returned`() = runTest {
         val context = mockk<Context>(relaxed = true)
         val api = mockk<EsmorgaAuthApi>(relaxed = true)
-
-        val errorCode = 401
-        coEvery { api.accountActivation(any()) } throws HttpException(
-            Response.error<ResponseBody>(errorCode, "Error".toResponseBody("application/json".toMediaTypeOrNull()))
-        )
+        coEvery { api.recoverPassword(any()) } returns Unit
 
         val sut = UserRemoteDatasourceImpl(api, context)
+        val result = sut.recoverPassword("test@example.com")
 
-        val exception = try {
-            sut.activateAccount("invalidCode")
-            null
-        } catch (e: Exception) {
-            e
-        }
+        Assert.assertEquals(Unit, result)
+    }
 
-        Assert.assertTrue(exception is EsmorgaException)
-        Assert.assertEquals(errorCode, (exception as EsmorgaException).code)
+    @Test(expected = Exception::class)
+    fun `given api call fails when recoverPassword is invoked then Exception is thrown`() = runTest {
+        val context = mockk<Context>(relaxed = true)
+        val api = mockk<EsmorgaAuthApi>(relaxed = true)
+        coEvery { api.recoverPassword(any()) } throws HttpException(Response.error<ResponseBody>(400, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
+
+        val sut = UserRemoteDatasourceImpl(api, context)
+        sut.recoverPassword("test@example.com")
     }
 }

@@ -18,6 +18,7 @@ import cmm.apps.esmorga.view.eventdetails.EventDetailsScreen
 import cmm.apps.esmorga.view.eventlist.EventListScreen
 import cmm.apps.esmorga.view.eventlist.MyEventListScreen
 import cmm.apps.esmorga.view.login.LoginScreen
+import cmm.apps.esmorga.view.password.RecoverPasswordScreen
 import cmm.apps.esmorga.view.profile.ProfileScreen
 import cmm.apps.esmorga.view.registration.RegistrationConfirmationScreen
 import cmm.apps.esmorga.view.registration.RegistrationScreen
@@ -57,6 +58,9 @@ sealed class Navigation {
 
     @Serializable
     data class ActivateAccountScreen(val verificationCode: String) : Navigation()
+
+    @Serializable
+    data object RecoverPasswordScreen : Navigation()
 }
 
 const val GOOGLE_MAPS_PACKAGE = "com.google.android.apps.maps"
@@ -167,6 +171,9 @@ private fun NavGraphBuilder.loginFlow(navigationController: NavHostController) {
             onRegisterClicked = {
                 navigationController.navigate(Navigation.RegistrationScreen)
             },
+            onForgotPasswordClicked = {
+                navigationController.navigate(Navigation.RecoverPasswordScreen)
+            },
             onLoginSuccess = {
                 navigationController.navigate(Navigation.EventListScreen) {
                     popUpTo(Navigation.WelcomeScreen) {
@@ -199,6 +206,14 @@ private fun NavGraphBuilder.loginFlow(navigationController: NavHostController) {
         RegistrationConfirmationScreen(
             onBackClicked = { navigationController.popBackStack() },
             email = email
+        )
+    }
+    composable<Navigation.RecoverPasswordScreen> {
+        RecoverPasswordScreen(
+            onBackClicked = { navigationController.popBackStack() },
+            onRecoverPasswordError = { esmorgaFullScreenArguments ->
+                navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = esmorgaFullScreenArguments))
+            },
         )
     }
 }

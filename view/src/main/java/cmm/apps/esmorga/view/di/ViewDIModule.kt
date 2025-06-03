@@ -2,11 +2,11 @@ package cmm.apps.esmorga.view.di
 
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.view.MainViewModel
-import cmm.apps.esmorga.view.activateaccount.ActivateAccountViewModel
 import cmm.apps.esmorga.view.eventdetails.EventDetailsViewModel
 import cmm.apps.esmorga.view.eventlist.EventListViewModel
 import cmm.apps.esmorga.view.eventlist.MyEventListViewModel
 import cmm.apps.esmorga.view.login.LoginViewModel
+import cmm.apps.esmorga.view.password.RecoverPasswordViewModel
 import cmm.apps.esmorga.view.profile.ProfileViewModel
 import cmm.apps.esmorga.view.registration.RegistrationConfirmationViewModel
 import cmm.apps.esmorga.view.registration.RegistrationViewModel
@@ -46,8 +46,6 @@ object ViewDIModule {
 
         viewModel { ProfileViewModel(get(), get()) }
 
-        viewModel { (verificationCode: String) ->
-            ActivateAccountViewModel(verificationCode, get())
-        }
+        viewModel { RecoverPasswordViewModel(get()) }
     }
 }

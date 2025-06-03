@@ -8,5 +8,5 @@ interface UserRepository {
     suspend fun getUser(): User
     suspend fun emailVerification(email: String)
     suspend fun logout()
-    suspend fun activateAccount(code: String)
+    suspend fun recoverPassword(email: String)
 }
