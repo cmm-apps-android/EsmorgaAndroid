@@ -388,7 +388,7 @@ class NavigationTest {
         composeTestRule.setContent {
             KoinContext {
                 navController = rememberNavController()
-                EsmorgaNavigationGraph(navigationController = navController, loggedIn = loggedIn)
+                EsmorgaNavigationGraph(navigationController = navController, loggedIn = loggedIn, deeplinkPath = null)
             }
         }
     }
