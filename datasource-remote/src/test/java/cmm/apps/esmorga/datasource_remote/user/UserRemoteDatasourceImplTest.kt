@@ -77,4 +77,37 @@ class UserRemoteDatasourceImplTest {
         Assert.assertEquals(errorCode, (exception as EsmorgaException).code)
     }
 
+    @Test
+    fun `given valid verificationCode when activateAccount succeeds then no exception is thrown`() = runTest {
+        val context = mockk<Context>(relaxed = true)
+        val api = mockk<EsmorgaAuthApi>(relaxed = true)
+        coEvery { api.accountActivation(any()) } returns Unit
+
+        val sut = UserRemoteDatasourceImpl(api, context)
+
+        sut.activateAccount("verificationCodeValid")
+    }
+
+    @Test
+    fun `given invalid verificationCode when activateAccount fails then EsmorgaException is thrown`() = runTest {
+        val context = mockk<Context>(relaxed = true)
+        val api = mockk<EsmorgaAuthApi>(relaxed = true)
+
+        val errorCode = 401
+        coEvery { api.accountActivation(any()) } throws HttpException(
+            Response.error<ResponseBody>(errorCode, "Error".toResponseBody("application/json".toMediaTypeOrNull()))
+        )
+
+        val sut = UserRemoteDatasourceImpl(api, context)
+
+        val exception = try {
+            sut.activateAccount("invalidCode")
+            null
+        } catch (e: Exception) {
+            e
+        }
+
+        Assert.assertTrue(exception is EsmorgaException)
+        Assert.assertEquals(errorCode, (exception as EsmorgaException).code)
+    }
 }
