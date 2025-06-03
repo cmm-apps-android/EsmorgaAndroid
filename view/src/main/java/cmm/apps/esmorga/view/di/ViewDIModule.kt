@@ -2,6 +2,7 @@ package cmm.apps.esmorga.view.di
 
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.view.MainViewModel
+import cmm.apps.esmorga.view.activateaccount.ActivateAccountViewModel
 import cmm.apps.esmorga.view.eventdetails.EventDetailsViewModel
 import cmm.apps.esmorga.view.eventlist.EventListViewModel
 import cmm.apps.esmorga.view.eventlist.MyEventListViewModel
@@ -47,5 +48,9 @@ object ViewDIModule {
         viewModel { ProfileViewModel(get(), get()) }
 
         viewModel { RecoverPasswordViewModel(get()) }
+
+        viewModel { (verificationCode: String) ->
+            ActivateAccountViewModel(verificationCode, get())
+        }
     }
 }

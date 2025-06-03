@@ -76,4 +76,10 @@
    <string name="forgot_password_button">Enviar</string>
    <string name="forgot_password_snackbar_success">Email de recuperación enviado</string>
    <string name="invalid_credentials_error">¡Datos incorrectos, inténtalo de nuevo!</string>
+   <string name="activate_account_title">Ya casi estamos…</string>
+   <string name="activate_account_description">Estamos verificando tu cuenta. Por favor, espera un momento.</string>
+   <string name="activate_account_continue">Continuar</string>
+   <string name="register_confirmation_error_title">¡Código expirado o no válido!</string>
+   <string name="register_confirmation_button_retry">Probar otra vez</string>
+   <string name="register_confirmation_button_cancel">Cancelar</string>
 </resources>
