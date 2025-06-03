@@ -16,6 +16,7 @@ import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_ANIMATION
 import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_RETRY_BUTTON
 import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_SUBTITLE
 import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_TITLE
+import cmm.apps.esmorga.domain.account.ActivateAccountUseCase
 import cmm.apps.esmorga.domain.event.GetEventListUseCase
 import cmm.apps.esmorga.domain.event.GetMyEventListUseCase
 import cmm.apps.esmorga.domain.event.JoinEventUseCase
@@ -132,6 +133,10 @@ class NavigationTest {
         coEvery { useCase(any()) } returns EsmorgaResult.success(Unit)
     }
 
+    private val activateAccountUseCase = mockk<ActivateAccountUseCase>(relaxed = true).also { useCase ->
+        coEvery { useCase(any()) } returns EsmorgaResult.success(Unit)
+    }
+
     @Before
     @Throws(Exception::class)
     fun setUp() {
@@ -153,6 +158,8 @@ class NavigationTest {
                     factory<PerformRegistrationConfirmationUseCase> { performRegistrationConfirmationUseCase }
                     factory<LogOutUseCase> { logOutUseCase }
                     factory<PerformRecoverPasswordUseCase> { performRecoverPasswordUseCase }
+                    factory<ActivateAccountUseCase> { activateAccountUseCase }
+
                 }
             )
         }
@@ -416,7 +423,7 @@ class NavigationTest {
         composeTestRule.setContent {
             KoinContext {
                 navController = rememberNavController()
-                EsmorgaNavigationGraph(navigationController = navController, loggedIn = loggedIn)
+                EsmorgaNavigationGraph(navigationController = navController, loggedIn = loggedIn, null)
             }
         }
     }
