@@ -66,7 +66,8 @@ fun ActivateAccountScreen(
         }
     }
     EsmorgaTheme {
-        ActivateAccountView(uiState = uiState, onContinueClick = {
+        ActivateAccountView(uiState = uiState,
+            onContinueClick = {
             viewModel.onContinueClicked()
         })
     }
@@ -74,7 +75,8 @@ fun ActivateAccountScreen(
 
 @Composable
 fun ActivateAccountView(
-    uiState: ActivateAccountUiState, onContinueClick: () -> Unit
+    uiState: ActivateAccountUiState,
+    onContinueClick: () -> Unit
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
