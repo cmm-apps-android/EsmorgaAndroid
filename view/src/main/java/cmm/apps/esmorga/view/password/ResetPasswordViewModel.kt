@@ -43,10 +43,9 @@ class ResetPasswordViewModel(val performResetPasswordUseCase: PerformResetPasswo
         }
     }
 
-    fun isEnabledButton(password: String, repeatedPassword: String): Boolean {
+    fun onValueChange(password: String, repeatedPassword: String) {
         validateField(type = ResetPasswordField.PASS, value = password, acceptsEmpty = false)
         validateField(type = ResetPasswordField.REPEAT_PASS, value = repeatedPassword, comparisonField = password, acceptsEmpty = false)
-        return !_uiState.value.hasAnyError()
     }
 
     fun validateField(type: ResetPasswordField, value: String, comparisonField: String? = null, acceptsEmpty: Boolean = true) {
