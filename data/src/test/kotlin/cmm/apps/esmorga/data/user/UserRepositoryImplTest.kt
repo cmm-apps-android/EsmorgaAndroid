@@ -14,7 +14,6 @@ import junit.framework.TestCase.fail
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
-import kotlin.jvm.Throws
 
 class UserRepositoryImplTest {
     @Test
@@ -133,7 +132,7 @@ class UserRepositoryImplTest {
         val remoteDS = mockk<UserDatasource>(relaxed = true)
         val localEventDS = mockk<EventDatasource>(relaxed = true)
         coEvery { localDS.deleteUser() } returns Unit
-        coEvery { localEventDS.deleteCacheEvents() }  returns Unit
+        coEvery { localEventDS.deleteCacheEvents() } returns Unit
 
         val sut = UserRepositoryImpl(localDS, remoteDS, localEventDS)
         sut.logout()
@@ -163,6 +162,33 @@ class UserRepositoryImplTest {
     }
 
     @Test
+    fun `given a verification code when activateAccount is called then remoteDs is called`() = runTest {
+        val localDS = mockk<UserDatasource>(relaxed = true)
+        val remoteDS = mockk<UserDatasource>(relaxed = true)
+        val localEventDS = mockk<EventDatasource>(relaxed = true)
+
+        coEvery { remoteDS.activateAccount(any()) } returns Unit
+
+        val sut = UserRepositoryImpl(localDS, remoteDS, localEventDS)
+
+        val code = "123456"
+        sut.activateAccount(code)
+
+        coVerify { remoteDS.activateAccount(code) }
+    }
+
+    @Test(expected = EsmorgaException::class)
+    fun `given a verification code when activateAccount fails then throws exception`() = runTest {
+        val localDS = mockk<UserDatasource>(relaxed = true)
+        val remoteDS = mockk<UserDatasource>(relaxed = true)
+        val localEventDS = mockk<EventDatasource>(relaxed = true)
+
+        coEvery { remoteDS.activateAccount(any()) } throws EsmorgaException("Error", Source.REMOTE, 400)
+
+        val sut = UserRepositoryImpl(localDS, remoteDS, localEventDS)
+
+        sut.activateAccount("invalid-code")
+    }
     fun `given valid data when recover password succeeds then success is returned`() = runTest {
         val localDS = mockk<UserDatasource>(relaxed = true)
         val remoteDS = mockk<UserDatasource>(relaxed = true)
@@ -182,5 +208,6 @@ class UserRepositoryImplTest {
         coEvery { remoteDS.recoverPassword(any()) } throws EsmorgaException("error", Source.REMOTE, 500)
         val sut = UserRepositoryImpl(localDS, remoteDS, localEventDS)
         sut.recoverPassword("test@example.com")
+
     }
 }
