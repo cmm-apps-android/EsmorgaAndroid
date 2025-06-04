@@ -34,7 +34,7 @@ class ResetPasswordViewModel(val performResetPasswordUseCase: PerformResetPasswo
                 _uiState.value = ResetPasswordUiState(isLoading = true)
                 val result = performResetPasswordUseCase(code, password)
                 result.onSuccess {
-                    _effect.tryEmit(ResetPasswordEffect.NavigateToLogin)
+                    _effect.tryEmit(ResetPasswordEffect.NavigateToLogin())
                 }.onFailure {
                     _uiState.value = ResetPasswordUiState(isLoading = false)
                     _effect.tryEmit(ResetPasswordEffect.ShowFullScreenError())

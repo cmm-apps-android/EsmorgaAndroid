@@ -17,7 +17,7 @@ data class ResetPasswordUiState(
 }
 
 sealed class ResetPasswordEffect {
-    data object NavigateToLogin : ResetPasswordEffect()
+    data class NavigateToLogin(val snackbarMessage: String = getEsmorgaMessageSnackBarSuccess()) : ResetPasswordEffect()
     data class ShowFullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments = getEsmorgaErrorScreenArguments()) : ResetPasswordEffect()
 }
 

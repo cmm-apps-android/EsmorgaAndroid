@@ -48,7 +48,7 @@ fun ResetPasswordScreen(
     rpvm: ResetPasswordViewModel = koinViewModel(),
     forgotPasswordCode: String,
     onResetPasswordError: (EsmorgaErrorScreenArguments) -> Unit,
-    onResetPasswordSuccess: () -> Unit
+    onResetPasswordSuccess: (String) -> Unit
 ) {
     val uiState: ResetPasswordUiState by rpvm.uiState.collectAsStateWithLifecycle()
 
@@ -56,7 +56,7 @@ fun ResetPasswordScreen(
         rpvm.effect.collect { eff ->
             when (eff) {
                 is ResetPasswordEffect.ShowFullScreenError -> onResetPasswordError(eff.esmorgaErrorScreenArguments)
-                is ResetPasswordEffect.NavigateToLogin -> onResetPasswordSuccess()
+                is ResetPasswordEffect.NavigateToLogin -> onResetPasswordSuccess(eff.snackbarMessage)
             }
         }
     }

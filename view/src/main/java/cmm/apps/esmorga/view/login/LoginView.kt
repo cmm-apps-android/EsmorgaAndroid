@@ -65,7 +65,8 @@ fun LoginScreen(
     onForgotPasswordClicked: () -> Unit,
     onLoginSuccess: () -> Unit,
     onLoginError: (EsmorgaErrorScreenArguments) -> Unit,
-    onBackClicked: () -> Unit
+    onBackClicked: () -> Unit,
+    snackbarMessage: String? = null
 ) {
     val uiState: LoginUiState by lvm.uiState.collectAsStateWithLifecycle()
     val message = stringResource(R.string.snackbar_no_internet)
@@ -79,6 +80,7 @@ fun LoginScreen(
                 is LoginEffect.ShowFullScreenError -> onLoginError(eff.esmorgaErrorScreenArguments)
                 is LoginEffect.NavigateToEventList -> onLoginSuccess()
                 is LoginEffect.NavigateToForgotPassword -> onForgotPasswordClicked()
+                is LoginEffect.ShowInitSnackbar -> snackbarMessage?.let { localCoroutineScope.launch { snackbarHostState.showSnackbar(message = snackbarMessage) } }
             }
         }
     }
