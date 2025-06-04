@@ -76,4 +76,10 @@
    <string name="forgot_password_button">Send</string>
    <string name="forgot_password_snackbar_success">Recovery Email sent</string>
    <string name="invalid_credentials_error">Incorrect data, try again!</string>
+   <string name="activate_account_title">We\'re almost there…</string>
+   <string name="activate_account_description">We\'re verifying your account. Please wait a moment.</string>
+   <string name="activate_account_continue">Continue</string>
+   <string name="register_confirmation_error_title">Expired or invalid code!</string>
+   <string name="register_confirmation_button_retry">Try again</string>
+   <string name="register_confirmation_button_cancel">Cancel</string>
 </resources>

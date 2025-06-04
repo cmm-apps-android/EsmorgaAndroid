@@ -11,6 +11,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import cmm.apps.esmorga.domain.event.model.Event
+import cmm.apps.esmorga.view.activateaccount.ActivateAccountScreen
+import cmm.apps.esmorga.view.deeplink.DeeplinkManager.navigateFromDeeplink
 import cmm.apps.esmorga.view.errors.EsmorgaErrorScreen
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreen
@@ -47,7 +49,7 @@ sealed class Navigation {
     data class RegistrationConfirmationScreen(val email: String) : Navigation()
 
     @Serializable
-    data class FullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments) : Navigation()
+    data class FullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments, val redirectToWelcome: Boolean = false) : Navigation()
 
     @Serializable
     data object MyEventsScreen : Navigation()
@@ -56,14 +58,21 @@ sealed class Navigation {
     data object ProfileScreen : Navigation()
 
     @Serializable
+    data class ActivateAccountScreen(val verificationCode: String) : Navigation()
+
+    @Serializable
     data object RecoverPasswordScreen : Navigation()
 }
 
 const val GOOGLE_MAPS_PACKAGE = "com.google.android.apps.maps"
 
 @Composable
-fun EsmorgaNavigationGraph(navigationController: NavHostController, loggedIn: Boolean) {
-    val startDestination = if (loggedIn) Navigation.EventListScreen else Navigation.WelcomeScreen
+fun EsmorgaNavigationGraph(navigationController: NavHostController, loggedIn: Boolean, deeplinkPath: Uri?) {
+    val startDestination = if (deeplinkPath != null) {
+        navigateFromDeeplink(deeplinkPath)
+    } else {
+        if (loggedIn) Navigation.EventListScreen else Navigation.WelcomeScreen
+    }
     EsmorgaNavHost(navigationController, startDestination)
 }
 
@@ -77,6 +86,32 @@ internal fun EsmorgaNavHost(navigationController: NavHostController, startDestin
         loginFlow(navigationController)
         homeFlow(navigationController)
         errorFlow(navigationController)
+        accountActivationFlow(navigationController)
+    }
+}
+
+private fun NavGraphBuilder.accountActivationFlow(navigationController: NavHostController) {
+    composable<Navigation.ActivateAccountScreen> { backStackEntry ->
+        ActivateAccountScreen(
+            backStackEntry.toRoute<Navigation.ActivateAccountScreen>().verificationCode, onContinueClick = {
+                navigationController.navigate(Navigation.WelcomeScreen) {
+                    popUpTo(0) {
+                        inclusive = true
+                    }
+                    launchSingleTop = true
+                }
+            },
+            onError = {
+                navigationController.navigate(Navigation.FullScreenError(it))
+            },
+            onLastTryError = { arguments, redirectToWelcome ->
+                navigationController.navigate(Navigation.FullScreenError(arguments, redirectToWelcome)) {
+                    popUpTo<Navigation.ActivateAccountScreen> {
+                        inclusive = true
+                    }
+                }
+            }
+        )
     }
 }
 
@@ -187,10 +222,19 @@ private fun NavGraphBuilder.errorFlow(navigationController: NavHostController) {
         typeMap = mapOf(typeOf<EsmorgaErrorScreenArguments>() to serializableType<EsmorgaErrorScreenArguments>())
     ) { backStackEntry ->
         val esmorgaErrorScreenArguments = backStackEntry.toRoute<Navigation.FullScreenError>().esmorgaErrorScreenArguments
+        val redirectToWelcome = backStackEntry.toRoute<Navigation.FullScreenError>().redirectToWelcome
         EsmorgaErrorScreen(
             esmorgaErrorScreenArguments = esmorgaErrorScreenArguments,
             onButtonPressed = {
-                navigationController.popBackStack()
+                if (redirectToWelcome) {
+                    navigationController.navigate(Navigation.WelcomeScreen) {
+                        popUpTo<Navigation.FullScreenError> {
+                            inclusive = true
+                        }
+                    }
+                } else {
+                    navigationController.popBackStack()
+                }
             })
     }
 }
