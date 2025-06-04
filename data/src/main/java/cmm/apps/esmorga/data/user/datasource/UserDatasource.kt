@@ -33,4 +33,8 @@ interface UserDatasource {
     suspend fun recoverPassword(email: String) {
         throw EsmorgaException(message = "Unsupported operation", source = Source.UNSUPPORTED, code = ErrorCodes.UNSUPPORTED_OPERATION)
     }
+
+    suspend fun activateAccount(verificationCode: String) {
+        throw EsmorgaException(message = "Unsupported operation", source = Source.UNSUPPORTED, code = ErrorCodes.UNSUPPORTED_OPERATION)
+    }
 }

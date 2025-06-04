@@ -43,6 +43,15 @@ class UserRemoteDatasourceImpl(private val api: EsmorgaAuthApi, private val cont
         }
     }
 
+    override suspend fun activateAccount(verificationCode: String) {
+        try {
+            val body = mapOf("verificationCode" to verificationCode)
+            api.accountActivation(body)
+        } catch (e: Exception) {
+            throw manageApiException(e, context)
+        }
+    }
+
     override suspend fun recoverPassword(email: String) {
         try {
             val emailBody = mapOf(
