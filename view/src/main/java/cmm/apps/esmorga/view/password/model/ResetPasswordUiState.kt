@@ -9,6 +9,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 data class ResetPasswordUiState(
+    val isLoading: Boolean = false,
     val passwordError: String? = null,
     val repeatPasswordError: String? = null
 ) {
@@ -16,7 +17,7 @@ data class ResetPasswordUiState(
 }
 
 sealed class ResetPasswordEffect {
-    data class ShowSnackbarSuccess(val message: String = getEsmorgaMessageSnackBarSuccess()) : ResetPasswordEffect()
+    data object NavigateToLogin : ResetPasswordEffect()
     data class ShowFullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments = getEsmorgaErrorScreenArguments()) : ResetPasswordEffect()
 }
 

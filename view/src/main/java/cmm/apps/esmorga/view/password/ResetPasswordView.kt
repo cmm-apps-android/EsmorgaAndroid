@@ -9,15 +9,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
@@ -38,13 +35,11 @@ import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.password.ResetPasswordScreenTestTags.RESET_PASSWORD_CHANGE_PASSWORD_BUTTON
 import cmm.apps.esmorga.view.password.ResetPasswordScreenTestTags.RESET_PASSWORD_NEW_PASSWORD_INPUT
 import cmm.apps.esmorga.view.password.ResetPasswordScreenTestTags.RESET_PASSWORD_REPEAT_PASSWORD_INPUT
-import cmm.apps.esmorga.view.password.ResetPasswordScreenTestTags.RESET_PASSWORD_SHOW_SNACKBAR
 import cmm.apps.esmorga.view.password.ResetPasswordScreenTestTags.RESET_PASSWORD_TITLE
 import cmm.apps.esmorga.view.password.ResetPasswordViewModel.ResetPasswordField
 import cmm.apps.esmorga.view.password.model.ResetPasswordEffect
 import cmm.apps.esmorga.view.password.model.ResetPasswordUiState
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
-import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Screen
@@ -55,28 +50,19 @@ fun ResetPasswordScreen(
     onResetPasswordError: (EsmorgaErrorScreenArguments) -> Unit,
     onResetPasswordSuccess: () -> Unit
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
-    val localCoroutineScope = rememberCoroutineScope()
     val uiState: ResetPasswordUiState by rpvm.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         rpvm.effect.collect { eff ->
             when (eff) {
-                is ResetPasswordEffect.ShowSnackbarSuccess -> localCoroutineScope.launch {
-                    snackbarHostState.showSnackbar(
-                        message = eff.message
-                    )
-                    onResetPasswordSuccess()
-                }
-
                 is ResetPasswordEffect.ShowFullScreenError -> onResetPasswordError(eff.esmorgaErrorScreenArguments)
+                is ResetPasswordEffect.NavigateToLogin -> onResetPasswordSuccess()
             }
         }
     }
 
     EsmorgaTheme {
         ResetPasswordView(
-            snackbarHostState = snackbarHostState,
             uiState = uiState,
             validateField = { type, password, repeatPass -> rpvm.validateField(type, password, repeatPass) },
             onResetPasswordClicked = { password -> rpvm.onResetPasswordClicked(forgotPasswordCode, password) },
@@ -88,7 +74,6 @@ fun ResetPasswordScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ResetPasswordView(
-    snackbarHostState: SnackbarHostState,
     uiState: ResetPasswordUiState,
     validateField: (ResetPasswordField, String, String?) -> Unit,
     onResetPasswordClicked: (String) -> Unit,
@@ -97,7 +82,6 @@ fun ResetPasswordView(
     var password by remember { mutableStateOf("") }
     var repeatPassword by remember { mutableStateOf("") }
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState, modifier = Modifier.testTag(RESET_PASSWORD_SHOW_SNACKBAR)) },
         topBar = {
             TopAppBar(
                 title = {}
@@ -165,7 +149,8 @@ fun ResetPasswordView(
                 primary = true,
                 modifier = Modifier
                     .testTag(RESET_PASSWORD_CHANGE_PASSWORD_BUTTON),
-                isEnabled = enabledButton(password, repeatPassword)
+                isEnabled = enabledButton(password, repeatPassword),
+                isLoading = uiState.isLoading
             ) {
                 onResetPasswordClicked(password)
             }
@@ -178,14 +163,12 @@ object ResetPasswordScreenTestTags {
     const val RESET_PASSWORD_CHANGE_PASSWORD_BUTTON = "reset password screen change password button"
     const val RESET_PASSWORD_NEW_PASSWORD_INPUT = "recover password screen new password input"
     const val RESET_PASSWORD_REPEAT_PASSWORD_INPUT = "recover password screen repeat password input"
-    const val RESET_PASSWORD_SHOW_SNACKBAR = "reset password screen show snackBar"
 }
 
 @Preview(showBackground = true)
 @Composable
 fun ResetPasswordScreenPreview() {
     ResetPasswordView(
-        snackbarHostState = remember { SnackbarHostState() },
         uiState = ResetPasswordUiState(),
         validateField = { _, _, _ -> },
         onResetPasswordClicked = {},

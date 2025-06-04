@@ -96,15 +96,6 @@ internal fun EsmorgaNavHost(navigationController: NavHostController, startDestin
 }
 
 private fun NavGraphBuilder.resetPasswordFlow(navigationController: NavHostController) {
-    composable<Navigation.RecoverPasswordScreen> {
-        RecoverPasswordScreen(
-            onBackClicked = { navigationController.popBackStack() },
-            onRecoverPasswordError = { esmorgaFullScreenArguments ->
-                navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = esmorgaFullScreenArguments))
-            }
-        )
-    }
-
     composable<Navigation.ResetPasswordScreen> { backStackEntry ->
         ResetPasswordScreen(
             forgotPasswordCode = backStackEntry.toRoute<Navigation.ResetPasswordScreen>().forgotPasswordCode,
@@ -240,6 +231,14 @@ private fun NavGraphBuilder.loginFlow(navigationController: NavHostController) {
         RegistrationConfirmationScreen(
             onBackClicked = { navigationController.popBackStack() },
             email = email
+        )
+    }
+    composable<Navigation.RecoverPasswordScreen> {
+        RecoverPasswordScreen(
+            onBackClicked = { navigationController.popBackStack() },
+            onRecoverPasswordError = { esmorgaFullScreenArguments ->
+                navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = esmorgaFullScreenArguments))
+            }
         )
     }
 }
