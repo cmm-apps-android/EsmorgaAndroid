@@ -290,4 +290,3 @@ private fun isPackageAvailable(context: Context, appPackage: String) = try {
 } catch (e: PackageManager.NameNotFoundException) {
     false
 }
-}
