@@ -16,9 +16,10 @@ object DeeplinkManager {
     }
 
     fun navigateFromDeeplink(deeplinkPath: Uri): Navigation {
-        val deeplinkData = deeplinkScreenName(deeplinkPath.queryParameterNames.first())
-        return when (deeplinkData) {
-            DEEPLINK_ACTIVATE_ACCOUNT_SCREEN_NAME -> Navigation.ActivateAccountScreen(deeplinkData)
+        val deeplinkParameterName = deeplinkPath.queryParameterNames.first()
+        val screenName = deeplinkScreenName(deeplinkParameterName)
+        return when (screenName) {
+            DEEPLINK_ACTIVATE_ACCOUNT_SCREEN_NAME -> Navigation.ActivateAccountScreen(deeplinkPath.getQueryParameter(deeplinkParameterName).orEmpty())
             else -> Navigation.WelcomeScreen
         }
     }
