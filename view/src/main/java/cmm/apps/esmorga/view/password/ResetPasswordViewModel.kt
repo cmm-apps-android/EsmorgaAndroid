@@ -3,8 +3,8 @@ package cmm.apps.esmorga.view.password
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cmm.apps.esmorga.common.util.ValidateTextFieldUtils.getFieldErrorText
-import cmm.apps.esmorga.domain.user.PerformRecoverPasswordUseCase
 import cmm.apps.esmorga.domain.user.model.User.Companion.PASSWORD_REGEX
+import cmm.apps.esmorga.domain.user.repository.PerformResetPasswordUseCase
 import cmm.apps.esmorga.view.password.model.ResetPasswordEffect
 import cmm.apps.esmorga.view.password.model.ResetPasswordUiState
 import cmm.apps.esmorga.view.password.model.ResetPasswordViewHelper.getEmptyFieldErrorText
@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 
-class ResetPasswordViewModel(val performRecoverPasswordUseCase: PerformRecoverPasswordUseCase) : ViewModel() {
+class ResetPasswordViewModel(val performResetPasswordUseCase: PerformResetPasswordUseCase) : ViewModel() {
     private val _uiState = MutableStateFlow(ResetPasswordUiState())
     val uiState: StateFlow<ResetPasswordUiState> = _uiState.asStateFlow()
 
@@ -28,15 +28,15 @@ class ResetPasswordViewModel(val performRecoverPasswordUseCase: PerformRecoverPa
         MutableSharedFlow(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val effect: SharedFlow<ResetPasswordEffect> = _effect.asSharedFlow()
 
-    fun onResetPasswordClicked(pass: String) {
+    fun onResetPasswordClicked(code: String, password: String) {
         if (!_uiState.value.hasAnyError()) {
             viewModelScope.launch {
-//                val result = performRecoverPasswordUseCase(email.trim())
-//                result.onSuccess {
-//                    _effect.tryEmit(ResetPasswordEffect.ShowSnackbarSuccess())
-//                }.onFailure {
-//                    _effect.tryEmit(ResetPasswordEffect.ShowFullScreenError())
-//                }
+                val result = performResetPasswordUseCase(code, password)
+                result.onSuccess {
+                    _effect.tryEmit(ResetPasswordEffect.ShowSnackbarSuccess())
+                }.onFailure {
+                    _effect.tryEmit(ResetPasswordEffect.ShowFullScreenError())
+                }
             }
         }
     }

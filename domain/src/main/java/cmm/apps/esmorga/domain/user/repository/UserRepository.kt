@@ -10,4 +10,5 @@ interface UserRepository {
     suspend fun logout()
     suspend fun recoverPassword(email: String)
     suspend fun activateAccount(code: String)
+    suspend fun resetPassword(code: String, password: String)
 }

@@ -20,6 +20,7 @@ import cmm.apps.esmorga.view.eventlist.EventListScreen
 import cmm.apps.esmorga.view.eventlist.MyEventListScreen
 import cmm.apps.esmorga.view.login.LoginScreen
 import cmm.apps.esmorga.view.password.RecoverPasswordScreen
+import cmm.apps.esmorga.view.password.ResetPasswordScreen
 import cmm.apps.esmorga.view.profile.ProfileScreen
 import cmm.apps.esmorga.view.registration.RegistrationConfirmationScreen
 import cmm.apps.esmorga.view.registration.RegistrationScreen
@@ -63,6 +64,8 @@ sealed class Navigation {
     @Serializable
     data class ActivateAccountScreen(val verificationCode: String) : Navigation()
 
+    @Serializable
+    data class ResetPasswordScreen(val forgotPasswordCode: String) : Navigation()
 }
 
 const val GOOGLE_MAPS_PACKAGE = "com.google.android.apps.maps"
@@ -88,13 +91,44 @@ internal fun EsmorgaNavHost(navigationController: NavHostController, startDestin
         homeFlow(navigationController)
         errorFlow(navigationController)
         accountActivationFlow(navigationController)
+        resetPasswordFlow(navigationController)
+    }
+}
+
+private fun NavGraphBuilder.resetPasswordFlow(navigationController: NavHostController) {
+    composable<Navigation.RecoverPasswordScreen> {
+        RecoverPasswordScreen(
+            onBackClicked = { navigationController.popBackStack() },
+            onRecoverPasswordError = { esmorgaFullScreenArguments ->
+                navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = esmorgaFullScreenArguments))
+            }
+        )
+    }
+
+    composable<Navigation.ResetPasswordScreen> { backStackEntry ->
+        ResetPasswordScreen(
+            forgotPasswordCode = backStackEntry.toRoute<Navigation.ResetPasswordScreen>().forgotPasswordCode,
+            onResetPasswordError = { esmorgaFullScreenArguments ->
+                navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = esmorgaFullScreenArguments))
+            },
+            onResetPasswordSuccess = {
+                navigationController.navigate(Navigation.LoginScreen) {
+                    popUpTo(0) {
+                        inclusive = true
+                    }
+                    launchSingleTop = true
+                }
+            }
+        )
+
     }
 }
 
 private fun NavGraphBuilder.accountActivationFlow(navigationController: NavHostController) {
     composable<Navigation.ActivateAccountScreen> { backStackEntry ->
         ActivateAccountScreen(
-            backStackEntry.toRoute<Navigation.ActivateAccountScreen>().verificationCode, onContinueClick = {
+            backStackEntry.toRoute<Navigation.ActivateAccountScreen>().verificationCode,
+            onContinueClick = {
                 navigationController.navigate(Navigation.WelcomeScreen) {
                     popUpTo(0) {
                         inclusive = true
@@ -208,14 +242,6 @@ private fun NavGraphBuilder.loginFlow(navigationController: NavHostController) {
             email = email
         )
     }
-    composable<Navigation.RecoverPasswordScreen> {
-        RecoverPasswordScreen(
-            onBackClicked = { navigationController.popBackStack() },
-            onRecoverPasswordError = { esmorgaFullScreenArguments ->
-                navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = esmorgaFullScreenArguments))
-            },
-        )
-    }
 }
 
 private fun NavGraphBuilder.errorFlow(navigationController: NavHostController) {
@@ -263,4 +289,5 @@ private fun isPackageAvailable(context: Context, appPackage: String) = try {
     appInfo != null && appInfo.enabled
 } catch (e: PackageManager.NameNotFoundException) {
     false
+}
 }
