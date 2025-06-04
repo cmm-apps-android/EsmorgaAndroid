@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.view.activateaccount.ActivateAccountScreen
+import cmm.apps.esmorga.view.deeplink.DeeplinkManager.navigateFromDeeplink
 import cmm.apps.esmorga.view.errors.EsmorgaErrorScreen
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreen
@@ -61,11 +62,10 @@ sealed class Navigation {
 
     @Serializable
     data class ActivateAccountScreen(val verificationCode: String) : Navigation()
+
 }
 
 const val GOOGLE_MAPS_PACKAGE = "com.google.android.apps.maps"
-private const val DEEPLINK_ACTIVATE_ACCOUNT_QUERY_PARAM_NAME = "verificationCode"
-private const val DEEPLINK_ACTIVATE_ACCOUNT_SCREEN_NAME = "AccountActivationScreen"
 
 @Composable
 fun EsmorgaNavigationGraph(navigationController: NavHostController, loggedIn: Boolean, deeplinkPath: Uri?) {
@@ -94,7 +94,7 @@ internal fun EsmorgaNavHost(navigationController: NavHostController, startDestin
 private fun NavGraphBuilder.accountActivationFlow(navigationController: NavHostController) {
     composable<Navigation.ActivateAccountScreen> { backStackEntry ->
         ActivateAccountScreen(
-            backStackEntry.toRoute<Navigation.ActivateAccountScreen>().verificationCode,onContinueClick = {
+            backStackEntry.toRoute<Navigation.ActivateAccountScreen>().verificationCode, onContinueClick = {
                 navigationController.navigate(Navigation.WelcomeScreen) {
                     popUpTo(0) {
                         inclusive = true
@@ -263,18 +263,4 @@ private fun isPackageAvailable(context: Context, appPackage: String) = try {
     appInfo != null && appInfo.enabled
 } catch (e: PackageManager.NameNotFoundException) {
     false
-}
-
-private fun deeplinkScreenName(deeplinkData: String): String {
-    return when (deeplinkData) {
-        DEEPLINK_ACTIVATE_ACCOUNT_QUERY_PARAM_NAME -> DEEPLINK_ACTIVATE_ACCOUNT_SCREEN_NAME
-        else -> ""
-    }
-}
-
-private fun navigateFromDeeplink(deeplinkPath: Uri): Navigation {
-    return when (deeplinkScreenName(deeplinkPath.queryParameterNames.first())) {
-        DEEPLINK_ACTIVATE_ACCOUNT_SCREEN_NAME -> Navigation.ActivateAccountScreen(deeplinkPath.getQueryParameter(deeplinkPath.queryParameterNames.first()).orEmpty())
-        else -> Navigation.WelcomeScreen
-    }
 }
