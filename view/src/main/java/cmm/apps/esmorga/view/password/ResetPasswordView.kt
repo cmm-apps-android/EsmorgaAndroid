@@ -22,7 +22,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmm.apps.designsystem.EsmorgaButton
@@ -66,7 +65,7 @@ fun ResetPasswordScreen(
             uiState = uiState,
             validateField = { type, password, repeatPass -> rpvm.validateField(type, password, repeatPass) },
             onResetPasswordClicked = { password -> rpvm.onResetPasswordClicked(forgotPasswordCode, password) },
-            enabledButton = { password, repeatPass -> rpvm.isEnabledButton(password, repeatPass) }
+            onValueChange = { password, repeatPass -> rpvm.onValueChange(password, repeatPass) }
         )
     }
 }
@@ -77,7 +76,7 @@ fun ResetPasswordView(
     uiState: ResetPasswordUiState,
     validateField: (ResetPasswordField, String, String?) -> Unit,
     onResetPasswordClicked: (String) -> Unit,
-    enabledButton: (String, String) -> Boolean
+    onValueChange: (String, String) -> Unit
 ) {
     var password by remember { mutableStateOf("") }
     var repeatPassword by remember { mutableStateOf("") }
@@ -111,6 +110,7 @@ fun ResetPasswordView(
                 value = password,
                 onValueChange = {
                     password = it
+                    onValueChange(password, repeatPassword)
                 },
                 title = R.string.reset_password_new_password_field,
                 placeholder = R.string.placeholder_new_password,
@@ -129,6 +129,7 @@ fun ResetPasswordView(
                 value = repeatPassword,
                 onValueChange = {
                     repeatPassword = it
+                    onValueChange(password, repeatPassword)
                 },
                 title = R.string.reset_password_repeat_password_field,
                 placeholder = R.string.placeholder_confirm_password,
@@ -149,7 +150,7 @@ fun ResetPasswordView(
                 primary = true,
                 modifier = Modifier
                     .testTag(RESET_PASSWORD_CHANGE_PASSWORD_BUTTON),
-                isEnabled = enabledButton(password, repeatPassword),
+                isEnabled = uiState.enableButton(password, repeatPassword),
                 isLoading = uiState.isLoading
             ) {
                 onResetPasswordClicked(password)
@@ -163,15 +164,4 @@ object ResetPasswordScreenTestTags {
     const val RESET_PASSWORD_CHANGE_PASSWORD_BUTTON = "reset password screen change password button"
     const val RESET_PASSWORD_NEW_PASSWORD_INPUT = "recover password screen new password input"
     const val RESET_PASSWORD_REPEAT_PASSWORD_INPUT = "recover password screen repeat password input"
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ResetPasswordScreenPreview() {
-    ResetPasswordView(
-        uiState = ResetPasswordUiState(),
-        validateField = { _, _, _ -> },
-        onResetPasswordClicked = {},
-        enabledButton = { _, _ -> false }
-    )
 }

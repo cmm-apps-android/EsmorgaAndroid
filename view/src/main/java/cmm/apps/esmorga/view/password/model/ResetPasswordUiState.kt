@@ -14,6 +14,7 @@ data class ResetPasswordUiState(
     val repeatPasswordError: String? = null
 ) {
     fun hasAnyError() = passwordError != null || repeatPasswordError != null
+    fun enableButton(password: String, repeatPassword: String) = !hasAnyError() && (password.isNotBlank() || repeatPassword.isNotBlank())
 }
 
 sealed class ResetPasswordEffect {
