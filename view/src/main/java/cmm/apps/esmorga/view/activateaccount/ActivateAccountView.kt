@@ -66,10 +66,11 @@ fun ActivateAccountScreen(
         }
     }
     EsmorgaTheme {
-        ActivateAccountView(uiState = uiState,
+        ActivateAccountView(
+            uiState = uiState,
             onContinueClick = {
-            viewModel.onContinueClicked()
-        })
+                viewModel.onContinueClicked()
+            })
     }
 }
 
@@ -88,7 +89,12 @@ fun ActivateAccountView(
         ) {
 
             Image(
-                painter = painterResource(id = R.drawable.activate_account_image), contentDescription = null, contentScale = ContentScale.FillWidth, modifier = Modifier
+                painter = painterResource(
+                    id = R.drawable.activate_account_image
+                ),
+                contentDescription = null,
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier
                     .fillMaxWidth()
                     .height(320.dp)
                     .testTag(ACTIVATE_ACCOUNT_IMAGE)
@@ -100,7 +106,9 @@ fun ActivateAccountView(
                     .padding(horizontal = 16.dp)
             ) {
                 EsmorgaText(
-                    text = stringResource(R.string.activate_account_title), style = EsmorgaTextStyle.HEADING_1, Modifier
+                    text = stringResource(R.string.activate_account_title),
+                    style = EsmorgaTextStyle.HEADING_1,
+                    Modifier
                         .padding(top = 20.dp, bottom = 12.dp)
                         .testTag(ACTIVATE_ACCOUNT_TITLE)
                 )
