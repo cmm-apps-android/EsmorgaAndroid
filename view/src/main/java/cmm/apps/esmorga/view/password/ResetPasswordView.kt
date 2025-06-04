@@ -51,7 +51,9 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun ResetPasswordScreen(
     rpvm: ResetPasswordViewModel = koinViewModel(),
-    onResetPasswordError: (EsmorgaErrorScreenArguments) -> Unit
+    forgotPasswordCode: String,
+    onResetPasswordError: (EsmorgaErrorScreenArguments) -> Unit,
+    onResetPasswordSuccess: () -> Unit
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val localCoroutineScope = rememberCoroutineScope()
@@ -64,6 +66,7 @@ fun ResetPasswordScreen(
                     snackbarHostState.showSnackbar(
                         message = eff.message
                     )
+                    onResetPasswordSuccess()
                 }
 
                 is ResetPasswordEffect.ShowFullScreenError -> onResetPasswordError(eff.esmorgaErrorScreenArguments)
@@ -76,7 +79,7 @@ fun ResetPasswordScreen(
             snackbarHostState = snackbarHostState,
             uiState = uiState,
             validateField = { type, password, repeatPass -> rpvm.validateField(type, password, repeatPass) },
-            onResetPasswordClicked = { password -> rpvm.onResetPasswordClicked(password) },
+            onResetPasswordClicked = { password -> rpvm.onResetPasswordClicked(forgotPasswordCode, password) },
             enabledButton = { password, repeatPass -> rpvm.isEnabledButton(password, repeatPass) }
         )
     }
@@ -90,7 +93,7 @@ fun ResetPasswordView(
     validateField: (ResetPasswordField, String, String?) -> Unit,
     onResetPasswordClicked: (String) -> Unit,
     enabledButton: (String, String) -> Boolean
-    ) {
+) {
     var password by remember { mutableStateOf("") }
     var repeatPassword by remember { mutableStateOf("") }
     Scaffold(
@@ -105,7 +108,7 @@ fun ResetPasswordView(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
-                    top =  innerPadding.calculateTopPadding(),
+                    top = innerPadding.calculateTopPadding(),
                     bottom = innerPadding.calculateBottomPadding(),
                     start = 16.dp,
                     end = 16.dp
@@ -186,6 +189,6 @@ fun ResetPasswordScreenPreview() {
         uiState = ResetPasswordUiState(),
         validateField = { _, _, _ -> },
         onResetPasswordClicked = {},
-        enabledButton = { _, _ -> false}
+        enabledButton = { _, _ -> false }
     )
 }

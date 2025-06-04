@@ -25,4 +25,6 @@ interface EsmorgaAuthApi {
     @POST("account/password/forgot-init")
     suspend fun recoverPassword(@Body body: Map<String, String>)
 
+    @PUT("account/password/forgot-update")
+    suspend fun resetPassword(@Body body: Map<String, String>)
 }
