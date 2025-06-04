@@ -3,8 +3,6 @@ package cmm.apps.esmorga.view.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cmm.apps.esmorga.common.util.ValidateTextFieldUtils.getFieldErrorText
-import cmm.apps.esmorga.domain.result.ErrorCodes
-import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.user.PerformLoginUseCase
 import cmm.apps.esmorga.domain.user.model.User.Companion.EMAIL_REGEX
 import cmm.apps.esmorga.domain.user.model.User.Companion.PASSWORD_REGEX
@@ -27,6 +25,10 @@ class LoginViewModel(private val performLoginUseCase: PerformLoginUseCase) : Vie
 
     private val _effect: MutableSharedFlow<LoginEffect> = MutableSharedFlow(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val effect: SharedFlow<LoginEffect> = _effect.asSharedFlow()
+
+    init {
+        _effect.tryEmit(LoginEffect.ShowInitSnackbar)
+    }
 
     fun onLoginClicked(email: String, password: String) {
         validateEmail(email, false)
