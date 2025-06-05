@@ -38,6 +38,9 @@ class ResetPasswordViewModel(val performResetPasswordUseCase: PerformResetPasswo
                 }.onFailure {
                     _uiState.value = ResetPasswordUiState(isLoading = false)
                     _effect.tryEmit(ResetPasswordEffect.ShowFullScreenError())
+                }.onNoConnectionError {
+                    _uiState.value = ResetPasswordUiState(isLoading = false)
+                    _effect.tryEmit(ResetPasswordEffect.ShowNoConnectionSnackbar())
                 }
             }
         }
