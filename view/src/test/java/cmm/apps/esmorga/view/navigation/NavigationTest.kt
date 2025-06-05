@@ -31,6 +31,7 @@ import cmm.apps.esmorga.domain.user.PerformLoginUseCase
 import cmm.apps.esmorga.domain.user.PerformRecoverPasswordUseCase
 import cmm.apps.esmorga.domain.user.PerformRegistrationConfirmationUseCase
 import cmm.apps.esmorga.domain.user.PerformRegistrationUserCase
+import cmm.apps.esmorga.domain.user.repository.PerformResetPasswordUseCase
 import cmm.apps.esmorga.view.activateaccount.RegistrationConfirmationScreenTestTags.ACTIVATE_ACCOUNT_BUTTON
 import cmm.apps.esmorga.view.activateaccount.RegistrationConfirmationScreenTestTags.ACTIVATE_ACCOUNT_IMAGE
 import cmm.apps.esmorga.view.activateaccount.RegistrationConfirmationScreenTestTags.ACTIVATE_ACCOUNT_SUBTITLE
@@ -53,6 +54,10 @@ import cmm.apps.esmorga.view.password.RecoverPasswordScreenTestTags.RECOVER_PASS
 import cmm.apps.esmorga.view.password.RecoverPasswordScreenTestTags.RECOVER_PASSWORD_SEND_EMAIL_BUTTON
 import cmm.apps.esmorga.view.password.RecoverPasswordScreenTestTags.RECOVER_PASSWORD_SHOW_SNACKBAR
 import cmm.apps.esmorga.view.password.RecoverPasswordScreenTestTags.RECOVER_PASSWORD_TITLE
+import cmm.apps.esmorga.view.password.ResetPasswordScreenTestTags.RESET_PASSWORD_CHANGE_PASSWORD_BUTTON
+import cmm.apps.esmorga.view.password.ResetPasswordScreenTestTags.RESET_PASSWORD_NEW_PASSWORD_INPUT
+import cmm.apps.esmorga.view.password.ResetPasswordScreenTestTags.RESET_PASSWORD_REPEAT_PASSWORD_INPUT
+import cmm.apps.esmorga.view.password.ResetPasswordScreenTestTags.RESET_PASSWORD_TITLE
 import cmm.apps.esmorga.view.profile.HomeScreenTestTags.PROFILE_TITLE
 import cmm.apps.esmorga.view.registration.RegistrationConfirmationScreenTestTags.REGISTRATION_CONFIRMATION_OPEN_BUTTON
 import cmm.apps.esmorga.view.registration.RegistrationConfirmationScreenTestTags.REGISTRATION_CONFIRMATION_RESEND_BUTTON
@@ -137,6 +142,10 @@ class NavigationTest {
         coEvery { useCase(any()) } returns EsmorgaResult.success(Unit)
     }
 
+    private val performResetPasswordUseCase = mockk<PerformResetPasswordUseCase>(relaxed = true).also { useCase ->
+        coEvery { useCase(any(), any()) } returns EsmorgaResult.success(Unit)
+    }
+
     @Before
     @Throws(Exception::class)
     fun setUp() {
@@ -159,6 +168,7 @@ class NavigationTest {
                     factory<LogOutUseCase> { logOutUseCase }
                     factory<PerformRecoverPasswordUseCase> { performRecoverPasswordUseCase }
                     factory<ActivateAccountUseCase> { activateAccountUseCase }
+                    factory<PerformResetPasswordUseCase> { performResetPasswordUseCase }
 
                 }
             )
@@ -207,7 +217,7 @@ class NavigationTest {
 
     @Test
     fun `given user not logged, when login visited and login is performed, then event list screen is shown`() {
-        setNavigationFromDestination(Navigation.LoginScreen)
+        setNavigationFromDestination(Navigation.LoginScreen())
 
         composeTestRule.onNodeWithTag(LOGIN_EMAIL_INPUT).performTextInput("simple@man.com")
         composeTestRule.onNodeWithTag(LOGIN_PASSWORD_INPUT).performTextInput("Test@123")
@@ -218,7 +228,7 @@ class NavigationTest {
 
     @Test
     fun `given user not logged, when login visited and register is clicked, then register screen is shown`() {
-        setNavigationFromDestination(Navigation.LoginScreen)
+        setNavigationFromDestination(Navigation.LoginScreen())
 
         composeTestRule.onNodeWithTag(LOGIN_REGISTER_BUTTON).performClick()
 
@@ -227,7 +237,7 @@ class NavigationTest {
 
     @Test
     fun `given user not logged, when login, register and back are clicked, then login screen is shown`() {
-        setNavigationFromDestination(Navigation.LoginScreen)
+        setNavigationFromDestination(Navigation.LoginScreen())
 
         composeTestRule.onNodeWithTag(LOGIN_REGISTER_BUTTON).performClick()
         composeTestRule.onNodeWithTag(REGISTRATION_BACK_BUTTON).performClick()
@@ -242,7 +252,7 @@ class NavigationTest {
         }
         loadKoinModules(module { factory<PerformLoginUseCase> { failurePerformLoginUseCase } })
 
-        setNavigationFromDestination(Navigation.LoginScreen)
+        setNavigationFromDestination(Navigation.LoginScreen())
 
         composeTestRule.onNodeWithTag(LOGIN_TITLE).assertIsDisplayed()
         composeTestRule.onNodeWithTag(LOGIN_EMAIL_INPUT).performTextInput("simple@man.com")
@@ -364,7 +374,7 @@ class NavigationTest {
 
     @Test
     fun `given user is on LoginScreen when forgot password button is clicked then RecoverPasswordScreen is displayed`() {
-        setNavigationFromDestination(Navigation.LoginScreen)
+        setNavigationFromDestination(Navigation.LoginScreen())
 
         composeTestRule.onNodeWithTag(LOGIN_FORGOT_PASSWORD_BUTTON).performClick()
 
@@ -375,7 +385,7 @@ class NavigationTest {
 
     @Test
     fun `given user is on RecoverPasswordScreen when back button is clicked then LoginScreen is displayed`() {
-        setNavigationFromDestination(Navigation.LoginScreen)
+        setNavigationFromDestination(Navigation.LoginScreen())
 
         composeTestRule.onNodeWithTag(LOGIN_FORGOT_PASSWORD_BUTTON).performClick()
 
@@ -418,6 +428,33 @@ class NavigationTest {
 
         composeTestRule.onNodeWithTag(ERROR_TITLE).assertIsDisplayed()
     }
+
+    @Test
+    fun `given reset password screen and success useCase, when user tap on change password, then login screen is shown`() {
+        setNavigationFromDestination(Navigation.ResetPasswordScreen("code"))
+
+        composeTestRule.onNodeWithTag(RESET_PASSWORD_TITLE).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(RESET_PASSWORD_NEW_PASSWORD_INPUT).performTextInput("Test@123")
+        composeTestRule.onNodeWithTag(RESET_PASSWORD_REPEAT_PASSWORD_INPUT).performTextInput("Test@123")
+        composeTestRule.onNodeWithTag(RESET_PASSWORD_CHANGE_PASSWORD_BUTTON).assertIsDisplayed()
+
+        composeTestRule.onNodeWithTag(RESET_PASSWORD_CHANGE_PASSWORD_BUTTON).performClick()
+
+        composeTestRule.onNodeWithTag(LOGIN_TITLE).assertIsDisplayed()
+    }
+
+    @Test
+    fun `given reset password screen and failure useCase, when user tap on change password, then error screen is shown`() {
+        coEvery { performResetPasswordUseCase(any(), any()) } returns EsmorgaResult.failure(EsmorgaException("Error", Source.REMOTE, 400))
+        setNavigationFromDestination(Navigation.ResetPasswordScreen("code"))
+
+        composeTestRule.onNodeWithTag(RESET_PASSWORD_NEW_PASSWORD_INPUT).performTextInput("Test@123")
+        composeTestRule.onNodeWithTag(RESET_PASSWORD_REPEAT_PASSWORD_INPUT).performTextInput("Test@123")
+        composeTestRule.onNodeWithTag(RESET_PASSWORD_CHANGE_PASSWORD_BUTTON).performClick()
+
+        composeTestRule.onNodeWithTag(ERROR_TITLE).assertIsDisplayed()
+    }
+
 
     private fun setNavigationFromAppLaunch(loggedIn: Boolean) {
         composeTestRule.setContent {

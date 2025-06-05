@@ -5,6 +5,7 @@ import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.password.model.ResetPasswordViewHelper.getEsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.password.model.ResetPasswordViewHelper.getEsmorgaMessageSnackBarSuccess
+import cmm.apps.esmorga.view.password.model.ResetPasswordViewHelper.getNoInternetSnackbarMessage
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -20,6 +21,7 @@ data class ResetPasswordUiState(
 sealed class ResetPasswordEffect {
     data class NavigateToLogin(val snackbarMessage: String = getEsmorgaMessageSnackBarSuccess()) : ResetPasswordEffect()
     data class ShowFullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments = getEsmorgaErrorScreenArguments()) : ResetPasswordEffect()
+    data class ShowNoConnectionSnackbar(val message: String = getNoInternetSnackbarMessage()) : ResetPasswordEffect()
 }
 
 object ResetPasswordViewHelper : KoinComponent {
@@ -32,4 +34,6 @@ object ResetPasswordViewHelper : KoinComponent {
         title = context.getString(R.string.default_error_title_expanded),
         buttonText = context.getString(R.string.button_retry)
     )
+
+    fun getNoInternetSnackbarMessage() = context.getString(R.string.snackbar_no_internet)
 }
