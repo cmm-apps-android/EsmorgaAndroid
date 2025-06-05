@@ -212,7 +212,8 @@ private fun NavGraphBuilder.loginFlow(navigationController: NavHostController) {
             onBackClicked = {
                 navigationController.popBackStack()
             },
-            snackbarMessage = backStackEntry.toRoute<Navigation.LoginScreen>().snackbarArguments)
+            snackbarMessage = backStackEntry.toRoute<Navigation.LoginScreen>().snackbarArguments
+        )
     }
     composable<Navigation.RegistrationScreen> {
         RegistrationScreen(
