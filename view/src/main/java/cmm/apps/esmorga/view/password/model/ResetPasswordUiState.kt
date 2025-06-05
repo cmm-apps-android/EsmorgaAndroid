@@ -3,7 +3,7 @@ package cmm.apps.esmorga.view.password.model
 import android.content.Context
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
-import cmm.apps.esmorga.view.password.model.ResetPasswordViewHelper.getEsmorgaErrorScreenArguments
+import cmm.apps.esmorga.view.login.model.LoginViewHelper.getEsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.password.model.ResetPasswordViewHelper.getEsmorgaMessageSnackBarSuccess
 import cmm.apps.esmorga.view.password.model.ResetPasswordViewHelper.getNoInternetSnackbarMessage
 import org.koin.core.component.KoinComponent
@@ -30,10 +30,6 @@ object ResetPasswordViewHelper : KoinComponent {
     fun getPasswordErrorText() = context.getString(R.string.inline_error_password_invalid)
     fun getRepeatPasswordErrorText() = context.getString(R.string.inline_error_password_mismatch)
     fun getEmptyFieldErrorText() = context.getString(R.string.inline_error_empty_field)
-    fun getEsmorgaErrorScreenArguments() = EsmorgaErrorScreenArguments(
-        title = context.getString(R.string.default_error_title_expanded),
-        buttonText = context.getString(R.string.button_retry)
-    )
 
     fun getNoInternetSnackbarMessage() = context.getString(R.string.snackbar_no_internet)
 }
