@@ -1,5 +1,7 @@
 package cmm.apps.esmorga.view.login
 
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cmm.apps.esmorga.common.util.ValidateTextFieldUtils.getFieldErrorText
@@ -19,14 +21,15 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class LoginViewModel(private val performLoginUseCase: PerformLoginUseCase) : ViewModel() {
+class LoginViewModel(private val performLoginUseCase: PerformLoginUseCase) : ViewModel(), DefaultLifecycleObserver {
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
     private val _effect: MutableSharedFlow<LoginEffect> = MutableSharedFlow(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val effect: SharedFlow<LoginEffect> = _effect.asSharedFlow()
 
-    init {
+    override fun onResume(owner: LifecycleOwner) {
+        super.onResume(owner)
         _effect.tryEmit(LoginEffect.ShowInitSnackbar)
     }
 

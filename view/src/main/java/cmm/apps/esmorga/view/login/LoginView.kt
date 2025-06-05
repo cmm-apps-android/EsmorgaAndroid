@@ -36,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmm.apps.designsystem.EsmorgaButton
 import cmm.apps.designsystem.EsmorgaText
@@ -45,6 +46,7 @@ import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAILS_BACK_BUTTON
+import cmm.apps.esmorga.view.extensions.observeLifecycleEvents
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_EMAIL_INPUT
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_FORGOT_PASSWORD_BUTTON
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_LOGIN_BUTTON
@@ -66,12 +68,15 @@ fun LoginScreen(
     onLoginSuccess: () -> Unit,
     onLoginError: (EsmorgaErrorScreenArguments) -> Unit,
     onBackClicked: () -> Unit,
-    snackbarMessage: String? = null
+    snackbarMessage: String?
 ) {
     val uiState: LoginUiState by lvm.uiState.collectAsStateWithLifecycle()
     val message = stringResource(R.string.snackbar_no_internet)
     val snackbarHostState = remember { SnackbarHostState() }
     val localCoroutineScope = rememberCoroutineScope()
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+
+    lvm.observeLifecycleEvents(lifecycle)
     LaunchedEffect(Unit) {
         lvm.effect.collect { eff ->
             when (eff) {
@@ -80,7 +85,7 @@ fun LoginScreen(
                 is LoginEffect.ShowFullScreenError -> onLoginError(eff.esmorgaErrorScreenArguments)
                 is LoginEffect.NavigateToEventList -> onLoginSuccess()
                 is LoginEffect.NavigateToForgotPassword -> onForgotPasswordClicked()
-                is LoginEffect.ShowInitSnackbar -> snackbarMessage?.let { localCoroutineScope.launch { snackbarHostState.showSnackbar(message = snackbarMessage) } }
+                is LoginEffect.ShowInitSnackbar -> snackbarMessage?.let { localCoroutineScope.launch { snackbarHostState.showSnackbar(message = it) } }
             }
         }
     }
