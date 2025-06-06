@@ -31,6 +31,7 @@ import cmm.apps.esmorga.domain.user.PerformLoginUseCase
 import cmm.apps.esmorga.domain.user.PerformRecoverPasswordUseCase
 import cmm.apps.esmorga.domain.user.PerformRegistrationConfirmationUseCase
 import cmm.apps.esmorga.domain.user.PerformRegistrationUserCase
+import cmm.apps.esmorga.domain.user.model.User
 import cmm.apps.esmorga.view.activateaccount.RegistrationConfirmationScreenTestTags.ACTIVATE_ACCOUNT_BUTTON
 import cmm.apps.esmorga.view.activateaccount.RegistrationConfirmationScreenTestTags.ACTIVATE_ACCOUNT_IMAGE
 import cmm.apps.esmorga.view.activateaccount.RegistrationConfirmationScreenTestTags.ACTIVATE_ACCOUNT_SUBTITLE
@@ -134,7 +135,12 @@ class NavigationTest {
     }
 
     private val activateAccountUseCase = mockk<ActivateAccountUseCase>(relaxed = true).also { useCase ->
-        coEvery { useCase(any()) } returns EsmorgaResult.success(Unit)
+         val fakeUser = User(
+            name = "Yago",
+            lastName = "Perez",
+            email = "yago@mail.com",
+        )
+        coEvery { useCase(any()) } returns EsmorgaResult.success(fakeUser)
     }
 
     @Before

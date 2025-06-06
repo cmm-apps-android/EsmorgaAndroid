@@ -1,22 +1,23 @@
 package cmm.apps.esmorga.domain.account
 
 import cmm.apps.esmorga.domain.result.EsmorgaResult
+import cmm.apps.esmorga.domain.user.model.User
 import cmm.apps.esmorga.domain.user.repository.UserRepository
 
 interface ActivateAccountUseCase {
-    suspend operator fun invoke(verificationCode: String): EsmorgaResult<Unit>
+    suspend operator fun invoke(verificationCode: String): EsmorgaResult<User>
 }
 
 class ActivateAccountUseCaseImpl(
     private val repo: UserRepository
 ) : ActivateAccountUseCase {
 
-    override suspend fun invoke(verificationCode: String): EsmorgaResult<Unit> {
-        return try {
-            repo.activateAccount(verificationCode)
-            EsmorgaResult.success(Unit)
+    override suspend fun invoke(verificationCode: String): EsmorgaResult<User> {
+         try {
+            val result = repo.activateAccount(verificationCode)
+            return EsmorgaResult.success(result)
         } catch (e: Exception) {
-            EsmorgaResult.failure(e)
+            return EsmorgaResult.failure(e)
         }
     }
 }

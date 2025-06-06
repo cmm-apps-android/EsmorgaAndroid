@@ -4,6 +4,7 @@ import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.EsmorgaResult
 import cmm.apps.esmorga.domain.result.Source
+import cmm.apps.esmorga.domain.user.model.User
 import cmm.apps.esmorga.domain.user.repository.UserRepository
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -17,13 +18,19 @@ class ActivateAccountUseCaseImplTest {
     fun `given a successful repository when activate account is called then return success`() = runTest {
         val code = "validCode"
         val repo = mockk<UserRepository>(relaxed = true)
-        coEvery { repo.activateAccount(code) } returns Unit
+        val fakeUser = User(
+            name = "Yago",
+            lastName = "Perez",
+            email = "yago@mail.com",
+        )
+
+        coEvery { repo.activateAccount(code) } returns fakeUser
 
         val sut = ActivateAccountUseCaseImpl(repo)
 
         val result = sut.invoke(code)
 
-        Assert.assertEquals(EsmorgaResult.success(Unit), result)
+        Assert.assertEquals(EsmorgaResult.success(fakeUser), result)
     }
 
     @Test
