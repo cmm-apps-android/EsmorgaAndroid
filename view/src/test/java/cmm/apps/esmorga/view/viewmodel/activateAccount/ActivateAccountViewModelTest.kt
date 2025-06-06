@@ -10,6 +10,7 @@ import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.EsmorgaResult
 import cmm.apps.esmorga.domain.result.Source
+import cmm.apps.esmorga.domain.user.model.User
 import cmm.apps.esmorga.view.activateaccount.ActivateAccountViewModel
 import cmm.apps.esmorga.view.activateaccount.model.ActivateAccountEffect
 import cmm.apps.esmorga.view.viewmodel.util.MainDispatcherRule
@@ -54,7 +55,12 @@ class ActivateAccountViewModelTest {
     fun `given valid verification code when activateAccount is called then UI state is not loading`() = runTest {
         val verificationCode = "validCode"
         val activateAccountUseCase = mockk<ActivateAccountUseCase>()
-        coEvery { activateAccountUseCase(verificationCode) } returns EsmorgaResult.success(Unit)
+        val fakeUser = User(
+            name = "Yago",
+            lastName = "Perez",
+            email = "yago@mail.com",
+        )
+        coEvery { activateAccountUseCase(verificationCode) } returns EsmorgaResult.success(fakeUser)
 
         val sut = ActivateAccountViewModel(verificationCode, activateAccountUseCase)
         sut.onStart(lifeCycleOwner)
@@ -136,9 +142,14 @@ class ActivateAccountViewModelTest {
     fun `given successful activation when onContinueClicked is called then navigate to welcome screen`() = runTest {
         val verificationCode = "code"
         val activateAccountUseCase = mockk<ActivateAccountUseCase>()
+        val fakeUser = User(
+            name = "Yago",
+            lastName = "Perez",
+            email = "yago@mail.com",
+        )
         coEvery {
             activateAccountUseCase(verificationCode)
-        } returns EsmorgaResult(Unit)
+        } returns EsmorgaResult(fakeUser)
 
         val sut = ActivateAccountViewModel(verificationCode, activateAccountUseCase)
 
