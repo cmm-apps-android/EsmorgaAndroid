@@ -18,19 +18,14 @@ class ActivateAccountUseCaseImplTest {
     fun `given a successful repository when activate account is called then return success`() = runTest {
         val code = "validCode"
         val repo = mockk<UserRepository>(relaxed = true)
-        val fakeUser = User(
-            name = "Yago",
-            lastName = "Perez",
-            email = "yago@mail.com",
-        )
 
-        coEvery { repo.activateAccount(code) } returns fakeUser
+        coEvery { repo.activateAccount(code) } returns Unit
 
         val sut = ActivateAccountUseCaseImpl(repo)
 
         val result = sut.invoke(code)
 
-        Assert.assertEquals(EsmorgaResult.success(fakeUser), result)
+        Assert.assertEquals(EsmorgaResult.success(Unit), result)
     }
 
     @Test

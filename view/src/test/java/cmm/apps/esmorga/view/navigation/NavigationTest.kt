@@ -135,12 +135,7 @@ class NavigationTest {
     }
 
     private val activateAccountUseCase = mockk<ActivateAccountUseCase>(relaxed = true).also { useCase ->
-         val fakeUser = User(
-            name = "Yago",
-            lastName = "Perez",
-            email = "yago@mail.com",
-        )
-        coEvery { useCase(any()) } returns EsmorgaResult.success(fakeUser)
+        coEvery { useCase(any()) } returns EsmorgaResult.success(Unit)
     }
 
     @Before

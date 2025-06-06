@@ -55,12 +55,7 @@ class ActivateAccountViewModelTest {
     fun `given valid verification code when activateAccount is called then UI state is not loading`() = runTest {
         val verificationCode = "validCode"
         val activateAccountUseCase = mockk<ActivateAccountUseCase>()
-        val fakeUser = User(
-            name = "Yago",
-            lastName = "Perez",
-            email = "yago@mail.com",
-        )
-        coEvery { activateAccountUseCase(verificationCode) } returns EsmorgaResult.success(fakeUser)
+        coEvery { activateAccountUseCase(verificationCode) } returns EsmorgaResult.success(Unit)
 
         val sut = ActivateAccountViewModel(verificationCode, activateAccountUseCase)
         sut.onStart(lifeCycleOwner)
@@ -142,14 +137,9 @@ class ActivateAccountViewModelTest {
     fun `given successful activation when onContinueClicked is called then navigate to welcome screen`() = runTest {
         val verificationCode = "code"
         val activateAccountUseCase = mockk<ActivateAccountUseCase>()
-        val fakeUser = User(
-            name = "Yago",
-            lastName = "Perez",
-            email = "yago@mail.com",
-        )
         coEvery {
             activateAccountUseCase(verificationCode)
-        } returns EsmorgaResult(fakeUser)
+        } returns EsmorgaResult(Unit)
 
         val sut = ActivateAccountViewModel(verificationCode, activateAccountUseCase)
 
