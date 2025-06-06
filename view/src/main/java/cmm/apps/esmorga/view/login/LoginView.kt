@@ -25,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -75,9 +76,10 @@ fun LoginScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val localCoroutineScope = rememberCoroutineScope()
     val lifecycle = LocalLifecycleOwner.current.lifecycle
+    var initialSnackbarFromNavShown by rememberSaveable(snackbarMessage) { mutableStateOf(false) }
 
     lvm.observeLifecycleEvents(lifecycle)
-    LaunchedEffect(Unit) {
+    LaunchedEffect(snackbarMessage, initialSnackbarFromNavShown) {
         lvm.effect.collect { eff ->
             when (eff) {
                 is LoginEffect.ShowNoNetworkSnackbar -> localCoroutineScope.launch { snackbarHostState.showSnackbar(message = message) }
@@ -85,7 +87,12 @@ fun LoginScreen(
                 is LoginEffect.ShowFullScreenError -> onLoginError(eff.esmorgaErrorScreenArguments)
                 is LoginEffect.NavigateToEventList -> onLoginSuccess()
                 is LoginEffect.NavigateToForgotPassword -> onForgotPasswordClicked()
-                is LoginEffect.ShowInitSnackbar -> snackbarMessage?.let { localCoroutineScope.launch { snackbarHostState.showSnackbar(message = it) } }
+                is LoginEffect.ShowInitSnackbar -> if (snackbarMessage != null && !initialSnackbarFromNavShown) {
+                    localCoroutineScope.launch {
+                        snackbarHostState.showSnackbar(message = snackbarMessage)
+                        initialSnackbarFromNavShown = true
+                    }
+                }
             }
         }
     }
