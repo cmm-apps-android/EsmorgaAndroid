@@ -31,6 +31,7 @@ import cmm.apps.esmorga.domain.user.PerformLoginUseCase
 import cmm.apps.esmorga.domain.user.PerformRecoverPasswordUseCase
 import cmm.apps.esmorga.domain.user.PerformRegistrationConfirmationUseCase
 import cmm.apps.esmorga.domain.user.PerformRegistrationUserCase
+import cmm.apps.esmorga.domain.user.model.User
 import cmm.apps.esmorga.view.activateaccount.RegistrationConfirmationScreenTestTags.ACTIVATE_ACCOUNT_BUTTON
 import cmm.apps.esmorga.view.activateaccount.RegistrationConfirmationScreenTestTags.ACTIVATE_ACCOUNT_IMAGE
 import cmm.apps.esmorga.view.activateaccount.RegistrationConfirmationScreenTestTags.ACTIVATE_ACCOUNT_SUBTITLE
@@ -405,10 +406,10 @@ class NavigationTest {
     }
 
     @Test
-    fun `given account not activated, when activation screen is visited and button clicked, then navigate to WelcomeScreen`() {
+    fun `given account not activated, when activation screen is visited and button clicked, then navigate to EventsScreen`() {
         setNavigationFromDestination(Navigation.ActivateAccountScreen("VerificationCode"))
         composeTestRule.onNodeWithTag(ACTIVATE_ACCOUNT_BUTTON).performClick()
-        composeTestRule.onNodeWithTag(WELCOME_PRIMARY_BUTTON).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(EVENT_LIST_TITLE).assertIsDisplayed()
     }
 
     @Test

@@ -20,7 +20,7 @@ interface EsmorgaAuthApi {
     suspend fun emailVerification(@Body body: Map<String, String>)
 
     @PUT("account/activate")
-    suspend fun accountActivation(@Body body: Map<String, String>)
+    suspend fun accountActivation(@Body body: Map<String, String>): UserRemoteModel
 
     @POST("account/password/forgot-init")
     suspend fun recoverPassword(@Body body: Map<String, String>)

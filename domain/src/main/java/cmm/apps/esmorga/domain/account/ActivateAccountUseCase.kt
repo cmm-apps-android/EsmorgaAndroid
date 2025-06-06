@@ -1,6 +1,7 @@
 package cmm.apps.esmorga.domain.account
 
 import cmm.apps.esmorga.domain.result.EsmorgaResult
+import cmm.apps.esmorga.domain.user.model.User
 import cmm.apps.esmorga.domain.user.repository.UserRepository
 
 interface ActivateAccountUseCase {
