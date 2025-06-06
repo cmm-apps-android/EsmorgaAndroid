@@ -1,10 +1,10 @@
 package cmm.apps.esmorga.view.login
 
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cmm.apps.esmorga.common.util.ValidateTextFieldUtils.getFieldErrorText
-import cmm.apps.esmorga.domain.result.ErrorCodes
-import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.user.PerformLoginUseCase
 import cmm.apps.esmorga.domain.user.model.User.Companion.EMAIL_REGEX
 import cmm.apps.esmorga.domain.user.model.User.Companion.PASSWORD_REGEX
@@ -21,12 +21,17 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class LoginViewModel(private val performLoginUseCase: PerformLoginUseCase) : ViewModel() {
+class LoginViewModel(private val performLoginUseCase: PerformLoginUseCase, private val snackbarMessage: String? = null) : ViewModel(), DefaultLifecycleObserver {
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
     private val _effect: MutableSharedFlow<LoginEffect> = MutableSharedFlow(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val effect: SharedFlow<LoginEffect> = _effect.asSharedFlow()
+
+    override fun onResume(owner: LifecycleOwner) {
+        super.onResume(owner)
+        snackbarMessage?.let { _effect.tryEmit(LoginEffect.ShowInitSnackbar(it))  }
+    }
 
     fun onLoginClicked(email: String, password: String) {
         validateEmail(email, false)

@@ -25,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,6 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmm.apps.designsystem.EsmorgaButton
 import cmm.apps.designsystem.EsmorgaText
@@ -45,6 +47,7 @@ import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAILS_BACK_BUTTON
+import cmm.apps.esmorga.view.extensions.observeLifecycleEvents
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_EMAIL_INPUT
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_FORGOT_PASSWORD_BUTTON
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_LOGIN_BUTTON
@@ -56,11 +59,13 @@ import cmm.apps.esmorga.view.login.model.LoginUiState
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Screen
 @Composable
 fun LoginScreen(
-    lvm: LoginViewModel = koinViewModel(),
+    snackbarMessage: String?,
+    lvm: LoginViewModel = koinViewModel(parameters = { parametersOf(snackbarMessage) }),
     onRegisterClicked: () -> Unit,
     onForgotPasswordClicked: () -> Unit,
     onLoginSuccess: () -> Unit,
@@ -71,7 +76,11 @@ fun LoginScreen(
     val message = stringResource(R.string.snackbar_no_internet)
     val snackbarHostState = remember { SnackbarHostState() }
     val localCoroutineScope = rememberCoroutineScope()
-    LaunchedEffect(Unit) {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    var initialSnackbarFromNavShown by rememberSaveable(snackbarMessage) { mutableStateOf(false) }
+
+    lvm.observeLifecycleEvents(lifecycle)
+    LaunchedEffect(snackbarMessage, initialSnackbarFromNavShown) {
         lvm.effect.collect { eff ->
             when (eff) {
                 is LoginEffect.ShowNoNetworkSnackbar -> localCoroutineScope.launch { snackbarHostState.showSnackbar(message = message) }
@@ -79,6 +88,12 @@ fun LoginScreen(
                 is LoginEffect.ShowFullScreenError -> onLoginError(eff.esmorgaErrorScreenArguments)
                 is LoginEffect.NavigateToEventList -> onLoginSuccess()
                 is LoginEffect.NavigateToForgotPassword -> onForgotPasswordClicked()
+                is LoginEffect.ShowInitSnackbar -> if (!initialSnackbarFromNavShown) {
+                    localCoroutineScope.launch {
+                        snackbarHostState.showSnackbar(message = eff.message)
+                        initialSnackbarFromNavShown = true
+                    }
+                }
             }
         }
     }

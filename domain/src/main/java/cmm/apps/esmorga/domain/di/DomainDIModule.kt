@@ -24,6 +24,8 @@ import cmm.apps.esmorga.domain.user.PerformRegistrationConfirmationUseCase
 import cmm.apps.esmorga.domain.user.PerformRegistrationConfirmationUseCaseImpl
 import cmm.apps.esmorga.domain.user.PerformRegistrationUserCase
 import cmm.apps.esmorga.domain.user.PerformRegistrationUserCaseImpl
+import cmm.apps.esmorga.domain.user.repository.PerformResetPasswordUseCase
+import cmm.apps.esmorga.domain.user.repository.PerformResetPasswordUseCaseImpl
 import org.koin.dsl.module
 
 
@@ -42,6 +44,6 @@ object DomainDIModule {
         factory<LogOutUseCase> { LogOutUseCaseImpl(get()) }
         factory<PerformRecoverPasswordUseCase> { PerformRecoverPasswordUseCaseImpl(get()) }
         factory<ActivateAccountUseCase> { ActivateAccountUseCaseImpl(get()) }
+        factory<PerformResetPasswordUseCase> { PerformResetPasswordUseCaseImpl(get()) }
     }
-
 }

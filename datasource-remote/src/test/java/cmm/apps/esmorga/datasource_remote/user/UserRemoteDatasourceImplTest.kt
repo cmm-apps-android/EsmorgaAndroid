@@ -120,4 +120,28 @@ class UserRemoteDatasourceImplTest {
         val sut = UserRemoteDatasourceImpl(api, context)
         sut.recoverPassword("test@example.com")
     }
+
+    @Test
+    fun `given valid data, when resetPassword is succeed then Unit is returned`() = runTest {
+        val context = mockk<Context>(relaxed = true)
+        val api = mockk<EsmorgaAuthApi>(relaxed = true)
+        coEvery { api.resetPassword(any()) } returns Unit
+
+        val sut = UserRemoteDatasourceImpl(api, context)
+        val result = sut.resetPassword("347638", "password")
+
+        Assert.assertEquals(Unit, result)
+    }
+
+    @Test(expected = Exception::class)
+    fun `given api call fails when resetPassword is invoked then Exception is thrown `() = runTest {
+        val context = mockk<Context>(relaxed = true)
+        val api = mockk<EsmorgaAuthApi>(relaxed = true)
+        coEvery { api.resetPassword(any()) } throws HttpException(Response.error<ResponseBody>(400, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
+
+        val sut = UserRemoteDatasourceImpl(api, context)
+        val result = sut.resetPassword("347638", "password")
+
+        Assert.assertEquals(Unit, result)
+    }
 }

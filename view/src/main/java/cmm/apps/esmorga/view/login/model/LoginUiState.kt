@@ -21,6 +21,7 @@ sealed class LoginEffect {
     data object NavigateToEventList : LoginEffect()
     data class ShowFullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments = getEsmorgaErrorScreenArguments()) : LoginEffect()
     data object NavigateToForgotPassword : LoginEffect()
+    data class ShowInitSnackbar(val message: String) : LoginEffect()
 }
 
 object LoginViewHelper : KoinComponent{
