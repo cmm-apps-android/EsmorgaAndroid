@@ -133,7 +133,7 @@ fun ResetPasswordView(
                     }
                     .testTag(RESET_PASSWORD_NEW_PASSWORD_INPUT),
                 imeAction = ImeAction.Next,
-                keyboardType = KeyboardType.Email
+                keyboardType = KeyboardType.Password
             )
             EsmorgaTextField(
                 value = repeatPassword,
@@ -151,8 +151,8 @@ fun ResetPasswordView(
                         }
                     }
                     .testTag(RESET_PASSWORD_REPEAT_PASSWORD_INPUT),
-                imeAction = ImeAction.Next,
-                keyboardType = KeyboardType.Email
+                imeAction = ImeAction.Done,
+                keyboardType = KeyboardType.Password
             )
             Spacer(modifier = Modifier.height(32.dp))
             EsmorgaButton(
