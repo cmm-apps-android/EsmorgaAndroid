@@ -40,10 +40,9 @@ class UserRepositoryImpl(private val localDs: UserDatasource, private val remote
         remoteDs.recoverPassword(email)
     }
 
-    override suspend fun activateAccount(verificationCode: String): User {
+    override suspend fun activateAccount(verificationCode: String) {
         val userDataModel = remoteDs.activateAccount(verificationCode)
         localDs.saveUser(userDataModel)
         localEventDs.deleteCacheEvents()
-        return userDataModel.toUser()
     }
 }
