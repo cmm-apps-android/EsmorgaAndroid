@@ -59,17 +59,18 @@ import cmm.apps.esmorga.view.login.model.LoginUiState
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Screen
 @Composable
 fun LoginScreen(
-    lvm: LoginViewModel = koinViewModel(),
+    snackbarMessage: String?,
+    lvm: LoginViewModel = koinViewModel(parameters = { parametersOf(snackbarMessage) }),
     onRegisterClicked: () -> Unit,
     onForgotPasswordClicked: () -> Unit,
     onLoginSuccess: () -> Unit,
     onLoginError: (EsmorgaErrorScreenArguments) -> Unit,
-    onBackClicked: () -> Unit,
-    snackbarMessage: String?
+    onBackClicked: () -> Unit
 ) {
     val uiState: LoginUiState by lvm.uiState.collectAsStateWithLifecycle()
     val message = stringResource(R.string.snackbar_no_internet)
@@ -87,9 +88,9 @@ fun LoginScreen(
                 is LoginEffect.ShowFullScreenError -> onLoginError(eff.esmorgaErrorScreenArguments)
                 is LoginEffect.NavigateToEventList -> onLoginSuccess()
                 is LoginEffect.NavigateToForgotPassword -> onForgotPasswordClicked()
-                is LoginEffect.ShowInitSnackbar -> if (snackbarMessage != null && !initialSnackbarFromNavShown) {
+                is LoginEffect.ShowInitSnackbar -> if (!initialSnackbarFromNavShown) {
                     localCoroutineScope.launch {
-                        snackbarHostState.showSnackbar(message = snackbarMessage)
+                        snackbarHostState.showSnackbar(message = eff.message)
                         initialSnackbarFromNavShown = true
                     }
                 }

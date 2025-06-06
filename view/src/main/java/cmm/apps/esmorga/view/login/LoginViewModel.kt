@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class LoginViewModel(private val performLoginUseCase: PerformLoginUseCase) : ViewModel(), DefaultLifecycleObserver {
+class LoginViewModel(private val performLoginUseCase: PerformLoginUseCase, private val snackbarMessage: String? = null) : ViewModel(), DefaultLifecycleObserver {
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
@@ -30,7 +30,7 @@ class LoginViewModel(private val performLoginUseCase: PerformLoginUseCase) : Vie
 
     override fun onResume(owner: LifecycleOwner) {
         super.onResume(owner)
-        _effect.tryEmit(LoginEffect.ShowInitSnackbar)
+        snackbarMessage?.let { _effect.tryEmit(LoginEffect.ShowInitSnackbar(it))  }
     }
 
     fun onLoginClicked(email: String, password: String) {
