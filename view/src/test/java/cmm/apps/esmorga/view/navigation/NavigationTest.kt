@@ -415,10 +415,10 @@ class NavigationTest {
     }
 
     @Test
-    fun `given account not activated, when activation screen is visited and button clicked, then navigate to WelcomeScreen`() {
+    fun `given account not activated, when activation screen is visited and button clicked, then navigate to EventsScreen`() {
         setNavigationFromDestination(Navigation.ActivateAccountScreen("VerificationCode"))
         composeTestRule.onNodeWithTag(ACTIVATE_ACCOUNT_BUTTON).performClick()
-        composeTestRule.onNodeWithTag(WELCOME_PRIMARY_BUTTON).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(EVENT_LIST_TITLE).assertIsDisplayed()
     }
 
     @Test

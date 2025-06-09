@@ -17,6 +17,7 @@ class ActivateAccountUseCaseImplTest {
     fun `given a successful repository when activate account is called then return success`() = runTest {
         val code = "validCode"
         val repo = mockk<UserRepository>(relaxed = true)
+
         coEvery { repo.activateAccount(code) } returns Unit
 
         val sut = ActivateAccountUseCaseImpl(repo)
