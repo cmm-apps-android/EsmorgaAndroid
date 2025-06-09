@@ -62,4 +62,16 @@ class UserRemoteDatasourceImpl(private val api: EsmorgaAuthApi, private val cont
             throw manageApiException(e, context)
         }
     }
+
+    override suspend fun resetPassword(code: String, password: String) {
+        try {
+            val body = mapOf(
+                "password" to password,
+                "forgotPasswordCode" to code
+            )
+            api.resetPassword(body)
+        } catch (e: Exception) {
+            throw manageApiException(e, context)
+        }
+    }
 }

@@ -8,6 +8,7 @@ import cmm.apps.esmorga.view.eventlist.EventListViewModel
 import cmm.apps.esmorga.view.eventlist.MyEventListViewModel
 import cmm.apps.esmorga.view.login.LoginViewModel
 import cmm.apps.esmorga.view.password.RecoverPasswordViewModel
+import cmm.apps.esmorga.view.password.ResetPasswordViewModel
 import cmm.apps.esmorga.view.profile.ProfileViewModel
 import cmm.apps.esmorga.view.registration.RegistrationConfirmationViewModel
 import cmm.apps.esmorga.view.registration.RegistrationViewModel
@@ -34,8 +35,8 @@ object ViewDIModule {
         viewModel {
             WelcomeViewModel()
         }
-        viewModel {
-            LoginViewModel(get())
+        viewModel { (message: String?) ->
+            LoginViewModel(get(), message)
         }
         viewModel {
             RegistrationViewModel(get())
@@ -52,5 +53,7 @@ object ViewDIModule {
         viewModel { (verificationCode: String) ->
             ActivateAccountViewModel(verificationCode, get())
         }
+
+        viewModel { ResetPasswordViewModel(get()) }
     }
 }
