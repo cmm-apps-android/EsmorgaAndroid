@@ -1,6 +1,7 @@
 package cmm.apps.esmorga.view.viewmodel.login
 
 import android.content.Context
+import androidx.lifecycle.LifecycleOwner
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import app.cash.turbine.test
@@ -33,6 +34,7 @@ class LoginViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
+    private val lifeCycleOwner = mockk<LifecycleOwner>()
     private lateinit var mockContext: Context
 
     @Before
@@ -211,6 +213,30 @@ class LoginViewModelTest {
             sut.onForgotPasswordClicked()
             val effect = awaitItem()
             Assert.assertTrue(effect is LoginEffect.NavigateToForgotPassword)
+        }
+    }
+
+    @Test
+    fun `given message passed to ViewModel when onResume is called then ShowInitSnackbar effect with message is emitted`() = runTest {
+        val useCase = mockk<PerformLoginUseCase>(relaxed = true)
+        val sut = LoginViewModel(useCase, "message")
+
+        sut.effect.test {
+            sut.onResume(lifeCycleOwner)
+            val effect = awaitItem()
+            Assert.assertTrue(effect is LoginEffect.ShowInitSnackbar)
+            Assert.assertEquals("message", (effect as LoginEffect.ShowInitSnackbar).message)
+        }
+    }
+
+    @Test
+    fun `given null message when onResume then no snackbar effect`() = runTest {
+        val useCase = mockk<PerformLoginUseCase>(relaxed = true)
+        val sut = LoginViewModel(useCase, null)
+
+        sut.effect.test {
+            sut.onResume(lifeCycleOwner)
+            expectNoEvents()
         }
     }
 }

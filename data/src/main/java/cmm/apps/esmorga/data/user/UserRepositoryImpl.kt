@@ -45,4 +45,8 @@ class UserRepositoryImpl(private val localDs: UserDatasource, private val remote
         localDs.saveUser(userDataModel)
         localEventDs.deleteCacheEvents()
     }
+
+    override suspend fun resetPassword(code: String, password: String) {
+        remoteDs.resetPassword(code, password)
+    }
 }
