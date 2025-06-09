@@ -1,9 +1,7 @@
 package cmm.apps.esmorga.view.password
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -113,9 +111,9 @@ fun ResetPasswordView(
                 text = stringResource(id = R.string.reset_password_screen_title),
                 style = EsmorgaTextStyle.HEADING_1,
                 modifier = Modifier
+                    .padding(bottom = 16.dp)
                     .testTag(RESET_PASSWORD_TITLE)
             )
-            Spacer(modifier = Modifier.height(16.dp))
             EsmorgaTextField(
                 value = password,
                 onValueChange = {
@@ -154,11 +152,11 @@ fun ResetPasswordView(
                 imeAction = ImeAction.Done,
                 keyboardType = KeyboardType.Password
             )
-            Spacer(modifier = Modifier.height(32.dp))
             EsmorgaButton(
                 text = stringResource(id = R.string.reset_password_button),
                 primary = true,
                 modifier = Modifier
+                    .padding(top = 32.dp)
                     .testTag(RESET_PASSWORD_CHANGE_PASSWORD_BUTTON),
                 isEnabled = uiState.enableButton(password, repeatPassword),
                 isLoading = uiState.isLoading
