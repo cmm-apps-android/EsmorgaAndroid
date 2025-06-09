@@ -4,6 +4,7 @@ import cmm.apps.esmorga.data.event.datasource.EventDatasource
 import cmm.apps.esmorga.data.mock.EventDataMock
 import cmm.apps.esmorga.data.mock.UserDataMock
 import cmm.apps.esmorga.data.user.datasource.UserDatasource
+import cmm.apps.esmorga.data.user.model.UserDataModel
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.Source
 import io.mockk.coEvery
@@ -166,15 +167,23 @@ class UserRepositoryImplTest {
         val localDS = mockk<UserDatasource>(relaxed = true)
         val remoteDS = mockk<UserDatasource>(relaxed = true)
         val localEventDS = mockk<EventDatasource>(relaxed = true)
+        val fakeUserDataModel = UserDataModel(
+            dataName = "Yago",
+            dataLastName = "Perez",
+            dataEmail = "yago@mail.com",
+            dataAccessToken = "fakeAccessToken123",
+            dataRefreshToken = "fakeRefreshToken123"
+        )
 
-        coEvery { remoteDS.activateAccount(any()) } returns Unit
+        coEvery { remoteDS.activateAccount(any()) } returns fakeUserDataModel
 
         val sut = UserRepositoryImpl(localDS, remoteDS, localEventDS)
 
         val code = "123456"
         sut.activateAccount(code)
 
-        coVerify { remoteDS.activateAccount(code) }
+        coVerify { localDS.saveUser(fakeUserDataModel) }
+        coVerify { localEventDS.deleteCacheEvents()}
     }
 
     @Test(expected = EsmorgaException::class)
