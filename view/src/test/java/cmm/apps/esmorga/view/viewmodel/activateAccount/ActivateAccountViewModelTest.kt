@@ -10,7 +10,6 @@ import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.EsmorgaResult
 import cmm.apps.esmorga.domain.result.Source
-import cmm.apps.esmorga.domain.user.model.User
 import cmm.apps.esmorga.view.activateaccount.ActivateAccountViewModel
 import cmm.apps.esmorga.view.activateaccount.model.ActivateAccountEffect
 import cmm.apps.esmorga.view.viewmodel.util.MainDispatcherRule
