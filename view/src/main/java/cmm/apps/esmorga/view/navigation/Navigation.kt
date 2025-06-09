@@ -120,7 +120,7 @@ private fun NavGraphBuilder.accountActivationFlow(navigationController: NavHostC
         ActivateAccountScreen(
             backStackEntry.toRoute<Navigation.ActivateAccountScreen>().verificationCode,
             onContinueClick = {
-                navigationController.navigate(Navigation.WelcomeScreen) {
+                navigationController.navigate(Navigation.EventListScreen) {
                     popUpTo(0) {
                         inclusive = true
                     }
