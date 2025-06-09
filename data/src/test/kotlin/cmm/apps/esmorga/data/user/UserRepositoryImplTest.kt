@@ -183,7 +183,8 @@ class UserRepositoryImplTest {
         sut.activateAccount(code)
 
         coVerify { remoteDS.activateAccount(code) }
-    }
+        coVerify { localDS.saveUser(fakeUserDataModel) }
+        coVerify { localEventDS.deleteCacheEvents()}    }
 
     @Test(expected = EsmorgaException::class)
     fun `given a verification code when activateAccount fails then throws exception`() = runTest {
