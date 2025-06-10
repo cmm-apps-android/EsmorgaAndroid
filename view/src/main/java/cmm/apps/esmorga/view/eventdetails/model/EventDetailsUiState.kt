@@ -3,8 +3,8 @@ package cmm.apps.esmorga.view.eventdetails.model
 import android.content.Context
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
+import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArgumentsHelper.getEsmorgaDefaultErrorScreenArguments
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiStateHelper.getEsmorgaNoNetworkScreenArguments
-import cmm.apps.esmorga.view.login.model.LoginViewHelper.getEsmorgaErrorScreenArguments
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -48,8 +48,8 @@ sealed class EventDetailsEffect {
     data object NavigateBack : EventDetailsEffect()
     data object NavigateToLoginScreen : EventDetailsEffect()
     data object ShowJoinEventSuccess : EventDetailsEffect()
-    data object ShowLeaveEventSuccess: EventDetailsEffect()
+    data object ShowLeaveEventSuccess : EventDetailsEffect()
     data class ShowNoNetworkError(val esmorgaNoNetworkArguments: EsmorgaErrorScreenArguments = getEsmorgaNoNetworkScreenArguments()) : EventDetailsEffect()
     data class NavigateToLocation(val lat: Double, val lng: Double) : EventDetailsEffect()
-    data class ShowFullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments = getEsmorgaErrorScreenArguments()) : EventDetailsEffect()
+    data class ShowFullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments = getEsmorgaDefaultErrorScreenArguments()) : EventDetailsEffect()
 }
