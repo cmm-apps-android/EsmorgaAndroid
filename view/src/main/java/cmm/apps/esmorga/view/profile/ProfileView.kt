@@ -1,9 +1,7 @@
 package cmm.apps.esmorga.view.profile
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,13 +9,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -26,15 +21,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import cmm.apps.designsystem.EsmorgaButton
 import cmm.apps.designsystem.EsmorgaGuestError
 import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextStyle
@@ -46,7 +40,6 @@ import cmm.apps.esmorga.view.profile.HomeScreenTestTags.PROFILE_TITLE
 import cmm.apps.esmorga.view.profile.model.ProfileEffect
 import cmm.apps.esmorga.view.profile.model.ProfileUiState
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
-import cmm.apps.esmorga.view.theme.Lavender
 import org.koin.androidx.compose.koinViewModel
 
 @Screen
@@ -105,7 +98,6 @@ fun ProfileView(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Lavender)
             .padding(16.dp)
     ) {
         EsmorgaText(
@@ -218,12 +210,9 @@ private fun LoggedProfileView(
 
 @Composable
 fun LogoutDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
-    val primaryColor = colorResource(id = R.color.primary)
-    val secondaryColor = colorResource(id = R.color.secondary)
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        containerColor = Color.White,
 
         title = {
             EsmorgaText(
@@ -237,40 +226,25 @@ fun LogoutDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
         text = null,
 
         dismissButton = {
-            Box(
-                modifier = Modifier
-                    .background(secondaryColor, shape = RoundedCornerShape(6.dp))
-                    .clickable { onDismiss() }
-                    .padding(vertical = 8.dp, horizontal = 24.dp),
-                contentAlignment = Alignment.Center
+            EsmorgaButton(
+                text = stringResource(R.string.my_profile_logout_pop_up_cancel),
+                primary = false,
+                isFillMaxWidth = false
             ) {
-                Text(
-                    text = stringResource(R.string.my_profile_logout_pop_up_cancel),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.Black
-                )
+                onDismiss()
             }
         },
 
         confirmButton = {
-            Box(
-                modifier = Modifier
-                    .background(primaryColor, shape = RoundedCornerShape(6.dp))
-                    .clickable {
-                        onDismiss()
-                        onConfirm()
-                    }
-                    .padding(vertical = 8.dp, horizontal = 24.dp),
-                contentAlignment = Alignment.Center
+            EsmorgaButton(
+                text = stringResource(R.string.my_profile_logout_pop_up_confirm),
+                primary = true,
+                isFillMaxWidth = false
             ) {
-                Text(
-                    text = stringResource(R.string.my_profile_logout_pop_up_confirm),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White
-                )
+                onDismiss()
+                onConfirm()
             }
         }
-
     )
 }
 
