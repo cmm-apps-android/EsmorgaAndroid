@@ -171,27 +171,29 @@ private fun LoggedProfileView(
             style = EsmorgaTextStyle.HEADING_1
         )
         Spacer(modifier = Modifier.height(16.dp))
+        
+// The following code is commented out due to release 1, in which the change password functionality is not yet implemented, and that's why we hide the button from the user.
 
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp)
-                .clickable {
-                    onChangePassword()
-                }
-        ) {
-            EsmorgaText(
-                text = stringResource(R.string.my_profile_changue_password),
-                style = EsmorgaTextStyle.HEADING_2
-            )
-
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                contentDescription = stringResource(R.string.content_description_forward_icon)
-            )
-        }
+//        Row(
+//            horizontalArrangement = Arrangement.SpaceBetween,
+//            verticalAlignment = Alignment.CenterVertically,
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(vertical = 16.dp)
+//                .clickable {
+//                    onChangePassword()
+//                }
+//        ) {
+//            EsmorgaText(
+//                text = stringResource(R.string.my_profile_changue_password),
+//                style = EsmorgaTextStyle.HEADING_2
+//            )
+//
+//            Icon(
+//                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+//                contentDescription = stringResource(R.string.content_description_forward_icon)
+//            )
+//        }
 
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
