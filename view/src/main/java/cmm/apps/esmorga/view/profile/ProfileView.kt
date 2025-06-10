@@ -128,7 +128,7 @@ fun ProfileView(
                 lastName = uiState.user.lastName,
                 email = uiState.user.email,
                 onLogout = { shownLogOutDialog() },
-                onChangePassword = { onChangePassword() },
+                //onChangePassword = { onChangePassword() },
             )
         }
     }
@@ -140,9 +140,9 @@ private fun LoggedProfileView(
     lastName: String,
     email: String,
     onLogout: () -> Unit,
-    onChangePassword: () -> Unit
 ) {
     var shownDialog by remember { mutableStateOf(false) }
+    val changuePasswordEnabled = false
 
     if (shownDialog) {
         LogoutDialog(onConfirm = onLogout, onDismiss = { shownDialog = false })
@@ -172,26 +172,28 @@ private fun LoggedProfileView(
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp)
-                .clickable {
-                    onChangePassword()
-                }
-        ) {
-            EsmorgaText(
-                text = stringResource(R.string.my_profile_changue_password),
-                style = EsmorgaTextStyle.HEADING_2
-            )
+//          The following code is commented out due to release 1, in which the change password functionality is not yet implemented, and that's why we hide the button from the user.
 
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                contentDescription = stringResource(R.string.content_description_forward_icon)
-            )
-        }
+//            Row(
+//                horizontalArrangement = Arrangement.SpaceBetween,
+//                verticalAlignment = Alignment.CenterVertically,
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(vertical = 16.dp)
+//                    .clickable {
+//                        onChangePassword()
+//                    }
+//            ) {
+//                EsmorgaText(
+//                    text = stringResource(R.string.my_profile_changue_password),
+//                    style = EsmorgaTextStyle.HEADING_2
+//                )
+//
+//                Icon(
+//                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+//                    contentDescription = stringResource(R.string.content_description_forward_icon)
+//                )
+//            }
 
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
