@@ -5,11 +5,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -32,12 +34,16 @@ fun EsmorgaRow(
         ) {
             EsmorgaText(
                 text = title,
-                style = EsmorgaTextStyle.HEADING_2
+                style = EsmorgaTextStyle.HEADING_2,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
             subtitle?.let {
                 EsmorgaText(
                     text = subtitle,
-                    style = EsmorgaTextStyle.BODY_1
+                    style = EsmorgaTextStyle.BODY_1,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
         }
@@ -49,7 +55,10 @@ fun EsmorgaRow(
             caption?.let {
                 EsmorgaText(
                     text = caption,
-                    style = EsmorgaTextStyle.CAPTION
+                    style = EsmorgaTextStyle.CAPTION,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.widthIn(max = 80.dp)
                 )
             }
 
