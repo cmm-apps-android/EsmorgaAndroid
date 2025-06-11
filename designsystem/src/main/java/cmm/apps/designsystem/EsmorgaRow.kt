@@ -36,14 +36,12 @@ fun EsmorgaRow(
                 text = title,
                 style = EsmorgaTextStyle.HEADING_2,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
             )
             subtitle?.let {
                 EsmorgaText(
                     text = subtitle,
                     style = EsmorgaTextStyle.BODY_1,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
                 )
             }
         }
@@ -57,7 +55,6 @@ fun EsmorgaRow(
                     text = caption,
                     style = EsmorgaTextStyle.CAPTION,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.widthIn(max = 80.dp)
                 )
             }
