@@ -3,7 +3,7 @@ package cmm.apps.esmorga.view.registration.model
 import android.content.Context
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
-import cmm.apps.esmorga.view.registration.model.RegistrationViewHelper.getEsmorgaErrorScreenArguments
+import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArgumentsHelper.getEsmorgaDefaultErrorScreenArguments
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -22,15 +22,11 @@ data class RegistrationUiState(
 sealed class RegistrationEffect {
     data object ShowNoNetworkSnackbar : RegistrationEffect()
     data class NavigateToEmailConfirmation(val email: String) : RegistrationEffect()
-    data class ShowFullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments = getEsmorgaErrorScreenArguments()) : RegistrationEffect()
+    data class ShowFullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments = getEsmorgaDefaultErrorScreenArguments()) : RegistrationEffect()
 }
 
 object RegistrationViewHelper : KoinComponent {
     private val context: Context by inject()
-    fun getEsmorgaErrorScreenArguments() = EsmorgaErrorScreenArguments(
-        title = context.getString(R.string.default_error_title_expanded),
-        buttonText = context.getString(R.string.button_retry)
-    )
 
     fun getNameErrorText() = context.getString(R.string.inline_error_name)
     fun getLastNameErrorText() = context.getString(R.string.inline_error_last_name)

@@ -3,7 +3,7 @@ package cmm.apps.esmorga.view.password.model
 import android.content.Context
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
-import cmm.apps.esmorga.view.login.model.LoginViewHelper.getEsmorgaErrorScreenArguments
+import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArgumentsHelper.getEsmorgaDefaultErrorScreenArguments
 import cmm.apps.esmorga.view.password.model.ResetPasswordViewHelper.getEsmorgaMessageSnackBarSuccess
 import cmm.apps.esmorga.view.password.model.ResetPasswordViewHelper.getNoInternetSnackbarMessage
 import org.koin.core.component.KoinComponent
@@ -20,7 +20,7 @@ data class ResetPasswordUiState(
 
 sealed class ResetPasswordEffect {
     data class NavigateToLogin(val snackbarMessage: String = getEsmorgaMessageSnackBarSuccess()) : ResetPasswordEffect()
-    data class ShowFullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments = getEsmorgaErrorScreenArguments()) : ResetPasswordEffect()
+    data class ShowFullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments = getEsmorgaDefaultErrorScreenArguments()) : ResetPasswordEffect()
     data class ShowNoConnectionSnackbar(val message: String = getNoInternetSnackbarMessage()) : ResetPasswordEffect()
 }
 
