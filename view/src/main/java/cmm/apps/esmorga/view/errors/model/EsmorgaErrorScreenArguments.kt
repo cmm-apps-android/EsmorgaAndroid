@@ -2,7 +2,6 @@ package cmm.apps.esmorga.view.errors.model
 
 import android.content.Context
 import cmm.apps.esmorga.view.R
-
 import kotlinx.serialization.Serializable
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
