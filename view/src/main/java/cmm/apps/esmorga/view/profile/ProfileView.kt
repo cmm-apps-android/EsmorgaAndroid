@@ -4,10 +4,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
@@ -59,7 +57,7 @@ fun ProfileScreen(
         rvm.effect.collect { eff ->
             when (eff) {
                 ProfileEffect.NavigateToChangePassword -> {
-                    //TODO to be done in MOB-27
+                    //TODO to be done in MOB-176
                 }
 
                 ProfileEffect.NavigateToLogOut -> {
@@ -148,21 +146,18 @@ private fun LoggedProfileView(
             text = stringResource(R.string.my_profile_name),
             style = EsmorgaTextStyle.HEADING_1
         )
-        EsmorgaText(text = "$name $lastName", style = EsmorgaTextStyle.BODY_1)
-        Spacer(modifier = Modifier.height(52.dp))
+        EsmorgaText(text = "$name $lastName", style = EsmorgaTextStyle.BODY_1, modifier = Modifier.padding(bottom = 52.dp))
 
         EsmorgaText(
             text = stringResource(R.string.my_profile_email),
             style = EsmorgaTextStyle.HEADING_1
         )
-        EsmorgaText(text = email, style = EsmorgaTextStyle.BODY_1)
-        Spacer(modifier = Modifier.height(52.dp))
+        EsmorgaText(text = email, style = EsmorgaTextStyle.BODY_1, modifier = Modifier.padding(bottom = 52.dp))
 
         EsmorgaText(
             text = stringResource(R.string.my_profile_options),
-            style = EsmorgaTextStyle.HEADING_1
+            style = EsmorgaTextStyle.HEADING_1, modifier = Modifier.padding(bottom = 16.dp)
         )
-        Spacer(modifier = Modifier.height(16.dp))
 
 // The following code is commented out due to release 1, in which the change password functionality is not implemented yet, and that's why we hide the button from the user.
 
