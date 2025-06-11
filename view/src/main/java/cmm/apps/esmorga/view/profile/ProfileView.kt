@@ -162,9 +162,9 @@ private fun LoggedProfileView(
 
 
         // The following code is commented out due to release 1, in which the change password functionality is not implemented yet, and that's why we hide the button from the user.
-        //EsmorgaRow(title = stringResource(R.string.my_profile_changue_password), icon = Icons.AutoMirrored.Filled.ArrowForward, modifier = Modifier.clickable { onChangePassword() } )
+        //EsmorgaRow(title = stringResource(R.string.my_profile_changue_password), modifier = Modifier.clickable { onChangePassword() } )
 
-        EsmorgaRow(title = stringResource(R.string.my_profile_logout), icon = Icons.AutoMirrored.Filled.ArrowForward, modifier = Modifier.clickable { shownDialog = true } )
+        EsmorgaRow(title = stringResource(R.string.my_profile_logout), modifier = Modifier.clickable { shownDialog = true } )
     }
 }
 
