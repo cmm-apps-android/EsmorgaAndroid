@@ -28,6 +28,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmm.apps.designsystem.EsmorgaButton
 import cmm.apps.designsystem.EsmorgaGuestError
+import cmm.apps.designsystem.EsmorgaRow
 import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.view.R
@@ -159,47 +160,11 @@ private fun LoggedProfileView(
             style = EsmorgaTextStyle.HEADING_1, modifier = Modifier.padding(bottom = 16.dp)
         )
 
-// The following code is commented out due to release 1, in which the change password functionality is not implemented yet, and that's why we hide the button from the user.
 
-//        Row(
-//            horizontalArrangement = Arrangement.SpaceBetween,
-//            verticalAlignment = Alignment.CenterVertically,
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(vertical = 16.dp)
-//                .clickable {
-//                    onChangePassword()
-//                }
-//        ) {
-//            EsmorgaText(
-//                text = stringResource(R.string.my_profile_changue_password),
-//                style = EsmorgaTextStyle.HEADING_2
-//            )
-//
-//            Icon(
-//                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-//                contentDescription = stringResource(R.string.content_description_forward_icon)
-//            )
-//        }
+        // The following code is commented out due to release 1, in which the change password functionality is not implemented yet, and that's why we hide the button from the user.
+        //EsmorgaRow(title = stringResource(R.string.my_profile_changue_password), icon = Icons.AutoMirrored.Filled.ArrowForward, modifier = Modifier.clickable { onChangePassword() } )
 
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp)
-                .clickable { shownDialog = true }
-        ) {
-            EsmorgaText(
-                text = stringResource(R.string.my_profile_logout),
-                style = EsmorgaTextStyle.HEADING_2
-            )
-
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                contentDescription = stringResource(R.string.content_description_forward_icon)
-            )
-        }
+        EsmorgaRow(title = stringResource(R.string.my_profile_logout), icon = Icons.AutoMirrored.Filled.ArrowForward, modifier = Modifier.clickable { shownDialog = true } )
     }
 }
 
