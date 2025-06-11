@@ -9,14 +9,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 
 @Composable
-fun EsmorgaText(text: String, style: EsmorgaTextStyle, modifier: Modifier = Modifier, textAlign: TextAlign = TextAlign.Start, maxLines: Int = Int.MAX_VALUE, overflow: TextOverflow = TextOverflow.Ellipsis) {
+fun EsmorgaText(text: String, style: EsmorgaTextStyle, modifier: Modifier = Modifier, textAlign: TextAlign = TextAlign.Start, maxLines: Int = Int.MAX_VALUE) {
     Text(
         text = text,
         style = getTextStyle(style),
         modifier = modifier,
         textAlign = textAlign,
         maxLines = maxLines,
-        overflow = overflow
+        overflow = TextOverflow.Ellipsis
     )
 }
 
