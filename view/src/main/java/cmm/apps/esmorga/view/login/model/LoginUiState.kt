@@ -3,7 +3,7 @@ package cmm.apps.esmorga.view.login.model
 import android.content.Context
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
-import cmm.apps.esmorga.view.login.model.LoginViewHelper.getEsmorgaErrorScreenArguments
+import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArgumentsHelper.getEsmorgaDefaultErrorScreenArguments
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -19,17 +19,13 @@ sealed class LoginEffect {
     data object NavigateToRegistration : LoginEffect()
     data object ShowNoNetworkSnackbar : LoginEffect()
     data object NavigateToEventList : LoginEffect()
-    data class ShowFullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments = getEsmorgaErrorScreenArguments()) : LoginEffect()
+    data class ShowFullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments = getEsmorgaDefaultErrorScreenArguments()) : LoginEffect()
     data object NavigateToForgotPassword : LoginEffect()
     data class ShowInitSnackbar(val message: String) : LoginEffect()
 }
 
 object LoginViewHelper : KoinComponent{
     private val context : Context by inject()
-    fun getEsmorgaErrorScreenArguments() = EsmorgaErrorScreenArguments(
-        title = context.getString(R.string.default_error_title_expanded),
-        buttonText = context.getString(R.string.button_retry)
-    )
 
     fun getEmailErrorText() = context.getString(R.string.inline_error_email)
     fun getPasswordErrorText() = context.getString(R.string.inline_error_password)
