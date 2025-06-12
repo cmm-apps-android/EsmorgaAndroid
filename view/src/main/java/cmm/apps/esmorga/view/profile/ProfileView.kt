@@ -137,9 +137,7 @@ private fun LoggedProfileView(
     var shownDialog by remember { mutableStateOf(false) }
 
     if (shownDialog) {
-        LogoutDialog(
-            onConfirm = onLogout,
-            onDismiss = { shownDialog = false })
+        LogoutDialog(onConfirm = onLogout, onDismiss = { shownDialog = false })
     }
 
     Column(
