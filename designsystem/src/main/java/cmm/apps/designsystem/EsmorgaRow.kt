@@ -12,7 +12,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -55,12 +54,12 @@ fun EsmorgaRow(
                     text = caption,
                     style = EsmorgaTextStyle.CAPTION,
                     maxLines = 1,
-                    modifier = Modifier.widthIn(max = 80.dp)
+                    modifier = Modifier.widthIn(max = 74.dp)
                 )
             }
 
             Icon(
-                imageVector =  Icons.AutoMirrored.Filled.ArrowForward,
+                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                 contentDescription = "Icono adelante"
             )
         }
