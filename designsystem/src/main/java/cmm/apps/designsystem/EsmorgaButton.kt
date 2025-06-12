@@ -17,12 +17,11 @@ fun EsmorgaButton(
     isLoading: Boolean = false,
     isEnabled: Boolean = true,
     primary: Boolean = true,
-    isFillMaxWidth: Boolean = true,
     onClick: () -> Unit
 ) {
     Button(
         shape = RoundedCornerShape(5.dp),
-        modifier = if (isFillMaxWidth) modifier.fillMaxWidth() else modifier,
+        modifier = modifier.fillMaxWidth(),
         colors = ButtonDefaults.buttonColors().copy(
             contentColor = if (primary) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondary,
             containerColor = if (primary) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary,
