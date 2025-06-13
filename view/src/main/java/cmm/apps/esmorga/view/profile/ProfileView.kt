@@ -1,33 +1,23 @@
 package cmm.apps.esmorga.view.profile
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import cmm.apps.designsystem.EsmorgaButton
+import cmm.apps.designsystem.EsmorgaDialog
 import cmm.apps.designsystem.EsmorgaGuestError
 import cmm.apps.designsystem.EsmorgaRow
 import cmm.apps.designsystem.EsmorgaText
@@ -137,7 +127,12 @@ private fun LoggedProfileView(
     var shownDialog by remember { mutableStateOf(false) }
 
     if (shownDialog) {
-        LogoutDialog(onConfirm = onLogout, onDismiss = { shownDialog = false })
+        EsmorgaDialog(
+            title = stringResource(R.string.my_profile_logout_pop_up_title),
+            dismissButtonText = stringResource(R.string.my_profile_logout_pop_up_cancel),
+            confirmButtonText = stringResource(R.string.my_profile_logout_pop_up_confirm),
+            onConfirm = onLogout,
+            onDismiss = { shownDialog = false })
     }
 
     Column(
@@ -162,60 +157,6 @@ private fun LoggedProfileView(
         )
 
         EsmorgaRow(title = stringResource(R.string.my_profile_logout), modifier = Modifier.clickable { shownDialog = true })
-    }
-}
-
-@Composable
-fun LogoutDialog(
-    onConfirm: () -> Unit,
-    onDismiss: () -> Unit
-) {
-    Dialog(onDismissRequest = {
-        onDismiss()
-    }) {
-        Surface(
-            shape = MaterialTheme.shapes.small,
-            color = MaterialTheme.colorScheme.surfaceContainerLow,
-            tonalElevation = 8.dp
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(end = 16.dp, start = 16.dp, top = 32.dp, bottom = 16.dp)
-                    .fillMaxWidth()
-            ) {
-                EsmorgaText(
-                    text = stringResource(R.string.my_profile_logout_pop_up_title),
-                    style = EsmorgaTextStyle.BODY_1,
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(bottom = 16.dp)
-                )
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    EsmorgaButton(
-                        text = stringResource(R.string.my_profile_logout_pop_up_cancel),
-                        onClick = {
-                            onDismiss()
-                        },
-                        modifier = Modifier
-                            .wrapContentSize(unbounded = true),
-                        primary = false
-                    )
-                    Spacer(Modifier.width(12.dp))
-                    EsmorgaButton(
-                        text = stringResource(R.string.my_profile_logout_pop_up_confirm),
-                        modifier = Modifier.wrapContentSize(unbounded = true),
-                        onClick = {
-                            onDismiss()
-                            onConfirm()
-                        }
-                    )
-                }
-            }
-        }
     }
 }
 
