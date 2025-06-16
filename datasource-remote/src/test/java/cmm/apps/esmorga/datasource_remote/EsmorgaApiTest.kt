@@ -1,8 +1,11 @@
 package cmm.apps.esmorga.datasource_remote
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.os.Build
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import cmm.apps.esmorga.datasource_remote.api.EsmorgaApi
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaAuthApi
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaGuestApi
 import cmm.apps.esmorga.datasource_remote.api.NetworkApiHelper
@@ -10,6 +13,7 @@ import cmm.apps.esmorga.datasource_remote.mock.EsmorgaAuthenticationMock.getAuth
 import cmm.apps.esmorga.datasource_remote.mock.EsmorgaAuthenticationMock.getEsmorgaAuthenticatorMock
 import cmm.apps.esmorga.datasource_remote.mock.MockServer
 import cmm.apps.esmorga.datasource_remote.mock.json.ServerFiles
+import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -20,19 +24,36 @@ import org.junit.runner.RunWith
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.dsl.module
+import org.robolectric.annotation.Config
 
+@Config(sdk = [Build.VERSION_CODES.M])
 @RunWith(AndroidJUnit4::class)
 class EsmorgaApiTest {
 
     private lateinit var mockServer: MockServer
+    private lateinit var mockContext: Context
+    private lateinit var mockConnectivityManager: ConnectivityManager
+    private lateinit var mockNetwork: Network
+    private lateinit var mockNetworkCapabilities: NetworkCapabilities
 
     @Before
     fun init() {
         mockServer = MockServer()
+        mockContext = mockk(relaxed = true)
+        mockConnectivityManager = mockk(relaxed = true)
+        mockNetwork = mockk(relaxed = true)
+        mockNetworkCapabilities = mockk(relaxed = true)
+
+
+        coEvery { mockContext.getSystemService(Context.CONNECTIVITY_SERVICE) } returns mockConnectivityManager
+
+        coEvery { mockConnectivityManager.activeNetwork } returns mockNetwork
+        coEvery { mockConnectivityManager.getNetworkCapabilities(mockNetwork) } returns mockNetworkCapabilities
+        coEvery { mockNetworkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) } returns true
 
         startKoin {
             modules(module {
-                single<Context> { mockk() }
+                single<Context> { mockContext }
             })
         }
     }
