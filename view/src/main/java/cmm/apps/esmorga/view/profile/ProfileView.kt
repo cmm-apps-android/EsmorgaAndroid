@@ -131,7 +131,10 @@ private fun LoggedProfileView(
             title = stringResource(R.string.my_profile_logout_pop_up_title),
             dismissButtonText = stringResource(R.string.my_profile_logout_pop_up_cancel),
             confirmButtonText = stringResource(R.string.my_profile_logout_pop_up_confirm),
-            onConfirm = onLogout,
+            onConfirm = {
+                shownDialog = false
+                onLogout()
+            },
             onDismiss = { shownDialog = false })
     }
 

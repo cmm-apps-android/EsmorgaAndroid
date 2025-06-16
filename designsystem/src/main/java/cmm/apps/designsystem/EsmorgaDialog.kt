@@ -64,7 +64,6 @@ fun EsmorgaDialog(
                         text = confirmButtonText,
                         modifier = Modifier.wrapContentSize(unbounded = true),
                         onClick = {
-                            onDismiss()
                             onConfirm()
                         }
                     )
