@@ -1,8 +1,8 @@
 package cmm.apps.esmorga.view.screenshot.profile
 
-import androidx.compose.material3.MaterialTheme
-import cmm.apps.esmorga.view.profile.LogoutDialog
+import cmm.apps.designsystem.EsmorgaDialog
 import cmm.apps.esmorga.view.screenshot.BaseScreenshotTest
+import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import org.junit.Test
 
 class ProfileLogOutDialogViewScreenshotTest : BaseScreenshotTest() {
@@ -10,8 +10,11 @@ class ProfileLogOutDialogViewScreenshotTest : BaseScreenshotTest() {
     @Test
     fun logoutDialog_default() {
         paparazzi.snapshot {
-            MaterialTheme {
-                LogoutDialog(
+            EsmorgaTheme {
+                EsmorgaDialog(
+                    title = "Are you sure you want to log out?",
+                    confirmButtonText = "Yes, log out",
+                    dismissButtonText = "No, cancel",
                     onConfirm = {},
                     onDismiss = {}
                 )
