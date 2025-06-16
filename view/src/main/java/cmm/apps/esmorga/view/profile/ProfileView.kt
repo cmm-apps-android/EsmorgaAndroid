@@ -3,9 +3,7 @@ package cmm.apps.esmorga.view.profile
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.AlertDialog
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -16,11 +14,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import cmm.apps.designsystem.EsmorgaButton
+import cmm.apps.designsystem.EsmorgaDialog
 import cmm.apps.designsystem.EsmorgaGuestError
 import cmm.apps.designsystem.EsmorgaRow
 import cmm.apps.designsystem.EsmorgaText
@@ -130,7 +127,15 @@ private fun LoggedProfileView(
     var shownDialog by remember { mutableStateOf(false) }
 
     if (shownDialog) {
-        LogoutDialog(onConfirm = onLogout, onDismiss = { shownDialog = false })
+        EsmorgaDialog(
+            title = stringResource(R.string.my_profile_logout_pop_up_title),
+            dismissButtonText = stringResource(R.string.my_profile_logout_pop_up_cancel),
+            confirmButtonText = stringResource(R.string.my_profile_logout_pop_up_confirm),
+            onConfirm = {
+                shownDialog = false
+                onLogout()
+            },
+            onDismiss = { shownDialog = false })
     }
 
     Column(
@@ -156,46 +161,6 @@ private fun LoggedProfileView(
 
         EsmorgaRow(title = stringResource(R.string.my_profile_logout), modifier = Modifier.clickable { shownDialog = true })
     }
-}
-
-@Composable
-fun LogoutDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-
-        title = {
-            EsmorgaText(
-                text = stringResource(R.string.my_profile_logout_pop_up_title),
-                style = EsmorgaTextStyle.BODY_1,
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center
-            )
-        },
-
-        text = null,
-
-        dismissButton = {
-            EsmorgaButton(
-                text = stringResource(R.string.my_profile_logout_pop_up_cancel),
-                primary = false,
-                isFillMaxWidth = false
-            ) {
-                onDismiss()
-            }
-        },
-
-        confirmButton = {
-            EsmorgaButton(
-                text = stringResource(R.string.my_profile_logout_pop_up_confirm),
-                primary = true,
-                isFillMaxWidth = false
-            ) {
-                onDismiss()
-                onConfirm()
-            }
-        }
-    )
 }
 
 object HomeScreenTestTags {
