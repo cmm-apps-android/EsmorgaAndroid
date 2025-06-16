@@ -53,7 +53,7 @@ class ConnectivityUtilsTest {
         every { connectivityManager.getNetworkCapabilities(network) } returns networkCapabilities
         every { networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) } returns true
 
-        val result = ConnectivityUtils.isNetworkAvailable(context)
+        val result = cmm.apps.esmorga.datasource_remote.firebase.ConnectivityUtils.isNetworkAvailable(context)
 
         assertTrue(result)
     }
@@ -62,7 +62,7 @@ class ConnectivityUtilsTest {
     fun `given network is not available, when isNetworkAvailable is called, then returns false`() {
         every { connectivityManager.activeNetwork } returns null
 
-        val result = ConnectivityUtils.isNetworkAvailable(context)
+        val result = cmm.apps.esmorga.datasource_remote.firebase.ConnectivityUtils.isNetworkAvailable(context)
 
         assertFalse(result)
     }
@@ -73,14 +73,14 @@ class ConnectivityUtilsTest {
             Settings.Global.getInt(context.contentResolver, Settings.Global.AIRPLANE_MODE_ON, 0)
         } returns 1
 
-        val result = ConnectivityUtils.isAirplaneModeOn(context)
+        val result = cmm.apps.esmorga.datasource_remote.firebase.ConnectivityUtils.isAirplaneModeOn(context)
 
         assertTrue(result)
     }
 
     @Test
     fun `given airplane mode is off, when isAirplaneModeOn is called, then returns false`() {
-        val result = ConnectivityUtils.isAirplaneModeOn(context)
+        val result = cmm.apps.esmorga.datasource_remote.firebase.ConnectivityUtils.isAirplaneModeOn(context)
 
         assertFalse(result)
     }
@@ -90,7 +90,7 @@ class ConnectivityUtilsTest {
         val crashlyticsMock = mockk<FirebaseCrashlytics>(relaxed = true)
         every { FirebaseCrashlytics.getInstance() } returns crashlyticsMock
 
-        ConnectivityUtils.reportNoConnectivityIfNeeded(context)
+        cmm.apps.esmorga.datasource_remote.firebase.ConnectivityUtils.reportNoConnectivityIfNeeded(context)
 
         verify {
             crashlyticsMock.log("No connectivity during backend call")

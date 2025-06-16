@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import app.cash.turbine.test
-import cmm.apps.esmorga.common.util.ConnectivityUtils
 import cmm.apps.esmorga.domain.result.EsmorgaResult
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.domain.user.LogOutUseCase
@@ -38,7 +37,6 @@ class ProfileViewModelTest {
 
     private val getSavedUserUseCase = mockk<GetSavedUserUseCase>(relaxed = true)
     private val logOutUseCase = mockk<LogOutUseCase>(relaxed = true)
-    private val connectivityUtils = mockk<ConnectivityUtils>(relaxed = true)
 
     @Before
     fun setUp() {
@@ -49,7 +47,6 @@ class ProfileViewModelTest {
         sut = ProfileViewModel(
             getSavedUserUseCase = getSavedUserUseCase,
             logOutUseCase = logOutUseCase,
-            connectivityUtils = connectivityUtils
         )
     }
 
@@ -90,30 +87,6 @@ class ProfileViewModelTest {
 
             val effect = awaitItem()
             assertTrue(effect is ProfileEffect.NavigateToLogIn)
-        }
-    }
-
-    @Test
-    fun `given internet is available when changePassword is called then NavigateToChangePassword effect is emitted`() = runTest {
-        coEvery { connectivityUtils.isNetworkAvailable(context) } returns true
-
-        sut.effect.test {
-            sut.changePassword(context)
-
-            val effect = awaitItem()
-            assertTrue(effect is ProfileEffect.NavigateToChangePassword)
-        }
-    }
-
-    @Test
-    fun `given no internet available when changePassword is called then not network screen is showed`() = runTest {
-        coEvery { connectivityUtils.isNetworkAvailable(context) } returns false
-
-        sut.effect.test {
-            sut.changePassword(context)
-
-            val effect = awaitItem()
-            assertTrue(effect is ProfileEffect.ShowNoNetworkError)
         }
     }
 }

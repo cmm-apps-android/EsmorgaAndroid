@@ -11,7 +11,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -40,7 +39,6 @@ fun ProfileScreen(
     onNoNetworkError: (EsmorgaErrorScreenArguments) -> Unit
 
 ) {
-    val context = LocalContext.current
     val uiState: ProfileUiState by rvm.uiState.collectAsStateWithLifecycle()
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     rvm.observeLifecycleEvents(lifecycle)
@@ -72,7 +70,6 @@ fun ProfileScreen(
         ProfileView(
             uiState = uiState,
             shownLogOutDialog = { rvm.logout() },
-            onChangePassword = { rvm.changePassword(context) },
             onNavigateLogin = { rvm.logIn() }
         )
     }
@@ -82,7 +79,6 @@ fun ProfileScreen(
 fun ProfileView(
     uiState: ProfileUiState,
     shownLogOutDialog: () -> Unit,
-    onChangePassword: () -> Unit,
     onNavigateLogin: () -> Unit
 ) {
     Column(
@@ -110,7 +106,6 @@ fun ProfileView(
                 lastName = uiState.user.lastName,
                 email = uiState.user.email,
                 onLogout = { shownLogOutDialog() },
-                onChangePassword = { onChangePassword() },
             )
         }
     }
@@ -122,7 +117,6 @@ private fun LoggedProfileView(
     lastName: String,
     email: String,
     onLogout: () -> Unit,
-    onChangePassword: () -> Unit
 ) {
     var shownDialog by remember { mutableStateOf(false) }
 

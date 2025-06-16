@@ -30,4 +30,21 @@ object LoginViewHelper : KoinComponent{
     fun getEmailErrorText() = context.getString(R.string.inline_error_email)
     fun getPasswordErrorText() = context.getString(R.string.inline_error_password)
     fun getEmptyFieldErrorText() = context.getString(R.string.inline_error_empty_field)
+
+    fun getFieldErrorText(
+        value: String,
+        errorTextProvider: String,
+        errorTextEmpty: String,
+        acceptsEmpty: Boolean,
+        nonEmptyCondition: Boolean
+    ): String? {
+        val isBlank = value.isBlank()
+        val isValid = value.isEmpty() || nonEmptyCondition
+
+        return when {
+            !acceptsEmpty && isBlank -> errorTextEmpty
+            !isValid -> errorTextProvider
+            else -> null
+        }
+    }
 }
