@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -47,22 +46,23 @@ fun EsmorgaDialog(
                 )
 
                 Row(
-                    modifier = modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     EsmorgaButton(
                         text = dismissButtonText,
                         onClick = {
                             onDismiss()
                         },
-                        modifier = Modifier
-                            .wrapContentSize(unbounded = true),
+                        modifier = modifier.weight(1F),
                         primary = false
                     )
                     Spacer(Modifier.width(12.dp))
                     EsmorgaButton(
                         text = confirmButtonText,
-                        modifier = Modifier.wrapContentSize(unbounded = true),
+                        modifier = modifier.weight(1F),
                         onClick = {
                             onConfirm()
                         }
