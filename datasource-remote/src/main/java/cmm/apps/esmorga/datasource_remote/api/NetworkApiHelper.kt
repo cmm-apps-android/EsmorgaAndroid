@@ -45,6 +45,7 @@ class NetworkApiHelper {
                 }
                 addInterceptor(CurlLogInterceptor)
                 addInterceptor(LogInterceptor)
+                addInterceptor(ConnectionInterceptor)
 
                 connectTimeout(30, TimeUnit.SECONDS)
                 readTimeout(30, TimeUnit.SECONDS)

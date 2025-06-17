@@ -2,10 +2,10 @@ package cmm.apps.esmorga.view.password
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cmm.apps.esmorga.common.util.ValidateTextFieldUtils.getFieldErrorText
 import cmm.apps.esmorga.domain.user.PerformRecoverPasswordUseCase
 import cmm.apps.esmorga.domain.user.model.User.Companion.EMAIL_REGEX
 import cmm.apps.esmorga.view.login.model.LoginViewHelper.getEmptyFieldErrorText
+import cmm.apps.esmorga.view.login.model.LoginViewHelper.getFieldErrorText
 import cmm.apps.esmorga.view.password.model.RecoverPasswordEffect
 import cmm.apps.esmorga.view.password.model.RecoverPasswordUiState
 import cmm.apps.esmorga.view.password.model.RecoverPasswordViewHelper.getEmailErrorText
