@@ -13,8 +13,12 @@ import cmm.apps.esmorga.datasource_remote.mock.EsmorgaAuthenticationMock.getAuth
 import cmm.apps.esmorga.datasource_remote.mock.EsmorgaAuthenticationMock.getEsmorgaAuthenticatorMock
 import cmm.apps.esmorga.datasource_remote.mock.MockServer
 import cmm.apps.esmorga.datasource_remote.mock.json.ServerFiles
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import io.mockk.coEvery
 import io.mockk.mockk
+import io.mockk.mockkStatic
+import io.mockk.unmockkStatic
+import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert
@@ -35,6 +39,7 @@ class EsmorgaApiTest {
     private lateinit var mockConnectivityManager: ConnectivityManager
     private lateinit var mockNetwork: Network
     private lateinit var mockNetworkCapabilities: NetworkCapabilities
+    private var isNetworkAvailable = true
 
     @Before
     fun init() {
@@ -44,12 +49,12 @@ class EsmorgaApiTest {
         mockNetwork = mockk(relaxed = true)
         mockNetworkCapabilities = mockk(relaxed = true)
 
-
+        mockkStatic(FirebaseCrashlytics::class)
         coEvery { mockContext.getSystemService(Context.CONNECTIVITY_SERVICE) } returns mockConnectivityManager
 
         coEvery { mockConnectivityManager.activeNetwork } returns mockNetwork
         coEvery { mockConnectivityManager.getNetworkCapabilities(mockNetwork) } returns mockNetworkCapabilities
-        coEvery { mockNetworkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) } returns true
+        coEvery { mockNetworkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) } returns isNetworkAvailable
 
         startKoin {
             modules(module {
@@ -62,10 +67,16 @@ class EsmorgaApiTest {
     fun shutDown() {
         mockServer.shutdown()
         stopKoin()
+        unmockkStatic(FirebaseCrashlytics::class)
     }
 
     @Test
     fun `given a successful mock server when events are requested then a correct eventWrapper is returned`() = runTest {
+        coEvery { mockNetworkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) } returns true
+        val crashlyticsMock = mockk<FirebaseCrashlytics>(relaxed = true)
+
+        coEvery { FirebaseCrashlytics.getInstance() } returns crashlyticsMock
+
         mockServer.enqueueFile(200, ServerFiles.GET_EVENTS)
 
         val sut = NetworkApiHelper().provideApi(mockServer.start(), EsmorgaGuestApi::class.java, getEsmorgaAuthenticatorMock(), getAuthInterceptor())
@@ -78,6 +89,11 @@ class EsmorgaApiTest {
 
     @Test
     fun `given a successful mock server when login is requested then a correct user is returned`() = runTest {
+        coEvery { mockNetworkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) } returns true
+        val crashlyticsMock = mockk<FirebaseCrashlytics>(relaxed = true)
+
+        coEvery { FirebaseCrashlytics.getInstance() } returns crashlyticsMock
+
         mockServer.enqueueFile(200, ServerFiles.LOGIN)
 
         val sut = NetworkApiHelper().provideApi(mockServer.start(), EsmorgaAuthApi::class.java, getEsmorgaAuthenticatorMock(), getAuthInterceptor())
@@ -85,6 +101,24 @@ class EsmorgaApiTest {
         val user = sut.login(body = mapOf("email" to "email", "password" to "password"))
 
         Assert.assertEquals("Albus", user.remoteProfile.remoteName)
+    }
+
+    @Test
+    fun `given a login api call when there is no network available then crashlytics logs no connection`() = runTest {
+        coEvery { mockNetworkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) } returns false
+        val crashlyticsMock = mockk<FirebaseCrashlytics>(relaxed = true)
+
+        coEvery { FirebaseCrashlytics.getInstance() } returns crashlyticsMock
+        mockServer.enqueueFile(200, ServerFiles.LOGIN)
+
+        val sut = NetworkApiHelper().provideApi(mockServer.start(), EsmorgaAuthApi::class.java, getEsmorgaAuthenticatorMock(), getAuthInterceptor())
+
+        sut.login(body = mapOf("email" to "email", "password" to "password"))
+        verify {
+            crashlyticsMock.log("No connectivity during backend call")
+            crashlyticsMock.recordException(any(), any())
+        }
+
     }
 
 }
