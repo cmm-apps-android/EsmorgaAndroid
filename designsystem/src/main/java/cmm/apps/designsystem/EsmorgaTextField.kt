@@ -51,7 +51,7 @@ fun EsmorgaTextField(
             value = value,
             visualTransformation = if (keyboardType == KeyboardType.Password && !passwordVisible) PasswordVisualTransformation() else VisualTransformation.None,
             onValueChange = onValueChange,
-            placeholder = { Text(text = stringResource(id = placeholder, TextStyle(color = MaterialTheme.colorScheme.onSurface))) },
+            placeholder = { Text(text = stringResource(id = placeholder), color = MaterialTheme.colorScheme.onSurface) },
             singleLine = singleLine,
             enabled = isEnabled,
             keyboardOptions = KeyboardOptions.Default.copy(
