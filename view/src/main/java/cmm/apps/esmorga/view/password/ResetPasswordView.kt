@@ -69,7 +69,7 @@ fun ResetPasswordScreen(
         ResetPasswordView(
             uiState = uiState,
             snackbarHostState = snackbarHostState,
-            validateField = { type, password, repeatPass, isTouched -> rpvm.validateField(type, password, repeatPass, isTouched) },
+            validateField = { type, password, repeatPass, hasFocused -> rpvm.validateField(type, password, repeatPass, hasFocused) },
             onResetPasswordClicked = { password -> rpvm.onResetPasswordClicked(forgotPasswordCode, password) }
         )
     }
