@@ -102,9 +102,9 @@ class ResetPasswordViewModelTest {
 
         val sut = ResetPasswordViewModel(useCase)
 
-        sut.validateField(ResetPasswordViewModel.ResetPasswordField.PASS, pass, isTouched = true)
+        sut.validateField(ResetPasswordViewModel.ResetPasswordField.PASS, pass, hasFocused = true)
         Assert.assertNotNull(sut.uiState.value.passwordError)
-        sut.validateField(ResetPasswordViewModel.ResetPasswordField.REPEAT_PASS, repeatPass, isTouched = true)
+        sut.validateField(ResetPasswordViewModel.ResetPasswordField.REPEAT_PASS, repeatPass, hasFocused = true)
         Assert.assertNotNull(sut.uiState.value.repeatPasswordError)
 
         val state = sut.uiState.value
@@ -122,7 +122,7 @@ class ResetPasswordViewModelTest {
         coEvery { useCase.invoke(any(), any()) } returns EsmorgaResult.success(Unit)
 
         val sut = ResetPasswordViewModel(useCase)
-        sut.validateField(ResetPasswordViewModel.ResetPasswordField.PASS, pass, isTouched = true)
+        sut.validateField(ResetPasswordViewModel.ResetPasswordField.PASS, pass, hasFocused = true)
         Assert.assertNull(sut.uiState.value.passwordError)
 
         val state = sut.uiState.value
@@ -139,7 +139,7 @@ class ResetPasswordViewModelTest {
         coEvery { useCase.invoke(any(), any()) } returns EsmorgaResult.success(Unit)
 
         val sut = ResetPasswordViewModel(useCase)
-        sut.validateField(ResetPasswordViewModel.ResetPasswordField.PASS, pass, isTouched = true)
+        sut.validateField(ResetPasswordViewModel.ResetPasswordField.PASS, pass, hasFocused = true)
         Assert.assertNotNull(sut.uiState.value.passwordError)
 
         val state = sut.uiState.value
@@ -155,7 +155,7 @@ class ResetPasswordViewModelTest {
         coEvery { useCase.invoke(any(), any()) } returns EsmorgaResult.success(Unit)
 
         val sut = ResetPasswordViewModel(useCase)
-        sut.validateField(ResetPasswordViewModel.ResetPasswordField.REPEAT_PASS, repeatPass, isTouched = true)
+        sut.validateField(ResetPasswordViewModel.ResetPasswordField.REPEAT_PASS, repeatPass, hasFocused = true)
         Assert.assertNotNull(sut.uiState.value.repeatPasswordError)
 
         val state = sut.uiState.value
@@ -164,7 +164,7 @@ class ResetPasswordViewModelTest {
     }
 
     @Test
-    fun `given empty fields when validateField is called with isTouched false, then uiState shows no error and button is disabled`() = runTest {
+    fun `given empty fields when validateField is called with hasFocused false, then uiState shows no error and button is disabled`() = runTest {
         val pass = ""
         val repeatPass = ""
         val useCase = mockk<PerformResetPasswordUseCase>(relaxed = true)
@@ -172,9 +172,9 @@ class ResetPasswordViewModelTest {
 
         val sut = ResetPasswordViewModel(useCase)
 
-        sut.validateField(ResetPasswordViewModel.ResetPasswordField.PASS, pass, isTouched = false)
+        sut.validateField(ResetPasswordViewModel.ResetPasswordField.PASS, pass, hasFocused = false)
         Assert.assertNull(sut.uiState.value.passwordError)
-        sut.validateField(ResetPasswordViewModel.ResetPasswordField.REPEAT_PASS, repeatPass, isTouched = false)
+        sut.validateField(ResetPasswordViewModel.ResetPasswordField.REPEAT_PASS, repeatPass, hasFocused = false)
         Assert.assertNull(sut.uiState.value.repeatPasswordError)
 
         val state = sut.uiState.value

@@ -46,8 +46,8 @@ class ResetPasswordViewModel(val performResetPasswordUseCase: PerformResetPasswo
         }
     }
 
-    fun validateField(type: ResetPasswordField, value: String, comparisonField: String? = null, isTouched: Boolean = false) {
-        if (isTouched) {
+    fun validateField(type: ResetPasswordField, value: String, comparisonField: String? = null, hasFocused: Boolean = false) {
+        if (hasFocused) {
             when (type) {
                 ResetPasswordField.PASS -> _uiState.value =
                     _uiState.value.copy(

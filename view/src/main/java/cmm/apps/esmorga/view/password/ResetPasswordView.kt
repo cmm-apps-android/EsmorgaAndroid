@@ -85,8 +85,8 @@ fun ResetPasswordView(
 ) {
     var password by remember { mutableStateOf("") }
     var repeatPassword by remember { mutableStateOf("") }
-    var passwordTouched by remember { mutableStateOf(false) }
-    var repeatPasswordTouched by remember { mutableStateOf(false) }
+    var passwordFieldAlreadyFocussed by remember { mutableStateOf(false) }
+    var repeatPasswordFieldAlreadyFocussed by remember { mutableStateOf(false) }
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
@@ -117,19 +117,18 @@ fun ResetPasswordView(
             EsmorgaTextField(
                 value = password,
                 onValueChange = {
-                    passwordTouched = true
                     password = it
-                    validateField(ResetPasswordField.PASS, password, null, passwordTouched)
+                    validateField(ResetPasswordField.PASS, password, null, passwordFieldAlreadyFocussed)
                 },
                 title = R.string.reset_password_new_password_field,
                 placeholder = R.string.placeholder_new_password,
                 errorText = uiState.passwordError,
                 modifier = Modifier
                     .onFocusChanged { focusState ->
-                        if (focusState.isFocused) passwordTouched = true
+                        if (focusState.isFocused) passwordFieldAlreadyFocussed = true
 
-                        if (!focusState.isFocused && passwordTouched) {
-                            validateField(ResetPasswordField.PASS, password, null, passwordTouched)
+                        if (!focusState.isFocused) {
+                            validateField(ResetPasswordField.PASS, password, null, passwordFieldAlreadyFocussed)
                         }
                     }
                     .testTag(RESET_PASSWORD_NEW_PASSWORD_INPUT),
@@ -139,18 +138,17 @@ fun ResetPasswordView(
             EsmorgaTextField(
                 value = repeatPassword,
                 onValueChange = {
-                    repeatPasswordTouched = true
                     repeatPassword = it
-                    validateField(ResetPasswordField.REPEAT_PASS, repeatPassword, password, repeatPasswordTouched)
+                    validateField(ResetPasswordField.REPEAT_PASS, repeatPassword, password, repeatPasswordFieldAlreadyFocussed)
                 },
                 title = R.string.reset_password_repeat_password_field,
                 placeholder = R.string.placeholder_confirm_password,
                 errorText = uiState.repeatPasswordError,
                 modifier = Modifier
                     .onFocusChanged { focusState ->
-                        if (focusState.isFocused) repeatPasswordTouched = true
-                        if (!focusState.isFocused && repeatPasswordTouched) {
-                            validateField(ResetPasswordField.REPEAT_PASS, repeatPassword, password, repeatPasswordTouched)
+                        if (focusState.isFocused) repeatPasswordFieldAlreadyFocussed = true
+                        if (!focusState.isFocused) {
+                            validateField(ResetPasswordField.REPEAT_PASS, repeatPassword, password, repeatPasswordFieldAlreadyFocussed)
                         }
                     }
                     .testTag(RESET_PASSWORD_REPEAT_PASSWORD_INPUT),
