@@ -46,35 +46,32 @@ class ResetPasswordViewModel(val performResetPasswordUseCase: PerformResetPasswo
         }
     }
 
-    fun onValueChange(password: String, repeatedPassword: String) {
-        validateField(type = ResetPasswordField.PASS, value = password, acceptsEmpty = false)
-        validateField(type = ResetPasswordField.REPEAT_PASS, value = repeatedPassword, comparisonField = password, acceptsEmpty = false)
-    }
-
-    fun validateField(type: ResetPasswordField, value: String, comparisonField: String? = null, acceptsEmpty: Boolean = true) {
-        when (type) {
-            ResetPasswordField.PASS -> _uiState.value =
-                _uiState.value.copy(
-                    passwordError = getFieldErrorText(
-                        value,
-                        getPasswordErrorText(),
-                        getEmptyFieldErrorText(),
-                        acceptsEmpty,
-                        value.matches(PASSWORD_REGEX.toRegex())
+    fun validateField(type: ResetPasswordField, value: String, comparisonField: String? = null, acceptsEmpty: Boolean = true, isTouched: Boolean = false) {
+        if(isTouched){
+            when (type) {
+                ResetPasswordField.PASS -> _uiState.value =
+                    _uiState.value.copy(
+                        passwordError = getFieldErrorText(
+                            value,
+                            getPasswordErrorText(),
+                            getEmptyFieldErrorText(),
+                            acceptsEmpty,
+                            value.matches(PASSWORD_REGEX.toRegex())
+                        )
                     )
-                )
 
-            ResetPasswordField.REPEAT_PASS -> _uiState.value =
-                _uiState.value.copy(
-                    repeatPasswordError = getFieldErrorText(
-                        value,
-                        getRepeatPasswordErrorText(),
-                        getEmptyFieldErrorText(),
-                        acceptsEmpty,
-                        value == comparisonField
+                ResetPasswordField.REPEAT_PASS -> _uiState.value =
+                    _uiState.value.copy(
+                        repeatPasswordError = getFieldErrorText(
+                            value,
+                            getRepeatPasswordErrorText(),
+                            getEmptyFieldErrorText(),
+                            acceptsEmpty,
+                            value == comparisonField
+                        )
                     )
-                )
 
+            }
         }
     }
 
