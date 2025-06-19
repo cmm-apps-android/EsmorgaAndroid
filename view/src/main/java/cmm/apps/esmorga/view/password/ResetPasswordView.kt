@@ -69,7 +69,7 @@ fun ResetPasswordScreen(
         ResetPasswordView(
             uiState = uiState,
             snackbarHostState = snackbarHostState,
-            validateField = { type, password, repeatPass, isTouched -> rpvm.validateField(type, password, repeatPass, acceptsEmpty = false, isTouched) },
+            validateField = { type, password, repeatPass, isTouched -> rpvm.validateField(type, password, repeatPass, isTouched) },
             onResetPasswordClicked = { password -> rpvm.onResetPasswordClicked(forgotPasswordCode, password) }
         )
     }
@@ -126,7 +126,7 @@ fun ResetPasswordView(
                 errorText = uiState.passwordError,
                 modifier = Modifier
                     .onFocusChanged { focusState ->
-                        if(focusState.isFocused) passwordTouched = true
+                        if (focusState.isFocused) passwordTouched = true
 
                         if (!focusState.isFocused && passwordTouched) {
                             validateField(ResetPasswordField.PASS, password, null, passwordTouched)
@@ -148,7 +148,7 @@ fun ResetPasswordView(
                 errorText = uiState.repeatPasswordError,
                 modifier = Modifier
                     .onFocusChanged { focusState ->
-                        if(focusState.isFocused) repeatPasswordTouched = true
+                        if (focusState.isFocused) repeatPasswordTouched = true
                         if (!focusState.isFocused && repeatPasswordTouched) {
                             validateField(ResetPasswordField.REPEAT_PASS, repeatPassword, password, repeatPasswordTouched)
                         }
