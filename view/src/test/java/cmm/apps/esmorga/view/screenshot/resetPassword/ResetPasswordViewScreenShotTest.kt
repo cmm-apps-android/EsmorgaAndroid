@@ -30,8 +30,7 @@ class ResetPasswordViewScreenShotTest : BaseScreenshotTest() {
                     ),
                     snackbarHostState = SnackbarHostState(),
                     onResetPasswordClicked = { },
-                    validateField = { _, _, _ -> },
-                    onValueChange = { _, _ -> }
+                    validateField = { _, _, _, _ -> }
                 )
             }
         }
