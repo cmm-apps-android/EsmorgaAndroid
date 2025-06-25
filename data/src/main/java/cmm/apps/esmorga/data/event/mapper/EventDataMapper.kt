@@ -4,6 +4,8 @@ import cmm.apps.esmorga.data.event.model.EventDataModel
 import cmm.apps.esmorga.data.event.model.EventLocationDataModel
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.domain.event.model.EventLocation
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 
 fun EventDataModel.toEvent(): Event = Event(
@@ -27,7 +29,7 @@ fun Event.toEventDataModel(): EventDataModel =
         dataDate = this.date,
         dataDescription = this.description,
         dataType = this.type,
-        dataImageUrl = this.imageUrl,
+        dataImageUrl = this.imageUrl?.let { URLEncoder.encode(it, StandardCharsets.UTF_8.toString()) },
         dataLocation = EventLocationDataModel(this.location.name, this.location.lat, this.location.long),
         dataTags = this.tags,
         dataUserJoined = this.userJoined
