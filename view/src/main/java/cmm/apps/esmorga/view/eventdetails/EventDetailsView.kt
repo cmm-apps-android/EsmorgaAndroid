@@ -69,7 +69,7 @@ fun EventDetailsScreen(
         edvm.effect.collect { eff ->
             when (eff) {
                 is EventDetailsEffect.NavigateToLocation -> {
-                    openNavigationApp(context, eff.lat, eff.lng)
+                    openNavigationApp(context, eff.lat, eff.lng, eff.locationName)
                 }
 
                 is EventDetailsEffect.NavigateBack -> {

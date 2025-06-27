@@ -43,8 +43,9 @@ class EventDetailsViewModel(
     fun onNavigateClick() {
         _effect.tryEmit(
             EventDetailsEffect.NavigateToLocation(
-                uiState.value.locationLat!!,
-                uiState.value.locationLng!!
+                uiState.value.locationLat ?: 0.0,
+                uiState.value.locationLng ?: 0.0,
+                uiState.value.locationName
             )
         )
     }
