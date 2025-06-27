@@ -50,6 +50,6 @@ sealed class EventDetailsEffect {
     data object ShowJoinEventSuccess : EventDetailsEffect()
     data object ShowLeaveEventSuccess : EventDetailsEffect()
     data class ShowNoNetworkError(val esmorgaNoNetworkArguments: EsmorgaErrorScreenArguments = getEsmorgaNoNetworkScreenArguments()) : EventDetailsEffect()
-    data class NavigateToLocation(val lat: Double, val lng: Double) : EventDetailsEffect()
+    data class NavigateToLocation(val lat: Double, val lng: Double, val locationName: String) : EventDetailsEffect()
     data class ShowFullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments = getEsmorgaDefaultErrorScreenArguments()) : EventDetailsEffect()
 }
