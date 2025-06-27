@@ -6,6 +6,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import app.cash.turbine.test
 import cmm.apps.esmorga.domain.event.JoinEventUseCase
 import cmm.apps.esmorga.domain.event.LeaveEventUseCase
+import cmm.apps.esmorga.domain.event.model.EventLocation
 import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.EsmorgaResult
@@ -205,6 +206,24 @@ class EventDetailsViewModelTest {
 
         val uiState = sut.uiState.value
         Assert.assertTrue(uiState.primaryButtonLoading)
+    }
+
+    @Test
+    fun `given event details screen when navigate button is clicked then navigate to map`() = runTest {
+        val event = EventViewMock.provideEvent("Event Name").copy(location = EventLocation("Location", lat = 43.0930493, long = -7.348734))
+        coEvery { joinEventUseCase(event) } returns EsmorgaResult.failure(EsmorgaException("No Connection", Source.REMOTE, ErrorCodes.NO_CONNECTION))
+
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event)
+        sut.effect.test {
+            sut.onNavigateClick()
+
+            val effect = awaitItem()
+            Assert.assertTrue(effect is EventDetailsEffect.NavigateToLocation)
+            val location = (effect as EventDetailsEffect.NavigateToLocation)
+            Assert.assertEquals(event.location.lat, location.lat)
+            Assert.assertEquals(event.location.long, location.lng)
+            Assert.assertEquals(event.location.name, location.locationName)
+        }
     }
 }
 
