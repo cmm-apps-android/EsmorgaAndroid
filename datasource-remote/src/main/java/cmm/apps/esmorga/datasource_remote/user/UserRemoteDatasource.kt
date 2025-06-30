@@ -1,20 +1,19 @@
 package cmm.apps.esmorga.datasource_remote.user
 
-import android.content.Context
 import cmm.apps.esmorga.data.user.datasource.UserDatasource
 import cmm.apps.esmorga.data.user.model.UserDataModel
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaAuthApi
 import cmm.apps.esmorga.datasource_remote.api.ExceptionHandler.manageApiException
 import cmm.apps.esmorga.datasource_remote.user.mapper.toUserDataModel
 
-class UserRemoteDatasourceImpl(private val api: EsmorgaAuthApi, private val context: Context) : UserDatasource {
+class UserRemoteDatasourceImpl(private val api: EsmorgaAuthApi) : UserDatasource {
     override suspend fun login(email: String, password: String): UserDataModel {
         try {
             val loginBody = mapOf("email" to email, "password" to password)
             val user = api.login(loginBody)
             return user.toUserDataModel()
         } catch (e: Exception) {
-            throw manageApiException(e, context)
+            throw manageApiException(e)
         }
     }
 
@@ -28,7 +27,7 @@ class UserRemoteDatasourceImpl(private val api: EsmorgaAuthApi, private val cont
             )
             api.register(registerBody)
         } catch (e: Exception) {
-            throw manageApiException(e, context)
+            throw manageApiException(e)
         }
     }
 
@@ -39,7 +38,7 @@ class UserRemoteDatasourceImpl(private val api: EsmorgaAuthApi, private val cont
             )
             api.emailVerification(emailBody)
         } catch (e: Exception) {
-            throw manageApiException(e, context)
+            throw manageApiException(e)
         }
     }
 
@@ -48,7 +47,7 @@ class UserRemoteDatasourceImpl(private val api: EsmorgaAuthApi, private val cont
             val body = mapOf("verificationCode" to verificationCode)
             return api.accountActivation(body).toUserDataModel()
         } catch (e: Exception) {
-            throw manageApiException(e, context)
+            throw manageApiException(e)
         }
     }
 
@@ -59,7 +58,7 @@ class UserRemoteDatasourceImpl(private val api: EsmorgaAuthApi, private val cont
             )
             api.recoverPassword(emailBody)
         } catch (e: Exception) {
-            throw manageApiException(e, context)
+            throw manageApiException(e)
         }
     }
 
@@ -71,7 +70,7 @@ class UserRemoteDatasourceImpl(private val api: EsmorgaAuthApi, private val cont
             )
             api.resetPassword(body)
         } catch (e: Exception) {
-            throw manageApiException(e, context)
+            throw manageApiException(e)
         }
     }
 }
