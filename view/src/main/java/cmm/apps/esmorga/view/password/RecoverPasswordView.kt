@@ -92,6 +92,7 @@ fun RecoverPasswordView(
     onSendEmailClicked: (String) -> Unit,
     validateEmail: (String) -> Unit
 ) {
+    val keyboardController = androidx.compose.ui.platform.LocalSoftwareKeyboardController.current
     var email by remember { mutableStateOf("") }
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState, modifier = Modifier.testTag(RECOVER_PASSWORD_SHOW_SNACKBAR)) },
@@ -158,6 +159,7 @@ fun RecoverPasswordView(
                 modifier = Modifier
                     .testTag(RECOVER_PASSWORD_SEND_EMAIL_BUTTON)
             ) {
+                keyboardController?.hide()
                 onSendEmailClicked(email)
             }
         }
