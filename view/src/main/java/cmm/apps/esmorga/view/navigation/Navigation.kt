@@ -267,8 +267,8 @@ private fun NavGraphBuilder.errorFlow(navigationController: NavHostController) {
     }
 }
 
-fun openNavigationApp(context: Context, latitude: Double, longitude: Double) {
-    val uri = Uri.parse("geo:$latitude,$longitude")
+fun openNavigationApp(context: Context, latitude: Double, longitude: Double, markerLabel: String) {
+    val uri = Uri.parse("geo:?q=loc:$latitude,$longitude ($markerLabel)")
     if (isPackageAvailable(context, GOOGLE_MAPS_PACKAGE)) {
         val mapIntent = Intent(Intent.ACTION_VIEW, uri)
         mapIntent.setPackage(GOOGLE_MAPS_PACKAGE)
