@@ -3,8 +3,11 @@ package cmm.apps.esmorga.view.password
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -92,11 +95,16 @@ fun RecoverPasswordView(
     onSendEmailClicked: (String) -> Unit,
     validateEmail: (String) -> Unit
 ) {
-    val keyboardController = androidx.compose.ui.platform.LocalSoftwareKeyboardController.current
     var email by remember { mutableStateOf("") }
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState, modifier = Modifier.testTag(RECOVER_PASSWORD_SHOW_SNACKBAR)) },
-        topBar = {
+        modifier = Modifier
+            .padding(WindowInsets.ime.asPaddingValues()),
+        snackbarHost = {
+            SnackbarHost(
+                snackbarHostState,
+                modifier = Modifier.testTag(RECOVER_PASSWORD_SHOW_SNACKBAR)
+            )
+        },topBar = {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -159,7 +167,6 @@ fun RecoverPasswordView(
                 modifier = Modifier
                     .testTag(RECOVER_PASSWORD_SEND_EMAIL_BUTTON)
             ) {
-                keyboardController?.hide()
                 onSendEmailClicked(email)
             }
         }
