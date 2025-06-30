@@ -1,6 +1,5 @@
 package cmm.apps.esmorga.datasource_remote.api
 
-import android.content.Context
 import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.Source
@@ -11,7 +10,7 @@ import java.time.format.DateTimeParseException
 
 object ExceptionHandler {
 
-    fun manageApiException(e: Exception, context: Context): EsmorgaException {
+    fun manageApiException(e: Exception): EsmorgaException {
         return when (e) {
             is HttpException -> {
                 EsmorgaException(
