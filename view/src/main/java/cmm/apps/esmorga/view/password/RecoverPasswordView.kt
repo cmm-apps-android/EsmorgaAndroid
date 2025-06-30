@@ -97,12 +97,12 @@ fun RecoverPasswordView(
 ) {
     var email by remember { mutableStateOf("") }
     Scaffold(
-        modifier = Modifier
-            .padding(WindowInsets.ime.asPaddingValues()),
         snackbarHost = {
             SnackbarHost(
-                snackbarHostState,
-                modifier = Modifier.testTag(RECOVER_PASSWORD_SHOW_SNACKBAR)
+                hostState = snackbarHostState,
+                modifier = Modifier
+                    .testTag(RECOVER_PASSWORD_SHOW_SNACKBAR)
+                    .padding(WindowInsets.ime.asPaddingValues())
             )
         },topBar = {
             Box(
