@@ -1,11 +1,9 @@
 package cmm.apps.esmorga.view.profile
 
-import android.content.Context
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cmm.apps.esmorga.common.util.ConnectivityUtils
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.domain.user.LogOutUseCase
 import cmm.apps.esmorga.view.profile.model.ProfileEffect
@@ -21,8 +19,7 @@ import kotlinx.coroutines.launch
 
 open class ProfileViewModel(
     private val getSavedUserUseCase: GetSavedUserUseCase,
-    private val logOutUseCase: LogOutUseCase,
-    private val connectivityUtils: ConnectivityUtils = ConnectivityUtils
+    private val logOutUseCase: LogOutUseCase
 ) : ViewModel(), DefaultLifecycleObserver {
 
     private val _uiState = MutableStateFlow(ProfileUiState())
@@ -41,20 +38,6 @@ open class ProfileViewModel(
 
     fun logout() {
         clearUserData()
-    }
-
-    fun changePassword(context: Context) {
-        viewModelScope.launch {
-            connectivityUtils.reportNoConnectivityIfNeeded(context)
-
-            val effect = if (connectivityUtils.isNetworkAvailable(context)) {
-                ProfileEffect.NavigateToChangePassword
-            } else {
-                ProfileEffect.ShowNoNetworkError()
-            }
-            _effect.emit(effect)
-
-        }
     }
 
     fun loadUser() {

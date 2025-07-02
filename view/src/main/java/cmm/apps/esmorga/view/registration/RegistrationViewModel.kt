@@ -2,11 +2,11 @@ package cmm.apps.esmorga.view.registration
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cmm.apps.esmorga.common.util.ValidateTextFieldUtils.getFieldErrorText
 import cmm.apps.esmorga.domain.user.PerformRegistrationUserCase
 import cmm.apps.esmorga.domain.user.model.User.Companion.EMAIL_REGEX
 import cmm.apps.esmorga.domain.user.model.User.Companion.NAME_REGEX
 import cmm.apps.esmorga.domain.user.model.User.Companion.PASSWORD_REGEX
+import cmm.apps.esmorga.view.login.model.LoginViewHelper.getFieldErrorText
 import cmm.apps.esmorga.view.registration.model.RegistrationEffect
 import cmm.apps.esmorga.view.registration.model.RegistrationUiState
 import cmm.apps.esmorga.view.registration.model.RegistrationViewHelper.getEmailAlreadyInUseErrorText

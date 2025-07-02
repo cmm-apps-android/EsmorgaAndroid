@@ -4,7 +4,6 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cmm.apps.esmorga.common.util.ValidateTextFieldUtils.getFieldErrorText
 import cmm.apps.esmorga.domain.user.PerformLoginUseCase
 import cmm.apps.esmorga.domain.user.model.User.Companion.EMAIL_REGEX
 import cmm.apps.esmorga.domain.user.model.User.Companion.PASSWORD_REGEX
@@ -12,6 +11,7 @@ import cmm.apps.esmorga.view.login.model.LoginEffect
 import cmm.apps.esmorga.view.login.model.LoginUiState
 import cmm.apps.esmorga.view.login.model.LoginViewHelper
 import cmm.apps.esmorga.view.login.model.LoginViewHelper.getEmptyFieldErrorText
+import cmm.apps.esmorga.view.login.model.LoginViewHelper.getFieldErrorText
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,7 +30,7 @@ class LoginViewModel(private val performLoginUseCase: PerformLoginUseCase, priva
 
     override fun onResume(owner: LifecycleOwner) {
         super.onResume(owner)
-        snackbarMessage?.let { _effect.tryEmit(LoginEffect.ShowInitSnackbar(it))  }
+        snackbarMessage?.let { _effect.tryEmit(LoginEffect.ShowInitSnackbar(it)) }
     }
 
     fun onLoginClicked(email: String, password: String) {
