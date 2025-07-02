@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -11,6 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -39,6 +41,7 @@ fun ProfileScreen(
     onNoNetworkError: (EsmorgaErrorScreenArguments) -> Unit
 
 ) {
+    val context = LocalContext.current
     val uiState: ProfileUiState by rvm.uiState.collectAsStateWithLifecycle()
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     rvm.observeLifecycleEvents(lifecycle)
@@ -70,6 +73,7 @@ fun ProfileScreen(
         ProfileView(
             uiState = uiState,
             shownLogOutDialog = { rvm.logout() },
+            onChangePassword = { rvm.changePassword(context) },
             onNavigateLogin = { rvm.logIn() }
         )
     }
@@ -79,36 +83,43 @@ fun ProfileScreen(
 fun ProfileView(
     uiState: ProfileUiState,
     shownLogOutDialog: () -> Unit,
+    onChangePassword: () -> Unit,
     onNavigateLogin: () -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        EsmorgaText(
-            text = stringResource(R.string.my_profile_title),
-            style = EsmorgaTextStyle.HEADING_1,
+    Scaffold(
+        modifier = Modifier.fillMaxSize()
+    ) { innerPadding ->
+        Column(
             modifier = Modifier
-                .padding(vertical = 32.dp)
-                .testTag(PROFILE_TITLE)
-        )
-        if (uiState.user == null) {
-            EsmorgaGuestError(
-                stringResource(R.string.unauthenticated_error_message),
-                stringResource(R.string.unauthenticated_error_login_button),
-                { onNavigateLogin() },
-                R.raw.oops
+                .padding(top = innerPadding.calculateTopPadding())
+        ) {
+            EsmorgaText(
+                text = stringResource(R.string.my_profile_title),
+                style = EsmorgaTextStyle.HEADING_1,
+                modifier = Modifier
+                    .padding(vertical = 32.dp, horizontal = 16.dp)
+                    .testTag(PROFILE_TITLE)
             )
-        } else {
-            LoggedProfileView(
-                name = uiState.user.name,
-                lastName = uiState.user.lastName,
-                email = uiState.user.email,
-                onLogout = { shownLogOutDialog() },
-            )
+
+            if (uiState.user == null) {
+                EsmorgaGuestError(
+                    stringResource(R.string.unauthenticated_error_message),
+                    stringResource(R.string.unauthenticated_error_login_button),
+                    { onNavigateLogin() },
+                    R.raw.oops
+                )
+            } else {
+                LoggedProfileView(
+                    name = uiState.user.name,
+                    lastName = uiState.user.lastName,
+                    email = uiState.user.email,
+                    onLogout = { shownLogOutDialog() },
+                    onChangePassword = { onChangePassword() },
+                )
+            }
         }
     }
+
 }
 
 @Composable
@@ -117,6 +128,7 @@ private fun LoggedProfileView(
     lastName: String,
     email: String,
     onLogout: () -> Unit,
+    onChangePassword: () -> Unit
 ) {
     var shownDialog by remember { mutableStateOf(false) }
 
@@ -135,6 +147,7 @@ private fun LoggedProfileView(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .padding(16.dp)
     ) {
         EsmorgaText(
             text = stringResource(R.string.my_profile_name),
@@ -153,6 +166,7 @@ private fun LoggedProfileView(
             style = EsmorgaTextStyle.HEADING_1, modifier = Modifier.padding(bottom = 16.dp)
         )
 
+        EsmorgaRow(title = stringResource(R.string.my_profile_changue_password), modifier = Modifier.clickable { onChangePassword() })
         EsmorgaRow(title = stringResource(R.string.my_profile_logout), modifier = Modifier.clickable { shownDialog = true })
     }
 }
