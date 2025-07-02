@@ -73,7 +73,9 @@ fun ProfileScreen(
         ProfileView(
             uiState = uiState,
             shownLogOutDialog = { rvm.logout() },
-            onChangePassword = { rvm.changePassword(context) },
+            onChangePassword = {
+                //TODO To be done in MOB-176
+            },
             onNavigateLogin = { rvm.logIn() }
         )
     }

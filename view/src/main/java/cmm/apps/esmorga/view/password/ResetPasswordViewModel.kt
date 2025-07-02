@@ -2,9 +2,9 @@ package cmm.apps.esmorga.view.password
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cmm.apps.esmorga.common.util.ValidateTextFieldUtils.getFieldErrorText
 import cmm.apps.esmorga.domain.user.model.User.Companion.PASSWORD_REGEX
 import cmm.apps.esmorga.domain.user.repository.PerformResetPasswordUseCase
+import cmm.apps.esmorga.view.login.model.LoginViewHelper.getFieldErrorText
 import cmm.apps.esmorga.view.password.model.ResetPasswordEffect
 import cmm.apps.esmorga.view.password.model.ResetPasswordUiState
 import cmm.apps.esmorga.view.password.model.ResetPasswordViewHelper.getEmptyFieldErrorText

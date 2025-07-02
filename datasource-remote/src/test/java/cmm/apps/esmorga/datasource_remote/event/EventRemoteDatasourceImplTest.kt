@@ -27,12 +27,11 @@ class EventRemoteDatasourceImplTest {
     fun `given a working api when events requested then event list is successfully returned`() = runTest {
         val remoteEventName = "RemoteEvent"
 
-        val context = mockk<Context>(relaxed = true)
         val api = mockk<EsmorgaApi>(relaxed = true)
         val guestApi = mockk<EsmorgaGuestApi>(relaxed = true)
         coEvery { guestApi.getEvents() } returns EventRemoteMock.provideEventListWrapper(listOf(remoteEventName))
 
-        val sut = EventRemoteDatasourceImpl(api, guestApi, context)
+        val sut = EventRemoteDatasourceImpl(api, guestApi)
         val result = sut.getEvents()
 
         Assert.assertEquals(remoteEventName, result[0].dataName)
@@ -48,7 +47,7 @@ class EventRemoteDatasourceImplTest {
         coEvery { guestApi.getEvents() } throws HttpException(Response.error<ResponseBody>(errorCode, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
         coEvery { context.getSystemService(Context.CONNECTIVITY_SERVICE) }
 
-        val sut = EventRemoteDatasourceImpl(api, guestApi, context)
+        val sut = EventRemoteDatasourceImpl(api, guestApi)
 
         val exception = try {
             sut.getEvents()
@@ -66,12 +65,11 @@ class EventRemoteDatasourceImplTest {
         val remoteEventName = "RemoteEvent"
         val wrongTypeEvent = provideEvent(remoteEventName).copy(remoteType = "ERROR")
 
-        val context = mockk<Context>(relaxed = true)
         val api = mockk<EsmorgaApi>(relaxed = true)
         val guestApi = mockk<EsmorgaGuestApi>(relaxed = true)
         coEvery { guestApi.getEvents() } returns EventListWrapperRemoteModel(1, listOf(wrongTypeEvent))
 
-        val sut = EventRemoteDatasourceImpl(api, guestApi, context)
+        val sut = EventRemoteDatasourceImpl(api, guestApi)
 
         val exception = try {
             sut.getEvents()
@@ -95,7 +93,7 @@ class EventRemoteDatasourceImplTest {
         coEvery { guestApi.getEvents() } returns EventListWrapperRemoteModel(1, listOf(wrongTypeEvent))
         coEvery { context.getSystemService(Context.CONNECTIVITY_SERVICE) }
 
-        val sut = EventRemoteDatasourceImpl(api, guestApi, context)
+        val sut = EventRemoteDatasourceImpl(api, guestApi)
         val exception = try {
             sut.getEvents()
             null
@@ -111,12 +109,11 @@ class EventRemoteDatasourceImplTest {
     fun `given a working api when my events requested then event list is successfully returned`() = runTest {
         val remoteEventName = "RemoteEvent"
 
-        val context = mockk<Context>(relaxed = true)
         val api = mockk<EsmorgaApi>(relaxed = true)
         val guestApi = mockk<EsmorgaGuestApi>(relaxed = true)
         coEvery { api.getMyEvents() } returns EventRemoteMock.provideEventListWrapper(listOf(remoteEventName))
 
-        val sut = EventRemoteDatasourceImpl(api, guestApi, context)
+        val sut = EventRemoteDatasourceImpl(api, guestApi)
         val result = sut.getMyEvents()
 
         Assert.assertEquals(remoteEventName, result[0].dataName)
@@ -132,7 +129,7 @@ class EventRemoteDatasourceImplTest {
 
         coEvery { api.getMyEvents() } throws HttpException(Response.error<ResponseBody>(errorCode, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
         coEvery { context.getSystemService(Context.CONNECTIVITY_SERVICE) }
-        val sut = EventRemoteDatasourceImpl(api, guestApi, context)
+        val sut = EventRemoteDatasourceImpl(api, guestApi)
 
         val exception = try {
             sut.getMyEvents()
@@ -147,12 +144,11 @@ class EventRemoteDatasourceImplTest {
 
     @Test
     fun `given a working api when join event requested successfully then return Unit`() = runTest {
-        val context = mockk<Context>(relaxed = true)
         val api = mockk<EsmorgaApi>(relaxed = true)
         val guestApi = mockk<EsmorgaGuestApi>(relaxed = true)
         coEvery { api.joinEvent(any()) } returns Unit
 
-        val sut = EventRemoteDatasourceImpl(api, guestApi, context)
+        val sut = EventRemoteDatasourceImpl(api, guestApi)
         val result = sut.joinEvent(provideEvent("Remote Event").toEventDataModel())
 
         coVerify { api.joinEvent(any()) }
@@ -162,12 +158,11 @@ class EventRemoteDatasourceImplTest {
     @Test
     fun `given an api returning a 400 when join event requested then Exception is thrown`() = runTest {
         val errorCode = 400
-        val context = mockk<Context>(relaxed = true)
         val api = mockk<EsmorgaApi>(relaxed = true)
         val guestApi = mockk<EsmorgaGuestApi>(relaxed = true)
         coEvery { api.joinEvent(any()) } throws HttpException(Response.error<ResponseBody>(errorCode, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
 
-        val sut = EventRemoteDatasourceImpl(api, guestApi, context)
+        val sut = EventRemoteDatasourceImpl(api, guestApi)
         val exception = try {
             sut.joinEvent(provideEvent("Remote Event").toEventDataModel())
         } catch (exception: RuntimeException) {
@@ -180,12 +175,11 @@ class EventRemoteDatasourceImplTest {
 
     @Test
     fun `given a working api when leave event requested successfully then return Unit`() = runTest {
-        val context = mockk<Context>(relaxed = true)
         val api = mockk<EsmorgaApi>(relaxed = true)
         val guestApi = mockk<EsmorgaGuestApi>(relaxed = true)
         coEvery { api.leaveEvent(any()) } returns Unit
 
-        val sut = EventRemoteDatasourceImpl(api, guestApi, context)
+        val sut = EventRemoteDatasourceImpl(api, guestApi)
         val result = sut.leaveEvent(provideEvent("Remote Event").toEventDataModel())
 
         coVerify { api.leaveEvent(any()) }
@@ -195,12 +189,11 @@ class EventRemoteDatasourceImplTest {
     @Test
     fun `given an api returning a 400 when leave event requested then Exception is thrown`() = runTest {
         val errorCode = 400
-        val context = mockk<Context>(relaxed = true)
         val api = mockk<EsmorgaApi>(relaxed = true)
         val guestApi = mockk<EsmorgaGuestApi>(relaxed = true)
         coEvery { api.leaveEvent(any()) } throws HttpException(Response.error<ResponseBody>(errorCode, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
 
-        val sut = EventRemoteDatasourceImpl(api, guestApi, context)
+        val sut = EventRemoteDatasourceImpl(api, guestApi)
         val exception = try {
             sut.leaveEvent(provideEvent("Remote Event").toEventDataModel())
         } catch (exception: RuntimeException) {
