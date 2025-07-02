@@ -33,7 +33,8 @@ class ProfileViewScreenshotTest : BaseScreenshotTest() {
                         user = user
                     ),
                     shownLogOutDialog = {},
-                    onNavigateLogin = {}
+                    onNavigateLogin = {},
+                    onChangePassword = {}
                 )
             }
         }
