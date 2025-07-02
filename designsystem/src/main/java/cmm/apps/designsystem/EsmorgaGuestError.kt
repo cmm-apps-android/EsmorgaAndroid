@@ -17,8 +17,8 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 
 @Composable
-fun EsmorgaGuestError(errorMessage: String, buttonText: String, onButtonClicked: () -> Unit, errorImage: Int) {
-    val lottieAnimation by rememberLottieComposition(LottieCompositionSpec.RawRes(errorImage))
+fun EsmorgaGuestError(errorMessage: String, buttonText: String, onButtonClicked: () -> Unit, animation: Int) {
+    val lottieAnimation by rememberLottieComposition(LottieCompositionSpec.RawRes(animation))
     Column(
         modifier = Modifier
             .padding(
