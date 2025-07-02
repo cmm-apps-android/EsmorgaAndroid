@@ -3,7 +3,6 @@ package cmm.apps.esmorga.view.eventlist
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,7 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import cmm.apps.designsystem.EsmorgaButton
+import cmm.apps.designsystem.EsmorgaGuestError
 import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.domain.event.model.Event
@@ -108,43 +107,11 @@ fun MyEventListView(
             } else {
                 when (uiState.error) {
                     MyEventListError.EMPTY_LIST -> MyEventsEmptyView()
-                    MyEventListError.NOT_LOGGED_IN -> MyEventGuestError(
-                        stringResource(R.string.unauthenticated_error_title),
-                        stringResource(R.string.button_login)
-                    ) { onSignInClick() }
-
-                    MyEventListError.UNKNOWN -> MyEventGuestError(stringResource(R.string.default_error_title), stringResource(R.string.button_retry)) { onRetryClick() }
+                    MyEventListError.NOT_LOGGED_IN -> EsmorgaGuestError(stringResource(R.string.unauthenticated_error_title), stringResource(R.string.button_login), { onSignInClick() }, R.raw.oops)
+                    MyEventListError.UNKNOWN -> EsmorgaGuestError(stringResource(R.string.default_error_title), stringResource(R.string.button_retry), { onRetryClick() }, R.raw.oops)
                     null -> EventList(uiState.eventList, onEventClick, modifier = Modifier.padding(horizontal = 16.dp))
                 }
             }
-        }
-    }
-}
-
-@Composable
-fun MyEventGuestError(errorMessage: String, buttonText: String, onButtonClicked: () -> Unit) {
-    val lottieAnimation by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.oops))
-    Column(
-        modifier = Modifier
-            .padding(
-                start = 16.dp,
-                end = 16.dp
-            )
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Spacer(modifier = Modifier.weight(1f))
-        LottieAnimation(
-            composition = lottieAnimation,
-            iterations = Int.MAX_VALUE,
-            contentScale = ContentScale.Inside,
-            modifier = Modifier.fillMaxHeight(0.3f)
-        )
-        EsmorgaText(errorMessage, style = EsmorgaTextStyle.HEADING_2)
-        Spacer(modifier = Modifier.weight(1f))
-        EsmorgaButton(buttonText) {
-            onButtonClicked.invoke()
         }
     }
 }
