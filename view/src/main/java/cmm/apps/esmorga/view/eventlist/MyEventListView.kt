@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmm.apps.designsystem.EsmorgaButton
+import cmm.apps.designsystem.EsmorgaGuestError
 import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.domain.event.model.Event
@@ -108,12 +109,8 @@ fun MyEventListView(
             } else {
                 when (uiState.error) {
                     MyEventListError.EMPTY_LIST -> MyEventsEmptyView()
-                    MyEventListError.NOT_LOGGED_IN -> MyEventGuestError(
-                        stringResource(R.string.unauthenticated_error_title),
-                        stringResource(R.string.button_login)
-                    ) { onSignInClick() }
-
-                    MyEventListError.UNKNOWN -> MyEventGuestError(stringResource(R.string.default_error_title), stringResource(R.string.button_retry)) { onRetryClick() }
+                    MyEventListError.NOT_LOGGED_IN -> EsmorgaGuestError(stringResource(R.string.unauthenticated_error_title), stringResource(R.string.button_login), { onSignInClick() }, R.raw.oops)
+                    MyEventListError.UNKNOWN -> EsmorgaGuestError(stringResource(R.string.default_error_title), stringResource(R.string.button_retry), { onRetryClick() }, R.raw.oops)
                     null -> EventList(uiState.eventList, onEventClick, modifier = Modifier.padding(horizontal = 16.dp))
                 }
             }
