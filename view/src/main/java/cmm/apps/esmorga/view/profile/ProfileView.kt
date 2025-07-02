@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -85,35 +86,40 @@ fun ProfileView(
     onChangePassword: () -> Unit,
     onNavigateLogin: () -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        EsmorgaText(
-            text = stringResource(R.string.my_profile_title),
-            style = EsmorgaTextStyle.HEADING_1,
+    Scaffold(
+        modifier = Modifier.fillMaxSize()
+    ) { innerPadding ->
+        Column(
             modifier = Modifier
-                .padding(vertical = 32.dp)
-                .testTag(PROFILE_TITLE)
-        )
-        if (uiState.user == null) {
-            EsmorgaGuestError(
-                stringResource(R.string.unauthenticated_error_message),
-                stringResource(R.string.unauthenticated_error_login_button),
-                { onNavigateLogin() },
-                R.raw.oops
+                .padding(top = innerPadding.calculateTopPadding())
+        ) {
+            EsmorgaText(
+                text = stringResource(R.string.my_profile_title),
+                style = EsmorgaTextStyle.HEADING_1,
+                modifier = Modifier
+                    .padding(vertical = 32.dp, horizontal = 16.dp)
+                    .testTag(PROFILE_TITLE)
             )
-        } else {
-            LoggedProfileView(
-                name = uiState.user.name,
-                lastName = uiState.user.lastName,
-                email = uiState.user.email,
-                onLogout = { shownLogOutDialog() },
-                onChangePassword = { onChangePassword() },
-            )
+
+            if (uiState.user == null) {
+                EsmorgaGuestError(
+                    stringResource(R.string.unauthenticated_error_message),
+                    stringResource(R.string.unauthenticated_error_login_button),
+                    { onNavigateLogin() },
+                    R.raw.oops
+                )
+            } else {
+                LoggedProfileView(
+                    name = uiState.user.name,
+                    lastName = uiState.user.lastName,
+                    email = uiState.user.email,
+                    onLogout = { shownLogOutDialog() },
+                    onChangePassword = { onChangePassword() },
+                )
+            }
         }
     }
+
 }
 
 @Composable
@@ -141,6 +147,7 @@ private fun LoggedProfileView(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .padding(16.dp)
     ) {
         EsmorgaText(
             text = stringResource(R.string.my_profile_name),
@@ -159,8 +166,7 @@ private fun LoggedProfileView(
             style = EsmorgaTextStyle.HEADING_1, modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        EsmorgaRow(title = stringResource(R.string.my_profile_changue_password), modifier = Modifier.clickable { onChangePassword() } )
-
+        EsmorgaRow(title = stringResource(R.string.my_profile_changue_password), modifier = Modifier.clickable { onChangePassword() })
         EsmorgaRow(title = stringResource(R.string.my_profile_logout), modifier = Modifier.clickable { shownDialog = true })
     }
 }
