@@ -10,7 +10,7 @@ class DeviceLocalDataSourceImpl(private val sharedPreferences: SharedPreferences
         private const val DEVICE_ID_KEY = "id_device"
     }
 
-    override fun saveDeviceId(deviceId: String) {
+    private fun saveDeviceId(deviceId: String) {
         sharedPreferences.edit().putString(DEVICE_ID_KEY, deviceId).apply()
     }
 

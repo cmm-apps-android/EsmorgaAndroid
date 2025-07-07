@@ -20,17 +20,6 @@ class DeviceLocalDataSourceImplTest {
 
     }
 
-    @Test
-    fun `given a new device id saved when device id is requested then new device id is successfully returned`() {
-        val deviceIdSaved = "2019"
-        val sut = DeviceLocalDataSourceImpl(provideFakeSharedPreferences())
-        sut.saveDeviceId(deviceIdSaved)
-        val result = sut.getDeviceId()
-
-        Assert.assertEquals(deviceIdSaved, result)
-
-    }
-
     private fun provideFakeSharedPreferences(): SharedPreferences {
         val sharedPreferences = mockk<SharedPreferences>(relaxed = true)
         val fakeSharedDeviceIdSlot = slot<String>()
