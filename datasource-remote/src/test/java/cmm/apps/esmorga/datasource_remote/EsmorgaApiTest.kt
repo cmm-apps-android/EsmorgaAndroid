@@ -9,6 +9,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaAuthApi
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaGuestApi
 import cmm.apps.esmorga.datasource_remote.api.NetworkApiHelper
+import cmm.apps.esmorga.datasource_remote.mock.DeviceInterceptorMock.getDeviceInterceptor
 import cmm.apps.esmorga.datasource_remote.mock.EsmorgaAuthenticationMock.getAuthInterceptor
 import cmm.apps.esmorga.datasource_remote.mock.EsmorgaAuthenticationMock.getEsmorgaAuthenticatorMock
 import cmm.apps.esmorga.datasource_remote.mock.MockServer
@@ -79,7 +80,7 @@ class EsmorgaApiTest {
 
         mockServer.enqueueFile(200, ServerFiles.GET_EVENTS)
 
-        val sut = NetworkApiHelper().provideApi(mockServer.start(), EsmorgaGuestApi::class.java, getEsmorgaAuthenticatorMock(), getAuthInterceptor())
+        val sut = NetworkApiHelper().provideApi(mockServer.start(), EsmorgaGuestApi::class.java, getEsmorgaAuthenticatorMock(), getAuthInterceptor(), getDeviceInterceptor())
 
         val eventWrapper = sut.getEvents()
 
@@ -96,7 +97,7 @@ class EsmorgaApiTest {
 
         mockServer.enqueueFile(200, ServerFiles.LOGIN)
 
-        val sut = NetworkApiHelper().provideApi(mockServer.start(), EsmorgaAuthApi::class.java, getEsmorgaAuthenticatorMock(), getAuthInterceptor())
+        val sut = NetworkApiHelper().provideApi(mockServer.start(), EsmorgaAuthApi::class.java, getEsmorgaAuthenticatorMock(), getAuthInterceptor(), getDeviceInterceptor())
 
         val user = sut.login(body = mapOf("email" to "email", "password" to "password"))
 
@@ -111,7 +112,7 @@ class EsmorgaApiTest {
         coEvery { FirebaseCrashlytics.getInstance() } returns crashlyticsMock
         mockServer.enqueueFile(200, ServerFiles.LOGIN)
 
-        val sut = NetworkApiHelper().provideApi(mockServer.start(), EsmorgaAuthApi::class.java, getEsmorgaAuthenticatorMock(), getAuthInterceptor())
+        val sut = NetworkApiHelper().provideApi(mockServer.start(), EsmorgaAuthApi::class.java, getEsmorgaAuthenticatorMock(), getAuthInterceptor(), getDeviceInterceptor())
 
         sut.login(body = mapOf("email" to "email", "password" to "password"))
         verify {
