@@ -78,7 +78,7 @@ class UserLocalDatasourceImplTest {
         val localUserName = "Draco"
 
         val sut = UserLocalDatasourceImpl(provideFakeDao(), provideFakeSharedPreferences())
-        sut.saveUser(UserLocalMock.provideUser(name = localUserName).toUserDataModel(null, null))
+        sut.saveUser(UserLocalMock.provideUser(name = localUserName).toUserDataModel(null, null, 600))
         val result = sut.getUser()
 
         Assert.assertEquals(localUserName, result.dataName)
@@ -90,7 +90,7 @@ class UserLocalDatasourceImplTest {
         fakeStorage = UserLocalMock.provideUser()
 
         val sut = UserLocalDatasourceImpl(provideFakeDao(), provideFakeSharedPreferences())
-        sut.saveUser(UserLocalMock.provideUser(name = localUserName).toUserDataModel(null, null))
+        sut.saveUser(UserLocalMock.provideUser(name = localUserName).toUserDataModel(null, null, 600))
         val result = sut.getUser()
 
         Assert.assertEquals(localUserName, result.dataName)

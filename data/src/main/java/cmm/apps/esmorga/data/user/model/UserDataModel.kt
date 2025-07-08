@@ -5,5 +5,6 @@ data class UserDataModel(
     val dataLastName: String,
     val dataEmail: String,
     val dataAccessToken: String?,
-    val dataRefreshToken: String?
+    val dataRefreshToken: String?,
+    val dataTtl: Long
 )

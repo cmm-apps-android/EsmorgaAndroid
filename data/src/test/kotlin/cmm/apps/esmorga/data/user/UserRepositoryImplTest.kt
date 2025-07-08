@@ -172,7 +172,8 @@ class UserRepositoryImplTest {
             dataLastName = "Perez",
             dataEmail = "yago@mail.com",
             dataAccessToken = "fakeAccessToken123",
-            dataRefreshToken = "fakeRefreshToken123"
+            dataRefreshToken = "fakeRefreshToken123",
+            dataTtl = 600
         )
 
         coEvery { remoteDS.activateAccount(any()) } returns fakeUserDataModel

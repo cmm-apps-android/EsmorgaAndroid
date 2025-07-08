@@ -19,6 +19,7 @@ class UserLocalDatasourceImpl(
         sharedPreferences.edit().run {
             putString("access_token", user.dataAccessToken)
             putString("refresh_token", user.dataRefreshToken)
+            putLong("ttl", user.dataTtl * 1000 + System.currentTimeMillis())
             apply()
         }
         userDao.insertUser(user.toUserLocalModel())
@@ -29,7 +30,8 @@ class UserLocalDatasourceImpl(
         user?.let {
             val accessToken = sharedPreferences.getString("access_token", null)
             val refreshToken = sharedPreferences.getString("refresh_token", null)
-            return it.toUserDataModel(accessToken, refreshToken)
+            val ttl = sharedPreferences.getLong("ttl", 0)
+            return it.toUserDataModel(accessToken, refreshToken, ttl)
         } ?: throw EsmorgaException(
             message = "User not found",
             source = Source.LOCAL,
