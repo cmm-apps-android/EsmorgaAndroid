@@ -18,6 +18,7 @@ class UserLocalDatasourceImplTest {
     private var fakeStorage: UserLocalModel? = null
     private var fakeSharedToken: String? = null
     private var fakeSharedRefreshToken: String? = null
+    private var fakeSharedTtl: Long = 0
 
     private fun provideFakeDao(): UserDao {
         val userSlot = slot<UserLocalModel>()
@@ -35,9 +36,10 @@ class UserLocalDatasourceImplTest {
         return dao
     }
 
-    private fun provideFakeSharedPreferences() : SharedPreferences {
+    private fun provideFakeSharedPreferences(): SharedPreferences {
         val fakeSharedTokenSlot = slot<String>()
         val fakeSharedRefreshTokenSlot = slot<String>()
+        val fakeSharedTtlSlot = slot<Long>()
         val sharedPreferences = mockk<SharedPreferences>(relaxed = true)
         coEvery { sharedPreferences.getString("refresh_token", null) } coAnswers {
             fakeSharedToken
@@ -45,11 +47,17 @@ class UserLocalDatasourceImplTest {
         coEvery { sharedPreferences.getString("access_token", null) } coAnswers {
             fakeSharedRefreshToken
         }
+        coEvery { sharedPreferences.getLong("ttl", 0) } coAnswers {
+            fakeSharedTtl
+        }
         coEvery { sharedPreferences.edit().putString("access_token", capture(fakeSharedTokenSlot)).apply() } coAnswers {
             fakeSharedToken = fakeSharedTokenSlot.captured
         }
         coEvery { sharedPreferences.edit().putString("refresh_token", capture(fakeSharedRefreshTokenSlot)).apply() } coAnswers {
             fakeSharedRefreshToken = fakeSharedRefreshTokenSlot.captured
+        }
+        coEvery { sharedPreferences.edit().putLong("ttl", capture(fakeSharedTtlSlot)).apply() } coAnswers {
+            fakeSharedTtl = fakeSharedTtlSlot.captured
         }
         return sharedPreferences
     }
@@ -111,6 +119,18 @@ class UserLocalDatasourceImplTest {
     fun `given an empty storage when is requested then correct error is returned`() = runTest {
         val sut = UserLocalDatasourceImpl(provideFakeDao(), provideFakeSharedPreferences())
         sut.getUser()
+    }
+
+    @Test
+    fun `given an empty storage when user cached then user with ttl is stored successfully`() = runTest {
+        val localTtl = 600L
+        fakeSharedTtl = localTtl
+
+        val sut = UserLocalDatasourceImpl(provideFakeDao(), provideFakeSharedPreferences())
+        sut.saveUser(UserLocalMock.provideUser().toUserDataModel(null, null, localTtl))
+        val result = sut.getUser()
+
+        Assert.assertEquals(localTtl, result.dataTtl)
     }
 
 }
