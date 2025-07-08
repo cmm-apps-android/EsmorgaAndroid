@@ -3,6 +3,7 @@ package cmm.apps.esmorga.datasource_remote.api
 
 import cmm.apps.esmorga.datasource_remote.BuildConfig
 import cmm.apps.esmorga.datasource_remote.api.authenticator.EsmorgaAuthenticator
+import cmm.apps.esmorga.datasource_remote.api.device.DeviceInterceptor
 import com.google.gson.GsonBuilder
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -22,9 +23,10 @@ class NetworkApiHelper {
         baseUrl: String,
         clazz: Class<T>,
         authenticator: EsmorgaAuthenticator?,
-        authInterceptor: Interceptor?
+        authInterceptor: Interceptor?,
+        deviceInterceptor: DeviceInterceptor
     ): T {
-        val okHttpClient = provideOkHttpClient(authenticator, authInterceptor)
+        val okHttpClient = provideOkHttpClient(authenticator, authInterceptor, deviceInterceptor)
         return Retrofit.Builder()
             .baseUrl(baseUrl)
             .client(okHttpClient)
@@ -34,7 +36,7 @@ class NetworkApiHelper {
             .create(clazz)
     }
 
-    private fun provideOkHttpClient(authenticator: EsmorgaAuthenticator?, authInterceptor: Interceptor?): OkHttpClient =
+    private fun provideOkHttpClient(authenticator: EsmorgaAuthenticator?, authInterceptor: Interceptor?, deviceInterceptor: DeviceInterceptor): OkHttpClient =
         try {
             OkHttpClient.Builder().apply {
                 authenticator?.let {
@@ -46,6 +48,7 @@ class NetworkApiHelper {
                 addInterceptor(CurlLogInterceptor)
                 addInterceptor(LogInterceptor)
                 addInterceptor(ConnectionInterceptor)
+                addInterceptor(deviceInterceptor)
 
                 connectTimeout(30, TimeUnit.SECONDS)
                 readTimeout(30, TimeUnit.SECONDS)

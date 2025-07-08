@@ -10,6 +10,7 @@ import cmm.apps.esmorga.datasource_remote.api.EsmorgaGuestApi
 import cmm.apps.esmorga.datasource_remote.api.NetworkApiHelper
 import cmm.apps.esmorga.datasource_remote.api.authenticator.EsmorgaAuthInterceptor
 import cmm.apps.esmorga.datasource_remote.api.authenticator.EsmorgaAuthenticator
+import cmm.apps.esmorga.datasource_remote.api.device.DeviceInterceptor
 import cmm.apps.esmorga.datasource_remote.event.EventRemoteDatasourceImpl
 import cmm.apps.esmorga.datasource_remote.user.AuthRemoteDatasourceImpl
 import cmm.apps.esmorga.datasource_remote.user.UserRemoteDatasourceImpl
@@ -24,7 +25,8 @@ object RemoteDIModule {
                 baseUrl = NetworkApiHelper.esmorgaApiBaseUrl(),
                 clazz = EsmorgaAuthApi::class.java,
                 authenticator = null,
-                authInterceptor = null
+                authInterceptor = null,
+                DeviceInterceptor(get())
             )
         }
         factory<AuthDatasource> { AuthRemoteDatasourceImpl(get(), get()) }
@@ -33,7 +35,8 @@ object RemoteDIModule {
                 baseUrl = NetworkApiHelper.esmorgaApiBaseUrl(),
                 clazz = EsmorgaApi::class.java,
                 authenticator = EsmorgaAuthenticator(get(), get()),
-                authInterceptor = EsmorgaAuthInterceptor(get(), get())
+                authInterceptor = EsmorgaAuthInterceptor(get(), get()),
+                deviceInterceptor = DeviceInterceptor(get())
             )
         }
         single {
@@ -41,7 +44,8 @@ object RemoteDIModule {
                 baseUrl = NetworkApiHelper.esmorgaApiBaseUrl(),
                 clazz = EsmorgaGuestApi::class.java,
                 authenticator = null,
-                authInterceptor = null
+                authInterceptor = null,
+                deviceInterceptor = DeviceInterceptor(get())
             )
         }
         factory<EventDatasource>(named(DataDIModule.REMOTE_DATASOURCE_INSTANCE_NAME)) { EventRemoteDatasourceImpl(get(), get()) }
