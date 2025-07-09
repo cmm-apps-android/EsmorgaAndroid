@@ -21,6 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmm.apps.designsystem.EsmorgaButton
@@ -101,8 +103,8 @@ fun WelcomeView(uiState: WelcomeUiState, onPrimaryButtonClicked: () -> Unit, onS
                     text = it,
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
-                        .testTag("welcome_screen_device_id")
                         .padding(bottom = 16.dp)
+                        .semantics { contentDescription = "welcome_screen_device_id" }
                 )
             }
         }

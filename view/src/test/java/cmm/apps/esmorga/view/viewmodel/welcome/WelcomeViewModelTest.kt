@@ -45,7 +45,7 @@ class WelcomeViewModelTest {
     }
 
     @Test
-    fun `when showDeviceIdNeededUseCase returns true, the deviceId is displayed`() = runTest {
+    fun `given showDeviceIdNeededUseCase returns true and getDeviceIdUseCase succeeds when ViewModel initialized then deviceId is displayed`() = runTest {
         coEvery { showDeviceIdNeededUseCase() } returns EsmorgaResult.success(true)
         coEvery { getDeviceIdUseCase() } returns EsmorgaResult.success("01234")
 
@@ -54,12 +54,11 @@ class WelcomeViewModelTest {
         viewModel.uiState.test {
             val state = awaitItem()
             assertEquals("01234", state.deviceId)
-            cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
-    fun `when showDeviceIdNeededUseCase returns false, the deviceId is not displayed`() = runTest {
+    fun `given showDeviceIdNeededUseCase returns false when ViewModel initialized then deviceId is not displayed`() = runTest {
         coEvery { showDeviceIdNeededUseCase() } returns EsmorgaResult.success(false)
         coEvery { getDeviceIdUseCase() } returns EsmorgaResult.success("01234")
 
@@ -68,12 +67,11 @@ class WelcomeViewModelTest {
         viewModel.uiState.test {
             val state = awaitItem()
             assertNull(state.deviceId)
-            cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
-    fun `when getDeviceIdUseCase fails, deviceId is null`() = runTest {
+    fun `given getDeviceIdUseCase fails and showDeviceIdNeededUseCase returns true when ViewModel initialized then deviceId is null`() = runTest {
         coEvery { showDeviceIdNeededUseCase() } returns EsmorgaResult.success(true)
         coEvery { getDeviceIdUseCase() } returns EsmorgaResult.failure(Exception("Error getting deviceId"))
 
@@ -82,12 +80,11 @@ class WelcomeViewModelTest {
         viewModel.uiState.test {
             val state = awaitItem()
             assertNull(state.deviceId)
-            cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
-    fun `when showDeviceIdNeededUseCase fails, deviceId is null`() = runTest {
+    fun `given showDeviceIdNeededUseCase fails when ViewModel initialized then deviceId is null`() = runTest {
         coEvery { showDeviceIdNeededUseCase() } returns EsmorgaResult.failure(Exception("Error checking if deviceId needed"))
         coEvery { getDeviceIdUseCase() } returns EsmorgaResult.success("someId")
 
@@ -96,7 +93,6 @@ class WelcomeViewModelTest {
         viewModel.uiState.test {
             val state = awaitItem()
             assertNull(state.deviceId)
-            cancelAndIgnoreRemainingEvents()
         }
     }
 }

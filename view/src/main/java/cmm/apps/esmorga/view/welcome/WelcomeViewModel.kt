@@ -34,18 +34,13 @@ class WelcomeViewModel(
                 .onSuccess { show ->
                     showDeviceId = show
                 }
-                .onFailure {
-                    showDeviceId = false
-                }
 
             val result = getDeviceIdUseCase()
             result
                 .onSuccess { deviceId ->
                     _uiState.value = _uiState.value.copy(deviceId = if (showDeviceId) deviceId else null)
                 }
-                .onFailure {
-                    _uiState.value = _uiState.value.copy(deviceId = null)
-                }
+
         }
     }
     init {

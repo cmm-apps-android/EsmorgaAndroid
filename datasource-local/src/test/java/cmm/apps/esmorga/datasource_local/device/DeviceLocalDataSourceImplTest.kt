@@ -34,7 +34,7 @@ class DeviceLocalDataSourceImplTest {
     }
 
     @Test
-    fun `getBuildType returns BuildConfig FLAVOR`() {
+    fun `given DeviceLocalDataSourceImpl when getBuildType is called then returns BuildConfig FLAVOR`() {
         val sharedPreferences = mockk<SharedPreferences>(relaxed = true)
         val sut = DeviceLocalDataSourceImpl(sharedPreferences)
 

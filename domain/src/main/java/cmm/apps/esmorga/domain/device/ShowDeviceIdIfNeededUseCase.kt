@@ -13,7 +13,6 @@ class ShowDeviceIdIfNeededUseCaseImpl(
     override suspend fun invoke(): EsmorgaResult<Boolean> {
         val buildType = repo.getBuildType()
         val shouldShow = buildType.equals("qa", ignoreCase = true)
-        println("Yago -> $shouldShow")
         return EsmorgaResult.success(shouldShow)
     }
 }

@@ -14,7 +14,7 @@ class ShowDeviceIdIfNeededUseCaseTest {
     private val useCase = ShowDeviceIdIfNeededUseCaseImpl(repo)
 
     @Test
-    fun `returns true when buildType is qa`() = runTest {
+    fun `given buildType is qa when invoke then returns true`() = runTest {
         coEvery { repo.getBuildType() } returns "qa"
 
         val result = useCase()
@@ -23,7 +23,7 @@ class ShowDeviceIdIfNeededUseCaseTest {
     }
 
     @Test
-    fun `returns true when buildType is QA ignoring case`() = runTest {
+    fun `given buildType is QA when invoke then returns true ignoring case`() = runTest {
         coEvery { repo.getBuildType() } returns "QA"
 
         val result = useCase()
@@ -32,7 +32,7 @@ class ShowDeviceIdIfNeededUseCaseTest {
     }
 
     @Test
-    fun `returns false when buildType is not qa`() = runTest {
+    fun `given buildType is prod when invoke then returns false`() = runTest {
         coEvery { repo.getBuildType() } returns "prod"
 
         val result = useCase()
@@ -41,7 +41,7 @@ class ShowDeviceIdIfNeededUseCaseTest {
     }
 
     @Test
-    fun `returns false when buildType is empty`() = runTest {
+    fun `given buildType is empty when invoke then returns false`() = runTest {
         coEvery { repo.getBuildType() } returns ""
 
         val result = useCase()
