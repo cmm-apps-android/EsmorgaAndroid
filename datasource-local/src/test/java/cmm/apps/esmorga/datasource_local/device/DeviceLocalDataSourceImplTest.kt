@@ -1,6 +1,7 @@
 package cmm.apps.esmorga.datasource_local.device
 
 import android.content.SharedPreferences
+import cmm.apps.datasource_local.BuildConfig
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.slot
@@ -30,5 +31,15 @@ class DeviceLocalDataSourceImplTest {
             fakeDeviceId = fakeSharedDeviceIdSlot.captured
         }
         return sharedPreferences
+    }
+
+    @Test
+    fun `getBuildType returns BuildConfig FLAVOR`() {
+        val sharedPreferences = mockk<SharedPreferences>(relaxed = true)
+        val sut = DeviceLocalDataSourceImpl(sharedPreferences)
+
+        val result = sut.getBuildType()
+
+        Assert.assertEquals(BuildConfig.FLAVOR, result)
     }
 }
