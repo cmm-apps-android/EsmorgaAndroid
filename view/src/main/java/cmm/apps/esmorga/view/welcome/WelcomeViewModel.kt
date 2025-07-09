@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 class WelcomeViewModel(
     private val getDeviceIdUseCase: GetDeviceIdUseCase,
     private val showDeviceIdNeededUseCase: ShowDeviceIdIfNeededUseCase
+    private val getDeviceIdUseCase: GetDeviceIdUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(WelcomeUiState().createDefaultWelcomeUiState())
@@ -48,6 +49,12 @@ class WelcomeViewModel(
                 }
         }
     }
+    init {
+        viewModelScope.launch {
+            getDeviceIdUseCase()
+        }
+    }
+
     fun onPrimaryButtonClicked() {
         _effect.tryEmit(WelcomeEffect.NavigateToLogin)
     }
