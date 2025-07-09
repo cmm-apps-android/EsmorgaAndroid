@@ -1,6 +1,7 @@
 package cmm.apps.esmorga.datasource_local.device
 
 import android.content.SharedPreferences
+import cmm.apps.datasource_local.BuildConfig
 import cmm.apps.esmorga.data.device.datasource.DeviceDataSource
 import java.util.UUID
 
@@ -21,5 +22,9 @@ class DeviceLocalDataSourceImpl(private val sharedPreferences: SharedPreferences
             saveDeviceId(uuid)
         }
         return uuid
+    }
+
+    override fun getBuildType(): String {
+        return BuildConfig.FLAVOR
     }
 }

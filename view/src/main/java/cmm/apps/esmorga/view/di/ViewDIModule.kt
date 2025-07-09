@@ -33,7 +33,7 @@ object ViewDIModule {
             EventDetailsViewModel(get(), get(), get(), event)
         }
         viewModel {
-            WelcomeViewModel(get())
+            WelcomeViewModel(get(), get())
         }
         viewModel { (message: String?) ->
             LoginViewModel(get(), message)

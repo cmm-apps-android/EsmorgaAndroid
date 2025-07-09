@@ -6,4 +6,6 @@ import cmm.apps.esmorga.domain.device.repository.DeviceRepository
 class DeviceRepositoryImpl(private val localDataSource: DeviceDataSource) : DeviceRepository {
 
     override fun getDeviceId(): String = localDataSource.getDeviceId()
+
+    override fun getBuildType(): String = localDataSource.getBuildType()
 }

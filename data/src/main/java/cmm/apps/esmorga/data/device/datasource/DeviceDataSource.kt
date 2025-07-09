@@ -9,4 +9,9 @@ interface DeviceDataSource {
     fun getDeviceId(): String {
         throw EsmorgaException(message = "Unsupported operation", source = Source.UNSUPPORTED, code = ErrorCodes.UNSUPPORTED_OPERATION)
     }
+
+    fun getBuildType(): String{
+        throw EsmorgaException(message = "Unsupported operation", source = Source.UNSUPPORTED, code = ErrorCodes.UNSUPPORTED_OPERATION)
+    }
+
 }
