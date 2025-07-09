@@ -34,7 +34,6 @@ object ViewDIModule {
         }
         viewModel {
             WelcomeViewModel(get(), get())
-            WelcomeViewModel(get())
         }
         viewModel { (message: String?) ->
             LoginViewModel(get(), message)

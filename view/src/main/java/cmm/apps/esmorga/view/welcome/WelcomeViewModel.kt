@@ -18,7 +18,6 @@ import kotlinx.coroutines.launch
 class WelcomeViewModel(
     private val getDeviceIdUseCase: GetDeviceIdUseCase,
     private val showDeviceIdNeededUseCase: ShowDeviceIdIfNeededUseCase
-    private val getDeviceIdUseCase: GetDeviceIdUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(WelcomeUiState().createDefaultWelcomeUiState())
