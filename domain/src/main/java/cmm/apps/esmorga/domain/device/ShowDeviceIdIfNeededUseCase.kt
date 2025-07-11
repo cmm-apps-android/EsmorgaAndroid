@@ -1,5 +1,6 @@
 package cmm.apps.esmorga.domain.device
 
+import cmm.apps.esmorga.domain.buildConfig.EsmorgaBuildConfig
 import cmm.apps.esmorga.domain.device.repository.DeviceRepository
 import cmm.apps.esmorga.domain.result.EsmorgaResult
 
@@ -11,8 +12,8 @@ class ShowDeviceIdIfNeededUseCaseImpl(
     private val repo: DeviceRepository
 ) : ShowDeviceIdIfNeededUseCase {
     override suspend fun invoke(): EsmorgaResult<Boolean> {
-        val buildType = repo.getBuildType()
-        val shouldShow = buildType.equals("qa", ignoreCase = true)
+        val buildType = repo.getEnvironment()
+        val shouldShow = buildType == EsmorgaBuildConfig.Environment.QA
         return EsmorgaResult.success(shouldShow)
     }
 }

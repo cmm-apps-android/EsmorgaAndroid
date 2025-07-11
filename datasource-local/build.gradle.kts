@@ -28,23 +28,6 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
-
-    buildFeatures {
-        flavorDimensions += "environment"
-        buildConfig = true
-    }
-
-    productFlavors {
-        create("prod") {
-            dimension = "environment"
-            buildConfigField("String", "FLAVOR", "\"prod\"")
-        }
-        create("qa") {
-            dimension = "environment"
-            buildConfigField("String", "FLAVOR", "\"qa\"")
-        }
-    }
-
     kotlin {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_1_8)

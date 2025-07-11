@@ -1,5 +1,6 @@
 package cmm.apps.esmorga.domain.device
 
+import cmm.apps.esmorga.domain.buildConfig.EsmorgaBuildConfig
 import cmm.apps.esmorga.domain.device.repository.DeviceRepository
 import cmm.apps.esmorga.domain.result.EsmorgaResult
 import io.mockk.coEvery
@@ -14,8 +15,10 @@ class ShowDeviceIdIfNeededUseCaseTest {
     private val useCase = ShowDeviceIdIfNeededUseCaseImpl(repo)
 
     @Test
-    fun `given buildType is qa when invoke then returns true`() = runTest {
-        coEvery { repo.getBuildType() } returns "qa"
+    fun `given qa environment when get environment is called then returns true`() = runTest {
+        val buildConfig: EsmorgaBuildConfig = mockk()
+        coEvery { buildConfig.getEnvironment() } returns EsmorgaBuildConfig.Environment.QA
+        coEvery { repo.getEnvironment() } returns EsmorgaBuildConfig.Environment.QA
 
         val result = useCase()
 
@@ -23,26 +26,10 @@ class ShowDeviceIdIfNeededUseCaseTest {
     }
 
     @Test
-    fun `given buildType is QA when invoke then returns true ignoring case`() = runTest {
-        coEvery { repo.getBuildType() } returns "QA"
-
-        val result = useCase()
-
-        assertEquals(EsmorgaResult.success(true), result)
-    }
-
-    @Test
-    fun `given buildType is prod when invoke then returns false`() = runTest {
-        coEvery { repo.getBuildType() } returns "prod"
-
-        val result = useCase()
-
-        assertEquals(EsmorgaResult.success(false), result)
-    }
-
-    @Test
-    fun `given buildType is empty when invoke then returns false`() = runTest {
-        coEvery { repo.getBuildType() } returns ""
+    fun `given prod environment when get environment is called then returns false`() = runTest {
+        val buildConfig: EsmorgaBuildConfig = mockk()
+        coEvery { buildConfig.getEnvironment() } returns EsmorgaBuildConfig.Environment.PROD
+        coEvery { repo.getEnvironment() } returns EsmorgaBuildConfig.Environment.PROD
 
         val result = useCase()
 
