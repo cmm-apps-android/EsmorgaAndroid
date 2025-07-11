@@ -45,7 +45,7 @@ class WelcomeViewModelTest {
     }
 
     @Test
-    fun `given showDeviceIdNeededUseCase returns true and getDeviceIdUseCase succeeds when ViewModel initialized then deviceId is displayed`() = runTest {
+    fun `given a success usecase, when is qa envoriment then deviceId is displayed`() = runTest {
         coEvery { showDeviceIdNeededUseCase() } returns EsmorgaResult.success(true)
         coEvery { getDeviceIdUseCase() } returns EsmorgaResult.success("01234")
 

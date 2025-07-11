@@ -26,6 +26,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmm.apps.designsystem.EsmorgaButton
+import cmm.apps.designsystem.EsmorgaText
+import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import cmm.apps.esmorga.view.welcome.WelcomeScreenTestTags.WELCOME_PRIMARY_BUTTON
@@ -99,12 +101,12 @@ fun WelcomeView(uiState: WelcomeUiState, onPrimaryButtonClicked: () -> Unit, onS
             }
 
             uiState.deviceId?.let {
-                Text(
+                EsmorgaText(
                     text = it,
+                    style = EsmorgaTextStyle.CAPTION,
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
-                        .padding(bottom = 16.dp)
-                        .semantics { contentDescription = "welcome_screen_device_id" }
+                        .semantics { contentDescription = "id_device" }
                 )
             }
         }
