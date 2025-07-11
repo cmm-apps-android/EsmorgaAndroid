@@ -12,5 +12,6 @@ data class UserRemoteModel(
 data class ProfileRemoteModel(
     @SerializedName("name") val remoteName: String,
     @SerializedName("lastName") val remoteLastName: String,
-    @SerializedName("email") val remoteEmail: String
+    @SerializedName("email") val remoteEmail: String,
+    @SerializedName("role") val remoteRole: String
 )

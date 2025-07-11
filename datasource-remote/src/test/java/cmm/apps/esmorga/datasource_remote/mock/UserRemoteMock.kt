@@ -9,7 +9,8 @@ object UserRemoteMock {
         remoteProfile = ProfileRemoteModel(
             remoteName = name,
             remoteEmail = "$",
-            remoteLastName = "Doe"
+            remoteLastName = "Doe",
+            remoteRole = "USER"
         ),
         remoteRefreshToken = "refreshToken",
         remoteAccessToken = "token",

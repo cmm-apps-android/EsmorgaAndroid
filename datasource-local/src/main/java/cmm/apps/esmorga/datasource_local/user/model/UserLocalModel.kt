@@ -8,4 +8,5 @@ data class UserLocalModel(
     @PrimaryKey val localEmail: String,
     val localName: String,
     val localLastName: String,
+    val localRole: String
 )
