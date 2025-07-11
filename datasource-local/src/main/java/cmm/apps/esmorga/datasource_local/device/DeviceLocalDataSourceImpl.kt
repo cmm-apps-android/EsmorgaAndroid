@@ -2,9 +2,10 @@ package cmm.apps.esmorga.datasource_local.device
 
 import android.content.SharedPreferences
 import cmm.apps.esmorga.data.device.datasource.DeviceDataSource
+import cmm.apps.esmorga.domain.buildConfig.EsmorgaBuildConfig
 import java.util.UUID
 
-class DeviceLocalDataSourceImpl(private val sharedPreferences: SharedPreferences) : DeviceDataSource {
+class DeviceLocalDataSourceImpl(private val sharedPreferences: SharedPreferences, private val buildConfigContract: EsmorgaBuildConfig) : DeviceDataSource {
 
     companion object {
         private const val DEVICE_ID_KEY = "id_device"
@@ -21,5 +22,9 @@ class DeviceLocalDataSourceImpl(private val sharedPreferences: SharedPreferences
             saveDeviceId(uuid)
         }
         return uuid
+    }
+
+    override fun getEnvironment(): EsmorgaBuildConfig.Environment {
+        return buildConfigContract.getEnvironment()
     }
 }

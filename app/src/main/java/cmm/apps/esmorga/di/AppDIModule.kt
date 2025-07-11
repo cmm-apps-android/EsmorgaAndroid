@@ -1,8 +1,10 @@
 package cmm.apps.esmorga.di
 
+import cmm.apps.esmorga.EsmorgaBuildConfigImpl
 import cmm.apps.esmorga.data.di.DataDIModule
 import cmm.apps.esmorga.datasource_local.di.LocalDIModule
 import cmm.apps.esmorga.datasource_remote.di.RemoteDIModule
+import cmm.apps.esmorga.domain.buildConfig.EsmorgaBuildConfig
 import cmm.apps.esmorga.domain.di.DomainDIModule
 import cmm.apps.esmorga.view.di.ViewDIModule
 import org.koin.dsl.module
@@ -18,5 +20,6 @@ object AppDIModules {
             RemoteDIModule.module,
             LocalDIModule.module
         )
+        single<EsmorgaBuildConfig> { EsmorgaBuildConfigImpl }
     }
 }

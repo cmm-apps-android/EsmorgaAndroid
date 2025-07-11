@@ -14,7 +14,19 @@ class WelcomeViewScreenshotTest : BaseScreenshotTest() {
         val uiState = WelcomeUiState(
             primaryButtonText = "Primary",
             secondaryButtonText = "Secondary",
-            icon = R.drawable.ic_logo
+            icon = R.drawable.ic_logo,
+        )
+
+        snapshotWithState(uiState)
+    }
+
+    @Test
+    fun welcomeView_lightTheme_withDeviceId() {
+        val uiState = WelcomeUiState(
+            primaryButtonText = "Primary",
+            secondaryButtonText = "Secondary",
+            icon = R.drawable.ic_logo,
+            deviceId = "test"
         )
 
         snapshotWithState(uiState)
