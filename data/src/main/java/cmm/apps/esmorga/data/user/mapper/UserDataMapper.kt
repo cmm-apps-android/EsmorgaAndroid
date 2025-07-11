@@ -6,5 +6,6 @@ import cmm.apps.esmorga.domain.user.model.User
 fun UserDataModel.toUser() = User(
     name = dataName,
     lastName = dataLastName,
-    email = dataEmail
+    email = dataEmail,
+    role = dataRole
 )

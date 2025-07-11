@@ -3,7 +3,8 @@ package cmm.apps.esmorga.domain.user.model
 data class User(
     val name: String,
     val lastName: String,
-    val email: String
+    val email: String,
+    val role: String
 ) {
     companion object {
         const val NAME_REGEX = "^[a-zA-Z '\\-]{3,100}$"

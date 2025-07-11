@@ -16,7 +16,7 @@ import cmm.apps.esmorga.datasource_local.user.model.UserLocalModel
         UserLocalModel::class
     ],
     autoMigrations = [
-        AutoMigration(from = 1, to = 2)
+        AutoMigration(from = 2, to = 3)
     ]
 )
 

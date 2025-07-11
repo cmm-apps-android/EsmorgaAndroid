@@ -15,7 +15,8 @@ class ProfileViewScreenshotTest : BaseScreenshotTest() {
             user = User(
                 name = "User",
                 lastName = "User",
-                email = "user@email.com"
+                email = "user@email.com",
+                role = "USER"
             )
         )
     }
