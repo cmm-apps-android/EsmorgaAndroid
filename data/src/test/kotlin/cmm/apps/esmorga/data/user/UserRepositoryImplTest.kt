@@ -173,7 +173,8 @@ class UserRepositoryImplTest {
             dataEmail = "yago@mail.com",
             dataAccessToken = "fakeAccessToken123",
             dataRefreshToken = "fakeRefreshToken123",
-            dataRole = "USER"
+            dataRole = "USER",
+            dataTtl = 600
         )
 
         coEvery { remoteDS.activateAccount(any()) } returns fakeUserDataModel
@@ -184,7 +185,7 @@ class UserRepositoryImplTest {
         sut.activateAccount(code)
 
         coVerify { localDS.saveUser(fakeUserDataModel) }
-        coVerify { localEventDS.deleteCacheEvents()}
+        coVerify { localEventDS.deleteCacheEvents() }
     }
 
     @Test(expected = EsmorgaException::class)

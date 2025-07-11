@@ -11,7 +11,8 @@ object UserDataMock {
         dataEmail = email,
         dataAccessToken = null,
         dataRefreshToken = null,
-        dataRole = role
+        dataRole = role,
+        dataTtl = 600
     )
 
 }

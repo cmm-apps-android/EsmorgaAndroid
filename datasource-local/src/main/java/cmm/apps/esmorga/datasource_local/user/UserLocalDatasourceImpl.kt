@@ -18,12 +18,14 @@ class UserLocalDatasourceImpl(
     companion object {
         private const val ACCESS_TOKEN_KEY = "access_token"
         private const val REFRESH_TOKEN_KEY = "refresh_token"
+        private const val TTL_KEY = "ttl"
     }
 
     override suspend fun saveUser(user: UserDataModel) {
         sharedPreferences.edit().run {
             putString(ACCESS_TOKEN_KEY, user.dataAccessToken)
             putString(REFRESH_TOKEN_KEY, user.dataRefreshToken)
+            putLong(TTL_KEY, user.dataTtl * 1000 + System.currentTimeMillis())
             apply()
         }
         userDao.insertUser(user.toUserLocalModel())
@@ -34,7 +36,8 @@ class UserLocalDatasourceImpl(
         user?.let {
             val accessToken = sharedPreferences.getString(ACCESS_TOKEN_KEY, null)
             val refreshToken = sharedPreferences.getString(REFRESH_TOKEN_KEY, null)
-            return it.toUserDataModel(accessToken, refreshToken)
+            val ttl = sharedPreferences.getLong(TTL_KEY, 0)
+            return it.toUserDataModel(accessToken, refreshToken, ttl)
         } ?: throw EsmorgaException(
             message = "User not found",
             source = Source.LOCAL,
@@ -46,7 +49,7 @@ class UserLocalDatasourceImpl(
         sharedPreferences.edit().run {
             remove(ACCESS_TOKEN_KEY)
             remove(REFRESH_TOKEN_KEY)
-            remove("ttl")
+            remove(TTL_KEY)
         }.apply()
         userDao.deleteUser()
     }
