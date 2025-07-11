@@ -6,5 +6,6 @@ data class UserDataModel(
     val dataEmail: String,
     val dataAccessToken: String?,
     val dataRefreshToken: String?,
+    val dataRole: String,
     val dataTtl: Long
 )

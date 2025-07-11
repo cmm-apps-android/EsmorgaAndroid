@@ -9,11 +9,13 @@ fun UserLocalModel.toUserDataModel(accessToken: String?, refreshToken: String?, 
     dataLastName = localLastName,
     dataAccessToken = accessToken,
     dataRefreshToken = refreshToken,
+    dataRole = localRole,
     dataTtl = ttl
 )
 
 fun UserDataModel.toUserLocalModel(): UserLocalModel = UserLocalModel(
     localEmail = dataEmail,
     localName = dataName,
-    localLastName = dataLastName
+    localLastName = dataLastName,
+    localRole = dataRole
 )

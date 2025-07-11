@@ -56,14 +56,17 @@ android {
 
     buildFeatures {
         flavorDimensions += "environment"
+        buildConfig = true
     }
 
     productFlavors {
         create("prod") {
             dimension = "environment"
+            buildConfigField("String", "FLAVOR", "\"prod\"")
         }
         create("qa") {
             dimension = "environment"
+            buildConfigField("String", "FLAVOR", "\"qa\"")
         }
     }
     kotlin {

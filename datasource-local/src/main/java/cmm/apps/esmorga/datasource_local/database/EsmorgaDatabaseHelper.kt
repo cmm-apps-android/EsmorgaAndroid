@@ -7,7 +7,7 @@ import androidx.room.Room
 object EsmorgaDatabaseHelper {
 
     private const val DATABASE_NAME = "esmorga_database"
-    const val DATABASE_VERSION = 2
+    const val DATABASE_VERSION = 3
 
     fun getDatabase(context: Context) =
         Room.databaseBuilder(context, EsmorgaDatabase::class.java, DATABASE_NAME)
