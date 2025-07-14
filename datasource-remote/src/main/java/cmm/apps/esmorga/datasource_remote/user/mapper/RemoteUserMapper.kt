@@ -8,9 +8,6 @@ fun UserRemoteModel.toUserDataModel(): UserDataModel {
         dataName = remoteProfile.remoteName,
         dataLastName = remoteProfile.remoteLastName,
         dataEmail = remoteProfile.remoteEmail,
-        dataAccessToken = remoteAccessToken,
-        dataRefreshToken = remoteRefreshToken,
-        dataRole = remoteProfile.remoteRole,
-        dataTtl = ttl.toLong()
+        dataRole = remoteProfile.remoteRole
     )
 }

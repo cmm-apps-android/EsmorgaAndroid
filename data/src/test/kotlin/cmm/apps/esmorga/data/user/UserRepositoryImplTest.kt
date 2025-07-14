@@ -138,6 +138,7 @@ class UserRepositoryImplTest {
         val sut = UserRepositoryImpl(localDS, remoteDS, localEventDS)
         sut.logout()
         coVerify { localDS.deleteUser() }
+        coVerify { remoteDS.deleteUser() }
         coVerify { localEventDS.deleteCacheEvents() }
     }
 
@@ -171,10 +172,7 @@ class UserRepositoryImplTest {
             dataName = "Yago",
             dataLastName = "Perez",
             dataEmail = "yago@mail.com",
-            dataAccessToken = "fakeAccessToken123",
-            dataRefreshToken = "fakeRefreshToken123",
-            dataRole = "USER",
-            dataTtl = 600
+            dataRole = "USER"
         )
 
         coEvery { remoteDS.activateAccount(any()) } returns fakeUserDataModel
