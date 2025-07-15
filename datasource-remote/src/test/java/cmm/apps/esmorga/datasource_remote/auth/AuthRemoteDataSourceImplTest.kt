@@ -41,24 +41,28 @@ class AuthRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `given an empty storage when access token is cached then get access token stored successfully`() {
-        fakeToken = "3883hh8fhfh84fh489"
+    fun `given a storage with access token when access token is cached then get access token stored successfully`() {
+        val localAccessToken = "3883hh8fhfh84fh489"
+        fakeToken = localAccessToken
 
         val api = mockk<EsmorgaAuthApi>(relaxed = true)
         val sut = AuthRemoteDatasourceImpl(api, provideFakeSharedPreferences())
+        sut.saveTokens(localAccessToken, localAccessToken, 0)
         val result = sut.getAccessToken()
 
-        Assert.assertEquals(fakeToken, result)
+        Assert.assertEquals(localAccessToken, result)
     }
 
     @Test
-    fun `given an empty storage when refresh token is cached then get refresh token stored successfully`() {
-        fakeRefreshToken = "3883hh8fhfh84fh489"
+    fun `given a storage with refresh token when refresh token is cached then get refresh token stored successfully`() {
+        val localRefreshToken = "3883hh8fhfh84fh489"
+        fakeRefreshToken = localRefreshToken
 
         val api = mockk<EsmorgaAuthApi>(relaxed = true)
         val sut = AuthRemoteDatasourceImpl(api, provideFakeSharedPreferences())
+        sut.saveTokens(localRefreshToken, localRefreshToken, 0)
         val result = sut.getRefreshToken()
 
-        Assert.assertEquals(fakeRefreshToken, result)
+        Assert.assertEquals(localRefreshToken, result)
     }
 }
