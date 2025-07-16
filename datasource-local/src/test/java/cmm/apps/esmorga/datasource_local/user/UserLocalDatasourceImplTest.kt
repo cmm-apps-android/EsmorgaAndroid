@@ -89,4 +89,18 @@ class UserLocalDatasourceImplTest {
         val sut = UserLocalDatasourceImpl(provideFakeDao())
         sut.getUser()
     }
+
+    @Test(expected = EsmorgaException::class)
+    fun `given a storage with user when delete user is requested then is deleted successfully`() = runTest {
+        val localUserName = "Draco"
+        fakeStorage = UserLocalMock.provideUser(name = localUserName)
+
+        val sut = UserLocalDatasourceImpl(provideFakeDao())
+        val result = sut.getUser()
+        Assert.assertEquals(localUserName, result.dataName)
+
+        sut.deleteUser()
+        Assert.assertNull(fakeStorage)
+        sut.getUser()
+    }
 }
