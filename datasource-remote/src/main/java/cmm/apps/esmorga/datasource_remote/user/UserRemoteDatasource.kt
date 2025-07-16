@@ -76,7 +76,7 @@ class UserRemoteDatasourceImpl(private val api: EsmorgaAuthApi, private val auth
         }
     }
 
-    override suspend fun deleteUser() {
+    override suspend fun deleteUserSession() {
         authDatasource.deleteTokens()
     }
 }

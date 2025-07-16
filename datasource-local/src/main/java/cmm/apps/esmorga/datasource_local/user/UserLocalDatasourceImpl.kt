@@ -28,7 +28,7 @@ class UserLocalDatasourceImpl(
         )
     }
 
-    override suspend fun deleteUser() {
+    override suspend fun deleteUserSession() {
         userDao.deleteUser()
     }
 }

@@ -29,8 +29,8 @@ class UserRepositoryImpl(private val localDs: UserDatasource, private val remote
 
     override suspend fun logout() {
         try {
-            localDs.deleteUser()
-            remoteDs.deleteUser()
+            localDs.deleteUserSession()
+            remoteDs.deleteUserSession()
             localEventDs.deleteCacheEvents()
         } catch (e: Exception) {
             throw Exception("Error al cerrar sesión: ${e.message}", e)

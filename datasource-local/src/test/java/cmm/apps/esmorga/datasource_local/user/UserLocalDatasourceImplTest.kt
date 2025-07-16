@@ -99,7 +99,7 @@ class UserLocalDatasourceImplTest {
         val result = sut.getUser()
         Assert.assertEquals(localUserName, result.dataName)
 
-        sut.deleteUser()
+        sut.deleteUserSession()
         Assert.assertNull(fakeStorage)
         sut.getUser()
     }
