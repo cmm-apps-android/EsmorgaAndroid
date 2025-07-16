@@ -14,6 +14,7 @@ class AuthRemoteDataSourceImplTest {
     private var fakeRefreshToken: String? = null
     private var fakeExpirationDate: Long = 0
 
+
     private fun provideFakeSharedPreferences(): SharedPreferences {
         val fakeTokenSlot = slot<String>()
         val fakeRefreshTokenSlot = slot<String>()
@@ -36,6 +37,18 @@ class AuthRemoteDataSourceImplTest {
         }
         coEvery { sharedPreferences.edit().putLong("token_expiration_date", capture(fakeExpirationDateSlot)).apply() } coAnswers {
             fakeExpirationDate = fakeExpirationDateSlot.captured
+        }
+        coEvery { sharedPreferences.edit().remove("access_token").apply() } coAnswers {
+            fakeTokenSlot.clear()
+            fakeToken = null
+        }
+        coEvery { sharedPreferences.edit().remove("refresh_token").apply() } coAnswers {
+            fakeRefreshTokenSlot.clear()
+            fakeRefreshToken = null
+        }
+        coEvery { sharedPreferences.edit().remove("token_expiration_date").apply() } coAnswers {
+            fakeExpirationDateSlot.clear()
+            fakeExpirationDate = 0
         }
         return sharedPreferences
     }

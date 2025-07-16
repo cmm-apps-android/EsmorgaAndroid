@@ -20,11 +20,6 @@ class AuthRemoteDatasourceImpl(
                 refreshedTokens.remoteRefreshToken,
                 refreshedTokens.ttl.toLong()
             )
-//            sharedPreferences.edit().run {
-//                putString(SHARED_REFRESH_TOKEN_KEY, refreshedTokens.remoteRefreshToken)
-//                putString(SHARED_AUTH_TOKEN_KEY, refreshedTokens.remoteAccessToken)
-//                putLong(SHARED_TOKEN_EXPIRATION_DATE_KEY, System.currentTimeMillis() + refreshedTokens.ttl * 1000)
-//            }.apply()
             return refreshedTokens.remoteAccessToken
         } catch (e: Exception) {
             null
