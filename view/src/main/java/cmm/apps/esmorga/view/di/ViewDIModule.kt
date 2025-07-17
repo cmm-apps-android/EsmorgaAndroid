@@ -27,7 +27,7 @@ object ViewDIModule {
             EventListViewModel(get())
         }
         viewModel {
-            MyEventListViewModel(get())
+            MyEventListViewModel(get(), get())
         }
         viewModel { (event: Event) ->
             EventDetailsViewModel(get(), get(), get(), event)

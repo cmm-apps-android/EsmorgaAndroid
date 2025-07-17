@@ -2,13 +2,20 @@ package cmm.apps.esmorga.view.eventlist
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -19,7 +26,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmm.apps.designsystem.EsmorgaGuestError
@@ -84,11 +94,13 @@ fun MyEventListView(
     snackbarHostState: SnackbarHostState,
     onSignInClick: () -> Unit,
     onEventClick: (event: EventListUiModel) -> Unit,
-    onRetryClick: () -> Unit
+    onRetryClick: () -> Unit,
+    onAddEventClick: () -> Unit = {}
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        snackbarHost = { SnackbarHost(snackbarHostState) }
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        floatingActionButton = { AddEventButon(visible = !uiState.isAdmin, onAddEventClick) }
     ) { innerPadding ->
         Column(
             modifier = Modifier.padding(
@@ -141,6 +153,43 @@ fun MyEventsEmptyView() {
         Spacer(modifier = Modifier.weight(0.1f))
     }
 
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewAddEventButton() {
+    AddEventButon(
+        visible = true,
+        onClick = {}
+    )
+}
+
+@Composable
+fun AddEventButon(
+    visible: Boolean,
+    onClick: () -> Unit
+) {
+    if (!visible) return
+
+    Button(
+        onClick = onClick,
+        shape = RoundedCornerShape(50),
+        modifier = Modifier
+            .padding(8.dp)
+            .size(64.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
+        ),
+        contentPadding = PaddingValues(0.dp)
+    ) {
+        Text(
+            text = "+",
+            fontSize = 50.sp,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
 }
 
 object MyEventListScreenTestTags {
