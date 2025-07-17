@@ -63,6 +63,9 @@ fun MyEventListScreen(elvm: MyEventListViewModel = koinViewModel(), onEventClick
 
     elvm.observeLifecycleEvents(lifecycle)
     LaunchedEffect(Unit) {
+        elvm.checkIfUserIsAdmin()
+    }
+    LaunchedEffect(Unit) {
         elvm.effect.collect { eff ->
             when (eff) {
                 is MyEventListEffect.ShowNoNetworkPrompt -> {
@@ -100,7 +103,8 @@ fun MyEventListView(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        floatingActionButton = { AddEventButon(visible = !uiState.isAdmin, onAddEventClick) }
+        floatingActionButton = { AddEventButon(visible = uiState.isAdmin, onAddEventClick) }
+
     ) { innerPadding ->
         Column(
             modifier = Modifier.padding(
@@ -171,6 +175,7 @@ fun AddEventButon(
 ) {
     if (!visible) return
 
+    //smorgabutton
     Button(
         onClick = onClick,
         shape = RoundedCornerShape(50),
@@ -183,6 +188,7 @@ fun AddEventButon(
         ),
         contentPadding = PaddingValues(0.dp)
     ) {
+        //EsmorgaText
         Text(
             text = "+",
             fontSize = 50.sp,
