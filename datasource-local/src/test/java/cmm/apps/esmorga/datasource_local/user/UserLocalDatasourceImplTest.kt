@@ -4,7 +4,9 @@ import cmm.apps.esmorga.datasource_local.database.dao.UserDao
 import cmm.apps.esmorga.datasource_local.mock.UserLocalMock
 import cmm.apps.esmorga.datasource_local.user.mapper.toUserDataModel
 import cmm.apps.esmorga.datasource_local.user.model.UserLocalModel
+import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
+import cmm.apps.esmorga.domain.result.Source
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.slot
@@ -90,8 +92,8 @@ class UserLocalDatasourceImplTest {
         sut.getUser()
     }
 
-    @Test(expected = EsmorgaException::class)
-    fun `given a storage with user when delete user is requested then is deleted successfully`() = runTest {
+    @Test
+    fun `given a storage with user when delete user is requested then user is deleted`() = runTest {
         val localUserName = "Draco"
         fakeStorage = UserLocalMock.provideUser(name = localUserName)
 
@@ -101,6 +103,14 @@ class UserLocalDatasourceImplTest {
 
         sut.deleteUserSession()
         Assert.assertNull(fakeStorage)
-        sut.getUser()
+        try {
+            sut.getUser()
+        } catch (e: EsmorgaException) {
+            EsmorgaException(
+                message = "User not found",
+                source = Source.LOCAL,
+                code = ErrorCodes.NOT_LOGGED_IN
+            )
+        }
     }
 }

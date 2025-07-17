@@ -21,7 +21,7 @@ interface AuthDatasource {
         throw EsmorgaException(message = "Unsupported operation", source = Source.UNSUPPORTED, code = ErrorCodes.UNSUPPORTED_OPERATION)
     }
 
-    fun saveTokens(accessToken: String, refreshToken: String, expirationDate: Long) {
+    fun saveTokens(accessToken: String, refreshToken: String, ttl: Int) {
         throw EsmorgaException(message = "Unsupported operation", source = Source.UNSUPPORTED, code = ErrorCodes.UNSUPPORTED_OPERATION)
     }
 

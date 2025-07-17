@@ -12,7 +12,7 @@ class UserRemoteDatasourceImpl(private val api: EsmorgaAuthApi, private val auth
         try {
             val loginBody = mapOf("email" to email, "password" to password)
             val user = api.login(loginBody)
-            authDatasource.saveTokens(user.remoteAccessToken, user.remoteRefreshToken, user.ttl.toLong())
+            authDatasource.saveTokens(user.remoteAccessToken, user.remoteRefreshToken, user.ttl)
             return user.toUserDataModel()
         } catch (e: Exception) {
             throw manageApiException(e)

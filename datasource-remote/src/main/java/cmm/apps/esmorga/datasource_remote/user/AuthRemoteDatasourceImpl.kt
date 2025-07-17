@@ -18,7 +18,7 @@ class AuthRemoteDatasourceImpl(
             saveTokens(
                 refreshedTokens.remoteAccessToken,
                 refreshedTokens.remoteRefreshToken,
-                refreshedTokens.ttl.toLong()
+                refreshedTokens.ttl
             )
             return refreshedTokens.remoteAccessToken
         } catch (e: Exception) {
@@ -32,11 +32,11 @@ class AuthRemoteDatasourceImpl(
 
     override fun getTokenExpirationDate(): Long = sharedPreferences.getLong(SHARED_TOKEN_EXPIRATION_DATE_KEY, 0)
 
-    override fun saveTokens(accessToken: String, refreshToken: String, expirationDate: Long) {
+    override fun saveTokens(accessToken: String, refreshToken: String, ttl: Int) {
         sharedPreferences.edit().run {
             putString(SHARED_AUTH_TOKEN_KEY, accessToken)
             putString(SHARED_REFRESH_TOKEN_KEY, refreshToken)
-            putLong(SHARED_TOKEN_EXPIRATION_DATE_KEY, System.currentTimeMillis() + expirationDate * 1000)
+            putLong(SHARED_TOKEN_EXPIRATION_DATE_KEY, System.currentTimeMillis() + ttl * 1000)
         }.apply()
     }
 

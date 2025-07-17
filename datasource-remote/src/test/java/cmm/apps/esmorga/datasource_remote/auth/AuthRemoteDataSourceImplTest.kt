@@ -54,12 +54,12 @@ class AuthRemoteDataSourceImplTest {
 
     @Test
     fun `given a storage with access token when access token is cached then get access token stored successfully`() {
-        val localAccessToken = "3883hh8fhfh84fh489"
+        val localAccessToken = "localAccessToken"
         fakeToken = localAccessToken
 
         val api = mockk<EsmorgaAuthApi>(relaxed = true)
         val sut = AuthRemoteDatasourceImpl(api, provideFakeSharedPreferences())
-        sut.saveTokens(localAccessToken, localAccessToken, 0)
+        sut.saveTokens(localAccessToken, "", 0)
         val result = sut.getAccessToken()
 
         Assert.assertEquals(localAccessToken, result)
@@ -67,12 +67,12 @@ class AuthRemoteDataSourceImplTest {
 
     @Test
     fun `given a storage with refresh token when refresh token is cached then get refresh token stored successfully`() {
-        val localRefreshToken = "3883hh8fhfh84fh489"
+        val localRefreshToken = "localRefreshToken"
         fakeRefreshToken = localRefreshToken
 
         val api = mockk<EsmorgaAuthApi>(relaxed = true)
         val sut = AuthRemoteDatasourceImpl(api, provideFakeSharedPreferences())
-        sut.saveTokens(localRefreshToken, localRefreshToken, 0)
+        sut.saveTokens("", localRefreshToken, 0)
         val result = sut.getRefreshToken()
 
         Assert.assertEquals(localRefreshToken, result)
@@ -80,7 +80,7 @@ class AuthRemoteDataSourceImplTest {
 
     @Test
     fun `given a storage with access token, when delete tokens is invoked then access token is removed from storage`() {
-        val localFakeToken = "3883hh8fhfh84fh489"
+        val localFakeToken = "localFakeToken"
         fakeToken = localFakeToken
 
         val api = mockk<EsmorgaAuthApi>(relaxed = true)
@@ -94,7 +94,7 @@ class AuthRemoteDataSourceImplTest {
 
     @Test
     fun `given a storage with refresh token, when delete tokens is invoked then refresh token is removed from storage`() {
-        val localFakeRefreshToken = "3883hh8fhfh84fh489"
+        val localFakeRefreshToken = "localFakeRefreshToken"
         fakeRefreshToken = localFakeRefreshToken
 
         val api = mockk<EsmorgaAuthApi>(relaxed = true)
