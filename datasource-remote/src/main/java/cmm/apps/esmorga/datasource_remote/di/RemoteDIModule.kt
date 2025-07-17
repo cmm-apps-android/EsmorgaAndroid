@@ -34,8 +34,8 @@ object RemoteDIModule {
             NetworkApiHelper().provideApi(
                 baseUrl = NetworkApiHelper.esmorgaApiBaseUrl(),
                 clazz = EsmorgaApi::class.java,
-                authenticator = EsmorgaAuthenticator(get(), get()),
-                authInterceptor = EsmorgaAuthInterceptor(get(), get()),
+                authenticator = EsmorgaAuthenticator(get()),
+                authInterceptor = EsmorgaAuthInterceptor(get()),
                 deviceInterceptor = DeviceInterceptor(get())
             )
         }
@@ -49,6 +49,6 @@ object RemoteDIModule {
             )
         }
         factory<EventDatasource>(named(DataDIModule.REMOTE_DATASOURCE_INSTANCE_NAME)) { EventRemoteDatasourceImpl(get(), get()) }
-        factory<UserDatasource>(named(DataDIModule.REMOTE_DATASOURCE_INSTANCE_NAME)) { UserRemoteDatasourceImpl(get()) }
+        factory<UserDatasource>(named(DataDIModule.REMOTE_DATASOURCE_INSTANCE_NAME)) { UserRemoteDatasourceImpl(get(), get()) }
     }
 }
