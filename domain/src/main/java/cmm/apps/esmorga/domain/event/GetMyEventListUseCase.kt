@@ -5,7 +5,6 @@ import cmm.apps.esmorga.domain.event.repository.EventRepository
 import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.EsmorgaResult
-import cmm.apps.esmorga.domain.result.Success
 import cmm.apps.esmorga.domain.user.repository.UserRepository
 
 interface GetMyEventListUseCase {
