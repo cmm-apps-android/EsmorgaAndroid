@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -90,6 +92,8 @@ fun EventListScreen(elvm: EventListViewModel = koinViewModel(), onEventClick: (e
 
 @Composable
 fun EventListView(uiState: EventListUiState, snackbarHostState: SnackbarHostState, onRetryClick: () -> Unit, onEventClick: (event: EventListUiModel) -> Unit) {
+    val listState = rememberLazyListState()
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         snackbarHost = { SnackbarHost(snackbarHostState) }
@@ -114,7 +118,7 @@ fun EventListView(uiState: EventListUiState, snackbarHostState: SnackbarHostStat
                 } else if (uiState.eventList.isEmpty()) {
                     EventListEmpty()
                 } else {
-                    EventList(uiState.eventList, onEventClick, modifier = Modifier.padding(horizontal = 16.dp))
+                    EventList(events = uiState.eventList, onEventClick = onEventClick, modifier = Modifier.padding(horizontal = 16.dp), listState = listState)
                 }
             }
         }
@@ -201,8 +205,8 @@ fun EventListError(onRetryClick: () -> Unit) {
 }
 
 @Composable
-fun EventList(events: List<EventListUiModel>, onEventClick: (event: EventListUiModel) -> Unit, modifier: Modifier = Modifier) {
-    LazyColumn {
+fun EventList(events: List<EventListUiModel>, onEventClick: (event: EventListUiModel) -> Unit, modifier: Modifier = Modifier, listState: LazyListState) {
+    LazyColumn(state = listState) {
         items(events.size) { pos ->
             val event = events[pos]
 
