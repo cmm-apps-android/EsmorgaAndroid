@@ -132,12 +132,13 @@ class UserRepositoryImplTest {
         val localDS = mockk<UserDatasource>(relaxed = true)
         val remoteDS = mockk<UserDatasource>(relaxed = true)
         val localEventDS = mockk<EventDatasource>(relaxed = true)
-        coEvery { localDS.deleteUser() } returns Unit
+        coEvery { localDS.deleteUserSession() } returns Unit
         coEvery { localEventDS.deleteCacheEvents() } returns Unit
 
         val sut = UserRepositoryImpl(localDS, remoteDS, localEventDS)
         sut.logout()
-        coVerify { localDS.deleteUser() }
+        coVerify { localDS.deleteUserSession() }
+        coVerify { remoteDS.deleteUserSession() }
         coVerify { localEventDS.deleteCacheEvents() }
     }
 
@@ -147,7 +148,7 @@ class UserRepositoryImplTest {
         val remoteDS = mockk<UserDatasource>(relaxed = true)
         val localEventDS = mockk<EventDatasource>(relaxed = true)
 
-        coEvery { localDS.deleteUser() } throws Exception("fallo deleteUser")
+        coEvery { localDS.deleteUserSession() } throws Exception("fallo deleteUser")
         coEvery { localEventDS.deleteCacheEvents() } returns Unit
 
         val sut = UserRepositoryImpl(localDS, remoteDS, localEventDS)
@@ -159,7 +160,7 @@ class UserRepositoryImplTest {
             assertTrue(e.message!!.contains("Error al cerrar sesión"))
         }
 
-        coVerify { localDS.deleteUser() }
+        coVerify { localDS.deleteUserSession() }
     }
 
     @Test
@@ -171,8 +172,6 @@ class UserRepositoryImplTest {
             dataName = "Yago",
             dataLastName = "Perez",
             dataEmail = "yago@mail.com",
-            dataAccessToken = "fakeAccessToken123",
-            dataRefreshToken = "fakeRefreshToken123",
             dataRole = "USER"
         )
 
@@ -184,7 +183,7 @@ class UserRepositoryImplTest {
         sut.activateAccount(code)
 
         coVerify { localDS.saveUser(fakeUserDataModel) }
-        coVerify { localEventDS.deleteCacheEvents()}
+        coVerify { localEventDS.deleteCacheEvents() }
     }
 
     @Test(expected = EsmorgaException::class)
