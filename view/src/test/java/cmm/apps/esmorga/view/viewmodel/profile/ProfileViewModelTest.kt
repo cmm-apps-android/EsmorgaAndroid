@@ -7,6 +7,7 @@ import app.cash.turbine.test
 import cmm.apps.esmorga.domain.result.EsmorgaResult
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.domain.user.LogOutUseCase
+import cmm.apps.esmorga.domain.user.model.RoleType
 import cmm.apps.esmorga.domain.user.model.User
 import cmm.apps.esmorga.view.profile.ProfileViewModel
 import cmm.apps.esmorga.view.profile.model.ProfileEffect
@@ -57,7 +58,7 @@ class ProfileViewModelTest {
 
     @Test
     fun `given a successful usecase when loadUser is called then uiState is updated with the user`() = runTest {
-        val user = User("1", "User", "email@example.com", "USER")
+        val user = User("1", "User", "email@example.com", role = RoleType.USER)
 
         coEvery { getSavedUserUseCase() } returns EsmorgaResult.success(user)
 

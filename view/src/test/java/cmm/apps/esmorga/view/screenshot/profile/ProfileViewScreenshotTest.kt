@@ -1,5 +1,6 @@
 package cmm.apps.esmorga.view.screenshot.profile
 
+import cmm.apps.esmorga.domain.user.model.RoleType
 import cmm.apps.esmorga.domain.user.model.User
 import cmm.apps.esmorga.view.profile.ProfileView
 import cmm.apps.esmorga.view.profile.model.ProfileUiState
@@ -16,7 +17,7 @@ class ProfileViewScreenshotTest : BaseScreenshotTest() {
                 name = "User",
                 lastName = "User",
                 email = "user@email.com",
-                role = "USER"
+                role = RoleType.USER
             )
         )
     }
