@@ -27,6 +27,7 @@ import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.EsmorgaResult
 import cmm.apps.esmorga.domain.result.Source
+import cmm.apps.esmorga.domain.user.GetIfUserIsAdminUsecase
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.domain.user.LogOutUseCase
 import cmm.apps.esmorga.domain.user.PerformLoginUseCase
@@ -155,6 +156,11 @@ class NavigationTest {
     private val showDeviceIdIfNeededUseCase = mockk<ShowDeviceIdIfNeededUseCase>(relaxed = true).also { useCase ->
         coEvery { useCase() } returns EsmorgaResult.success(true)
     }
+
+    private val getIfUserIsAdminUsecase = mockk<GetIfUserIsAdminUsecase>(relaxed = true).also { useCase ->
+        coEvery { useCase.invoke() } returns true
+    }
+    
     @Before
     @Throws(Exception::class)
     fun setUp() {
@@ -180,6 +186,7 @@ class NavigationTest {
                     factory<PerformResetPasswordUseCase> { performResetPasswordUseCase }
                     factory<GetDeviceIdUseCase> { getDeviceIdUseCase }
                     factory<ShowDeviceIdIfNeededUseCase> { showDeviceIdIfNeededUseCase }
+                    factory<GetIfUserIsAdminUsecase> { getIfUserIsAdminUsecase }
                 }
             )
         }
