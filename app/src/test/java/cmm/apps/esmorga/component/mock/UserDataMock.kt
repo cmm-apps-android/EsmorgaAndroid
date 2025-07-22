@@ -10,8 +10,6 @@ object UserDataMock {
         dataName = name,
         dataLastName = lastName,
         dataEmail = email,
-        dataAccessToken = null,
-        dataRefreshToken = null,
         dataRole = role
     )
 
