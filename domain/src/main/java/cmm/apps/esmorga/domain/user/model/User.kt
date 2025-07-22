@@ -14,5 +14,15 @@ data class User(
 }
 
 enum class RoleType {
-    USER, ADMIN
+    USER, ADMIN;
+
+    companion object {
+        fun fromString(value: String): RoleType {
+            return try {
+                valueOf(value.uppercase())
+            } catch (e: Exception) {
+                USER
+            }
+        }
+    }
 }

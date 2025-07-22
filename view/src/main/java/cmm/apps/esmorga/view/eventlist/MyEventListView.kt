@@ -63,9 +63,6 @@ fun MyEventListScreen(elvm: MyEventListViewModel = koinViewModel(), onEventClick
 
     elvm.observeLifecycleEvents(lifecycle)
     LaunchedEffect(Unit) {
-        elvm.checkIfUserIsAdmin()
-    }
-    LaunchedEffect(Unit) {
         elvm.effect.collect { eff ->
             when (eff) {
                 is MyEventListEffect.ShowNoNetworkPrompt -> {
@@ -104,33 +101,29 @@ fun MyEventListView(
     var fabVisible by remember { mutableStateOf(true) }
     var lastScrollOffset by remember { mutableStateOf(0) }
 
-    LaunchedEffect(Unit) {
-        fabVisible = true
-    }
 
     LaunchedEffect(listState) {
         snapshotFlow {
-            listState.firstVisibleItemIndex to listState.firstVisibleItemScrollOffset
-        }.collect { (index, offset) ->
+            listOf(
+                listState.firstVisibleItemIndex to listState.firstVisibleItemScrollOffset,
+                listState.isScrollInProgress
+            )
+        }.collect { values ->
+            val (index, offset) = values[0] as Pair<Int, Int>
+            val isScrolling = values[1] as Boolean
+
             val currentScroll = index * 10000 + offset
             val goingDown = currentScroll > lastScrollOffset
             lastScrollOffset = currentScroll
 
-            if (goingDown) {
-                fabVisible = false
+            fabVisible = when {
+                goingDown -> false
+                !isScrolling -> true
+                else -> fabVisible
             }
         }
     }
 
-    LaunchedEffect(listState) {
-        snapshotFlow {
-            listState.isScrollInProgress
-        }.collect { isScrolling ->
-            if (!isScrolling) {
-                fabVisible = true
-            }
-        }
-    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
