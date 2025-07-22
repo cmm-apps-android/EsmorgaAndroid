@@ -173,8 +173,6 @@ class UserRepositoryImplTest {
             dataName = "Yago",
             dataLastName = "Perez",
             dataEmail = "yago@mail.com",
-            dataAccessToken = "fakeAccessToken123",
-            dataRefreshToken = "fakeRefreshToken123",
             dataRole = RoleType.USER
 
         )
