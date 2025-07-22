@@ -2,13 +2,13 @@ package cmm.apps.esmorga.domain.user
 
 import cmm.apps.esmorga.domain.user.model.RoleType
 
-interface GetIfUserIsAdminUsecase{
+interface GetUserIsAdminUsecase{
     suspend operator fun invoke(): Boolean
 }
 
-class GetIfUserIsAdminUsecaseImpl(
+class GetUserIsAdminUsecaseImpl(
     private val getSavedUserUseCase: GetSavedUserUseCase
-) : GetIfUserIsAdminUsecase {
+) : GetUserIsAdminUsecase {
 
     override suspend fun invoke(): Boolean {
         val result = getSavedUserUseCase()

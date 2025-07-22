@@ -14,11 +14,11 @@ import org.junit.Test
 class GetIfUserIsAdminUseCaseTest {
 
     private val getSavedUserUseCase: GetSavedUserUseCase = mockk()
-    private lateinit var useCase: GetIfUserIsAdminUsecaseImpl
+    private lateinit var useCase: GetUserIsAdminUsecaseImpl
 
     @Before
     fun setUp() {
-        useCase = GetIfUserIsAdminUsecaseImpl(getSavedUserUseCase)
+        useCase = GetUserIsAdminUsecaseImpl(getSavedUserUseCase)
     }
 
     @Test

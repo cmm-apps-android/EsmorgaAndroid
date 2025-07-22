@@ -16,8 +16,8 @@ import cmm.apps.esmorga.domain.event.JoinEventUseCase
 import cmm.apps.esmorga.domain.event.JoinEventUseCaseImpl
 import cmm.apps.esmorga.domain.event.LeaveEventUseCase
 import cmm.apps.esmorga.domain.event.LeaveEventUseCaseImpl
-import cmm.apps.esmorga.domain.user.GetIfUserIsAdminUsecase
-import cmm.apps.esmorga.domain.user.GetIfUserIsAdminUsecaseImpl
+import cmm.apps.esmorga.domain.user.GetUserIsAdminUsecase
+import cmm.apps.esmorga.domain.user.GetUserIsAdminUsecaseImpl
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCaseImpl
 import cmm.apps.esmorga.domain.user.LogOutUseCase
@@ -53,6 +53,6 @@ object DomainDIModule {
         factory<PerformResetPasswordUseCase> { PerformResetPasswordUseCaseImpl(get()) }
         factory<GetDeviceIdUseCase> { GetDeviceIdUseCaseImpl(get()) }
         factory<ShowDeviceIdIfNeededUseCase>{ShowDeviceIdIfNeededUseCaseImpl(get()) }
-        factory<GetIfUserIsAdminUsecase> { GetIfUserIsAdminUsecaseImpl(get()) }
+        factory<GetUserIsAdminUsecase> { GetUserIsAdminUsecaseImpl(get()) }
     }
 }
