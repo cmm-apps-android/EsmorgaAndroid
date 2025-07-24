@@ -7,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import cmm.apps.esmorga.domain.event.GetMyEventListUseCase
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.domain.result.ErrorCodes
+import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
+import cmm.apps.esmorga.domain.user.model.RoleType
 import cmm.apps.esmorga.view.eventlist.mapper.EventListUiMapper.toEventUiList
 import cmm.apps.esmorga.view.eventlist.model.EventListUiModel
 import cmm.apps.esmorga.view.eventlist.model.MyEventListEffect
@@ -21,7 +23,10 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class MyEventListViewModel(private val getMyEventListUseCase: GetMyEventListUseCase) : ViewModel(), DefaultLifecycleObserver {
+class MyEventListViewModel(
+    private val getMyEventListUseCase: GetMyEventListUseCase,
+    private val getSavedUserUseCase: GetSavedUserUseCase
+) : ViewModel(), DefaultLifecycleObserver {
 
     private val _uiState = MutableStateFlow(MyEventListUiState())
     val uiState: StateFlow<MyEventListUiState> = _uiState.asStateFlow()
@@ -33,34 +38,52 @@ class MyEventListViewModel(private val getMyEventListUseCase: GetMyEventListUseC
 
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
+        checkIfUserIsAdmin()
         loadMyEvents()
     }
 
     fun loadMyEvents() {
-        _uiState.value = MyEventListUiState(loading = true)
+        _uiState.value = _uiState.value.copy(loading = true)
+
         viewModelScope.launch {
             val result = getMyEventListUseCase()
 
             result.onSuccess { myEventList ->
                 events = myEventList
-                if (myEventList.isEmpty()) {
-                    _uiState.value = MyEventListUiState(error = MyEventListError.EMPTY_LIST)
+                _uiState.value = if (myEventList.isEmpty()) {
+                    _uiState.value.copy(
+                        loading = false,
+                        error = MyEventListError.EMPTY_LIST
+                    )
                 } else {
-                    _uiState.value = MyEventListUiState(
-                        eventList = myEventList.toEventUiList()
+                    _uiState.value.copy(
+                        loading = false,
+                        eventList = myEventList.toEventUiList(),
+                        error = null
                     )
                 }
             }.onFailure { error ->
-                if (error.code == ErrorCodes.NOT_LOGGED_IN) {
-                    _uiState.value = MyEventListUiState(error = MyEventListError.NOT_LOGGED_IN)
-                } else {
-                    _uiState.value = MyEventListUiState(error = MyEventListError.UNKNOWN)
-                }
+                _uiState.value = _uiState.value.copy(
+                    loading = false,
+                    error = when (error.code) {
+                        ErrorCodes.NOT_LOGGED_IN -> MyEventListError.NOT_LOGGED_IN
+                        else -> MyEventListError.UNKNOWN
+                    }
+                )
             }.onNoConnectionError {
                 _effect.tryEmit(MyEventListEffect.ShowNoNetworkPrompt)
             }
         }
     }
+
+    fun checkIfUserIsAdmin() {
+        viewModelScope.launch {
+            val result = getSavedUserUseCase()
+            val isAdmin = result.data?.role == RoleType.ADMIN
+            _uiState.value = _uiState.value.copy(isAdmin = isAdmin)
+        }
+    }
+
 
     fun onEventClick(event: EventListUiModel) {
         val eventFound = events.find { it.id == event.id }

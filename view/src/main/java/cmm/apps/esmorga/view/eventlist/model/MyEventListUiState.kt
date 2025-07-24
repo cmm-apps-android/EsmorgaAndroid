@@ -5,7 +5,8 @@ import cmm.apps.esmorga.domain.event.model.Event
 data class MyEventListUiState(
     val loading: Boolean = false,
     val eventList: List<EventListUiModel> = emptyList(),
-    val error: MyEventListError? = null
+    val error: MyEventListError? = null,
+    val isAdmin: Boolean = false,
 )
 
 enum class MyEventListError {

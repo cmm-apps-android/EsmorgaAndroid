@@ -12,6 +12,7 @@ import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.EsmorgaResult
 import cmm.apps.esmorga.domain.result.Source
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
+import cmm.apps.esmorga.domain.user.model.RoleType
 import cmm.apps.esmorga.domain.user.model.User
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.eventdetails.EventDetailsViewModel
@@ -43,7 +44,7 @@ class EventDetailsViewModelTest {
     private val event = EventViewMock.provideEvent("DomainEvent")
 
     private val getSavedUserUseCase = mockk<GetSavedUserUseCase>(relaxed = true).also { useCase ->
-        coEvery { useCase() } returns EsmorgaResult.success(User("", "", "", ""))
+        coEvery { useCase() } returns EsmorgaResult.success(User("", "", "", RoleType.USER))
     }
 
     private val joinEventUseCase = mockk<JoinEventUseCase>(relaxed = true)
