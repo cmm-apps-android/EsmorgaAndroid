@@ -6,7 +6,7 @@ import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.EsmorgaResult
 import cmm.apps.esmorga.domain.result.Source
-import cmm.apps.esmorga.domain.user.GetUserIsAdminUsecase
+import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.view.eventlist.MyEventListViewModel
 import cmm.apps.esmorga.view.eventlist.model.MyEventListEffect
 import cmm.apps.esmorga.view.eventlist.model.MyEventListError
@@ -31,10 +31,9 @@ class MyEventListViewModelTest {
         val useCase = mockk<GetMyEventListUseCase>(relaxed = true)
         coEvery { useCase() } returns EsmorgaResult.success(EventViewMock.provideEventList(listOf(domainEventName)))
 
-        val isAdminUseCase = mockk<GetUserIsAdminUsecase>(relaxed = true)
-        coEvery { isAdminUseCase() } returns false
+        val getSavedUserUseCase = mockk<GetSavedUserUseCase>(relaxed = true)
 
-        val sut = MyEventListViewModel(useCase, isAdminUseCase)
+        val sut = MyEventListViewModel(useCase, getSavedUserUseCase)
         sut.loadMyEvents()
 
         val uiState = sut.uiState.value
@@ -46,10 +45,9 @@ class MyEventListViewModelTest {
         val useCase = mockk<GetMyEventListUseCase>(relaxed = true)
         coEvery { useCase() } returns EsmorgaResult.success(EventViewMock.provideEventList(listOf()))
 
-        val isAdminUseCase = mockk<GetUserIsAdminUsecase>(relaxed = true)
-        coEvery { isAdminUseCase() } returns false
+        val getSavedUserUseCase = mockk<GetSavedUserUseCase>(relaxed = true)
 
-        val sut = MyEventListViewModel(useCase, isAdminUseCase)
+        val sut = MyEventListViewModel(useCase, getSavedUserUseCase)
         sut.loadMyEvents()
 
         val uiState = sut.uiState.value
@@ -59,12 +57,13 @@ class MyEventListViewModelTest {
     @Test
     fun `given a not logged in error usecase when load method is called then UI state containing error is emitted`() = runTest {
         val useCase = mockk<GetMyEventListUseCase>(relaxed = true)
-        coEvery { useCase() } returns EsmorgaResult.failure(EsmorgaException(message = "Mock error", source = Source.LOCAL, code = ErrorCodes.NOT_LOGGED_IN))
+        coEvery { useCase() } returns EsmorgaResult.failure(
+            EsmorgaException(message = "Mock error", source = Source.LOCAL, code = ErrorCodes.NOT_LOGGED_IN)
+        )
 
-        val isAdminUseCase = mockk<GetUserIsAdminUsecase>(relaxed = true)
-        coEvery { isAdminUseCase() } returns false
+        val getSavedUserUseCase = mockk<GetSavedUserUseCase>(relaxed = true)
 
-        val sut = MyEventListViewModel(useCase, isAdminUseCase)
+        val sut = MyEventListViewModel(useCase, getSavedUserUseCase)
         sut.loadMyEvents()
 
         val uiState = sut.uiState.value
@@ -72,14 +71,15 @@ class MyEventListViewModelTest {
     }
 
     @Test
-    fun `given an usecase with unkwnown error when load method is called then UI state containing error is emitted`() = runTest {
+    fun `given an usecase with unknown error when load method is called then UI state containing error is emitted`() = runTest {
         val useCase = mockk<GetMyEventListUseCase>(relaxed = true)
-        coEvery { useCase() } returns EsmorgaResult.failure(EsmorgaException(message = "Mock error", source = Source.REMOTE, code = ErrorCodes.UNKNOWN_ERROR))
+        coEvery { useCase() } returns EsmorgaResult.failure(
+            EsmorgaException(message = "Mock error", source = Source.REMOTE, code = ErrorCodes.UNKNOWN_ERROR)
+        )
 
-        val isAdminUseCase = mockk<GetUserIsAdminUsecase>(relaxed = true)
-        coEvery { isAdminUseCase() } returns false
+        val getSavedUserUseCase = mockk<GetSavedUserUseCase>(relaxed = true)
 
-        val sut = MyEventListViewModel(useCase, isAdminUseCase)
+        val sut = MyEventListViewModel(useCase, getSavedUserUseCase)
         sut.loadMyEvents()
 
         val uiState = sut.uiState.value
@@ -93,10 +93,9 @@ class MyEventListViewModelTest {
         val useCase = mockk<GetMyEventListUseCase>(relaxed = true)
         coEvery { useCase() } returns EsmorgaResult.noConnectionError(EventViewMock.provideEventList(listOf(domainEventName)))
 
-        val isAdminUseCase = mockk<GetUserIsAdminUsecase>(relaxed = true)
-        coEvery { isAdminUseCase() } returns false
+        val getSavedUserUseCase = mockk<GetSavedUserUseCase>(relaxed = true)
 
-        val sut = MyEventListViewModel(useCase, isAdminUseCase)
+        val sut = MyEventListViewModel(useCase, getSavedUserUseCase)
         sut.effect.test {
             sut.loadMyEvents()
 
@@ -109,34 +108,20 @@ class MyEventListViewModelTest {
     }
 
     @Test
-    fun `given an successful usecase when load method is called then UI state containing loading is emitted`() = runTest {
+    fun `given a successful usecase when load method is called then UI state containing loading is emitted`() = runTest {
         val domainEventName = "DomainEvent"
 
         val useCase = mockk<GetMyEventListUseCase>(relaxed = true)
         coEvery { useCase() } returns EsmorgaResult.noConnectionError(EventViewMock.provideEventList(listOf(domainEventName)))
 
-        val isAdminUseCase = mockk<GetUserIsAdminUsecase>(relaxed = true)
-        coEvery { isAdminUseCase() } returns false
+        val getSavedUserUseCase = mockk<GetSavedUserUseCase>(relaxed = true)
 
-        val sut = MyEventListViewModel(useCase, isAdminUseCase)
+        val sut = MyEventListViewModel(useCase, getSavedUserUseCase)
         sut.uiState.test {
-            awaitItem() //skip state already in flow before calling loadMyEvents again
+            awaitItem()
             sut.loadMyEvents()
             Assert.assertTrue(awaitItem().loading)
             cancelAndIgnoreRemainingEvents()
         }
-    }
-
-    @Test
-    fun `given user is admin when checkIfUserIsAdmin is called then UI state should have isAdmin true`() = runTest {
-        val useCase = mockk<GetMyEventListUseCase>(relaxed = true)
-        val isAdminUseCase = mockk<GetUserIsAdminUsecase>()
-        coEvery { isAdminUseCase() } returns true
-
-        val sut = MyEventListViewModel(useCase, isAdminUseCase)
-        sut.checkIfUserIsAdmin()
-
-        val uiState = sut.uiState.value
-        Assert.assertTrue(uiState.isAdmin)
     }
 }
