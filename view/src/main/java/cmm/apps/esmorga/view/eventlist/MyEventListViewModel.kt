@@ -7,7 +7,8 @@ import androidx.lifecycle.viewModelScope
 import cmm.apps.esmorga.domain.event.GetMyEventListUseCase
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.domain.result.ErrorCodes
-import cmm.apps.esmorga.domain.user.GetUserIsAdminUsecase
+import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
+import cmm.apps.esmorga.domain.user.model.RoleType
 import cmm.apps.esmorga.view.eventlist.mapper.EventListUiMapper.toEventUiList
 import cmm.apps.esmorga.view.eventlist.model.EventListUiModel
 import cmm.apps.esmorga.view.eventlist.model.MyEventListEffect
@@ -24,7 +25,7 @@ import kotlinx.coroutines.launch
 
 class MyEventListViewModel(
     private val getMyEventListUseCase: GetMyEventListUseCase,
-    private val getUserIsAdminUsecase: GetUserIsAdminUsecase
+    private val getSavedUserUseCase: GetSavedUserUseCase
 ) : ViewModel(), DefaultLifecycleObserver {
 
     private val _uiState = MutableStateFlow(MyEventListUiState())
@@ -77,7 +78,8 @@ class MyEventListViewModel(
 
     fun checkIfUserIsAdmin() {
         viewModelScope.launch {
-            val isAdmin = getUserIsAdminUsecase()
+            val result = getSavedUserUseCase()
+            val isAdmin = result.data?.role == RoleType.ADMIN
             _uiState.value = _uiState.value.copy(isAdmin = isAdmin)
         }
     }
