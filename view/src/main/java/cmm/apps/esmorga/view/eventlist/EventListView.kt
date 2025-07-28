@@ -27,6 +27,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -118,7 +120,7 @@ fun EventListView(uiState: EventListUiState, snackbarHostState: SnackbarHostStat
                 } else if (uiState.eventList.isEmpty()) {
                     EventListEmpty()
                 } else {
-                    EventList(events = uiState.eventList, onEventClick = onEventClick, modifier = Modifier.padding(horizontal = 16.dp), listState = listState)
+                    EventList(events = uiState.eventList, onEventClick = onEventClick, modifier = Modifier.padding(horizontal = 16.dp))
                 }
             }
         }
@@ -205,8 +207,8 @@ fun EventListError(onRetryClick: () -> Unit) {
 }
 
 @Composable
-fun EventList(events: List<EventListUiModel>, onEventClick: (event: EventListUiModel) -> Unit, modifier: Modifier = Modifier, listState: LazyListState) {
-    LazyColumn(state = listState) {
+fun EventList(events: List<EventListUiModel>, onEventClick: (event: EventListUiModel) -> Unit, modifier: Modifier = Modifier, nestedScrollConnection: NestedScrollConnection? = null) {
+    LazyColumn(modifier = nestedScrollConnection?.let { Modifier.nestedScroll(it) }?: run { Modifier }) {
         items(events.size) { pos ->
             val event = events[pos]
 

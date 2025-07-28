@@ -1,5 +1,8 @@
 package cmm.apps.esmorga.view.eventlist
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -22,10 +25,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -97,50 +104,31 @@ fun MyEventListView(
     onRetryClick: () -> Unit,
     onAddEventClick: () -> Unit = {}
 ) {
-    val listState = rememberLazyListState()
     var fabVisible by remember { mutableStateOf(true) }
-    var lastScrollOffset by remember { mutableStateOf(0) }
 
+    var isVisible by rememberSaveable { mutableStateOf(true) }
+    val nestedScrollConnection = remember {
+        object : NestedScrollConnection {
+            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+                if (available.y < -1) {
+                    isVisible = false
+                }
 
-    LaunchedEffect(listState) {
-        snapshotFlow {
-            listOf(
-                listState.firstVisibleItemIndex to listState.firstVisibleItemScrollOffset,
-                listState.isScrollInProgress
-            )
-        }.collect { values ->
-            val (index, offset) = values[0] as Pair<Int, Int>
-            val isScrolling = values[1] as Boolean
+                if (available.y > 1) {
+                    isVisible = true
+                }
 
-            val currentScroll = index * 10000 + offset
-            val goingDown = currentScroll > lastScrollOffset
-            lastScrollOffset = currentScroll
-
-            fabVisible = when {
-                goingDown -> false
-                !isScrolling -> true
-                else -> fabVisible
+                return Offset.Zero
             }
         }
     }
-
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButton = {
             if (uiState.isAdmin && fabVisible) {
-                FloatingActionButton(
-                    onClick = onAddEventClick,
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
-                    shape = CircleShape
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "Añadir evento"
-                    )
-                }
+                AnimatedFloatingActionButton(isVisible, onAddEventClick)
             }
         }
     ) { innerPadding ->
@@ -168,10 +156,34 @@ fun MyEventListView(
                         onEventClick = onEventClick,
                         modifier = Modifier
                             .padding(horizontal = 16.dp),
-                        listState = listState
+                        nestedScrollConnection = nestedScrollConnection
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun AnimatedFloatingActionButton(
+    visible: Boolean,
+    onAddEventClick: () -> Unit
+) {
+    AnimatedVisibility(
+        visible = visible,
+        enter = slideInVertically(initialOffsetY = { it * 2 }),
+        exit = slideOutVertically(targetOffsetY = { it * 2 }),
+    ) {
+        FloatingActionButton(
+            onClick = onAddEventClick,
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
+            shape = CircleShape
+        ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = "Añadir evento"
+            )
         }
     }
 }
