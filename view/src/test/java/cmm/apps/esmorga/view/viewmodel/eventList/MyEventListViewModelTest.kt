@@ -6,11 +6,10 @@ import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.EsmorgaResult
 import cmm.apps.esmorga.domain.result.Source
+import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.view.eventlist.MyEventListViewModel
 import cmm.apps.esmorga.view.eventlist.model.MyEventListEffect
 import cmm.apps.esmorga.view.eventlist.model.MyEventListError
-import cmm.apps.esmorga.view.eventlist.model.MyEventListUiState
-import cmm.apps.esmorga.view.login.model.LoginEffect
 import cmm.apps.esmorga.view.viewmodel.mock.EventViewMock
 import cmm.apps.esmorga.view.viewmodel.util.MainDispatcherRule
 import io.mockk.coEvery
@@ -32,7 +31,9 @@ class MyEventListViewModelTest {
         val useCase = mockk<GetMyEventListUseCase>(relaxed = true)
         coEvery { useCase() } returns EsmorgaResult.success(EventViewMock.provideEventList(listOf(domainEventName)))
 
-        val sut = MyEventListViewModel(useCase)
+        val getSavedUserUseCase = mockk<GetSavedUserUseCase>(relaxed = true)
+
+        val sut = MyEventListViewModel(useCase, getSavedUserUseCase)
         sut.loadMyEvents()
 
         val uiState = sut.uiState.value
@@ -44,7 +45,9 @@ class MyEventListViewModelTest {
         val useCase = mockk<GetMyEventListUseCase>(relaxed = true)
         coEvery { useCase() } returns EsmorgaResult.success(EventViewMock.provideEventList(listOf()))
 
-        val sut = MyEventListViewModel(useCase)
+        val getSavedUserUseCase = mockk<GetSavedUserUseCase>(relaxed = true)
+
+        val sut = MyEventListViewModel(useCase, getSavedUserUseCase)
         sut.loadMyEvents()
 
         val uiState = sut.uiState.value
@@ -54,9 +57,13 @@ class MyEventListViewModelTest {
     @Test
     fun `given a not logged in error usecase when load method is called then UI state containing error is emitted`() = runTest {
         val useCase = mockk<GetMyEventListUseCase>(relaxed = true)
-        coEvery { useCase() } returns EsmorgaResult.failure(EsmorgaException(message = "Mock error", source = Source.LOCAL, code = ErrorCodes.NOT_LOGGED_IN))
+        coEvery { useCase() } returns EsmorgaResult.failure(
+            EsmorgaException(message = "Mock error", source = Source.LOCAL, code = ErrorCodes.NOT_LOGGED_IN)
+        )
 
-        val sut = MyEventListViewModel(useCase)
+        val getSavedUserUseCase = mockk<GetSavedUserUseCase>(relaxed = true)
+
+        val sut = MyEventListViewModel(useCase, getSavedUserUseCase)
         sut.loadMyEvents()
 
         val uiState = sut.uiState.value
@@ -64,11 +71,15 @@ class MyEventListViewModelTest {
     }
 
     @Test
-    fun `given an usecase with unkwnown error when load method is called then UI state containing error is emitted`() = runTest {
+    fun `given an usecase with unknown error when load method is called then UI state containing error is emitted`() = runTest {
         val useCase = mockk<GetMyEventListUseCase>(relaxed = true)
-        coEvery { useCase() } returns EsmorgaResult.failure(EsmorgaException(message = "Mock error", source = Source.REMOTE, code = ErrorCodes.UNKNOWN_ERROR))
+        coEvery { useCase() } returns EsmorgaResult.failure(
+            EsmorgaException(message = "Mock error", source = Source.REMOTE, code = ErrorCodes.UNKNOWN_ERROR)
+        )
 
-        val sut = MyEventListViewModel(useCase)
+        val getSavedUserUseCase = mockk<GetSavedUserUseCase>(relaxed = true)
+
+        val sut = MyEventListViewModel(useCase, getSavedUserUseCase)
         sut.loadMyEvents()
 
         val uiState = sut.uiState.value
@@ -82,7 +93,9 @@ class MyEventListViewModelTest {
         val useCase = mockk<GetMyEventListUseCase>(relaxed = true)
         coEvery { useCase() } returns EsmorgaResult.noConnectionError(EventViewMock.provideEventList(listOf(domainEventName)))
 
-        val sut = MyEventListViewModel(useCase)
+        val getSavedUserUseCase = mockk<GetSavedUserUseCase>(relaxed = true)
+
+        val sut = MyEventListViewModel(useCase, getSavedUserUseCase)
         sut.effect.test {
             sut.loadMyEvents()
 
@@ -95,15 +108,17 @@ class MyEventListViewModelTest {
     }
 
     @Test
-    fun `given an successful usecase when load method is called then UI state containing loading is emitted`() = runTest {
+    fun `given a successful usecase when load method is called then UI state containing loading is emitted`() = runTest {
         val domainEventName = "DomainEvent"
 
         val useCase = mockk<GetMyEventListUseCase>(relaxed = true)
         coEvery { useCase() } returns EsmorgaResult.noConnectionError(EventViewMock.provideEventList(listOf(domainEventName)))
 
-        val sut = MyEventListViewModel(useCase)
+        val getSavedUserUseCase = mockk<GetSavedUserUseCase>(relaxed = true)
+
+        val sut = MyEventListViewModel(useCase, getSavedUserUseCase)
         sut.uiState.test {
-            awaitItem() //skip state already in flow before calling loadMyEvents again
+            awaitItem()
             sut.loadMyEvents()
             Assert.assertTrue(awaitItem().loading)
             cancelAndIgnoreRemainingEvents()
