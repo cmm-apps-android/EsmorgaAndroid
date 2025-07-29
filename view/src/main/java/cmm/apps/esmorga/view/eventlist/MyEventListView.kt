@@ -105,7 +105,6 @@ fun MyEventListView(
     onRetryClick: () -> Unit,
     onAddEventClick: () -> Unit = {}
 ) {
-    var fabVisible by remember { mutableStateOf(true) }
 
     var isVisible by rememberSaveable { mutableStateOf(true) }
     val nestedScrollConnection = remember {
@@ -128,7 +127,7 @@ fun MyEventListView(
         modifier = Modifier.fillMaxSize(),
         snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButton = {
-            if (uiState.isAdmin && fabVisible) {
+            if (uiState.isAdmin) {
                 AnimatedFloatingActionButton(isVisible, onAddEventClick)
             }
         }
