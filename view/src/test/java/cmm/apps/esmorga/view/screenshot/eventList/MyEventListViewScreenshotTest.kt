@@ -39,6 +39,33 @@ class MyEventListViewScreenshotTest : BaseScreenshotTest() {
         snapshotWithState(loading = false, eventList = listOf(event, event))
     }
 
+    @Test
+    fun myEventListView_lightTheme_user_is_admin() {
+        val event = EventListUiModel(
+            id = "1",
+            imageUrl = "test.png",
+            cardTitle = "Card Title",
+            cardSubtitle1 = "Card subtitle 1",
+            cardSubtitle2 = "Card subtitle 2",
+        )
+
+        paparazzi.snapshot {
+            EsmorgaTheme(darkTheme = false) {
+                MyEventListView(
+                    uiState = MyEventListUiState(
+                        loading = false,
+                        eventList = listOf(event),
+                        isAdmin = true
+                    ),
+                    snackbarHostState = SnackbarHostState(),
+                    onEventClick = {},
+                    onSignInClick = {},
+                    onRetryClick = {}
+                )
+            }
+        }
+    }
+
     private fun snapshotWithState(loading: Boolean, eventList: List<EventListUiModel>, error: MyEventListError? = null) {
         paparazzi.snapshot {
             EsmorgaTheme(darkTheme = false) {

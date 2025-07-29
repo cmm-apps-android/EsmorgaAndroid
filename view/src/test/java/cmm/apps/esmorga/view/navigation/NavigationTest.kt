@@ -155,6 +155,7 @@ class NavigationTest {
     private val showDeviceIdIfNeededUseCase = mockk<ShowDeviceIdIfNeededUseCase>(relaxed = true).also { useCase ->
         coEvery { useCase() } returns EsmorgaResult.success(true)
     }
+
     @Before
     @Throws(Exception::class)
     fun setUp() {

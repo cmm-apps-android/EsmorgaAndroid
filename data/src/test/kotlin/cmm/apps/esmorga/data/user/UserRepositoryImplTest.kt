@@ -7,6 +7,7 @@ import cmm.apps.esmorga.data.user.datasource.UserDatasource
 import cmm.apps.esmorga.data.user.model.UserDataModel
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.Source
+import cmm.apps.esmorga.domain.user.model.RoleType
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -172,7 +173,8 @@ class UserRepositoryImplTest {
             dataName = "Yago",
             dataLastName = "Perez",
             dataEmail = "yago@mail.com",
-            dataRole = "USER"
+            dataRole = RoleType.USER
+
         )
 
         coEvery { remoteDS.activateAccount(any()) } returns fakeUserDataModel
