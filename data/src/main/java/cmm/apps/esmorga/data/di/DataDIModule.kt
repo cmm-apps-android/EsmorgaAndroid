@@ -32,6 +32,7 @@ object DataDIModule {
         }
         factory<DeviceRepository> {
             DeviceRepositoryImpl(
+                get(named(REMOTE_DATASOURCE_INSTANCE_NAME)),
                 get(named(LOCAL_DATASOURCE_INSTANCE_NAME))
             )
         }

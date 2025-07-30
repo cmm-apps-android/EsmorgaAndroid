@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import app.cash.turbine.test
-import cmm.apps.esmorga.domain.device.GetDeviceIdUseCase
 import cmm.apps.esmorga.domain.device.ShowDeviceIdIfNeededUseCase
 import cmm.apps.esmorga.domain.result.EsmorgaResult
 import cmm.apps.esmorga.view.viewmodel.util.MainDispatcherRule
@@ -28,7 +27,6 @@ class WelcomeViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    private val getDeviceIdUseCase: GetDeviceIdUseCase = mockk()
     private val showDeviceIdNeededUseCase: ShowDeviceIdIfNeededUseCase = mockk()
 
     @Before
@@ -46,23 +44,22 @@ class WelcomeViewModelTest {
 
     @Test
     fun `given a success usecase, when is qa envoriment then deviceId is displayed`() = runTest {
-        coEvery { showDeviceIdNeededUseCase() } returns EsmorgaResult.success(true)
-        coEvery { getDeviceIdUseCase() } returns EsmorgaResult.success("01234")
+        val expectedDeviceId = "device-id"
+        coEvery { showDeviceIdNeededUseCase() } returns EsmorgaResult.success(expectedDeviceId)
 
-        val viewModel = WelcomeViewModel(getDeviceIdUseCase, showDeviceIdNeededUseCase)
+        val viewModel = WelcomeViewModel(showDeviceIdNeededUseCase)
 
         viewModel.uiState.test {
             val state = awaitItem()
-            assertEquals("01234", state.deviceId)
+            assertEquals(expectedDeviceId, state.deviceId)
         }
     }
 
     @Test
     fun `given a success usecase when is prod environment then deviceId is not displayed`() = runTest {
-        coEvery { showDeviceIdNeededUseCase() } returns EsmorgaResult.success(false)
-        coEvery { getDeviceIdUseCase() } returns EsmorgaResult.success("01234")
+        coEvery { showDeviceIdNeededUseCase() } returns EsmorgaResult.success(null)
 
-        val viewModel = WelcomeViewModel(getDeviceIdUseCase, showDeviceIdNeededUseCase)
+        val viewModel = WelcomeViewModel(showDeviceIdNeededUseCase)
 
         viewModel.uiState.test {
             val state = awaitItem()

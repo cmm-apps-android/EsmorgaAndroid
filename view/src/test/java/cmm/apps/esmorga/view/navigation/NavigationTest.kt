@@ -17,7 +17,6 @@ import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_RETRY_BUTTON
 import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_SUBTITLE
 import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_TITLE
 import cmm.apps.esmorga.domain.account.ActivateAccountUseCase
-import cmm.apps.esmorga.domain.device.GetDeviceIdUseCase
 import cmm.apps.esmorga.domain.device.ShowDeviceIdIfNeededUseCase
 import cmm.apps.esmorga.domain.event.GetEventListUseCase
 import cmm.apps.esmorga.domain.event.GetMyEventListUseCase
@@ -148,12 +147,8 @@ class NavigationTest {
         coEvery { useCase(any(), any()) } returns EsmorgaResult.success(Unit)
     }
 
-    private val getDeviceIdUseCase = mockk<GetDeviceIdUseCase>(relaxed = true).also { useCase ->
-        coEvery { useCase() } returns EsmorgaResult.success("device_id")
-    }
-
     private val showDeviceIdIfNeededUseCase = mockk<ShowDeviceIdIfNeededUseCase>(relaxed = true).also { useCase ->
-        coEvery { useCase() } returns EsmorgaResult.success(true)
+        coEvery { useCase() } returns EsmorgaResult.success("device-id")
     }
 
     @Before
@@ -179,7 +174,6 @@ class NavigationTest {
                     factory<PerformRecoverPasswordUseCase> { performRecoverPasswordUseCase }
                     factory<ActivateAccountUseCase> { activateAccountUseCase }
                     factory<PerformResetPasswordUseCase> { performResetPasswordUseCase }
-                    factory<GetDeviceIdUseCase> { getDeviceIdUseCase }
                     factory<ShowDeviceIdIfNeededUseCase> { showDeviceIdIfNeededUseCase }
                 }
             )

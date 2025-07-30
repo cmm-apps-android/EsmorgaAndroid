@@ -13,9 +13,10 @@ class DeviceRepositoryImplTest {
         val expectedDeviceId = "24601"
 
         val localDS = mockk<DeviceDataSource>(relaxed = true)
-        coEvery { localDS.getDeviceId() } returns expectedDeviceId
+        val remoteDS = mockk<DeviceDataSource>(relaxed = true)
+        coEvery { remoteDS.getDeviceId() } returns expectedDeviceId
 
-        val sut = DeviceRepositoryImpl(localDS)
+        val sut = DeviceRepositoryImpl(remoteDS, localDS)
         val result = sut.getDeviceId()
 
         Assert.assertEquals(expectedDeviceId, result)

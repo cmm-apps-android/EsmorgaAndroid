@@ -16,23 +16,27 @@ class ShowDeviceIdIfNeededUseCaseTest {
 
     @Test
     fun `given qa environment when get environment is called then returns true`() = runTest {
+        val expectedDeviceId = "device-id"
         val buildConfig: EsmorgaBuildConfig = mockk()
         coEvery { buildConfig.getEnvironment() } returns EsmorgaBuildConfig.Environment.QA
         coEvery { repo.getEnvironment() } returns EsmorgaBuildConfig.Environment.QA
+        coEvery { repo.getDeviceId() } returns expectedDeviceId
 
         val result = useCase()
 
-        assertEquals(EsmorgaResult.success(true), result)
+        assertEquals(EsmorgaResult.success(expectedDeviceId), result)
     }
 
     @Test
     fun `given prod environment when get environment is called then returns false`() = runTest {
+        val expectedDeviceId = "device-id"
         val buildConfig: EsmorgaBuildConfig = mockk()
         coEvery { buildConfig.getEnvironment() } returns EsmorgaBuildConfig.Environment.PROD
         coEvery { repo.getEnvironment() } returns EsmorgaBuildConfig.Environment.PROD
+        coEvery { repo.getDeviceId() } returns expectedDeviceId
 
         val result = useCase()
 
-        assertEquals(EsmorgaResult.success(false), result)
+        assertEquals(EsmorgaResult.success(null), result)
     }
 }
