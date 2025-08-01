@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.view.activateaccount.ActivateAccountScreen
+import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen
 import cmm.apps.esmorga.view.deeplink.DeeplinkManager.navigateFromDeeplink
 import cmm.apps.esmorga.view.errors.EsmorgaErrorScreen
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
@@ -66,6 +67,9 @@ sealed class Navigation {
 
     @Serializable
     data class ResetPasswordScreen(val forgotPasswordCode: String) : Navigation()
+
+    @Serializable
+    data object ChangePasswordScreen : Navigation()
 }
 
 const val GOOGLE_MAPS_PACKAGE = "com.google.android.apps.maps"
@@ -172,7 +176,27 @@ private fun NavGraphBuilder.homeFlow(navigationController: NavHostController) {
     composable<Navigation.ProfileScreen> {
         ProfileScreen(
             navigateLogIn = { navigationController.navigate(Navigation.LoginScreen()) },
-            onNoNetworkError = { navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = it)) }
+            onNoNetworkError = { navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = it)) },
+            onChangePasswordClick = { navigationController.navigate(Navigation.ChangePasswordScreen) }
+        )
+    }
+
+    composable<Navigation.ChangePasswordScreen> {
+        ChangePasswordScreen(
+            onChangePasswordSuccess = { message ->
+                navigationController.navigate(Navigation.LoginScreen(message)) {
+                    popUpTo(0) {
+                        inclusive = true
+                    }
+                    launchSingleTop = true
+                }
+            },
+            onChangePasswordError = { errorArguments ->
+                navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = errorArguments))
+            },
+            onBackPressed = {
+                navigationController.popBackStack()
+            }
         )
     }
 }

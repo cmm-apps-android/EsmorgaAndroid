@@ -79,4 +79,16 @@ class UserRemoteDatasourceImpl(private val api: EsmorgaAuthApi, private val auth
     override suspend fun deleteUserSession() {
         authDatasource.deleteTokens()
     }
+
+    override suspend fun changePassword(currentPassword: String, newPassword: String) {
+        try {
+            val body = mapOf(
+                "currentPassword" to currentPassword,
+                "newPassword" to newPassword
+            )
+            api.changePassword(body)
+        } catch (e: Exception) {
+            throw manageApiException(e)
+        }
+    }
 }

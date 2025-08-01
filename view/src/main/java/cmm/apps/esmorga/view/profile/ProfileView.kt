@@ -1,6 +1,5 @@
 package cmm.apps.esmorga.view.profile
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -12,7 +11,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -38,10 +36,10 @@ import org.koin.androidx.compose.koinViewModel
 fun ProfileScreen(
     rvm: ProfileViewModel = koinViewModel(),
     navigateLogIn: () -> Unit,
-    onNoNetworkError: (EsmorgaErrorScreenArguments) -> Unit
+    onNoNetworkError: (EsmorgaErrorScreenArguments) -> Unit,
+    onChangePasswordClick: () -> Unit
 
 ) {
-    val context = LocalContext.current
     val uiState: ProfileUiState by rvm.uiState.collectAsStateWithLifecycle()
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     rvm.observeLifecycleEvents(lifecycle)
@@ -50,7 +48,7 @@ fun ProfileScreen(
         rvm.effect.collect { eff ->
             when (eff) {
                 ProfileEffect.NavigateToChangePassword -> {
-                    //TODO to be done in MOB-176
+                    onChangePasswordClick()
                 }
 
                 ProfileEffect.NavigateToLogOut -> {
@@ -73,9 +71,7 @@ fun ProfileScreen(
         ProfileView(
             uiState = uiState,
             shownLogOutDialog = { rvm.logout() },
-            onChangePassword = {
-                //TODO To be done in MOB-176
-            },
+            onChangePassword = { rvm.navigateToChangePassword() },
             onNavigateLogin = { rvm.logIn() }
         )
     }
@@ -168,8 +164,8 @@ private fun LoggedProfileView(
             style = EsmorgaTextStyle.HEADING_1, modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        EsmorgaRow(title = stringResource(R.string.my_profile_changue_password), onClick = onChangePassword )
-        EsmorgaRow(title = stringResource(R.string.my_profile_logout), onClick =  { shownDialog = true })
+        EsmorgaRow(title = stringResource(R.string.my_profile_changue_password), onClick = onChangePassword)
+        EsmorgaRow(title = stringResource(R.string.my_profile_logout), onClick = { shownDialog = true })
     }
 }
 
