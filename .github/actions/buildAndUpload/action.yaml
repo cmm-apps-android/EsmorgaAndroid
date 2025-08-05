@@ -90,7 +90,7 @@ runs:
           curl -vs -F "buiFile=@${file}" \
               -F "buiName=${name}" \
               -F "buiVersion=${versionName}" \
-              -F "buiBuildNum=${versionCode}" \
+              -F "buiBuildNum=${github.run_number}" \
               -F "buiBuildType=${buildType}" \
               -F "buiTemplate=0" \
               -F "buiHash=${buildHash}" \
