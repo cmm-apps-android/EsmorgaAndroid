@@ -1,10 +1,13 @@
 package cmm.apps.designsystem
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -19,10 +22,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -41,6 +44,7 @@ fun EsmorgaTextField(
     imeAction: ImeAction = ImeAction.Done,
     errorText: String? = null,
     isEnabled: Boolean = true,
+    maxChars:Int? = null,
     onDonePressed: () -> Unit = {}
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
@@ -63,8 +67,32 @@ fun EsmorgaTextField(
                 unfocusedBorderColor = MaterialTheme.colorScheme.secondary
             ),
             supportingText = {
-                if (errorText != null) {
-                    EsmorgaText(text = errorText, style = EsmorgaTextStyle.CAPTION, modifier = Modifier.padding(top = 4.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 4.dp),
+                    verticalAlignment = Alignment.Top,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    if (errorText != null) {
+                        EsmorgaText(
+                            text = errorText,
+                            style = EsmorgaTextStyle.CAPTION,
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(end = 8.dp),
+                            maxLines = 2
+                        )
+                    } else {
+                        Spacer(modifier = Modifier.weight(1f))
+                    }
+                    if (maxChars != null) {
+                        EsmorgaText(
+                            text = "${value.length}/$maxChars",
+                            style = EsmorgaTextStyle.CAPTION,
+                            modifier = Modifier.wrapContentWidth(Alignment.End)
+                        )
+                    }
                 }
             },
             modifier = modifier.fillMaxWidth(),

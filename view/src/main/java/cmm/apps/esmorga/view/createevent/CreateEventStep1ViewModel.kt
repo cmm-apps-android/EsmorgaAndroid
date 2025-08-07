@@ -1,15 +1,12 @@
 package cmm.apps.esmorga.view.createevent
 
 import androidx.lifecycle.ViewModel
-import cmm.apps.esmorga.domain.createEvent.ValidateCreateEventFormUseCase
 import cmm.apps.esmorga.view.createevent.model.CreateEventStep1Effect
 import cmm.apps.esmorga.view.createevent.model.CreateEventStep1UiState
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.*
 
-class CreateEventStep1ViewModel(
-    private val validateCreateEventForm: ValidateCreateEventFormUseCase
-) : ViewModel() {
+class CreateEventStep1ViewModel() : ViewModel() {
 
     private val _uiState = MutableStateFlow(CreateEventStep1UiState())
     val uiState: StateFlow<CreateEventStep1UiState> = _uiState.asStateFlow()

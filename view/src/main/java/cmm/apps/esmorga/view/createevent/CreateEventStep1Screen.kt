@@ -25,7 +25,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cmm.apps.designsystem.EsmorgaButton
-import cmm.apps.designsystem.EsmorgaDescriptionTextField
 import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextField
 import cmm.apps.designsystem.EsmorgaTextStyle
@@ -89,7 +88,7 @@ fun CreateEventStep1Screen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            EsmorgaDescriptionTextField(
+            EsmorgaTextField(
                 value = uiState.description,
                 onValueChange = viewModel::onDescriptionChange,
                 title = R.string.field_title_event_description,
@@ -97,7 +96,8 @@ fun CreateEventStep1Screen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(min = 120.dp),
-                singleLine = false
+                singleLine = false,
+                placeholder = R.string.placeholder_event_name,
             )
 
             Box(
