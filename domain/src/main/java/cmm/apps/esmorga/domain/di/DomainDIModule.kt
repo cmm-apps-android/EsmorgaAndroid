@@ -2,6 +2,8 @@ package cmm.apps.esmorga.domain.di
 
 import cmm.apps.esmorga.domain.account.ActivateAccountUseCase
 import cmm.apps.esmorga.domain.account.ActivateAccountUseCaseImpl
+import cmm.apps.esmorga.domain.createEvent.ValidateCreateEventFormUseCase
+import cmm.apps.esmorga.domain.createEvent.ValidateCreateEventFormUseCaseImpl
 import cmm.apps.esmorga.domain.device.GetDeviceIdUseCase
 import cmm.apps.esmorga.domain.device.GetDeviceIdUseCaseImpl
 import cmm.apps.esmorga.domain.device.ShowDeviceIdIfNeededUseCase
@@ -51,5 +53,6 @@ object DomainDIModule {
         factory<PerformResetPasswordUseCase> { PerformResetPasswordUseCaseImpl(get()) }
         factory<GetDeviceIdUseCase> { GetDeviceIdUseCaseImpl(get()) }
         factory<ShowDeviceIdIfNeededUseCase>{ShowDeviceIdIfNeededUseCaseImpl(get()) }
+        factory<ValidateCreateEventFormUseCase>{ValidateCreateEventFormUseCaseImpl() }
     }
 }

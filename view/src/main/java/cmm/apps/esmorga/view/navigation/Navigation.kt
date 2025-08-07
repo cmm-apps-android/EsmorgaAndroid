@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.view.activateaccount.ActivateAccountScreen
+import cmm.apps.esmorga.view.createevent.CreateEventStep1Screen
 import cmm.apps.esmorga.view.deeplink.DeeplinkManager.navigateFromDeeplink
 import cmm.apps.esmorga.view.errors.EsmorgaErrorScreen
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
@@ -66,6 +67,9 @@ sealed class Navigation {
 
     @Serializable
     data class ResetPasswordScreen(val forgotPasswordCode: String) : Navigation()
+
+    @Serializable
+    data object CreateEventStep1Screen : Navigation()
 }
 
 const val GOOGLE_MAPS_PACKAGE = "com.google.android.apps.maps"
@@ -142,6 +146,15 @@ private fun NavGraphBuilder.accountActivationFlow(navigationController: NavHostC
 }
 
 private fun NavGraphBuilder.homeFlow(navigationController: NavHostController) {
+    composable<Navigation.CreateEventStep1Screen> {
+        CreateEventStep1Screen(
+            onBack = { navigationController.popBackStack() },
+            onNext = { eventName, description ->
+                navigationController.popBackStack()
+            }
+        )
+    }
+
     composable<Navigation.EventListScreen>(
         typeMap = mapOf(typeOf<Event>() to serializableType<Event>())
     ) {
@@ -167,6 +180,8 @@ private fun NavGraphBuilder.homeFlow(navigationController: NavHostController) {
             navigationController.navigate(Navigation.EventDetailScreen(event))
         }, onSignInClick = {
             navigationController.navigate(Navigation.LoginScreen())
+        }, onCreateEventClick = {
+            navigationController.navigate(Navigation.CreateEventStep1Screen)
         })
     }
     composable<Navigation.ProfileScreen> {

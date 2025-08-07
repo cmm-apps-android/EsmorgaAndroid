@@ -88,4 +88,12 @@
    <string name="register_confirmation_error_title">Expired or invalid code!</string>
    <string name="register_confirmation_button_retry">Try again</string>
    <string name="register_confirmation_button_cancel">Cancel</string>
+   <string name="screen_create_event_title">Create your event</string>
+   <string name="step_continue_button">Continue</string>
+   <string name="field_title_event_name">Event Name</string>
+   <string name="field_title_event_description">Description</string>
+   <string name="placeholder_event_name">Enter the name of the event</string>
+   <string name="caption_event_description">$n/5000</string>
+   <string name="inline_error_invalid_length_name">The text must be between 3 and 100 characters</string>
+   <string name="inline_error_invalid_length_description">The text must be between 4 and 5000 characters</string>
 </resources>
