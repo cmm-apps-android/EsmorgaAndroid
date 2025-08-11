@@ -8,9 +8,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -40,24 +42,48 @@ fun EsmorgaTextField(
     placeholder: Int,
     modifier: Modifier = Modifier,
     singleLine: Boolean = true,
+    maxLines: Int = if (singleLine) 1 else 4,
     keyboardType: KeyboardType = KeyboardType.Text,
     imeAction: ImeAction = ImeAction.Done,
     errorText: String? = null,
     isEnabled: Boolean = true,
-    maxChars:Int? = null,
+    maxChars: Int? = null,
     onDonePressed: () -> Unit = {}
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
+    val scrollState = rememberScrollState()
+
     Column {
         EsmorgaText(text = stringResource(id = title), style = EsmorgaTextStyle.BODY_1)
         Spacer(modifier = Modifier.height(8.dp))
         OutlinedTextField(
             value = value,
-            visualTransformation = if (keyboardType == KeyboardType.Password && !passwordVisible) PasswordVisualTransformation() else VisualTransformation.None,
-            onValueChange = onValueChange,
-            placeholder = { Text(text = stringResource(id = placeholder), color = MaterialTheme.colorScheme.onSurface) },
+            visualTransformation = if (keyboardType == KeyboardType.Password && !passwordVisible)
+                PasswordVisualTransformation()
+            else
+                VisualTransformation.None,
+            onValueChange = { newValue ->
+                if (maxChars == null || newValue.length <= maxChars) {
+                    onValueChange(newValue)
+                }
+            },
+            placeholder = {
+                Text(
+                    text = stringResource(id = placeholder),
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            },
             singleLine = singleLine,
+            maxLines = maxLines,
             enabled = isEnabled,
+            modifier = if (!singleLine) {
+                modifier
+                    .fillMaxWidth()
+                    .height(150.dp)
+                    .verticalScroll(scrollState)
+            } else {
+                modifier.fillMaxWidth()
+            },
             keyboardOptions = KeyboardOptions.Default.copy(
                 imeAction = imeAction,
                 keyboardType = keyboardType
@@ -84,7 +110,9 @@ fun EsmorgaTextField(
                             maxLines = 2
                         )
                     } else {
-                        Spacer(modifier = Modifier.weight(1f))
+                        Spacer(modifier = Modifier
+                            .weight(1f)
+                            .padding(end = 8.dp))
                     }
                     if (maxChars != null) {
                         EsmorgaText(
@@ -95,7 +123,6 @@ fun EsmorgaTextField(
                     }
                 }
             },
-            modifier = modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12),
             trailingIcon = {
                 if (keyboardType == KeyboardType.Password) {
@@ -107,6 +134,5 @@ fun EsmorgaTextField(
             },
             keyboardActions = KeyboardActions(onDone = { onDonePressed() })
         )
-
     }
 }

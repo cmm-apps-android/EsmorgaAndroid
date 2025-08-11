@@ -1,6 +1,7 @@
 package cmm.apps.esmorga.view.createevent
 
 import androidx.lifecycle.ViewModel
+import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.createevent.model.CreateEventStep1Effect
 import cmm.apps.esmorga.view.createevent.model.CreateEventStep1UiState
 import kotlinx.coroutines.channels.BufferOverflow
@@ -32,37 +33,34 @@ class CreateEventStep1ViewModel() : ViewModel() {
     }
 
     fun onNextClick() {
-        val result = validateCreateEventForm(
-            name = _uiState.value.eventName,
-            description = _uiState.value.description,
-            finalValidation = true
-        )
-
-        _uiState.update {
-            it.copy(
-                eventNameError = result.nameErrorRes,
-                descriptionError = result.descriptionErrorRes,
-                isFormValid = result.isFormValid
-            )
-        }
-
-        if (result.isFormValid) {
+        validateForm(finalValidation = true)
+        if (_uiState.value.isFormValid) {
             _effect.tryEmit(CreateEventStep1Effect.NavigateToStep2)
         }
     }
 
-    private fun validateForm() {
-        val result = validateCreateEventForm(
-            name = _uiState.value.eventName,
-            description = _uiState.value.description,
-            finalValidation = false
-        )
+    private fun validateForm(finalValidation: Boolean = false) {
+        val state = _uiState.value
+
+        val nameError = when {
+            state.eventName.isBlank() -> R.string.inline_error_empty_field
+            state.eventName.length < 3 || state.eventName.length > 100 -> R.string.inline_error_invalid_length_name
+            else -> null
+        }
+
+        val descriptionError = when {
+            state.description.isBlank() -> R.string.inline_error_empty_field
+            state.description.length < 4 || state.description.length > 5000 -> R.string.inline_error_invalid_length_description
+            else -> null
+        }
+
+        val isValid = nameError == null && descriptionError == null
 
         _uiState.update {
             it.copy(
-                eventNameError = result.nameErrorRes,
-                descriptionError = result.descriptionErrorRes,
-                isFormValid = result.isFormValid
+                eventNameError = nameError,
+                descriptionError = descriptionError,
+                isFormValid = isValid
             )
         }
     }

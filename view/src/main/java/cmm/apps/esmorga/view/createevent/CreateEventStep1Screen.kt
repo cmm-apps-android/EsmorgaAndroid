@@ -83,7 +83,8 @@ fun CreateEventStep1Screen(
                 title = R.string.field_title_event_name,
                 placeholder = R.string.placeholder_event_name,
                 modifier = Modifier.fillMaxWidth(),
-                errorText = uiState.eventNameError
+                maxChars = 100,
+                errorText = uiState.eventNameError?.let { stringResource(it) }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -92,12 +93,13 @@ fun CreateEventStep1Screen(
                 value = uiState.description,
                 onValueChange = viewModel::onDescriptionChange,
                 title = R.string.field_title_event_description,
-                errorText = uiState.descriptionError.toString(),
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(min = 120.dp),
                 singleLine = false,
+                maxChars = 5000,
                 placeholder = R.string.placeholder_event_name,
+                errorText = uiState.descriptionError?.let { stringResource(it) }
             )
 
             Box(
