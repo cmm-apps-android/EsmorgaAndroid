@@ -26,7 +26,7 @@ object RemoteDIModule {
                 clazz = EsmorgaAuthApi::class.java,
                 authenticator = null,
                 authInterceptor = null,
-                DeviceInterceptor(get())
+                deviceInterceptor = DeviceInterceptor(get(named(DataDIModule.LOCAL_DATASOURCE_INSTANCE_NAME)))
             )
         }
         factory<AuthDatasource> { AuthRemoteDatasourceImpl(get(), get()) }
@@ -36,7 +36,7 @@ object RemoteDIModule {
                 clazz = EsmorgaApi::class.java,
                 authenticator = EsmorgaAuthenticator(get()),
                 authInterceptor = EsmorgaAuthInterceptor(get()),
-                deviceInterceptor = DeviceInterceptor(get())
+                deviceInterceptor = DeviceInterceptor(get(named(DataDIModule.LOCAL_DATASOURCE_INSTANCE_NAME)))
             )
         }
         single {
@@ -45,7 +45,7 @@ object RemoteDIModule {
                 clazz = EsmorgaGuestApi::class.java,
                 authenticator = null,
                 authInterceptor = null,
-                deviceInterceptor = DeviceInterceptor(get())
+                deviceInterceptor = DeviceInterceptor(get(named(DataDIModule.LOCAL_DATASOURCE_INSTANCE_NAME)))
             )
         }
         factory<EventDatasource>(named(DataDIModule.REMOTE_DATASOURCE_INSTANCE_NAME)) { EventRemoteDatasourceImpl(get(), get()) }
