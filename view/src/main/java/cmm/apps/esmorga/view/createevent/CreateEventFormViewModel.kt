@@ -2,21 +2,21 @@ package cmm.apps.esmorga.view.createevent
 
 import androidx.lifecycle.ViewModel
 import cmm.apps.esmorga.view.R
-import cmm.apps.esmorga.view.createevent.model.CreateEventStep1Effect
-import cmm.apps.esmorga.view.createevent.model.CreateEventStep1UiState
+import cmm.apps.esmorga.view.createevent.model.CreateEventFormEffect
+import cmm.apps.esmorga.view.createevent.model.CreateEventFormUiState
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.*
 
 class CreateEventFormViewModel() : ViewModel() {
 
-    private val _uiState = MutableStateFlow(CreateEventStep1UiState())
-    val uiState: StateFlow<CreateEventStep1UiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(CreateEventFormUiState())
+    val uiState: StateFlow<CreateEventFormUiState> = _uiState.asStateFlow()
 
-    private val _effect = MutableSharedFlow<CreateEventStep1Effect>(
+    private val _effect = MutableSharedFlow<CreateEventFormEffect>(
         extraBufferCapacity = 1,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
-    val effect: SharedFlow<CreateEventStep1Effect> = _effect.asSharedFlow()
+    val effect: SharedFlow<CreateEventFormEffect> = _effect.asSharedFlow()
 
     fun onEventNameChange(newValue: String) {
         _uiState.update { it.copy(eventName = newValue) }
@@ -29,13 +29,13 @@ class CreateEventFormViewModel() : ViewModel() {
     }
 
     fun onBackClick() {
-        _effect.tryEmit(CreateEventStep1Effect.NavigateBack)
+        _effect.tryEmit(CreateEventFormEffect.NavigateBack)
     }
 
     fun onNextClick() {
         validateForm(finalValidation = true)
         if (_uiState.value.isFormValid) {
-            _effect.tryEmit(CreateEventStep1Effect.NavigateToStep2)
+            _effect.tryEmit(CreateEventFormEffect.NavigateEventType)
         }
     }
 

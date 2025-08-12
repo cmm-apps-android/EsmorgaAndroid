@@ -150,7 +150,6 @@ private fun NavGraphBuilder.homeFlow(navigationController: NavHostController) {
         CreateEventStep1Screen(
             onBack = { navigationController.popBackStack() },
             onNext = { eventName, description ->
-                navigationController.popBackStack()
             }
         )
     }

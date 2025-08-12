@@ -2,7 +2,7 @@ package cmm.apps.esmorga.view.viewmodel.createEvent
 
 import app.cash.turbine.test
 import cmm.apps.esmorga.view.createevent.CreateEventFormViewModel
-import cmm.apps.esmorga.view.createevent.model.CreateEventStep1Effect
+import cmm.apps.esmorga.view.createevent.model.CreateEventFormEffect
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
@@ -64,7 +64,7 @@ class CreateEventFormViewModelTest {
             viewModel.onNextClick()
 
             val effect = awaitItem()
-            assertEquals(CreateEventStep1Effect.NavigateToStep2, effect)
+            assertEquals(CreateEventFormEffect.NavigateEventType, effect)
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -84,7 +84,7 @@ class CreateEventFormViewModelTest {
         viewModel.effect.test {
             viewModel.onBackClick()
             val effect = awaitItem()
-            assertEquals(CreateEventStep1Effect.NavigateBack, effect)
+            assertEquals(CreateEventFormEffect.NavigateBack, effect)
             cancelAndIgnoreRemainingEvents()
         }
     }

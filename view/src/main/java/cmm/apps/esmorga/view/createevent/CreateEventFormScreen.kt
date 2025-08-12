@@ -1,6 +1,5 @@
 package cmm.apps.esmorga.view.createevent
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -29,7 +27,7 @@ import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextField
 import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.view.R
-import cmm.apps.esmorga.view.createevent.model.CreateEventStep1Effect
+import cmm.apps.esmorga.view.createevent.model.CreateEventFormEffect
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -44,8 +42,8 @@ fun CreateEventStep1Screen(
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                is CreateEventStep1Effect.NavigateBack -> onBack()
-                is CreateEventStep1Effect.NavigateToStep2 -> onNext(
+                is CreateEventFormEffect.NavigateBack -> onBack()
+                is CreateEventFormEffect.NavigateEventType -> onNext(
                     uiState.eventName.trim(),
                     uiState.description.trim()
                 )
@@ -129,18 +127,15 @@ fun CreateEventStep1ScreenContent(
                 errorText = descriptionError?.let { stringResource(it) }
             )
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp),
-                contentAlignment = Alignment.Center
-            ) {
                 EsmorgaButton(
                     text = stringResource(id = R.string.step_continue_button),
                     isEnabled = isFormValid,
-                    onClick = onNextClick
+                    onClick = onNextClick,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp),
                 )
             }
         }
-    }
+
 }
