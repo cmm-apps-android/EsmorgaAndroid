@@ -32,7 +32,7 @@ import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
-fun CreateEventStep1Screen(
+fun CreateEventFormScreen(
     viewModel: CreateEventFormViewModel = koinViewModel(),
     onBack: () -> Unit,
     onNext: (String, String) -> Unit
@@ -51,7 +51,7 @@ fun CreateEventStep1Screen(
         }
     }
 
-    CreateEventStep1ScreenContent(
+    CreateEventFormScreenContent(
         eventName = uiState.eventName,
         onEventNameChange = viewModel::onEventNameChange,
         eventNameError = uiState.eventNameError,
@@ -67,7 +67,7 @@ fun CreateEventStep1Screen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateEventStep1ScreenContent(
+fun CreateEventFormScreenContent(
     eventName: String,
     onEventNameChange: (String) -> Unit,
     eventNameError: Int?,

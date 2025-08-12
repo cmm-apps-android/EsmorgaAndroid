@@ -1,15 +1,15 @@
 package cmm.apps.esmorga.view.screenshot.createevent
 
-import cmm.apps.esmorga.view.createevent.CreateEventStep1ScreenContent
+import cmm.apps.esmorga.view.createevent.CreateEventFormScreenContent
 import cmm.apps.esmorga.view.screenshot.BaseScreenshotTest
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import org.junit.Test
 import cmm.apps.esmorga.view.R
 
-class CreateEventStep1ScreenContentScreenshotTest : BaseScreenshotTest() {
+class CreateEventFormScreenContentScreenshotTest : BaseScreenshotTest() {
 
     @Test
-    fun createEventStep1Screen_default() {
+    fun createEventFormScreen_default() {
         snapshotWithState(
             eventName = "",
             eventNameError = null,
@@ -20,7 +20,7 @@ class CreateEventStep1ScreenContentScreenshotTest : BaseScreenshotTest() {
     }
 
     @Test
-    fun createEventStep1Screen_withNameError() {
+    fun createEventFormScreen_withNameError() {
         snapshotWithState(
             eventName = "1",
             eventNameError = R.string.inline_error_invalid_length_name,
@@ -31,7 +31,7 @@ class CreateEventStep1ScreenContentScreenshotTest : BaseScreenshotTest() {
     }
 
     @Test
-    fun createEventStep1Screen_withDescriptionError() {
+    fun createEventFormScreen_withDescriptionError() {
         snapshotWithState(
             eventName = "My Event",
             eventNameError = null,
@@ -42,7 +42,7 @@ class CreateEventStep1ScreenContentScreenshotTest : BaseScreenshotTest() {
     }
 
     @Test
-    fun createEventStep1Screen_formValid() {
+    fun createEventFormScreen_formValid() {
         snapshotWithState(
             eventName = "My Event",
             eventNameError = null,
@@ -61,7 +61,7 @@ class CreateEventStep1ScreenContentScreenshotTest : BaseScreenshotTest() {
     ) {
         paparazzi.snapshot {
             EsmorgaTheme(darkTheme = false) {
-                CreateEventStep1ScreenContent(
+                CreateEventFormScreenContent(
                     eventName = eventName,
                     onEventNameChange = {},
                     eventNameError = eventNameError,
