@@ -32,7 +32,7 @@ import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.createevent.model.CreateEventStep1Effect
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun CreateEventStep1Screen(
     viewModel: CreateEventStep1ViewModel = koinViewModel(),
@@ -53,12 +53,39 @@ fun CreateEventStep1Screen(
         }
     }
 
+    CreateEventStep1ScreenContent(
+        eventName = uiState.eventName,
+        onEventNameChange = viewModel::onEventNameChange,
+        eventNameError = uiState.eventNameError,
+        description = uiState.description,
+        onDescriptionChange = viewModel::onDescriptionChange,
+        descriptionError = uiState.descriptionError,
+        isFormValid = uiState.isFormValid,
+        onBackClick = { viewModel.onBackClick() },
+        onNextClick = { viewModel.onNextClick() }
+    )
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CreateEventStep1ScreenContent(
+    eventName: String,
+    onEventNameChange: (String) -> Unit,
+    eventNameError: Int?,
+    description: String,
+    onDescriptionChange: (String) -> Unit,
+    descriptionError: Int?,
+    isFormValid: Boolean,
+    onBackClick: () -> Unit,
+    onNextClick: () -> Unit,
+) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {},
                 navigationIcon = {
-                    IconButton(onClick = { viewModel.onBackClick() }) {
+                    IconButton(onClick = onBackClick) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
@@ -78,20 +105,20 @@ fun CreateEventStep1Screen(
             )
 
             EsmorgaTextField(
-                value = uiState.eventName,
-                onValueChange = viewModel::onEventNameChange,
+                value = eventName,
+                onValueChange = onEventNameChange,
                 title = R.string.field_title_event_name,
                 placeholder = R.string.placeholder_event_name,
                 modifier = Modifier.fillMaxWidth(),
                 maxChars = 100,
-                errorText = uiState.eventNameError?.let { stringResource(it) }
+                errorText = eventNameError?.let { stringResource(it) }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             EsmorgaTextField(
-                value = uiState.description,
-                onValueChange = viewModel::onDescriptionChange,
+                value = description,
+                onValueChange = onDescriptionChange,
                 title = R.string.field_title_event_description,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -99,7 +126,7 @@ fun CreateEventStep1Screen(
                 singleLine = false,
                 maxChars = 5000,
                 placeholder = R.string.placeholder_event_name,
-                errorText = uiState.descriptionError?.let { stringResource(it) }
+                errorText = descriptionError?.let { stringResource(it) }
             )
 
             Box(
@@ -110,8 +137,8 @@ fun CreateEventStep1Screen(
             ) {
                 EsmorgaButton(
                     text = stringResource(id = R.string.step_continue_button),
-                    isEnabled = uiState.isFormValid,
-                    onClick = { viewModel.onNextClick() }
+                    isEnabled = isFormValid,
+                    onClick = onNextClick
                 )
             }
         }
