@@ -35,7 +35,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun CreateEventStep1Screen(
-    viewModel: CreateEventStep1ViewModel = koinViewModel(),
+    viewModel: CreateEventFormViewModel = koinViewModel(),
     onBack: () -> Unit,
     onNext: (String, String) -> Unit
 ) {

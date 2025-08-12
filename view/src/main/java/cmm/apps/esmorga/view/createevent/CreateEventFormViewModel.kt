@@ -7,7 +7,7 @@ import cmm.apps.esmorga.view.createevent.model.CreateEventStep1UiState
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.*
 
-class CreateEventStep1ViewModel() : ViewModel() {
+class CreateEventFormViewModel() : ViewModel() {
 
     private val _uiState = MutableStateFlow(CreateEventStep1UiState())
     val uiState: StateFlow<CreateEventStep1UiState> = _uiState.asStateFlow()

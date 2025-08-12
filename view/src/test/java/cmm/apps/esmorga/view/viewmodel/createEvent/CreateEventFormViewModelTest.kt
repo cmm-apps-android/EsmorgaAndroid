@@ -1,7 +1,7 @@
 package cmm.apps.esmorga.view.viewmodel.createEvent
 
 import app.cash.turbine.test
-import cmm.apps.esmorga.view.createevent.CreateEventStep1ViewModel
+import cmm.apps.esmorga.view.createevent.CreateEventFormViewModel
 import cmm.apps.esmorga.view.createevent.model.CreateEventStep1Effect
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -11,13 +11,13 @@ import org.junit.Test
 import cmm.apps.esmorga.view.R
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class CreateEventStep1ViewModelTest {
+class CreateEventFormViewModelTest {
 
-    private lateinit var viewModel: CreateEventStep1ViewModel
+    private lateinit var viewModel: CreateEventFormViewModel
 
     @Before
     fun setup() {
-        viewModel = CreateEventStep1ViewModel()
+        viewModel = CreateEventFormViewModel()
     }
 
     @Test
