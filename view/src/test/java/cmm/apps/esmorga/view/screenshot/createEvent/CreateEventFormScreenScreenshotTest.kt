@@ -9,7 +9,7 @@ import cmm.apps.esmorga.view.R
 class CreateEventFormScreenContentScreenshotTest : BaseScreenshotTest() {
 
     @Test
-    fun createEventFormScreen_default() {
+    fun createEventFormScreenDefault() {
         snapshotWithState(
             eventName = "",
             eventNameError = null,
@@ -20,7 +20,7 @@ class CreateEventFormScreenContentScreenshotTest : BaseScreenshotTest() {
     }
 
     @Test
-    fun createEventFormScreen_withNameError() {
+    fun createEventFormScreenWithNameError() {
         snapshotWithState(
             eventName = "1",
             eventNameError = R.string.inline_error_invalid_length_name,
@@ -31,7 +31,7 @@ class CreateEventFormScreenContentScreenshotTest : BaseScreenshotTest() {
     }
 
     @Test
-    fun createEventFormScreen_withDescriptionError() {
+    fun createEventFormScreenWithDescriptionError() {
         snapshotWithState(
             eventName = "My Event",
             eventNameError = null,
@@ -42,7 +42,7 @@ class CreateEventFormScreenContentScreenshotTest : BaseScreenshotTest() {
     }
 
     @Test
-    fun createEventFormScreen_formValid() {
+    fun createEventFormScreenValidForm() {
         snapshotWithState(
             eventName = "My Event",
             eventNameError = null,
