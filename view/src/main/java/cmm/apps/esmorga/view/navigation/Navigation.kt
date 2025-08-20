@@ -5,6 +5,13 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -13,6 +20,9 @@ import androidx.navigation.toRoute
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.view.activateaccount.ActivateAccountScreen
 import cmm.apps.esmorga.view.createevent.CreateEventFormScreen
+import cmm.apps.esmorga.view.createeventtype.CreateEventTypeScreen
+import cmm.apps.esmorga.view.createeventtype.CreateEventTypeViewModel
+import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeScrrenEffect
 import cmm.apps.esmorga.view.deeplink.DeeplinkManager.navigateFromDeeplink
 import cmm.apps.esmorga.view.errors.EsmorgaErrorScreen
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
@@ -70,6 +80,11 @@ sealed class Navigation {
 
     @Serializable
     data object CreateEventFormScreen : Navigation()
+
+    @Serializable
+    data class CreateEventTypeScreen(val eventName: String, val description: String) : Navigation() {
+        fun toRoute() = "CreateEventTypeScreen?eventName=$eventName&description=$description"
+    }
 }
 
 const val GOOGLE_MAPS_PACKAGE = "com.google.android.apps.maps"
@@ -117,6 +132,49 @@ private fun NavGraphBuilder.resetPasswordFlow(navigationController: NavHostContr
         )
 
     }
+    composable<Navigation.CreateEventTypeScreen> { navBackStackEntry ->
+        val args = navBackStackEntry.toRoute<Navigation.CreateEventTypeScreen>()
+        val eventName = args.eventName
+        val description = args.description
+
+        val viewModel: CreateEventTypeViewModel = viewModel(
+            factory = object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    if (modelClass.isAssignableFrom(CreateEventTypeViewModel::class.java)) {
+                        @Suppress("UNCHECKED_CAST")
+                        return CreateEventTypeViewModel(eventName, description) as T
+                    }
+                    throw IllegalArgumentException("Unknown ViewModel class")
+                }
+            }
+        )
+
+        val lifecycleOwner = LocalLifecycleOwner.current
+
+        LaunchedEffect(lifecycleOwner) {
+            viewModel.effect.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+                .collect { effect ->
+                    when (effect) {
+                        is CreateEventTypeScrrenEffect.NavigateBack -> {
+                            navigationController.popBackStack()
+                        }
+
+                        is CreateEventTypeScrrenEffect.NavigateNext -> {
+                        }
+                    }
+                }
+        }
+
+        CreateEventTypeScreen(
+            viewModel = viewModel,
+            onBackClick = {
+                viewModel.onBackClick()
+            },
+            onNextClick = {
+                viewModel.onNextClick()
+            }
+        )
+    }
 }
 
 private fun NavGraphBuilder.accountActivationFlow(navigationController: NavHostController) {
@@ -150,6 +208,9 @@ private fun NavGraphBuilder.homeFlow(navigationController: NavHostController) {
         CreateEventFormScreen(
             onBack = { navigationController.popBackStack() },
             onNext = { eventName, description ->
+                navigationController.navigate(
+                    Navigation.CreateEventTypeScreen(eventName = eventName, description = description)
+                )
             }
         )
     }
