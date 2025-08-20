@@ -1,4 +1,4 @@
-package cmm.apps.esmorga.view.viewmodel.createEvent
+package cmm.apps.esmorga.view.viewmodel.createEventForm
 
 import app.cash.turbine.test
 import cmm.apps.esmorga.view.createevent.CreateEventFormViewModel
