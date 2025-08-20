@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cmm.apps.designsystem.EsmorgaButton
@@ -37,7 +38,7 @@ fun CreateEventTypeScreen(
             TopAppBar(
                 title = {},
                 navigationIcon = {
-                    IconButton(onClick = onBackClick) {
+                    IconButton(onClick = onBackClick, modifier = Modifier.testTag(CreateEventTypeScreenTestTags.CREATE_EVENT_TYPE_BACK_BUTTON)) {
                         Icon(Icons.Default.ArrowBack, contentDescription = null)
                     }
                 }
@@ -54,6 +55,7 @@ fun CreateEventTypeScreen(
                 text = stringResource(R.string.screen_create_event_title),
                 style = EsmorgaTextStyle.HEADING_1,
                 modifier = Modifier.padding(bottom = 12.dp)
+                    .testTag(CreateEventTypeScreenTestTags.CREATE_EVENT_TYPE_TITLE)
             )
             EsmorgaText(text = stringResource(R.string.step_2_screen_titlle), style = EsmorgaTextStyle.BODY_1, modifier = Modifier.padding(bottom = 15.dp))
 
@@ -71,7 +73,13 @@ fun CreateEventTypeScreen(
                 onClick = onNextClick,
                 text = stringResource(R.string.step_continue_button),
                 modifier = Modifier.padding(top = 54.dp)
+                    .testTag(CreateEventTypeScreenTestTags.CREATE_EVENT_TYPE_NEXT_BUTTON)
             )
         }
     }
+}
+object CreateEventTypeScreenTestTags {
+    const val CREATE_EVENT_TYPE_TITLE = "create_event_type_title"
+    const val CREATE_EVENT_TYPE_BACK_BUTTON = "create_event_type_back_button"
+    const val CREATE_EVENT_TYPE_NEXT_BUTTON = "create_event_type_next_button"
 }

@@ -111,6 +111,7 @@ internal fun EsmorgaNavHost(navigationController: NavHostController, startDestin
         errorFlow(navigationController)
         accountActivationFlow(navigationController)
         resetPasswordFlow(navigationController)
+        createEventTypeFlow(navigationController)
     }
 }
 
@@ -132,6 +133,9 @@ private fun NavGraphBuilder.resetPasswordFlow(navigationController: NavHostContr
         )
 
     }
+}
+
+private fun NavGraphBuilder.createEventTypeFlow(navigationController: NavHostController) {
     composable<Navigation.CreateEventTypeScreen> { navBackStackEntry ->
         val args = navBackStackEntry.toRoute<Navigation.CreateEventTypeScreen>()
         val eventName = args.eventName
