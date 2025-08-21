@@ -1,7 +1,6 @@
 package cmm.apps.esmorga.datasource_remote.user
 
 import android.content.Context
-import android.content.SharedPreferences
 import cmm.apps.esmorga.data.user.datasource.AuthDatasource
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaAuthApi
 import cmm.apps.esmorga.datasource_remote.mock.UserRemoteMock
@@ -9,7 +8,6 @@ import cmm.apps.esmorga.domain.result.EsmorgaException
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.slot
 import kotlinx.coroutines.test.runTest
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody
@@ -148,6 +146,30 @@ class UserRemoteDatasourceImplTest {
 
         val sut = UserRemoteDatasourceImpl(api, authDatasource)
         val result = sut.resetPassword("347638", "password")
+
+        Assert.assertEquals(Unit, result)
+    }
+
+    @Test
+    fun `given valid data, when changePassword is succeed then Unit is returned`() = runTest {
+        val api = mockk<EsmorgaAuthApi>(relaxed = true)
+        val authDatasource = mockk<AuthDatasource>(relaxed = true)
+        coEvery { api.changePassword(any()) } returns Unit
+
+        val sut = UserRemoteDatasourceImpl(api, authDatasource)
+        val result = sut.changePassword("password1", "password2")
+
+        Assert.assertEquals(Unit, result)
+    }
+
+    @Test(expected = Exception::class)
+    fun `given api call fails when changePassword is invoked then Exception is thrown `() = runTest {
+        val api = mockk<EsmorgaAuthApi>(relaxed = true)
+        val authDatasource = mockk<AuthDatasource>(relaxed = true)
+        coEvery { api.changePassword(any()) } throws HttpException(Response.error<ResponseBody>(400, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
+
+        val sut = UserRemoteDatasourceImpl(api, authDatasource)
+        val result = sut.changePassword("password1", "password2")
 
         Assert.assertEquals(Unit, result)
     }
