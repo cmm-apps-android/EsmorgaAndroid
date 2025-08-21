@@ -4,6 +4,7 @@ import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.view.MainViewModel
 import cmm.apps.esmorga.view.activateaccount.ActivateAccountViewModel
 import cmm.apps.esmorga.view.changepassword.ChangePasswordViewModel
+import cmm.apps.esmorga.view.createevent.CreateEventFormViewModel
 import cmm.apps.esmorga.view.eventdetails.EventDetailsViewModel
 import cmm.apps.esmorga.view.eventlist.EventListViewModel
 import cmm.apps.esmorga.view.eventlist.MyEventListViewModel
@@ -34,7 +35,7 @@ object ViewDIModule {
             EventDetailsViewModel(get(), get(), get(), event)
         }
         viewModel {
-            WelcomeViewModel(get(), get())
+            WelcomeViewModel(get())
         }
         viewModel { (message: String?) ->
             LoginViewModel(get(), message)
@@ -58,5 +59,7 @@ object ViewDIModule {
         viewModel { ResetPasswordViewModel(get()) }
 
         viewModel { ChangePasswordViewModel(get()) }
+
+        viewModel {CreateEventFormViewModel()}
     }
 }

@@ -90,4 +90,12 @@
    <string name="register_confirmation_button_cancel">Cancelar</string>
    <string name="registration_password_mismatch_error">¡Las contraseñas no coinciden, inténtalo de nuevo!</string>
    <string name="registration_reused_password_error">La nueva contraseña debe ser distinta a la actual</string>
+   <string name="screen_create_event_title">Crea tu evento</string>
+   <string name="step_continue_button">Siguiente</string>
+   <string name="field_title_event_name">Nombre de evento</string>
+   <string name="field_title_event_description">Descripcion</string>
+   <string name="placeholder_event_name">Introduce el nombre del evento</string>
+   <string name="caption_event_description">$n/5000</string>
+   <string name="inline_error_invalid_length_name">El texto debe tener entre 3 y 100 caracteres</string>
+   <string name="inline_error_invalid_length_description">El texto debe tener entre 4 y 5000 caracteres</string>
 </resources>

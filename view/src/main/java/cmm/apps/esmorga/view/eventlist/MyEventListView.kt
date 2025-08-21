@@ -61,7 +61,7 @@ private const val SCROLL_THRESHOLD_DOWN = 1
 
 @Screen
 @Composable
-fun MyEventListScreen(elvm: MyEventListViewModel = koinViewModel(), onEventClick: (event: Event) -> Unit, onSignInClick: () -> Unit) {
+fun MyEventListScreen(elvm: MyEventListViewModel = koinViewModel(), onEventClick: (event: Event) -> Unit, onSignInClick: () -> Unit, onCreateEventClick: () -> Unit) {
     val uiState: MyEventListUiState by elvm.uiState.collectAsStateWithLifecycle()
 
     val message = stringResource(R.string.snackbar_no_internet)
@@ -91,7 +91,8 @@ fun MyEventListScreen(elvm: MyEventListViewModel = koinViewModel(), onEventClick
             snackbarHostState = snackbarHostState,
             onSignInClick = { elvm.onSignInClick() },
             onEventClick = { elvm.onEventClick(it) },
-            onRetryClick = { elvm.loadMyEvents() }
+            onRetryClick = { elvm.loadMyEvents() },
+            onAddEventClick = { onCreateEventClick() }
         )
     }
 }

@@ -66,7 +66,9 @@ runs:
         BUILD_STORE_PASSWORD: ${{ inputs.Build-STORE-PASSWORD }}
       run: ./gradlew :app:assemble${{ inputs.Build-ENVL }}Release
     - shell: bash
-      id: otashare_file_url 
+      id: otashare_file_url
+      env:
+        BUILD_NUMBER: ${{ github.run_number }}
       run: |
         
         rootDir="./"
@@ -90,7 +92,7 @@ runs:
           curl -vs -F "buiFile=@${file}" \
               -F "buiName=${name}" \
               -F "buiVersion=${versionName}" \
-              -F "buiBuildNum=${versionCode}" \
+              -F "buiBuildNum=${BUILD_NUMBER}" \
               -F "buiBuildType=${buildType}" \
               -F "buiTemplate=0" \
               -F "buiHash=${buildHash}" \
