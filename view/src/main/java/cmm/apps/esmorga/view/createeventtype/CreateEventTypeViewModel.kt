@@ -1,6 +1,8 @@
 package cmm.apps.esmorga.view.createeventtype
 
 import androidx.lifecycle.ViewModel
+import cmm.apps.esmorga.domain.event.model.EventType
+import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeScreenEffect
 import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeScreenUiState
 import kotlinx.coroutines.channels.BufferOverflow
@@ -18,7 +20,7 @@ class CreateEventTypeViewModel(
 
     private val _uiState = MutableStateFlow(
         CreateEventTypeScreenUiState(
-            selectedEventType = EventType.Party
+            selectedEventType = EventType.PARTY
         )
     )
     val uiState: StateFlow<CreateEventTypeScreenUiState> = _uiState.asStateFlow()
@@ -43,16 +45,16 @@ class CreateEventTypeViewModel(
             CreateEventTypeScreenEffect.NavigateNext(
                 eventName = eventName,
                 description = description,
-                eventType = state.selectedEventType?.backendValue
+                eventType = state.selectedEventType.name
             )
         )
     }
 }
 
-enum class EventType(val uiTextRes: Int, val backendValue: String) {
-    Party(cmm.apps.esmorga.view.R.string.step_2_option_party, "Party"),
-    Sport(cmm.apps.esmorga.view.R.string.step_2_option_sport, "Sport"),
-    Food(cmm.apps.esmorga.view.R.string.step_2_option_food, "Food"),
-    Charity(cmm.apps.esmorga.view.R.string.step_2_option_charity, "Charity"),
-    Games(cmm.apps.esmorga.view.R.string.step_2_option_games, "Games")
+fun EventType.getUiTextRes(): Int = when(this) {
+    EventType.PARTY -> R.string.step_2_option_party
+    EventType.SPORT -> R.string.step_2_option_sport
+    EventType.FOOD -> R.string.step_2_option_food
+    EventType.CHARITY -> R.string.step_2_option_charity
+    EventType.GAMES -> R.string.step_2_option_games
 }

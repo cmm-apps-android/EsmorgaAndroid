@@ -23,6 +23,7 @@ import cmm.apps.designsystem.EsmorgaButton
 import cmm.apps.designsystem.EsmorgaRadioButton
 import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextStyle
+import cmm.apps.esmorga.domain.event.model.EventType
 import cmm.apps.esmorga.view.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,7 +62,7 @@ fun CreateEventTypeScreen(
 
             EventType.values().forEach { type ->
                 EsmorgaRadioButton(
-                    text = stringResource(type.uiTextRes),
+                    text = stringResource(type.getUiTextRes()),
                     selected = uiState.selectedEventType == type,
                     onClick = { viewModel.onEventTypeSelected(type) },
                     modifier = Modifier

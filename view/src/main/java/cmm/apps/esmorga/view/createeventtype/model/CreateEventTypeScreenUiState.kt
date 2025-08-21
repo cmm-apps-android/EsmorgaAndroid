@@ -1,9 +1,10 @@
 package cmm.apps.esmorga.view.createeventtype.model
 
-import cmm.apps.esmorga.view.createeventtype.EventType
+import cmm.apps.esmorga.domain.event.model.EventType
+
 
 data class CreateEventTypeScreenUiState(
-    val selectedEventType: EventType? = null
+    val selectedEventType: EventType = EventType.PARTY
 )
 
 sealed class CreateEventTypeScreenEffect {
