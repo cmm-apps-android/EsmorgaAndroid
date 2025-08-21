@@ -22,7 +22,7 @@ import cmm.apps.esmorga.view.activateaccount.ActivateAccountScreen
 import cmm.apps.esmorga.view.createevent.CreateEventFormScreen
 import cmm.apps.esmorga.view.createeventtype.CreateEventTypeScreen
 import cmm.apps.esmorga.view.createeventtype.CreateEventTypeViewModel
-import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeScrrenEffect
+import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeScreenEffect
 import cmm.apps.esmorga.view.deeplink.DeeplinkManager.navigateFromDeeplink
 import cmm.apps.esmorga.view.errors.EsmorgaErrorScreen
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
@@ -111,7 +111,7 @@ internal fun EsmorgaNavHost(navigationController: NavHostController, startDestin
         errorFlow(navigationController)
         accountActivationFlow(navigationController)
         resetPasswordFlow(navigationController)
-        createEventTypeFlow(navigationController)
+        createEventFlow(navigationController)
     }
 }
 
@@ -135,7 +135,18 @@ private fun NavGraphBuilder.resetPasswordFlow(navigationController: NavHostContr
     }
 }
 
-private fun NavGraphBuilder.createEventTypeFlow(navigationController: NavHostController) {
+private fun NavGraphBuilder.createEventFlow(navigationController: NavHostController) {
+    composable<Navigation.CreateEventFormScreen> {
+        CreateEventFormScreen(
+            onBack = { navigationController.popBackStack() },
+            onNext = { eventName, description ->
+                navigationController.navigate(
+                    Navigation.CreateEventTypeScreen(eventName = eventName, description = description)
+                )
+            }
+        )
+    }
+
     composable<Navigation.CreateEventTypeScreen> { navBackStackEntry ->
         val args = navBackStackEntry.toRoute<Navigation.CreateEventTypeScreen>()
         val eventName = args.eventName
@@ -159,11 +170,11 @@ private fun NavGraphBuilder.createEventTypeFlow(navigationController: NavHostCon
             viewModel.effect.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
                 .collect { effect ->
                     when (effect) {
-                        is CreateEventTypeScrrenEffect.NavigateBack -> {
+                        is CreateEventTypeScreenEffect.NavigateBack -> {
                             navigationController.popBackStack()
                         }
 
-                        is CreateEventTypeScrrenEffect.NavigateNext -> {
+                        is CreateEventTypeScreenEffect.NavigateNext -> {
                         }
                     }
                 }
@@ -208,17 +219,6 @@ private fun NavGraphBuilder.accountActivationFlow(navigationController: NavHostC
 }
 
 private fun NavGraphBuilder.homeFlow(navigationController: NavHostController) {
-    composable<Navigation.CreateEventFormScreen> {
-        CreateEventFormScreen(
-            onBack = { navigationController.popBackStack() },
-            onNext = { eventName, description ->
-                navigationController.navigate(
-                    Navigation.CreateEventTypeScreen(eventName = eventName, description = description)
-                )
-            }
-        )
-    }
-
     composable<Navigation.EventListScreen>(
         typeMap = mapOf(typeOf<Event>() to serializableType<Event>())
     ) {

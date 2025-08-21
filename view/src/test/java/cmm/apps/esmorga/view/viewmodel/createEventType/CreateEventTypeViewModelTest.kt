@@ -3,7 +3,7 @@ package cmm.apps.esmorga.view.viewmodel.createEventType
 import app.cash.turbine.test
 import cmm.apps.esmorga.view.createeventtype.CreateEventTypeViewModel
 import cmm.apps.esmorga.view.createeventtype.EventType
-import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeScrrenEffect
+import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeScreenEffect
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -61,7 +61,7 @@ class CreateEventTypeViewModelTest {
             viewModel.onBackClick()
 
             val effect = awaitItem()
-            assertEquals(CreateEventTypeScrrenEffect.NavigateBack, effect)
+            assertEquals(CreateEventTypeScreenEffect.NavigateBack, effect)
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -75,8 +75,8 @@ class CreateEventTypeViewModelTest {
             viewModel.onNextClick()
 
             val effect = awaitItem()
-            assertTrue(effect is CreateEventTypeScrrenEffect.NavigateNext)
-            val navigateNext = effect as CreateEventTypeScrrenEffect.NavigateNext
+            assertTrue(effect is CreateEventTypeScreenEffect.NavigateNext)
+            val navigateNext = effect as CreateEventTypeScreenEffect.NavigateNext
 
             assertEquals("Initial Name", navigateNext.eventName)
             assertEquals("Initial Description", navigateNext.description)

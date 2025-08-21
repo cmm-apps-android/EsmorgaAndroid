@@ -1,8 +1,8 @@
 package cmm.apps.esmorga.view.createeventtype
 
 import androidx.lifecycle.ViewModel
-import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeScrrenEffect
-import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeScrrenUi
+import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeScreenEffect
+import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeScreenUiState
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,34 +17,32 @@ class CreateEventTypeViewModel(
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
-        CreateEventTypeScrrenUi(
-            eventName = eventName,
-            description = description,
+        CreateEventTypeScreenUiState(
             selectedEventType = EventType.Party
         )
     )
-    val uiState: StateFlow<CreateEventTypeScrrenUi> = _uiState.asStateFlow()
+    val uiState: StateFlow<CreateEventTypeScreenUiState> = _uiState.asStateFlow()
 
-    private val _effect = MutableSharedFlow<CreateEventTypeScrrenEffect>(
+    private val _effect = MutableSharedFlow<CreateEventTypeScreenEffect>(
         extraBufferCapacity = 1,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
-    val effect: SharedFlow<CreateEventTypeScrrenEffect> = _effect.asSharedFlow()
+    val effect: SharedFlow<CreateEventTypeScreenEffect> = _effect.asSharedFlow()
 
     fun onEventTypeSelected(type: EventType) {
         _uiState.value = _uiState.value.copy(selectedEventType = type)
     }
 
     fun onBackClick() {
-        _effect.tryEmit(CreateEventTypeScrrenEffect.NavigateBack)
+        _effect.tryEmit(CreateEventTypeScreenEffect.NavigateBack)
     }
 
     fun onNextClick() {
         val state = _uiState.value
         _effect.tryEmit(
-            CreateEventTypeScrrenEffect.NavigateNext(
-                eventName = state.eventName,
-                description = state.description,
+            CreateEventTypeScreenEffect.NavigateNext(
+                eventName = eventName,
+                description = description,
                 eventType = state.selectedEventType?.backendValue
             )
         )
