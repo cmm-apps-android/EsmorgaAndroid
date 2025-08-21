@@ -88,4 +88,6 @@
    <string name="register_confirmation_error_title">Expired or invalid code!</string>
    <string name="register_confirmation_button_retry">Try again</string>
    <string name="register_confirmation_button_cancel">Cancel</string>
+   <string name="registration_password_mismatch_error">Passwords do not match, please try again!</string>
+   <string name="registration_reused_password_error">The new password must be different from the current one.</string>
 </resources>

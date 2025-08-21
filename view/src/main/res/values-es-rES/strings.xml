@@ -88,4 +88,6 @@
    <string name="register_confirmation_error_title">¡Código expirado o no válido!</string>
    <string name="register_confirmation_button_retry">Probar otra vez</string>
    <string name="register_confirmation_button_cancel">Cancelar</string>
+   <string name="registration_password_mismatch_error">¡Las contraseñas no coinciden, inténtalo de nuevo!</string>
+   <string name="registration_reused_password_error">La nueva contraseña debe ser distinta a la actual</string>
 </resources>

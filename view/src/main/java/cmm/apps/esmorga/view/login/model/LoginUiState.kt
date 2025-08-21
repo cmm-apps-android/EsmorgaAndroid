@@ -24,8 +24,8 @@ sealed class LoginEffect {
     data class ShowInitSnackbar(val message: String) : LoginEffect()
 }
 
-object LoginViewHelper : KoinComponent{
-    private val context : Context by inject()
+object LoginViewHelper : KoinComponent {
+    private val context: Context by inject()
 
     fun getEmailErrorText() = context.getString(R.string.inline_error_email)
     fun getPasswordErrorText() = context.getString(R.string.inline_error_password)
@@ -36,7 +36,11 @@ object LoginViewHelper : KoinComponent{
         errorTextProvider: String,
         errorTextEmpty: String,
         acceptsEmpty: Boolean,
-        nonEmptyCondition: Boolean
+        nonEmptyCondition: Boolean,
+        mismatchErrorCondition: Boolean = false,
+        mismatchErrorText: String? = null,
+        reusedErrorCondition: Boolean = false,
+        reusedErrorText: String? = null
     ): String? {
         val isBlank = value.isBlank()
         val isValid = value.isEmpty() || nonEmptyCondition
@@ -44,6 +48,8 @@ object LoginViewHelper : KoinComponent{
         return when {
             !acceptsEmpty && isBlank -> errorTextEmpty
             !isValid -> errorTextProvider
+            !mismatchErrorCondition -> mismatchErrorText
+            !reusedErrorCondition -> reusedErrorText
             else -> null
         }
     }

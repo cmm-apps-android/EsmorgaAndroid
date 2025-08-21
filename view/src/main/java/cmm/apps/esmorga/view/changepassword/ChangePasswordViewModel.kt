@@ -6,6 +6,8 @@ import cmm.apps.esmorga.domain.user.PerformChangePasswordUseCase
 import cmm.apps.esmorga.domain.user.model.User.Companion.PASSWORD_REGEX
 import cmm.apps.esmorga.view.changepassword.model.ChangePasswordEffect
 import cmm.apps.esmorga.view.changepassword.model.ChangePasswordUiState
+import cmm.apps.esmorga.view.changepassword.model.ChangePasswordViewHelper.getRegistrationPasswordMismatchError
+import cmm.apps.esmorga.view.changepassword.model.ChangePasswordViewHelper.getRegistrationReusedPasswordError
 import cmm.apps.esmorga.view.login.model.LoginViewHelper.getEmptyFieldErrorText
 import cmm.apps.esmorga.view.login.model.LoginViewHelper.getFieldErrorText
 import cmm.apps.esmorga.view.login.model.LoginViewHelper.getPasswordErrorText
@@ -80,7 +82,11 @@ class ChangePasswordViewModel(
                             getPasswordErrorText(),
                             getEmptyFieldErrorText(),
                             false,
-                            newPass.orEmpty().matches(PASSWORD_REGEX.toRegex())
+                            repeatNewPass.orEmpty().matches(PASSWORD_REGEX.toRegex()),
+                            mismatchErrorCondition = newPass == repeatNewPass,
+                            mismatchErrorText = getRegistrationPasswordMismatchError(),
+                            reusedErrorCondition = password != repeatNewPass,
+                            reusedErrorText = getRegistrationReusedPasswordError()
                         )
                     )
             }
