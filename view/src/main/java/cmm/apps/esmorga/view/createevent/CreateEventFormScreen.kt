@@ -27,10 +27,11 @@ import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextField
 import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.view.R
+import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.createevent.model.CreateEventFormEffect
 import org.koin.androidx.compose.koinViewModel
 
-
+@Screen
 @Composable
 fun CreateEventFormScreen(
     viewModel: CreateEventFormViewModel = koinViewModel(),
@@ -126,15 +127,14 @@ fun CreateEventFormScreenContent(
                 errorText = descriptionError?.let { stringResource(it) }
             )
 
-                EsmorgaButton(
-                    text = stringResource(id = R.string.step_continue_button),
-                    isEnabled = isFormValid,
-                    onClick = onNextClick,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 16.dp),
-                )
-            }
+            EsmorgaButton(
+                text = stringResource(id = R.string.step_continue_button),
+                isEnabled = isFormValid,
+                onClick = onNextClick,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp),
+            )
         }
-
+    }
 }
