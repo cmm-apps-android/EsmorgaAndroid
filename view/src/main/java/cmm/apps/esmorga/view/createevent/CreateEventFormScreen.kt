@@ -108,7 +108,6 @@ fun CreateEventFormScreenContent(
                 title = R.string.field_title_event_name,
                 placeholder = R.string.placeholder_event_name,
                 modifier = Modifier.fillMaxWidth(),
-                maxChars = 100,
                 errorText = eventNameError?.let { stringResource(it) }
             )
 
