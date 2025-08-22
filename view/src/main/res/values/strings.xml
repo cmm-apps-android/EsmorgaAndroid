@@ -96,4 +96,11 @@
    <string name="caption_event_description">$n/5000</string>
    <string name="inline_error_invalid_length_name">The text must be between 3 and 100 characters</string>
    <string name="inline_error_invalid_length_description">The text must be between 4 and 5000 characters</string>
+   <string name="step_2_option_party">Party</string>
+   <string name="step_2_option_sport">Sport</string>
+   <string name="step_2_option_food">Food</string>
+   <string name="step_2_option_charity">Charity</string>
+   <string name="step_2_option_games">Games</string>
+   <string name="step_2_screen_titlle">Event Type</string>
+
 </resources>
