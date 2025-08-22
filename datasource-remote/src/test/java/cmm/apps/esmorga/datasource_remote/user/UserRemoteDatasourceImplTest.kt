@@ -151,7 +151,7 @@ class UserRemoteDatasourceImplTest {
     }
 
     @Test
-    fun `given valid verification code, when account activation is succeed then user is returned`() = runTest {
+    fun `given valid verification code, when account activation is succeed then user is returned and tokens are saved`() = runTest {
         val remoteUserName = "Albus"
 
         val api = mockk<EsmorgaAuthApi>(relaxed = true)
