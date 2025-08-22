@@ -3,11 +3,12 @@ package cmm.apps.esmorga.datasource_remote.user
 import cmm.apps.esmorga.data.user.datasource.AuthDatasource
 import cmm.apps.esmorga.data.user.datasource.UserDatasource
 import cmm.apps.esmorga.data.user.model.UserDataModel
+import cmm.apps.esmorga.datasource_remote.api.EsmorgaApi
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaAuthApi
 import cmm.apps.esmorga.datasource_remote.api.ExceptionHandler.manageApiException
 import cmm.apps.esmorga.datasource_remote.user.mapper.toUserDataModel
 
-class UserRemoteDatasourceImpl(private val api: EsmorgaAuthApi, private val authDatasource: AuthDatasource) : UserDatasource {
+class UserRemoteDatasourceImpl(private val api: EsmorgaAuthApi, private val esmorgaApi: EsmorgaApi, private val authDatasource: AuthDatasource) : UserDatasource {
     override suspend fun login(email: String, password: String): UserDataModel {
         try {
             val loginBody = mapOf("email" to email, "password" to password)
@@ -86,7 +87,7 @@ class UserRemoteDatasourceImpl(private val api: EsmorgaAuthApi, private val auth
                 "currentPassword" to currentPassword,
                 "newPassword" to newPassword
             )
-            api.changePassword(body)
+            esmorgaApi.changePassword(body)
         } catch (e: Exception) {
             throw manageApiException(e)
         }

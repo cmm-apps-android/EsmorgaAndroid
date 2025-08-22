@@ -72,6 +72,7 @@ sealed class Navigation {
     @Serializable
     data object ChangePasswordScreen : Navigation()
 
+    @Serializable
     data object CreateEventFormScreen : Navigation()
 }
 

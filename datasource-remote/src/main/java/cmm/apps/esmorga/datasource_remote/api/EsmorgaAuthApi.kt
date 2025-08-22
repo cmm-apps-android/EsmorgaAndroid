@@ -28,6 +28,6 @@ interface EsmorgaAuthApi {
     @PUT("account/password/forgot-update")
     suspend fun resetPassword(@Body body: Map<String, String>)
 
-    @PUT("account/password")
-    suspend fun changePassword(@Body body: Map<String, String>)
+//    @PUT("account/password")
+//    suspend fun changePassword(@Body body: Map<String, String>)
 }
