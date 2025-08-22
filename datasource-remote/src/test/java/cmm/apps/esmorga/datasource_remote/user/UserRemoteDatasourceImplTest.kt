@@ -1,7 +1,6 @@
 package cmm.apps.esmorga.datasource_remote.user
 
 import android.content.Context
-import android.content.SharedPreferences
 import cmm.apps.esmorga.data.user.datasource.AuthDatasource
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaAuthApi
 import cmm.apps.esmorga.datasource_remote.mock.UserRemoteMock
@@ -9,7 +8,6 @@ import cmm.apps.esmorga.domain.result.EsmorgaException
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.slot
 import kotlinx.coroutines.test.runTest
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody
@@ -150,5 +148,31 @@ class UserRemoteDatasourceImplTest {
         val result = sut.resetPassword("347638", "password")
 
         Assert.assertEquals(Unit, result)
+    }
+
+    @Test
+    fun `given valid verification code, when account activation is succeed then user is returned`() = runTest {
+        val remoteUserName = "Albus"
+
+        val api = mockk<EsmorgaAuthApi>(relaxed = true)
+        val authDatasource = mockk<AuthDatasource>(relaxed = true)
+        coEvery { api.accountActivation(any()) } returns UserRemoteMock.provideUser(remoteUserName)
+
+        val sut = UserRemoteDatasourceImpl(api, authDatasource)
+        val result = sut.activateAccount("verification code")
+
+        Assert.assertEquals(remoteUserName, result.dataName)
+
+        coVerify { authDatasource.saveTokens(any(), any(), any()) }
+    }
+
+    @Test(expected = Exception::class)
+    fun `given invalid verification code when accounte activation fails then exception is thrown`() = runTest {
+        val api = mockk<EsmorgaAuthApi>(relaxed = true)
+        val authDatasource = mockk<AuthDatasource>(relaxed = true)
+        coEvery { api.accountActivation(any()) } throws HttpException(Response.error<ResponseBody>(401, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
+
+        val sut = UserRemoteDatasourceImpl(api, authDatasource)
+        sut.activateAccount("verification code")
     }
 }
