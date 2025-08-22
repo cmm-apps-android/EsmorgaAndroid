@@ -62,8 +62,7 @@ fun CreateEventTypeScreen(
 
             EventType.values().forEach { type ->
                 EsmorgaRadioButton(
-                    text = stringResource(type.getUiTextRes()),
-                    selected = uiState.selectedEventType == type,
+                    text = stringResource(viewModel.getEventTypeUiTextRes(type)),                    selected = uiState.selectedEventType == type,
                     onClick = { viewModel.onEventTypeSelected(type) },
                     modifier = Modifier
                         .fillMaxWidth()

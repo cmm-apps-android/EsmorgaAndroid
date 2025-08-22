@@ -5,6 +5,7 @@ import cmm.apps.esmorga.domain.event.model.EventType
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeScreenEffect
 import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeScreenUiState
+import cmm.apps.esmorga.view.createeventtype.model.EventTypeHelper
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -49,12 +50,8 @@ class CreateEventTypeViewModel(
             )
         )
     }
-}
 
-fun EventType.getUiTextRes(): Int = when(this) {
-    EventType.PARTY -> R.string.step_2_option_party
-    EventType.SPORT -> R.string.step_2_option_sport
-    EventType.FOOD -> R.string.step_2_option_food
-    EventType.CHARITY -> R.string.step_2_option_charity
-    EventType.GAMES -> R.string.step_2_option_games
+    fun getEventTypeUiTextRes(type: EventType): Int {
+        return EventTypeHelper.getUiTextRes(type)
+    }
 }
