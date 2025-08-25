@@ -12,7 +12,7 @@ import org.junit.Test
 class PerformChangePasswordUseCaseImplTest {
 
     @Test
-    fun `given a successful repository when reset password is performed then Unit is returned`() = runTest {
+    fun `given a successful repository when change password is called then Unit is returned`() = runTest {
         val repo = mockk<UserRepository>(relaxed = true)
         coEvery { repo.changePassword(any(), any()) } returns Unit
 
@@ -23,7 +23,7 @@ class PerformChangePasswordUseCaseImplTest {
     }
 
     @Test
-    fun `given a faulty repository when reset password is performed then exception is thrown`() = runTest {
+    fun `given a faulty repository when change password is called then exception is thrown`() = runTest {
         val repo = mockk<UserRepository>(relaxed = true)
         coEvery { repo.changePassword(any(), any()) } throws EsmorgaException("error", Source.REMOTE, 400)
 

@@ -473,7 +473,7 @@ class NavigationTest {
     }
 
     @Test
-    fun `given profile screen and failure, when user tap on change password row, then change password screen is shown`() {
+    fun `given profile screen, when user tap on change password row, then change password screen is shown`() {
         setNavigationFromDestination(Navigation.ProfileScreen)
 
         composeTestRule.onNodeWithTag(PROFILE_CHANGE_PASSWORD_BUTTON).performClick()

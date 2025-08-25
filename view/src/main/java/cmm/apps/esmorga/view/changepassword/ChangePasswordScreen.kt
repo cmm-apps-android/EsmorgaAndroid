@@ -62,14 +62,8 @@ fun ChangePasswordScreen(
     LaunchedEffect(Unit) {
         cpvm.effect.collect { eff ->
             when (eff) {
-                is ChangePasswordEffect.NavigateToLogin -> {
-                    onChangePasswordSuccess(eff.snackbarMessage)
-                }
-
-                is ChangePasswordEffect.ShowFullScreenError -> {
-                    onChangePasswordError(eff.esmorgaErrorScreenArguments)
-                }
-
+                is ChangePasswordEffect.NavigateToLogin -> onChangePasswordSuccess(eff.snackbarMessage)
+                is ChangePasswordEffect.ShowFullScreenError -> onChangePasswordError(eff.esmorgaErrorScreenArguments)
                 is ChangePasswordEffect.ShowNoConnectionSnackbar -> localCoroutineScope.launch { snackbarHostState.showSnackbar(eff.message) }
             }
         }

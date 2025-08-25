@@ -37,7 +37,7 @@ object ChangePasswordViewHelper : KoinComponent {
         isValidCondition: Boolean,
         reusedError: Boolean = false,
         mismatchError: Boolean = false,
-    ) : String? {
+    ): String? {
         val isBlank = value.isBlank()
         val isValid = value.isEmpty() || isValidCondition
         return when {

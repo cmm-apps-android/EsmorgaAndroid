@@ -13,7 +13,6 @@ class PerformChangePasswordUseCaseImpl(
     override suspend fun invoke(currentPassword: String, newPassword: String): EsmorgaResult<Unit> {
         try {
             val result = repo.changePassword(currentPassword, newPassword)
-
             return EsmorgaResult.success(result)
         } catch (e: Exception) {
             return EsmorgaResult.failure(e)
