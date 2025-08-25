@@ -48,7 +48,9 @@ class UserRemoteDatasourceImpl(private val api: EsmorgaAuthApi, private val esmo
     override suspend fun activateAccount(verificationCode: String): UserDataModel {
         try {
             val body = mapOf("verificationCode" to verificationCode)
-            return api.accountActivation(body).toUserDataModel()
+            val user = api.accountActivation(body)
+            authDatasource.saveTokens(user.remoteAccessToken, user.remoteRefreshToken, user.ttl)
+            return user.toUserDataModel()
         } catch (e: Exception) {
             throw manageApiException(e)
         }

@@ -191,4 +191,33 @@ class UserRemoteDatasourceImplTest {
 
         Assert.assertEquals(Unit, result)
     }
+
+    @Test
+    fun `given valid verification code, when account activation is succeed then user is returned and tokens are saved`() = runTest {
+        val remoteUserName = "Albus"
+
+        val api = mockk<EsmorgaAuthApi>(relaxed = true)
+        val authDatasource = mockk<AuthDatasource>(relaxed = true)
+        val esmorgaApi = mockk<EsmorgaApi>(relaxed = true)
+
+        coEvery { api.accountActivation(any()) } returns UserRemoteMock.provideUser(remoteUserName)
+
+        val sut = UserRemoteDatasourceImpl(api, esmorgaApi, authDatasource)
+        val result = sut.activateAccount("verification code")
+
+        Assert.assertEquals(remoteUserName, result.dataName)
+
+        coVerify { authDatasource.saveTokens(any(), any(), any()) }
+    }
+
+    @Test(expected = Exception::class)
+    fun `given invalid verification code when accounte activation fails then exception is thrown`() = runTest {
+        val api = mockk<EsmorgaAuthApi>(relaxed = true)
+        val authDatasource = mockk<AuthDatasource>(relaxed = true)
+        val esmorgaApi = mockk<EsmorgaApi>(relaxed = true)
+        coEvery { api.accountActivation(any()) } throws HttpException(Response.error<ResponseBody>(401, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
+
+        val sut = UserRemoteDatasourceImpl(api, esmorgaApi, authDatasource)
+        sut.activateAccount("verification code")
+    }
 }
