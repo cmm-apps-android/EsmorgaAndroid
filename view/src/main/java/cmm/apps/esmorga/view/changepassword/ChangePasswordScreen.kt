@@ -202,6 +202,7 @@ fun ChangePasswordView(
                     text = stringResource(id = R.string.reset_password_button),
                     primary = true,
                     isLoading = uiState.isLoading,
+                    isEnabled = uiState.enableButton(currentPassword, newPassword, repeatNewPassword),
                     modifier = Modifier
                         .padding(top = 32.dp)
                 ) {

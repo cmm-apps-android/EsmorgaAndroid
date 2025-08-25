@@ -15,7 +15,11 @@ data class ChangePasswordUiState(
     val currentPasswordError: String? = null,
     val newPasswordError: String? = null,
     val repeatPasswordError: String? = null
-)
+) {
+    fun hasAnyError() = currentPasswordError != null || newPasswordError != null || repeatPasswordError != null
+    fun enableButton(currentPassword: String, newPassword: String, repeatPassword: String) =
+        !hasAnyError() && currentPassword.isNotBlank() && newPassword.isNotBlank() && repeatPassword.isNotBlank()
+}
 
 sealed class ChangePasswordEffect {
     data class NavigateToLogin(val snackbarMessage: String = getChangePasswordSnackBarSuccess()) : ChangePasswordEffect()
