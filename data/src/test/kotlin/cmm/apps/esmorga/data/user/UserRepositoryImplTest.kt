@@ -249,4 +249,30 @@ class UserRepositoryImplTest {
         val sut = UserRepositoryImpl(localDs, remoteDs, localEventDs)
         sut.resetPassword("123456", "password")
     }
+
+    @Test
+    fun `given valid data when change password succeeds then success is returned`() = runTest {
+        val remoteDs = mockk<UserDatasource>(relaxed = true)
+        val localDS = mockk<UserDatasource>(relaxed = true)
+        val localEventDS = mockk<EventDatasource>(relaxed = true)
+
+        coEvery { remoteDs.changePassword(any(), any()) } returns Unit
+
+        val sut = UserRepositoryImpl(localDS, remoteDs, localEventDS)
+        val result = sut.changePassword("password1", "password2")
+
+        Assert.assertEquals(Unit, result)
+    }
+
+    @Test(expected = EsmorgaException::class)
+    fun `given remote datasource failure, when changePassword is called then EsmorgaException is thrown`() = runTest {
+        val remoteDs = mockk<UserDatasource>(relaxed = true)
+        val localDs = mockk<UserDatasource>(relaxed = true)
+        val localEventDs = mockk<EventDatasource>(relaxed = true)
+
+        coEvery { remoteDs.changePassword(any(), any()) } throws EsmorgaException("error", Source.REMOTE, 400)
+
+        val sut = UserRepositoryImpl(localDs, remoteDs, localEventDs)
+        sut.changePassword("123456", "password")
+    }
 }

@@ -50,4 +50,8 @@ class UserRepositoryImpl(private val localDs: UserDatasource, private val remote
     override suspend fun resetPassword(code: String, password: String) {
         remoteDs.resetPassword(code, password)
     }
+
+    override suspend fun changePassword(currentPassword: String, newPassword: String) {
+        remoteDs.changePassword(currentPassword, newPassword)
+    }
 }
