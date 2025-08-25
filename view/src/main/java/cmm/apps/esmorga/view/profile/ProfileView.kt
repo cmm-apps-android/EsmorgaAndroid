@@ -25,6 +25,7 @@ import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.extensions.observeLifecycleEvents
+import cmm.apps.esmorga.view.profile.HomeScreenTestTags.PROFILE_CHANGE_PASSWORD_BUTTON
 import cmm.apps.esmorga.view.profile.HomeScreenTestTags.PROFILE_TITLE
 import cmm.apps.esmorga.view.profile.model.ProfileEffect
 import cmm.apps.esmorga.view.profile.model.ProfileUiState
@@ -164,11 +165,12 @@ private fun LoggedProfileView(
             style = EsmorgaTextStyle.HEADING_1, modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        EsmorgaRow(title = stringResource(R.string.my_profile_changue_password), onClick = onChangePassword)
+        EsmorgaRow(title = stringResource(R.string.my_profile_changue_password), onClick = onChangePassword, modifier = Modifier.testTag(PROFILE_CHANGE_PASSWORD_BUTTON))
         EsmorgaRow(title = stringResource(R.string.my_profile_logout), onClick = { shownDialog = true })
     }
 }
 
 object HomeScreenTestTags {
     const val PROFILE_TITLE = "profile screen title"
+    const val PROFILE_CHANGE_PASSWORD_BUTTON = "profile change password button"
 }

@@ -33,6 +33,11 @@ import cmm.apps.designsystem.EsmorgaTextField
 import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
+import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD_BUTTON
+import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD_CURRENT_PASS_INPUT
+import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD_NEW_PASS_INPUT
+import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD_REPEAT_PASS_INPUT
+import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD_SCREEN_TITLE
 import cmm.apps.esmorga.view.changepassword.model.ChangePasswordEffect
 import cmm.apps.esmorga.view.changepassword.model.ChangePasswordUiState
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
@@ -130,6 +135,7 @@ fun ChangePasswordView(
                 style = EsmorgaTextStyle.HEADING_1,
                 modifier = Modifier
                     .padding(vertical = 32.dp, horizontal = 16.dp)
+                    .testTag(CHANGE_PASSWORD_SCREEN_TITLE)
             )
 
             Column(
@@ -151,7 +157,8 @@ fun ChangePasswordView(
                             if (!focusState.isFocused) {
                                 validateField(ChangePasswordViewModel.ChangePasswordField.PASS, currentPassword, null, null, currentPasswordFieldAlreadyFocussed)
                             }
-                        },
+                        }
+                        .testTag(CHANGE_PASSWORD_CURRENT_PASS_INPUT),
                     imeAction = ImeAction.Next,
                     keyboardType = KeyboardType.Password
                 )
@@ -172,7 +179,8 @@ fun ChangePasswordView(
                             if (!focusState.isFocused) {
                                 validateField(ChangePasswordViewModel.ChangePasswordField.NEW_PASS, currentPassword, newPassword, null, newPasswordFieldAlreadyFocussed)
                             }
-                        },
+                        }
+                        .testTag(CHANGE_PASSWORD_NEW_PASS_INPUT),
                     imeAction = ImeAction.Next,
                     keyboardType = KeyboardType.Password
                 )
@@ -193,8 +201,9 @@ fun ChangePasswordView(
                             if (!focusState.isFocused) {
                                 validateField(ChangePasswordViewModel.ChangePasswordField.REPEAT_NEW_PASS, currentPassword, newPassword, repeatNewPassword, repeatNewasswordFieldAlreadyFocussed)
                             }
-                        },
-                    imeAction = ImeAction.Next,
+                        }
+                        .testTag(CHANGE_PASSWORD_REPEAT_PASS_INPUT),
+                    imeAction = ImeAction.Done,
                     keyboardType = KeyboardType.Password
                 )
 
@@ -205,11 +214,20 @@ fun ChangePasswordView(
                     isEnabled = uiState.enableButton(currentPassword, newPassword, repeatNewPassword),
                     modifier = Modifier
                         .padding(top = 32.dp)
+                        .testTag(CHANGE_PASSWORD_BUTTON)
                 ) {
                     onChangePasswordClicked(currentPassword, newPassword)
                 }
             }
         }
     }
+}
+
+object ChangePasswordScreen {
+    const val CHANGE_PASSWORD_SCREEN_TITLE = "change password screen title"
+    const val CHANGE_PASSWORD_CURRENT_PASS_INPUT = "change password currente pass input"
+    const val CHANGE_PASSWORD_NEW_PASS_INPUT = "change password new pass input"
+    const val CHANGE_PASSWORD_REPEAT_PASS_INPUT = "change password repeat pass input"
+    const val CHANGE_PASSWORD_BUTTON = "change password button"
 }
 
