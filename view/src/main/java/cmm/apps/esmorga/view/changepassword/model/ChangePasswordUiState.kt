@@ -31,6 +31,22 @@ object ChangePasswordViewHelper : KoinComponent {
     private val context: Context by inject()
     fun getChangePasswordSnackBarSuccess() = context.getString(R.string.password_set_snackbar)
     fun getNoInternetSnackbarMessage() = context.getString(R.string.snackbar_no_internet)
-    fun getRegistrationPasswordMismatchError() = context.getString(R.string.registration_password_mismatch_error)
-    fun getRegistrationReusedPasswordError() = context.getString(R.string.registration_reused_password_error)
+
+    fun getPassFieldErrorText(
+        value: String,
+        isValidCondition: Boolean,
+        reusedError: Boolean = false,
+        mismatchError: Boolean = false,
+    ) : String? {
+        val isBlank = value.isBlank()
+        val isValid = value.isEmpty() || isValidCondition
+        return when {
+            isBlank -> context.getString(R.string.inline_error_empty_field)
+            !isValid -> context.getString(R.string.inline_error_password)
+            reusedError -> context.getString(R.string.registration_reused_password_error)
+            mismatchError -> context.getString(R.string.registration_password_mismatch_error)
+            else -> null
+        }
+
+    }
 }

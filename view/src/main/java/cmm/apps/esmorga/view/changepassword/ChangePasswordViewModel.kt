@@ -6,11 +6,7 @@ import cmm.apps.esmorga.domain.user.PerformChangePasswordUseCase
 import cmm.apps.esmorga.domain.user.model.User.Companion.PASSWORD_REGEX
 import cmm.apps.esmorga.view.changepassword.model.ChangePasswordEffect
 import cmm.apps.esmorga.view.changepassword.model.ChangePasswordUiState
-import cmm.apps.esmorga.view.changepassword.model.ChangePasswordViewHelper.getRegistrationPasswordMismatchError
-import cmm.apps.esmorga.view.changepassword.model.ChangePasswordViewHelper.getRegistrationReusedPasswordError
-import cmm.apps.esmorga.view.login.model.LoginViewHelper.getEmptyFieldErrorText
-import cmm.apps.esmorga.view.login.model.LoginViewHelper.getFieldErrorText
-import cmm.apps.esmorga.view.login.model.LoginViewHelper.getPasswordErrorText
+import cmm.apps.esmorga.view.changepassword.model.ChangePasswordViewHelper.getPassFieldErrorText
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -55,38 +51,27 @@ class ChangePasswordViewModel(
             when (type) {
                 ChangePasswordField.PASS -> _uiState.value =
                     _uiState.value.copy(
-                        currentPasswordError = getFieldErrorText(
-                            password,
-                            getPasswordErrorText(),
-                            getEmptyFieldErrorText(),
-                            false,
-                            password.matches(PASSWORD_REGEX.toRegex())
+                        currentPasswordError = getPassFieldErrorText(
+                            value = password,
+                            isValidCondition = password.matches(PASSWORD_REGEX.toRegex()),
                         )
                     )
 
                 ChangePasswordField.NEW_PASS -> _uiState.value =
                     _uiState.value.copy(
-                        newPasswordError = getFieldErrorText(
-                            newPass.orEmpty(),
-                            getPasswordErrorText(),
-                            getEmptyFieldErrorText(),
-                            false,
-                            newPass.orEmpty().matches(PASSWORD_REGEX.toRegex())
+                        newPasswordError = getPassFieldErrorText(
+                            value = newPass.orEmpty(),
+                            isValidCondition = newPass.orEmpty().matches(PASSWORD_REGEX.toRegex()),
                         )
                     )
 
                 ChangePasswordField.REPEAT_NEW_PASS -> _uiState.value =
                     _uiState.value.copy(
-                        repeatPasswordError = getFieldErrorText(
-                            repeatNewPass.orEmpty(),
-                            getPasswordErrorText(),
-                            getEmptyFieldErrorText(),
-                            false,
-                            repeatNewPass.orEmpty().matches(PASSWORD_REGEX.toRegex()),
-                            mismatchErrorCondition = newPass == repeatNewPass,
-                            mismatchErrorText = getRegistrationPasswordMismatchError(),
-                            reusedErrorCondition = password != repeatNewPass,
-                            reusedErrorText = getRegistrationReusedPasswordError()
+                        repeatPasswordError = getPassFieldErrorText(
+                            value = repeatNewPass.orEmpty(),
+                            isValidCondition = repeatNewPass.orEmpty().matches(PASSWORD_REGEX.toRegex()),
+                            reusedError = password == repeatNewPass,
+                            mismatchError = newPass != repeatNewPass
                         )
                     )
             }

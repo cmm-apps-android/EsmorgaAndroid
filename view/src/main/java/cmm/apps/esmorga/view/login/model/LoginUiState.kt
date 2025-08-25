@@ -36,11 +36,7 @@ object LoginViewHelper : KoinComponent {
         errorTextProvider: String,
         errorTextEmpty: String,
         acceptsEmpty: Boolean,
-        nonEmptyCondition: Boolean,
-        mismatchErrorCondition: Boolean = false,
-        mismatchErrorText: String? = null,
-        reusedErrorCondition: Boolean = false,
-        reusedErrorText: String? = null
+        nonEmptyCondition: Boolean
     ): String? {
         val isBlank = value.isBlank()
         val isValid = value.isEmpty() || nonEmptyCondition
@@ -48,8 +44,6 @@ object LoginViewHelper : KoinComponent {
         return when {
             !acceptsEmpty && isBlank -> errorTextEmpty
             !isValid -> errorTextProvider
-            !mismatchErrorCondition -> mismatchErrorText
-            !reusedErrorCondition -> reusedErrorText
             else -> null
         }
     }
