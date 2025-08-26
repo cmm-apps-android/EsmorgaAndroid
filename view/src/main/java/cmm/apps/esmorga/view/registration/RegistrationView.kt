@@ -1,9 +1,8 @@
 package cmm.apps.esmorga.view.registration
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -27,6 +26,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -104,6 +105,7 @@ fun RegistrationView(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var repeatedPassword by remember { mutableStateOf("") }
+    val keyboardController = LocalSoftwareKeyboardController.current
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
@@ -134,6 +136,11 @@ fun RegistrationView(
                 )
                 .fillMaxWidth()
                 .verticalScroll(state = rememberScrollState())
+                .pointerInput(Unit) {
+                    detectTapGestures(onTap = {
+                        keyboardController?.hide()
+                    })
+                }
         ) {
             EsmorgaText(
                 text = stringResource(id = R.string.screen_registration_title),
