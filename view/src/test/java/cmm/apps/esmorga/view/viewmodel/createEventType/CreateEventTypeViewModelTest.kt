@@ -1,8 +1,9 @@
 package cmm.apps.esmorga.view.viewmodel.createEventType
 
 import app.cash.turbine.test
+import cmm.apps.esmorga.domain.event.model.EventType
+import cmm.apps.esmorga.view.createevent.model.CreateEventFormUiModel
 import cmm.apps.esmorga.view.createeventtype.CreateEventTypeViewModel
-import cmm.apps.esmorga.view.createeventtype.EventType
 import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeScreenEffect
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -14,42 +15,39 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class CreateEventTypeViewModelTest {
     private lateinit var viewModel: CreateEventTypeViewModel
+    private lateinit var initialForm: CreateEventFormUiModel
 
     @Before
     fun setup() {
-        viewModel = CreateEventTypeViewModel(
-            eventName = "Initial Name",
-            description = "Initial Description"
+        initialForm = CreateEventFormUiModel(
+            name = "Initial Name",
+            description = "Initial Description",
+            type = EventType.PARTY
         )
+        viewModel = CreateEventTypeViewModel(initialForm)
     }
 
     @Test
-    fun `given initial state when initialized then contains provided eventName description and default event type`() = runTest {
+    fun `given initial state when initialized then type is correct`() = runTest {
         viewModel.uiState.test {
             val state = awaitItem()
-
-            assertEquals("Initial Name", state.eventName)
-            assertEquals("Initial Description", state.description)
-            assertEquals(EventType.Party, state.selectedEventType)
-
+            assertEquals(EventType.PARTY, state.type)
             cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
-    fun `given initial state when event type selected then updates selected event type in state`() = runTest {
+    fun `given initial state when event type selected then updates selected event type`() = runTest {
         viewModel.uiState.test {
-            awaitItem()
+            awaitItem() // inicial
 
-            viewModel.onEventTypeSelected(EventType.Sport)
-
+            viewModel.onEventTypeSelected(EventType.SPORT)
             val updatedState = awaitItem()
-            assertEquals(EventType.Sport, updatedState.selectedEventType)
+            assertEquals(EventType.SPORT, updatedState.type)
 
-            viewModel.onEventTypeSelected(EventType.Charity)
-
+            viewModel.onEventTypeSelected(EventType.CHARITY)
             val secondUpdate = awaitItem()
-            assertEquals(EventType.Charity, secondUpdate.selectedEventType)
+            assertEquals(EventType.CHARITY, secondUpdate.type)
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -59,28 +57,25 @@ class CreateEventTypeViewModelTest {
     fun `when back clicked then emits navigate back effect`() = runTest {
         viewModel.effect.test {
             viewModel.onBackClick()
-
             val effect = awaitItem()
             assertEquals(CreateEventTypeScreenEffect.NavigateBack, effect)
-
             cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
-    fun `given selected event type when next clicked then emits navigate next effect with correct data`() = runTest {
-        viewModel.onEventTypeSelected(EventType.Games)
+    fun `given selected event type when next clicked then emits navigate next effect with correct form`() = runTest {
+        viewModel.onEventTypeSelected(EventType.GAMES)
 
         viewModel.effect.test {
             viewModel.onNextClick()
-
             val effect = awaitItem()
             assertTrue(effect is CreateEventTypeScreenEffect.NavigateNext)
             val navigateNext = effect as CreateEventTypeScreenEffect.NavigateNext
 
-            assertEquals("Initial Name", navigateNext.eventName)
-            assertEquals("Initial Description", navigateNext.description)
-            assertEquals(EventType.Games.backendValue, navigateNext.eventType)
+            assertEquals(initialForm.name, navigateNext.eventForm.name)
+            assertEquals(initialForm.description, navigateNext.eventForm.description)
+            assertEquals(EventType.GAMES, navigateNext.eventForm.type)
 
             cancelAndIgnoreRemainingEvents()
         }

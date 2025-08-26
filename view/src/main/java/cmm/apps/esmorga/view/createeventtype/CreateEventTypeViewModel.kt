@@ -2,10 +2,9 @@ package cmm.apps.esmorga.view.createeventtype
 
 import androidx.lifecycle.ViewModel
 import cmm.apps.esmorga.domain.event.model.EventType
-import cmm.apps.esmorga.view.R
+import cmm.apps.esmorga.view.createevent.model.CreateEventFormUiModel
 import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeScreenEffect
 import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeScreenUiState
-import cmm.apps.esmorga.view.createeventtype.model.EventTypeHelper
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,14 +14,11 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class CreateEventTypeViewModel(
-    private val eventName: String,
-    private val description: String
+    private val eventForm: CreateEventFormUiModel
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
-        CreateEventTypeScreenUiState(
-            selectedEventType = EventType.PARTY
-        )
+        CreateEventTypeScreenUiState(type = EventType.PARTY)
     )
     val uiState: StateFlow<CreateEventTypeScreenUiState> = _uiState.asStateFlow()
 
@@ -33,7 +29,9 @@ class CreateEventTypeViewModel(
     val effect: SharedFlow<CreateEventTypeScreenEffect> = _effect.asSharedFlow()
 
     fun onEventTypeSelected(type: EventType) {
-        _uiState.value = _uiState.value.copy(selectedEventType = type)
+        _uiState.value = _uiState.value.copy(
+            type = type
+        )
     }
 
     fun onBackClick() {
@@ -41,17 +39,8 @@ class CreateEventTypeViewModel(
     }
 
     fun onNextClick() {
-        val state = _uiState.value
-        _effect.tryEmit(
-            CreateEventTypeScreenEffect.NavigateNext(
-                eventName = eventName,
-                description = description,
-                eventType = state.selectedEventType.name
-            )
-        )
-    }
-
-    fun getEventTypeUiTextRes(type: EventType): Int {
-        return EventTypeHelper.getUiTextRes(type)
+        val updatedForm = eventForm.copy(type = _uiState.value.type)
+        println("TEST" + updatedForm)
+        _effect.tryEmit(CreateEventTypeScreenEffect.NavigateNext(updatedForm))
     }
 }

@@ -1,8 +1,8 @@
 package cmm.apps.esmorga.view.screenshot.createEvent
 
+import cmm.apps.esmorga.domain.event.model.EventType
+import cmm.apps.esmorga.view.createevent.model.CreateEventFormUiModel
 import cmm.apps.esmorga.view.createeventtype.CreateEventTypeScreen
-import cmm.apps.esmorga.view.createeventtype.CreateEventTypeViewModel
-import cmm.apps.esmorga.view.createeventtype.EventType
 import cmm.apps.esmorga.view.screenshot.BaseScreenshotTest
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import org.junit.Test
@@ -11,64 +11,84 @@ class CreateEventTypeScreenScreenshotTest : BaseScreenshotTest() {
 
     @Test
     fun createEventTypeScreenDefault() {
-        snapshotWithState(
-            eventName = "My Event",
+        val form = CreateEventFormUiModel(
+            name = "My Event",
             description = "Some description",
-            selectedEventType = EventType.Party
+            type = EventType.PARTY
+        )
+
+        snapshotWithState(
+            form = form,
+            selectedEventType = EventType.PARTY
         )
     }
 
     @Test
     fun createEventTypeScreenWithSportSelected() {
-        snapshotWithState(
-            eventName = "My Event",
+        val form = CreateEventFormUiModel(
+            name = "My Event",
             description = "Some description",
-            selectedEventType = EventType.Sport
+            type = null
+        )
+
+        snapshotWithState(
+            form = form,
+            selectedEventType = EventType.SPORT
         )
     }
 
     @Test
     fun createEventTypeScreenWithCharitySelected() {
-        snapshotWithState(
-            eventName = "Charity Event",
+        val form = CreateEventFormUiModel(
+            name = "Charity Event",
             description = "Helping hands",
-            selectedEventType = EventType.Charity
+            type = null
+        )
+
+        snapshotWithState(
+            form = form,
+            selectedEventType = EventType.CHARITY
         )
     }
 
     @Test
     fun createEventTypeScreenWithFoodSelected() {
-        snapshotWithState(
-            eventName = "Food Event",
+        val form = CreateEventFormUiModel(
+            name = "Food Event",
             description = "Dinner with friends",
-            selectedEventType = EventType.Food
+            type = null
+        )
+
+        snapshotWithState(
+            form = form,
+            selectedEventType = EventType.FOOD
         )
     }
 
     @Test
     fun createEventTypeScreenWithGamesSelected() {
-        snapshotWithState(
-            eventName = "Games Night",
+        val form = CreateEventFormUiModel(
+            name = "Games Night",
             description = "Board games and fun",
-            selectedEventType = EventType.Games
+            type = null
+        )
+
+        snapshotWithState(
+            form = form,
+            selectedEventType = EventType.GAMES
         )
     }
+
     private fun snapshotWithState(
-        eventName: String,
-        description: String,
+        form: CreateEventFormUiModel,
         selectedEventType: EventType
     ) {
-        val viewModel = CreateEventTypeViewModel(
-            eventName = eventName,
-            description = description
-        ).apply {
-            onEventTypeSelected(selectedEventType)
-        }
+        val updatedForm = form.copy(type = selectedEventType)
 
         paparazzi.snapshot {
             EsmorgaTheme(darkTheme = false) {
                 CreateEventTypeScreen(
-                    viewModel = viewModel,
+                    eventForm = updatedForm,
                     onBackClick = {},
                     onNextClick = {}
                 )

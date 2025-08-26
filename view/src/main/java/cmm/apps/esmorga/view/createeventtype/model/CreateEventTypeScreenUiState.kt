@@ -1,27 +1,29 @@
 package cmm.apps.esmorga.view.createeventtype.model
 
+import android.content.Context
 import cmm.apps.esmorga.domain.event.model.EventType
 import cmm.apps.esmorga.view.R
+import cmm.apps.esmorga.view.createevent.model.CreateEventFormUiModel
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 data class CreateEventTypeScreenUiState(
-    val selectedEventType: EventType = EventType.PARTY
+    val type: EventType? = null,
 )
 
 sealed class CreateEventTypeScreenEffect {
     object NavigateBack : CreateEventTypeScreenEffect()
-    data class NavigateNext(
-        val eventName: String,
-        val description: String,
-        val eventType: String
-    ) : CreateEventTypeScreenEffect()
+    data class NavigateNext(val eventForm: CreateEventFormUiModel) : CreateEventTypeScreenEffect()
 }
 
-object EventTypeHelper {
-    fun getUiTextRes(type: EventType): Int = when(type) {
-        EventType.PARTY -> R.string.step_2_option_party
-        EventType.SPORT -> R.string.step_2_option_sport
-        EventType.FOOD -> R.string.step_2_option_food
-        EventType.CHARITY -> R.string.step_2_option_charity
-        EventType.GAMES -> R.string.step_2_option_games
+object EventTypeHelper : KoinComponent {
+    private val context: Context by inject()
+
+    fun getUiTextRes(type: EventType): String = when (type) {
+        EventType.PARTY -> context.getString(R.string.step_2_option_party)
+        EventType.SPORT -> context.getString(R.string.step_2_option_sport)
+        EventType.FOOD -> context.getString(R.string.step_2_option_food)
+        EventType.CHARITY -> context.getString(R.string.step_2_option_charity)
+        EventType.GAMES -> context.getString(R.string.step_2_option_games)
     }
 }

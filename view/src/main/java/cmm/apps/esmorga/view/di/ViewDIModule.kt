@@ -4,6 +4,8 @@ import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.view.MainViewModel
 import cmm.apps.esmorga.view.activateaccount.ActivateAccountViewModel
 import cmm.apps.esmorga.view.createevent.CreateEventFormViewModel
+import cmm.apps.esmorga.view.createevent.model.CreateEventFormUiModel
+import cmm.apps.esmorga.view.createeventtype.CreateEventTypeViewModel
 import cmm.apps.esmorga.view.eventdetails.EventDetailsViewModel
 import cmm.apps.esmorga.view.eventlist.EventListViewModel
 import cmm.apps.esmorga.view.eventlist.MyEventListViewModel
@@ -57,6 +59,10 @@ object ViewDIModule {
 
         viewModel { ResetPasswordViewModel(get()) }
 
-        viewModel {CreateEventFormViewModel()}
+        viewModel { CreateEventFormViewModel() }
+
+        viewModel { (eventForm: CreateEventFormUiModel) ->
+            CreateEventTypeViewModel(eventForm)
+        }
     }
 }

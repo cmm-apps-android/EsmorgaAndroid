@@ -1,8 +1,7 @@
 package cmm.apps.esmorga.view.createevent.model
 
 data class CreateEventFormUiState(
-    val eventName: String = "",
-    val description: String = "",
+    val form: CreateEventFormUiModel = CreateEventFormUiModel(),
     val eventNameError: Int? = null,
     val descriptionError: Int? = null,
     val isFormValid: Boolean = false

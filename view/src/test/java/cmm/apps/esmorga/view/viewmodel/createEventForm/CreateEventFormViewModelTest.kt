@@ -1,14 +1,17 @@
 package cmm.apps.esmorga.view.viewmodel.createEventForm
 
 import app.cash.turbine.test
+import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.createevent.CreateEventFormViewModel
 import cmm.apps.esmorga.view.createevent.model.CreateEventFormEffect
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import cmm.apps.esmorga.view.R
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class CreateEventFormViewModelTest {
@@ -27,10 +30,9 @@ class CreateEventFormViewModelTest {
 
             viewModel.onEventNameChange("ab")
 
-            awaitItem()
             val state = awaitItem()
 
-            assertEquals("ab", state.eventName)
+            assertEquals("ab", state.form.name)
             assertEquals(R.string.inline_error_invalid_length_name, state.eventNameError)
             assertFalse(state.isFormValid)
 
@@ -45,11 +47,11 @@ class CreateEventFormViewModelTest {
 
             viewModel.onDescriptionChange("This is a good description")
 
-            awaitItem()
             val state = awaitItem()
 
-            assertEquals("This is a good description", state.description)
+            assertEquals("This is a good description", state.form.description)
             assertNull(state.descriptionError)
+            assertTrue(state.isFormValid)
 
             cancelAndIgnoreRemainingEvents()
         }
