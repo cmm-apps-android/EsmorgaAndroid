@@ -8,7 +8,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 data class CreateEventTypeScreenUiState(
-    val type: EventType? = null,
+    val type: EventType,
 )
 
 sealed class CreateEventTypeScreenEffect {
@@ -16,7 +16,7 @@ sealed class CreateEventTypeScreenEffect {
     data class NavigateNext(val eventForm: CreateEventFormUiModel) : CreateEventTypeScreenEffect()
 }
 
-object EventTypeHelper : KoinComponent {
+object CreateEventTypeHelper : KoinComponent {
     private val context: Context by inject()
 
     fun getUiTextRes(type: EventType): String = when (type) {

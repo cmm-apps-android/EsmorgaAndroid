@@ -23,20 +23,23 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import cmm.apps.designsystem.EsmorgaButton
 import cmm.apps.designsystem.EsmorgaRadioButton
 import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.domain.event.model.EventType
 import cmm.apps.esmorga.view.R
+import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.createevent.model.CreateEventFormUiModel
 import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeScreenEffect
 import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeScreenUiState
-import cmm.apps.esmorga.view.createeventtype.model.EventTypeHelper
+import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeHelper
+import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
-@OptIn(ExperimentalMaterial3Api::class)
+@Screen
 @Composable
 fun CreateEventTypeScreen(
     eventForm: CreateEventFormUiModel,
@@ -55,14 +58,33 @@ fun CreateEventTypeScreen(
             }
         }
     }
+    EsmorgaTheme {
+        CreateEventTypeView(
+            eventType = uiState.type,
+            onBackClick = { onBackClick() },
+            onNextClick = { createEventviewModel.onNextClick() },
+            onEventTypeSelected = { createEventviewModel.onEventTypeSelected(it) },
+            getTypeName = { createEventviewModel.getTypeName(it)}
+        )
+    }
+}
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CreateEventTypeView(
+    eventType: EventType,
+    onBackClick: () -> Unit,
+    onNextClick: () -> Unit,
+    onEventTypeSelected: (EventType) -> Unit,
+    getTypeName: (EventType) -> String
+    ){
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {},
                 navigationIcon = {
                     IconButton(
-                        onClick = { createEventviewModel.onBackClick() },
+                        onClick = { onBackClick() },
                         modifier = Modifier.testTag(CreateEventTypeScreenTestTags.CREATE_EVENT_TYPE_BACK_BUTTON)
                     ) {
                         Icon(Icons.Default.ArrowBack, contentDescription = null)
@@ -93,15 +115,15 @@ fun CreateEventTypeScreen(
 
             EventType.values().forEach { type ->
                 EsmorgaRadioButton(
-                    text = EventTypeHelper.getUiTextRes(type),
-                    selected = uiState.type == type,
-                    onClick = { createEventviewModel.onEventTypeSelected(type) },
+                    text = getTypeName(type),
+                    selected = eventType == type,
+                    onClick = { onEventTypeSelected(type) },
                     modifier = Modifier.fillMaxWidth()
                 )
             }
 
             EsmorgaButton(
-                onClick = { createEventviewModel.onNextClick() },
+                onClick = { onNextClick() },
                 text = stringResource(R.string.step_continue_button),
                 modifier = Modifier
                     .testTag(CreateEventTypeScreenTestTags.CREATE_EVENT_TYPE_NEXT_BUTTON)
@@ -111,7 +133,6 @@ fun CreateEventTypeScreen(
         }
     }
 }
-
 
 object CreateEventTypeScreenTestTags {
     const val CREATE_EVENT_TYPE_TITLE = "create_event_type_title"

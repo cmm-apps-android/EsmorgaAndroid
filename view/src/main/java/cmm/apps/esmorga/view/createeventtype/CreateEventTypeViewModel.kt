@@ -3,6 +3,7 @@ package cmm.apps.esmorga.view.createeventtype
 import androidx.lifecycle.ViewModel
 import cmm.apps.esmorga.domain.event.model.EventType
 import cmm.apps.esmorga.view.createevent.model.CreateEventFormUiModel
+import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeHelper
 import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeScreenEffect
 import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeScreenUiState
 import kotlinx.coroutines.channels.BufferOverflow
@@ -41,5 +42,9 @@ class CreateEventTypeViewModel(
     fun onNextClick() {
         val updatedForm = eventForm.copy(type = _uiState.value.type)
         _effect.tryEmit(CreateEventTypeScreenEffect.NavigateNext(updatedForm))
+    }
+
+    fun getTypeName(evenType :EventType): String {
+        return CreateEventTypeHelper.getUiTextRes(evenType)
     }
 }
