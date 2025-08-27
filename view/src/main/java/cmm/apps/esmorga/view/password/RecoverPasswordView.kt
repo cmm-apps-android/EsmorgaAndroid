@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -104,7 +105,7 @@ fun RecoverPasswordView(
                     .testTag(RECOVER_PASSWORD_SHOW_SNACKBAR)
                     .padding(WindowInsets.ime.asPaddingValues())
             )
-        },topBar = {
+        }, topBar = {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -134,6 +135,7 @@ fun RecoverPasswordView(
                 )
                 .fillMaxWidth()
                 .verticalScroll(state = rememberScrollState())
+                .imePadding()
         ) {
             EsmorgaText(
                 text = stringResource(id = R.string.forgot_password_screen_title),

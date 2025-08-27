@@ -2,6 +2,7 @@ package cmm.apps.esmorga.view.password
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -106,6 +107,7 @@ fun ResetPasswordView(
                 )
                 .fillMaxWidth()
                 .verticalScroll(state = rememberScrollState())
+                .imePadding()
         ) {
             EsmorgaText(
                 text = stringResource(id = R.string.reset_password_screen_title),
