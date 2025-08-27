@@ -82,7 +82,7 @@ class CreateEventFormViewModelTest {
     }
 
     @Test
-    fun `when back clicked then emits navigate back effect`() = runTest {
+    fun `given create form screen when back clicked then navigate to previous screen`() = runTest {
         viewModel.effect.test {
             viewModel.onBackClick()
             val effect = awaitItem()

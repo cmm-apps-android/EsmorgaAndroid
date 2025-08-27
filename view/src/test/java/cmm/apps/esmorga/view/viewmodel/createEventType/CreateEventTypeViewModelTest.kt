@@ -39,7 +39,7 @@ class CreateEventTypeViewModelTest {
     @Test
     fun `given initial state when event type selected then updates selected event type`() = runTest {
         viewModel.uiState.test {
-            awaitItem() // inicial
+            awaitItem()
 
             viewModel.onEventTypeSelected(EventType.SPORT)
             val updatedState = awaitItem()
@@ -54,7 +54,7 @@ class CreateEventTypeViewModelTest {
     }
 
     @Test
-    fun `when back clicked then emits navigate back effect`() = runTest {
+    fun `given create event type screen when back clicked then navigate to previous screen`() = runTest {
         viewModel.effect.test {
             viewModel.onBackClick()
             val effect = awaitItem()

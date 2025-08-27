@@ -105,7 +105,7 @@ fun CreateEventTypeScreen(
                 text = stringResource(R.string.step_continue_button),
                 modifier = Modifier
                     .testTag(CreateEventTypeScreenTestTags.CREATE_EVENT_TYPE_NEXT_BUTTON)
-                    .padding(vertical = 32.dp)
+                    .padding(top = 32.dp, bottom = 16.dp)
             )
 
         }

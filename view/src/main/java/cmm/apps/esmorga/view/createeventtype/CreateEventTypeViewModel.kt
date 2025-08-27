@@ -40,7 +40,6 @@ class CreateEventTypeViewModel(
 
     fun onNextClick() {
         val updatedForm = eventForm.copy(type = _uiState.value.type)
-        println("TEST" + updatedForm)
         _effect.tryEmit(CreateEventTypeScreenEffect.NavigateNext(updatedForm))
     }
 }
