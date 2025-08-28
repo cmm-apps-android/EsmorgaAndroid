@@ -1,6 +1,5 @@
 package cmm.apps.esmorga.view.profile
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -168,7 +167,7 @@ private fun LoggedProfileView(
             style = EsmorgaTextStyle.HEADING_1, modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        EsmorgaRow(title = stringResource(R.string.my_profile_changue_password), onClick = onChangePassword )
+        EsmorgaRow(title = stringResource(R.string.my_profile_change_password), onClick = onChangePassword )
         EsmorgaRow(title = stringResource(R.string.my_profile_logout), onClick =  { shownDialog = true })
     }
 }
