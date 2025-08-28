@@ -2,8 +2,8 @@ package cmm.apps.esmorga.view.viewmodel.createEventType
 
 import app.cash.turbine.test
 import cmm.apps.esmorga.domain.event.model.EventType
-import cmm.apps.esmorga.view.createevent.model.CreateEventFormUiModel
-import cmm.apps.esmorga.view.createeventtype.CreateEventTypeViewModel
+import cmm.apps.esmorga.domain.event.model.CreateEventForm
+import cmm.apps.esmorga.view.createeventtype.CreateEventFormTypeViewModel
 import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeScreenEffect
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -13,18 +13,18 @@ import org.junit.Before
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class CreateEventTypeViewModelTest {
-    private lateinit var viewModel: CreateEventTypeViewModel
-    private lateinit var initialForm: CreateEventFormUiModel
+class CreateEventFormTypeViewModelTest {
+    private lateinit var viewModel: CreateEventFormTypeViewModel
+    private lateinit var initialForm: CreateEventForm
 
     @Before
     fun setup() {
-        initialForm = CreateEventFormUiModel(
+        initialForm = CreateEventForm(
             name = "Initial Name",
             description = "Initial Description",
             type = EventType.PARTY
         )
-        viewModel = CreateEventTypeViewModel(initialForm)
+        viewModel = CreateEventFormTypeViewModel(initialForm)
     }
 
     @Test

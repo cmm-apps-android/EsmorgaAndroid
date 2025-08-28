@@ -31,7 +31,7 @@ import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.domain.event.model.EventType
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
-import cmm.apps.esmorga.view.createevent.model.CreateEventFormUiModel
+import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeHelper
 import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeScreenEffect
 import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeScreenUiState
@@ -41,11 +41,11 @@ import org.koin.core.parameter.parametersOf
 
 @Screen
 @Composable
-fun CreateEventTypeScreen(
-    eventForm: CreateEventFormUiModel,
-    createEventviewModel: CreateEventTypeViewModel = koinViewModel(parameters = { parametersOf(eventForm) }),
+fun CreateEventFormTypeScreen(
+    eventForm: CreateEventForm,
+    createEventviewModel: CreateEventFormTypeViewModel = koinViewModel(parameters = { parametersOf(eventForm) }),
     onBackClick: () -> Unit,
-    onNextClick: (CreateEventFormUiModel) -> Unit
+    onNextClick: (CreateEventForm) -> Unit
 ) {
     var selectedEventType by remember { mutableStateOf(eventForm.type ?: EventType.PARTY) }
     val uiState: CreateEventTypeScreenUiState by createEventviewModel.uiState.collectAsStateWithLifecycle()
@@ -59,7 +59,7 @@ fun CreateEventTypeScreen(
         }
     }
     EsmorgaTheme {
-        CreateEventTypeView(
+        CreateEventFormTypeView(
             eventType = uiState.type,
             onBackClick = { onBackClick() },
             onNextClick = { createEventviewModel.onNextClick() },
@@ -70,7 +70,7 @@ fun CreateEventTypeScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateEventTypeView(
+fun CreateEventFormTypeView(
     eventType: EventType,
     onBackClick: () -> Unit,
     onNextClick: () -> Unit,

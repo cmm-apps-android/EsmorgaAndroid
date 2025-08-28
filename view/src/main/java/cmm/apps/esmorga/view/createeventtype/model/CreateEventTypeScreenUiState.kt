@@ -3,9 +3,7 @@ package cmm.apps.esmorga.view.createeventtype.model
 import android.content.Context
 import cmm.apps.esmorga.domain.event.model.EventType
 import cmm.apps.esmorga.view.R
-import cmm.apps.esmorga.view.createevent.model.CreateEventFormUiModel
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import cmm.apps.esmorga.domain.event.model.CreateEventForm
 
 data class CreateEventTypeScreenUiState(
     val type: EventType,
@@ -13,7 +11,7 @@ data class CreateEventTypeScreenUiState(
 
 sealed class CreateEventTypeScreenEffect {
     object NavigateBack : CreateEventTypeScreenEffect()
-    data class NavigateNext(val eventForm: CreateEventFormUiModel) : CreateEventTypeScreenEffect()
+    data class NavigateNext(val eventForm: CreateEventForm) : CreateEventTypeScreenEffect()
 }
 
 object CreateEventTypeHelper {

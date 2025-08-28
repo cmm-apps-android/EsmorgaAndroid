@@ -1,7 +1,7 @@
 package cmm.apps.esmorga.view.screenshot.createEvent
 
 import cmm.apps.esmorga.domain.event.model.EventType
-import cmm.apps.esmorga.view.createeventtype.CreateEventTypeView
+import cmm.apps.esmorga.view.createeventtype.CreateEventFormTypeView
 import cmm.apps.esmorga.view.screenshot.BaseScreenshotTest
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import org.junit.Test
@@ -48,7 +48,7 @@ class CreateEventTypeScreenScreenshotTest : BaseScreenshotTest() {
     ) {
         paparazzi.snapshot {
             EsmorgaTheme(darkTheme = false) {
-                CreateEventTypeView(
+                CreateEventFormTypeView(
                     eventType = selectedEventType,
                     onBackClick = {},
                     onNextClick = {},

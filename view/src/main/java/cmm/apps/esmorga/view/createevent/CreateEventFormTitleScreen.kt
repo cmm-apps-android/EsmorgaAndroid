@@ -30,15 +30,15 @@ import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.createevent.model.CreateEventFormEffect
-import cmm.apps.esmorga.view.createevent.model.CreateEventFormUiModel
+import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import org.koin.androidx.compose.koinViewModel
 
 @Screen
 @Composable
 fun CreateEventFormScreen(
-    viewModel: CreateEventFormViewModel = koinViewModel(),
+    viewModel: CreateEventFormTitleViewModel = koinViewModel(),
     onBack: () -> Unit,
-    onNext: (CreateEventFormUiModel) -> Unit
+    onNext: (CreateEventForm) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -46,17 +46,17 @@ fun CreateEventFormScreen(
         viewModel.effect.collect { effect ->
             when (effect) {
                 is CreateEventFormEffect.NavigateBack -> onBack()
-                is CreateEventFormEffect.NavigateEventType -> onNext(uiState.form)
+                is CreateEventFormEffect.NavigateNext -> onNext(effect.eventForm)
             }
         }
     }
 
 
-    CreateEventFormScreenContent(
-        eventName = uiState.form.name.orEmpty(),
+    CreateEventFormTitleScreenContent(
+        eventName = uiState.eventName,
         onEventNameChange = viewModel::onEventNameChange,
         eventNameError = uiState.eventNameError,
-        description = uiState.form.description.orEmpty(),
+        description = uiState.eventDescription,
         onDescriptionChange = viewModel::onDescriptionChange,
         descriptionError = uiState.descriptionError,
         isFormValid = uiState.isFormValid,
@@ -68,7 +68,7 @@ fun CreateEventFormScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateEventFormScreenContent(
+fun CreateEventFormTitleScreenContent(
     eventName: String,
     onEventNameChange: (String) -> Unit,
     eventNameError: Int?,
@@ -84,7 +84,7 @@ fun CreateEventFormScreenContent(
             TopAppBar(
                 title = {},
                 navigationIcon = {
-                    IconButton(onClick = onBackClick, modifier = Modifier.testTag(CreateEventFormScreenTestTags.CREATE_EVENT_FORM_BACK_BUTTON)) {
+                    IconButton(onClick = onBackClick, modifier = Modifier.testTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_BACK_BUTTON)) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
@@ -102,7 +102,7 @@ fun CreateEventFormScreenContent(
                 style = EsmorgaTextStyle.HEADING_1,
                 modifier = Modifier
                     .padding(bottom = 12.dp)
-                    .testTag(CreateEventFormScreenTestTags.CREATE_EVENT_FORM_TITLE)
+                    .testTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_TITLE)
             )
 
             EsmorgaTextField(
@@ -112,8 +112,7 @@ fun CreateEventFormScreenContent(
                 placeholder = R.string.placeholder_event_name,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .testTag(CreateEventFormScreenTestTags.CREATE_EVENT_FORM_NAME),
-                maxChars = 100,
+                    .testTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_NAME),
                 errorText = eventNameError?.let { stringResource(it) }
             )
 
@@ -126,7 +125,7 @@ fun CreateEventFormScreenContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(min = 120.dp)
-                    .testTag(CreateEventFormScreenTestTags.CREATE_EVENT_FORM_DESCRIPTION),
+                    .testTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_DESCRIPTION),
                 singleLine = false,
                 maxChars = 5000,
                 placeholder = R.string.placeholder_event_name,
@@ -140,13 +139,13 @@ fun CreateEventFormScreenContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 16.dp)
-                    .testTag(CreateEventFormScreenTestTags.CREATE_EVENT_FORM_NEXT_BUTTON),
+                    .testTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_NEXT_BUTTON),
             )
         }
     }
 }
 
-object CreateEventFormScreenTestTags {
+object CreateEventFormTitleScreenTestTags {
     const val CREATE_EVENT_FORM_TITLE = "create_event_form_title"
     const val CREATE_EVENT_FORM_BACK_BUTTON = "create_event_form_back_button"
     const val CREATE_EVENT_FORM_NEXT_BUTTON = "create_event_form_next_button"

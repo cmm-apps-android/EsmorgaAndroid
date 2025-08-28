@@ -2,7 +2,7 @@ package cmm.apps.esmorga.view.createeventtype
 
 import androidx.lifecycle.ViewModel
 import cmm.apps.esmorga.domain.event.model.EventType
-import cmm.apps.esmorga.view.createevent.model.CreateEventFormUiModel
+import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeScreenEffect
 import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeScreenUiState
 import kotlinx.coroutines.channels.BufferOverflow
@@ -13,8 +13,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class CreateEventTypeViewModel(
-    private val eventForm: CreateEventFormUiModel
+class CreateEventFormTypeViewModel(
+    private val eventForm: CreateEventForm
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -41,7 +41,5 @@ class CreateEventTypeViewModel(
     fun onNextClick() {
         val updatedForm = eventForm.copy(type = _uiState.value.type)
         _effect.tryEmit(CreateEventTypeScreenEffect.NavigateNext(updatedForm))
-        println("TEST" + updatedForm)
-
     }
 }

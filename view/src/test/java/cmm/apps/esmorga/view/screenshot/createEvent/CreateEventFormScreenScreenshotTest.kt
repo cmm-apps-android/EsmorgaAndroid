@@ -1,12 +1,12 @@
 package cmm.apps.esmorga.view.screenshot.createevent
 
 import cmm.apps.esmorga.view.R
-import cmm.apps.esmorga.view.createevent.CreateEventFormScreenContent
+import cmm.apps.esmorga.view.createevent.CreateEventFormTitleScreenContent
 import cmm.apps.esmorga.view.screenshot.BaseScreenshotTest
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import org.junit.Test
 
-class CreateEventFormUiModelScreenContentScreenshotTest : BaseScreenshotTest() {
+class CreateEventFormScreenContentScreenshotTest : BaseScreenshotTest() {
 
     @Test
     fun createEventFormScreenDefault() {
@@ -61,7 +61,7 @@ class CreateEventFormUiModelScreenContentScreenshotTest : BaseScreenshotTest() {
     ) {
         paparazzi.snapshot {
             EsmorgaTheme(darkTheme = false) {
-                CreateEventFormScreenContent(
+                CreateEventFormTitleScreenContent(
                     eventName = eventName,
                     onEventNameChange = {},
                     eventNameError = eventNameError,

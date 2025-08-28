@@ -1,11 +1,9 @@
-package cmm.apps.esmorga.view.createevent.model
+package cmm.apps.esmorga.domain.event.model
 
-import cmm.apps.esmorga.domain.event.model.EventLocation
-import cmm.apps.esmorga.domain.event.model.EventType
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CreateEventFormUiModel(
+data class CreateEventForm(
     val name: String? = null,
     val description: String? = null,
     val type: EventType? = null,

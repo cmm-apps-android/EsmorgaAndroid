@@ -10,11 +10,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.view.activateaccount.ActivateAccountScreen
 import cmm.apps.esmorga.view.createevent.CreateEventFormScreen
-import cmm.apps.esmorga.view.createevent.model.CreateEventFormUiModel
-import cmm.apps.esmorga.view.createeventtype.CreateEventTypeScreen
+import cmm.apps.esmorga.view.createeventtype.CreateEventFormTypeScreen
 import cmm.apps.esmorga.view.deeplink.DeeplinkManager.navigateFromDeeplink
 import cmm.apps.esmorga.view.errors.EsmorgaErrorScreen
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
@@ -74,7 +74,7 @@ sealed class Navigation {
     data object CreateEventFormScreen : Navigation()
 
     @Serializable
-    data class CreateEventTypeScreen(val form: CreateEventFormUiModel) : Navigation()
+    data class CreateEventTypeScreen(val form: CreateEventForm) : Navigation()
 }
 
 const val GOOGLE_MAPS_PACKAGE = "com.google.android.apps.maps"
@@ -126,9 +126,7 @@ private fun NavGraphBuilder.resetPasswordFlow(navigationController: NavHostContr
 }
 
 private fun NavGraphBuilder.createEventFlow(navController: NavHostController) {
-    composable<Navigation.CreateEventFormScreen>(
-        typeMap = mapOf(typeOf<CreateEventFormUiModel>() to serializableType<CreateEventFormUiModel>())
-    ) { backStackEntry ->
+    composable<Navigation.CreateEventFormScreen> {
         CreateEventFormScreen(
             onBack = { navController.popBackStack() },
             onNext = { form ->
@@ -138,10 +136,10 @@ private fun NavGraphBuilder.createEventFlow(navController: NavHostController) {
     }
 
     composable<Navigation.CreateEventTypeScreen>(
-        typeMap = mapOf(typeOf<CreateEventFormUiModel>() to serializableType<CreateEventFormUiModel>())
+        typeMap = mapOf(typeOf<CreateEventForm>() to serializableType<CreateEventForm>())
     ) { backStackEntry ->
         val form = backStackEntry.toRoute<Navigation.CreateEventTypeScreen>().form
-        CreateEventTypeScreen(
+        CreateEventFormTypeScreen(
             eventForm = form,
             onBackClick = { navController.popBackStack() },
             onNextClick = { updatedForm -> }
