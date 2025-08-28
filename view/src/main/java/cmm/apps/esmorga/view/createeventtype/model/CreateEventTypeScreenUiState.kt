@@ -16,10 +16,9 @@ sealed class CreateEventTypeScreenEffect {
     data class NavigateNext(val eventForm: CreateEventFormUiModel) : CreateEventTypeScreenEffect()
 }
 
-object CreateEventTypeHelper : KoinComponent {
-    private val context: Context by inject()
+object CreateEventTypeHelper {
 
-    fun getUiTextRes(type: EventType): String = when (type) {
+    fun getUiTextRes(type: EventType, context: Context): String = when (type) {
         EventType.PARTY -> context.getString(R.string.step_2_option_party)
         EventType.SPORT -> context.getString(R.string.step_2_option_sport)
         EventType.FOOD -> context.getString(R.string.step_2_option_food)

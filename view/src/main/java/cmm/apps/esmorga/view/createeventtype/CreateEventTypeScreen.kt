@@ -19,11 +19,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import cmm.apps.designsystem.EsmorgaButton
 import cmm.apps.designsystem.EsmorgaRadioButton
 import cmm.apps.designsystem.EsmorgaText
@@ -32,9 +32,9 @@ import cmm.apps.esmorga.domain.event.model.EventType
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.createevent.model.CreateEventFormUiModel
+import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeHelper
 import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeScreenEffect
 import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeScreenUiState
-import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeHelper
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -64,7 +64,6 @@ fun CreateEventTypeScreen(
             onBackClick = { onBackClick() },
             onNextClick = { createEventviewModel.onNextClick() },
             onEventTypeSelected = { createEventviewModel.onEventTypeSelected(it) },
-            getTypeName = { createEventviewModel.getTypeName(it)}
         )
     }
 }
@@ -76,8 +75,7 @@ fun CreateEventTypeView(
     onBackClick: () -> Unit,
     onNextClick: () -> Unit,
     onEventTypeSelected: (EventType) -> Unit,
-    getTypeName: (EventType) -> String
-    ){
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -115,7 +113,7 @@ fun CreateEventTypeView(
 
             EventType.values().forEach { type ->
                 EsmorgaRadioButton(
-                    text = getTypeName(type),
+                    text = CreateEventTypeHelper.getUiTextRes(type, LocalContext.current),
                     selected = eventType == type,
                     onClick = { onEventTypeSelected(type) },
                     modifier = Modifier.fillMaxWidth()
