@@ -100,7 +100,7 @@ fun CreateEventFormScreenContent(
             EsmorgaText(
                 text = stringResource(R.string.screen_create_event_title),
                 style = EsmorgaTextStyle.HEADING_1,
-                modifier = Modifier.padding(bottom = 20.dp)
+                modifier = Modifier.padding(bottom = 16.dp)
             )
 
             EsmorgaTextField(
@@ -112,14 +112,13 @@ fun CreateEventFormScreenContent(
                 errorText = eventNameError?.let { stringResource(it) }
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
-
             EsmorgaTextField(
                 value = description,
                 onValueChange = onDescriptionChange,
                 title = R.string.field_title_event_description,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(bottom = 16.dp)
                     .heightIn(min = 120.dp),
                 singleLine = false,
                 maxChars = 5000,
@@ -133,7 +132,7 @@ fun CreateEventFormScreenContent(
                 onClick = onNextClick,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 32.dp),
+                    .padding(vertical = 16.dp),
             )
         }
     }
