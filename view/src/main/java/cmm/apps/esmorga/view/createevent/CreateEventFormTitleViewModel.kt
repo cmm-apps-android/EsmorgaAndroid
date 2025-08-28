@@ -36,7 +36,7 @@ class CreateEventFormTitleViewModel() : ViewModel() {
 
     fun onEventNameChange(name: String) {
         eventName = name
-        val error = if (name.length < 3) R.string.inline_error_invalid_length_name else null
+        val error = if (name.length < EVENT_NAME_MIN_LENGTH) R.string.inline_error_invalid_length_name else null
         _uiState.value = _uiState.value.copy(
             eventName = eventName,
             eventDescription = eventDescription,

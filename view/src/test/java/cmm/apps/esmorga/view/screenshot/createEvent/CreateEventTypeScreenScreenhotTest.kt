@@ -6,7 +6,7 @@ import cmm.apps.esmorga.view.screenshot.BaseScreenshotTest
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import org.junit.Test
 
-class CreateEventTypeScreenScreenshotTest : BaseScreenshotTest() {
+class CreateEventFormTypeScreenScreenshotTest : BaseScreenshotTest() {
 
     @Test
     fun createEventTypeScreenDefault() {

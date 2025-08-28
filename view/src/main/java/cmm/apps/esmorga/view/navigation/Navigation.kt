@@ -71,10 +71,10 @@ sealed class Navigation {
     data class ResetPasswordScreen(val forgotPasswordCode: String) : Navigation()
 
     @Serializable
-    data object CreateEventFormScreen : Navigation()
+    data object CreateEventFormTitleScreen : Navigation()
 
     @Serializable
-    data class CreateEventTypeScreen(val form: CreateEventForm) : Navigation()
+    data class CreateEventFormTypeScreen(val form: CreateEventForm) : Navigation()
 }
 
 const val GOOGLE_MAPS_PACKAGE = "com.google.android.apps.maps"
@@ -126,19 +126,19 @@ private fun NavGraphBuilder.resetPasswordFlow(navigationController: NavHostContr
 }
 
 private fun NavGraphBuilder.createEventFlow(navController: NavHostController) {
-    composable<Navigation.CreateEventFormScreen> {
+    composable<Navigation.CreateEventFormTitleScreen> {
         CreateEventFormScreen(
             onBack = { navController.popBackStack() },
             onNext = { form ->
-                navController.navigate(Navigation.CreateEventTypeScreen(form))
+                navController.navigate(Navigation.CreateEventFormTypeScreen(form))
             }
         )
     }
 
-    composable<Navigation.CreateEventTypeScreen>(
+    composable<Navigation.CreateEventFormTypeScreen>(
         typeMap = mapOf(typeOf<CreateEventForm>() to serializableType<CreateEventForm>())
     ) { backStackEntry ->
-        val form = backStackEntry.toRoute<Navigation.CreateEventTypeScreen>().form
+        val form = backStackEntry.toRoute<Navigation.CreateEventFormTypeScreen>().form
         CreateEventFormTypeScreen(
             eventForm = form,
             onBackClick = { navController.popBackStack() },
@@ -200,7 +200,7 @@ private fun NavGraphBuilder.homeFlow(navigationController: NavHostController) {
         }, onSignInClick = {
             navigationController.navigate(Navigation.LoginScreen())
         }, onCreateEventClick = {
-            navigationController.navigate(Navigation.CreateEventFormScreen)
+            navigationController.navigate(Navigation.CreateEventFormTitleScreen)
         })
     }
     composable<Navigation.ProfileScreen> {

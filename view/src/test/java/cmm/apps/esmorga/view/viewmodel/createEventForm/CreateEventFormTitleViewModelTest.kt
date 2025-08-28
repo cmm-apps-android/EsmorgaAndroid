@@ -10,7 +10,6 @@ import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class CreateEventFormTitleViewModelTest {
 
     private lateinit var viewModel: CreateEventFormTitleViewModel
