@@ -58,7 +58,7 @@
    <string name="my_profile_name">Name</string>
    <string name="my_profile_email">Email</string>
    <string name="my_profile_options">Options</string>
-   <string name="my_profile_changue_password">Change password</string>
+   <string name="my_profile_change_password">Change password</string>
    <string name="my_profile_logout">Log out</string>
    <string name="my_profile_logout_pop_up_title">Are you sure you want to log out?</string>
    <string name="my_profile_logout_pop_up_confirm">Yes, log out</string>
