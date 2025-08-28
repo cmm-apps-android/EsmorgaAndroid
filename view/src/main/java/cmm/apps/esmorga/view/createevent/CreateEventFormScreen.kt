@@ -94,13 +94,13 @@ fun CreateEventFormScreenContent(
         Column(
             modifier = Modifier
                 .padding(padding)
-                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .padding(horizontal = 16.dp, vertical = 11.dp)
                 .verticalScroll(rememberScrollState())
         ) {
             EsmorgaText(
                 text = stringResource(R.string.screen_create_event_title),
                 style = EsmorgaTextStyle.HEADING_1,
-                modifier = Modifier.padding(bottom = 12.dp)
+                modifier = Modifier.padding(bottom = 20.dp)
             )
 
             EsmorgaTextField(
@@ -133,7 +133,7 @@ fun CreateEventFormScreenContent(
                 onClick = onNextClick,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 16.dp),
+                    .padding(vertical = 32.dp),
             )
         }
     }
