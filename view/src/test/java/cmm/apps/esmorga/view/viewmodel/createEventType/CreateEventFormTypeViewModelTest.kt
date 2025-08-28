@@ -12,7 +12,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class CreateEventFormTypeViewModelTest {
     private lateinit var viewModel: CreateEventFormTypeViewModel
     private lateinit var initialForm: CreateEventForm
@@ -28,7 +27,7 @@ class CreateEventFormTypeViewModelTest {
     }
 
     @Test
-    fun `given initial state when initialized then type is correct`() = runTest {
+    fun `given create event form type screen, when screen started, then default type is selected`() = runTest {
         viewModel.uiState.test {
             val state = awaitItem()
             assertEquals(EventType.PARTY, state.type)
@@ -64,7 +63,7 @@ class CreateEventFormTypeViewModelTest {
     }
 
     @Test
-    fun `given selected event type when next clicked then emits navigate next effect with correct form`() = runTest {
+    fun `given selected event type when next button is clicked then navigate to next screen with correct data`() = runTest {
         viewModel.onEventTypeSelected(EventType.GAMES)
 
         viewModel.effect.test {
