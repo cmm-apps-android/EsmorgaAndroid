@@ -6,10 +6,7 @@ import cmm.apps.esmorga.view.createevent.CreateEventFormTitleViewModel
 import cmm.apps.esmorga.view.createevent.model.CreateEventFormEffect
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNull
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 
@@ -32,7 +29,7 @@ class CreateEventFormTitleViewModelTest {
 
             val state = awaitItem()
 
-            assertEquals("ab", state.form.name)
+            assertEquals("ab", state.eventName)
             assertEquals(R.string.inline_error_invalid_length_name, state.eventNameError)
             assertFalse(state.isFormValid)
 
@@ -49,7 +46,7 @@ class CreateEventFormTitleViewModelTest {
 
             val state = awaitItem()
 
-            assertEquals("This is a good description", state.form.description)
+            assertEquals("This is a good description", state.eventDescription)
             assertNull(state.descriptionError)
             assertTrue(state.isFormValid)
 
@@ -66,7 +63,10 @@ class CreateEventFormTitleViewModelTest {
             viewModel.onNextClick()
 
             val effect = awaitItem()
-            assertEquals(CreateEventFormEffect.NavigateEventType, effect)
+            assertTrue(effect is CreateEventFormEffect.NavigateNext)
+            val navigateEffect = effect as CreateEventFormEffect.NavigateNext
+            assertEquals("Valid Name", navigateEffect.eventForm.name)
+            assertEquals("Valid description", navigateEffect.eventForm.description)
 
             cancelAndIgnoreRemainingEvents()
         }
