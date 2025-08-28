@@ -1,6 +1,7 @@
 package cmm.apps.esmorga.view.registration
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -88,7 +89,7 @@ fun RegistrationScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun RegistrationView(
     uiState: RegistrationUiState,
@@ -104,6 +105,7 @@ fun RegistrationView(
     var password by remember { mutableStateOf("") }
     var repeatedPassword by remember { mutableStateOf("") }
     Scaffold(
+        modifier = Modifier.imePadding(),
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
@@ -130,135 +132,127 @@ fun RegistrationView(
                     start = 16.dp,
                     end = 16.dp
                 )
-                .imePadding()
+                .verticalScroll(state = rememberScrollState())
         ) {
-            Column(
+            EsmorgaText(
+                text = stringResource(id = R.string.screen_registration_title),
+                style = EsmorgaTextStyle.HEADING_1,
                 modifier = Modifier
-                    .verticalScroll(state = rememberScrollState())
-            ) {
-                EsmorgaText(
-                    text = stringResource(id = R.string.screen_registration_title),
-                    style = EsmorgaTextStyle.HEADING_1,
-                    modifier = Modifier
-                        .padding(vertical = 16.dp)
-                        .testTag(REGISTRATION_TITLE)
-                )
-                EsmorgaTextField(
-                    value = name,
-                    isEnabled = !uiState.loading,
-                    onValueChange = {
-                        name = it
-                        onFieldChanged(RegistrationField.NAME)
-                    },
-                    title = R.string.field_title_name,
-                    placeholder = R.string.placeholder_name,
-                    errorText = uiState.nameError,
-                    modifier = Modifier
-                        .onFocusChanged { focusState ->
-                            if (!focusState.isFocused) {
-                                validateField(RegistrationField.NAME, name, null)
-                            }
+                    .padding(vertical = 16.dp)
+                    .testTag(REGISTRATION_TITLE)
+            )
+            EsmorgaTextField(
+                value = name,
+                isEnabled = !uiState.loading,
+                onValueChange = {
+                    name = it
+                    onFieldChanged(RegistrationField.NAME)
+                },
+                title = R.string.field_title_name,
+                placeholder = R.string.placeholder_name,
+                errorText = uiState.nameError,
+                modifier = Modifier
+                    .onFocusChanged { focusState ->
+                        if (!focusState.isFocused) {
+                            validateField(RegistrationField.NAME, name, null)
                         }
-                        .testTag(REGISTRATION_NAME_INPUT),
-                    imeAction = ImeAction.Next
-                )
-                EsmorgaTextField(
-                    value = lastName,
-                    isEnabled = !uiState.loading,
-                    onValueChange = {
-                        lastName = it
-                        onFieldChanged(RegistrationField.LAST_NAME)
-                    },
-                    title = R.string.field_title_last_name,
-                    placeholder = R.string.placeholder_last_name,
-                    errorText = uiState.lastNameError,
-                    modifier = Modifier
-                        .onFocusChanged { focusState ->
-                            if (!focusState.isFocused) {
-                                validateField(RegistrationField.LAST_NAME, lastName, null)
-                            }
-                        }
-                        .testTag(REGISTRATION_LAST_NAME_INPUT),
-                    imeAction = ImeAction.Next
-                )
-                EsmorgaTextField(
-                    value = email,
-                    isEnabled = !uiState.loading,
-                    onValueChange = {
-                        email = it
-                        onFieldChanged(RegistrationField.EMAIL)
-                    },
-                    title = R.string.field_title_email,
-                    placeholder = R.string.placeholder_email,
-                    errorText = uiState.emailError,
-                    modifier = Modifier
-                        .onFocusChanged { focusState ->
-                            if (!focusState.isFocused) {
-                                validateField(RegistrationField.EMAIL, email, null)
-                            }
-                        }
-                        .testTag(REGISTRATION_EMAIL_INPUT),
-                    imeAction = ImeAction.Next,
-                    keyboardType = KeyboardType.Email
-                )
-                EsmorgaTextField(
-                    value = password,
-                    isEnabled = !uiState.loading,
-                    onValueChange = {
-                        password = it
-                        onFieldChanged(RegistrationField.PASS)
-                    },
-                    title = R.string.field_title_password,
-                    placeholder = R.string.placeholder_password,
-                    errorText = uiState.passError,
-                    modifier = Modifier
-                        .onFocusChanged { focusState ->
-                            if (!focusState.isFocused) {
-                                validateField(RegistrationField.PASS, password, null)
-                            }
-                        }
-                        .testTag(REGISTRATION_PASSWORD_INPUT),
-                    imeAction = ImeAction.Next,
-                    keyboardType = KeyboardType.Password
-                )
-                EsmorgaTextField(
-                    value = repeatedPassword,
-                    isEnabled = !uiState.loading,
-                    onValueChange = {
-                        repeatedPassword = it
-                        onFieldChanged(RegistrationField.REPEAT_PASS)
-                    },
-                    title = R.string.field_title_repeat_password,
-                    placeholder = R.string.placeholder_confirm_password,
-                    errorText = uiState.repeatPassError,
-                    modifier = Modifier
-                        .onFocusChanged { focusState ->
-                            if (!focusState.isFocused) {
-                                validateField(RegistrationField.REPEAT_PASS, password, repeatedPassword)
-                            }
-                        }
-                        .testTag(REGISTRATION_REPEAT_PASSWORD_INPUT),
-                    imeAction = ImeAction.Done,
-                    keyboardType = KeyboardType.Password,
-                    onDonePressed = {
-                        onRegisterClicked(name, lastName, email, password, repeatedPassword)
                     }
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                EsmorgaButton(
-                    text = stringResource(id = R.string.button_register),
-                    isLoading = uiState.loading,
-                    primary = true,
-                    modifier = Modifier.testTag(REGISTRATION_LOGIN_BUTTON)
-                ) {
+                    .testTag(REGISTRATION_NAME_INPUT),
+                imeAction = ImeAction.Next
+            )
+            EsmorgaTextField(
+                value = lastName,
+                isEnabled = !uiState.loading,
+                onValueChange = {
+                    lastName = it
+                    onFieldChanged(RegistrationField.LAST_NAME)
+                },
+                title = R.string.field_title_last_name,
+                placeholder = R.string.placeholder_last_name,
+                errorText = uiState.lastNameError,
+                modifier = Modifier
+                    .onFocusChanged { focusState ->
+                        if (!focusState.isFocused) {
+                            validateField(RegistrationField.LAST_NAME, lastName, null)
+                        }
+                    }
+                    .testTag(REGISTRATION_LAST_NAME_INPUT),
+                imeAction = ImeAction.Next
+            )
+            EsmorgaTextField(
+                value = email,
+                isEnabled = !uiState.loading,
+                onValueChange = {
+                    email = it
+                    onFieldChanged(RegistrationField.EMAIL)
+                },
+                title = R.string.field_title_email,
+                placeholder = R.string.placeholder_email,
+                errorText = uiState.emailError,
+                modifier = Modifier
+                    .onFocusChanged { focusState ->
+                        if (!focusState.isFocused) {
+                            validateField(RegistrationField.EMAIL, email, null)
+                        }
+                    }
+                    .testTag(REGISTRATION_EMAIL_INPUT),
+                imeAction = ImeAction.Next,
+                keyboardType = KeyboardType.Email
+            )
+            EsmorgaTextField(
+                value = password,
+                isEnabled = !uiState.loading,
+                onValueChange = {
+                    password = it
+                    onFieldChanged(RegistrationField.PASS)
+                },
+                title = R.string.field_title_password,
+                placeholder = R.string.placeholder_password,
+                errorText = uiState.passError,
+                modifier = Modifier
+                    .onFocusChanged { focusState ->
+                        if (!focusState.isFocused) {
+                            validateField(RegistrationField.PASS, password, null)
+                        }
+                    }
+                    .testTag(REGISTRATION_PASSWORD_INPUT),
+                imeAction = ImeAction.Next,
+                keyboardType = KeyboardType.Password
+            )
+            EsmorgaTextField(
+                value = repeatedPassword,
+                isEnabled = !uiState.loading,
+                onValueChange = {
+                    repeatedPassword = it
+                    onFieldChanged(RegistrationField.REPEAT_PASS)
+                },
+                title = R.string.field_title_repeat_password,
+                placeholder = R.string.placeholder_confirm_password,
+                errorText = uiState.repeatPassError,
+                modifier = Modifier
+                    .onFocusChanged { focusState ->
+                        if (!focusState.isFocused) {
+                            validateField(RegistrationField.REPEAT_PASS, password, repeatedPassword)
+                        }
+                    }
+                    .testTag(REGISTRATION_REPEAT_PASSWORD_INPUT),
+                imeAction = ImeAction.Done,
+                keyboardType = KeyboardType.Password,
+                onDonePressed = {
                     onRegisterClicked(name, lastName, email, password, repeatedPassword)
                 }
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            EsmorgaButton(
+                text = stringResource(id = R.string.button_register),
+                isLoading = uiState.loading,
+                primary = true,
+                modifier = Modifier.testTag(REGISTRATION_LOGIN_BUTTON)
+            ) {
+                onRegisterClicked(name, lastName, email, password, repeatedPassword)
             }
         }
-
-
     }
-
 }
 
 object RegistrationScreenTestTags {
