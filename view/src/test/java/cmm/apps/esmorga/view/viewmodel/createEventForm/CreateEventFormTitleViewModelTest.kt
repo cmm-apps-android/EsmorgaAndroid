@@ -56,7 +56,7 @@ class CreateEventFormTitleViewModelTest {
 
 
     @Test
-    fun `given valid form when next clicked then emits navigate to step 2 effect`() = runTest {
+    fun `given valid form when next clicked then emits navigate to next screen`() = runTest {
         viewModel.onEventNameChange("Valid Name")
         viewModel.onDescriptionChange("Valid description")
 
@@ -74,7 +74,7 @@ class CreateEventFormTitleViewModelTest {
     }
 
     @Test
-    fun `given invalid form when next clicked then does not emit navigate to step 2 effect`() = runTest {
+    fun `given invalid form when next clicked then does not emit navigate to next screen`() = runTest {
         viewModel.effect.test {
             viewModel.onNextClick()
             expectNoEvents()
