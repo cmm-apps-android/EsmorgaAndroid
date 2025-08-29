@@ -101,7 +101,7 @@ fun CreateEventFormTypeView(
                 text = stringResource(R.string.screen_create_event_title),
                 style = EsmorgaTextStyle.HEADING_1,
                 modifier = Modifier
-                    .padding(bottom = 16.dp)
+                    .padding(bottom = 12.dp)
                     .testTag(CreateEventTypeScreenTestTags.CREATE_EVENT_TYPE_TITLE)
             )
 
