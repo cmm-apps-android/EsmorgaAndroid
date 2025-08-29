@@ -2,7 +2,10 @@ package cmm.apps.esmorga.view.changepassword
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -98,7 +101,9 @@ fun ChangePasswordView(
     var repeatNewasswordFieldAlreadyFocussed by remember { mutableStateOf(false) }
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .imePadding()
+            .fillMaxSize(),
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
@@ -122,6 +127,7 @@ fun ChangePasswordView(
         Column(
             modifier = Modifier
                 .padding(top = innerPadding.calculateTopPadding())
+                .verticalScroll(rememberScrollState())
         )
         {
             EsmorgaText(
@@ -198,6 +204,7 @@ fun ChangePasswordView(
                         }
                         .testTag(CHANGE_PASSWORD_REPEAT_PASS_INPUT),
                     imeAction = ImeAction.Done,
+                    onDonePressed = { onChangePasswordClicked(currentPassword, newPassword) },
                     keyboardType = KeyboardType.Password
                 )
 
