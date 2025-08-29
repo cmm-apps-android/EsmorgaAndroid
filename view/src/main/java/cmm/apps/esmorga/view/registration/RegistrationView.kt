@@ -1,11 +1,10 @@
 package cmm.apps.esmorga.view.registration
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -105,6 +104,7 @@ fun RegistrationView(
     var password by remember { mutableStateOf("") }
     var repeatedPassword by remember { mutableStateOf("") }
     Scaffold(
+        modifier = Modifier.imePadding(),
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
@@ -128,11 +128,9 @@ fun RegistrationView(
                 .fillMaxWidth()
                 .padding(
                     top = innerPadding.calculateTopPadding(),
-                    bottom = innerPadding.calculateBottomPadding(),
                     start = 16.dp,
                     end = 16.dp
                 )
-                .fillMaxWidth()
                 .verticalScroll(state = rememberScrollState())
         ) {
             EsmorgaText(
@@ -152,11 +150,13 @@ fun RegistrationView(
                 title = R.string.field_title_name,
                 placeholder = R.string.placeholder_name,
                 errorText = uiState.nameError,
-                modifier = Modifier.onFocusChanged { focusState ->
-                    if (!focusState.isFocused) {
-                        validateField(RegistrationField.NAME, name, null)
+                modifier = Modifier
+                    .onFocusChanged { focusState ->
+                        if (!focusState.isFocused) {
+                            validateField(RegistrationField.NAME, name, null)
+                        }
                     }
-                }.testTag(REGISTRATION_NAME_INPUT),
+                    .testTag(REGISTRATION_NAME_INPUT),
                 imeAction = ImeAction.Next
             )
             EsmorgaTextField(
@@ -169,11 +169,13 @@ fun RegistrationView(
                 title = R.string.field_title_last_name,
                 placeholder = R.string.placeholder_last_name,
                 errorText = uiState.lastNameError,
-                modifier = Modifier.onFocusChanged { focusState ->
-                    if (!focusState.isFocused) {
-                        validateField(RegistrationField.LAST_NAME, lastName, null)
+                modifier = Modifier
+                    .onFocusChanged { focusState ->
+                        if (!focusState.isFocused) {
+                            validateField(RegistrationField.LAST_NAME, lastName, null)
+                        }
                     }
-                }.testTag(REGISTRATION_LAST_NAME_INPUT),
+                    .testTag(REGISTRATION_LAST_NAME_INPUT),
                 imeAction = ImeAction.Next
             )
             EsmorgaTextField(
@@ -186,11 +188,13 @@ fun RegistrationView(
                 title = R.string.field_title_email,
                 placeholder = R.string.placeholder_email,
                 errorText = uiState.emailError,
-                modifier = Modifier.onFocusChanged { focusState ->
-                    if (!focusState.isFocused) {
-                        validateField(RegistrationField.EMAIL, email, null)
+                modifier = Modifier
+                    .onFocusChanged { focusState ->
+                        if (!focusState.isFocused) {
+                            validateField(RegistrationField.EMAIL, email, null)
+                        }
                     }
-                }.testTag(REGISTRATION_EMAIL_INPUT),
+                    .testTag(REGISTRATION_EMAIL_INPUT),
                 imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Email
             )
@@ -204,11 +208,13 @@ fun RegistrationView(
                 title = R.string.field_title_password,
                 placeholder = R.string.placeholder_password,
                 errorText = uiState.passError,
-                modifier = Modifier.onFocusChanged { focusState ->
-                    if (!focusState.isFocused) {
-                        validateField(RegistrationField.PASS, password, null)
+                modifier = Modifier
+                    .onFocusChanged { focusState ->
+                        if (!focusState.isFocused) {
+                            validateField(RegistrationField.PASS, password, null)
+                        }
                     }
-                }.testTag(REGISTRATION_PASSWORD_INPUT),
+                    .testTag(REGISTRATION_PASSWORD_INPUT),
                 imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Password
             )
@@ -222,11 +228,13 @@ fun RegistrationView(
                 title = R.string.field_title_repeat_password,
                 placeholder = R.string.placeholder_confirm_password,
                 errorText = uiState.repeatPassError,
-                modifier = Modifier.onFocusChanged { focusState ->
-                    if (!focusState.isFocused) {
-                        validateField(RegistrationField.REPEAT_PASS, password, repeatedPassword)
+                modifier = Modifier
+                    .onFocusChanged { focusState ->
+                        if (!focusState.isFocused) {
+                            validateField(RegistrationField.REPEAT_PASS, password, repeatedPassword)
+                        }
                     }
-                }.testTag(REGISTRATION_REPEAT_PASSWORD_INPUT),
+                    .testTag(REGISTRATION_REPEAT_PASSWORD_INPUT),
                 imeAction = ImeAction.Done,
                 keyboardType = KeyboardType.Password,
                 onDonePressed = {
@@ -243,7 +251,6 @@ fun RegistrationView(
                 onRegisterClicked(name, lastName, email, password, repeatedPassword)
             }
         }
-
     }
 }
 
