@@ -37,6 +37,8 @@ import cmm.apps.esmorga.view.activateaccount.RegistrationConfirmationScreenTestT
 import cmm.apps.esmorga.view.activateaccount.RegistrationConfirmationScreenTestTags.ACTIVATE_ACCOUNT_IMAGE
 import cmm.apps.esmorga.view.activateaccount.RegistrationConfirmationScreenTestTags.ACTIVATE_ACCOUNT_SUBTITLE
 import cmm.apps.esmorga.view.activateaccount.RegistrationConfirmationScreenTestTags.ACTIVATE_ACCOUNT_TITLE
+import cmm.apps.esmorga.view.createevent.CreateEventFormTitleScreenTestTags
+import cmm.apps.esmorga.view.createeventtype.CreateEventTypeScreenTestTags
 import cmm.apps.esmorga.view.di.ViewDIModule
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAILS_BACK_BUTTON
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAILS_EVENT_NAME
@@ -460,6 +462,48 @@ class NavigationTest {
         composeTestRule.onNodeWithTag(ERROR_TITLE).assertIsDisplayed()
     }
 
+    @Test
+    fun `given user is in CreateEventFormTitleScreen when clicks next then navigates to CreateEventFormTypeScreen`() {
+        setNavigationFromDestination(Navigation.CreateEventFormTitleScreen)
+        composeTestRule.waitForIdle()
+
+        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_TITLE)
+            .assertIsDisplayed()
+
+        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_NAME)
+            .performTextInput("Description for name type test")
+        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_DESCRIPTION)
+            .performTextInput("Description for event type test")
+        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_NEXT_BUTTON)
+            .performClick()
+        composeTestRule.waitForIdle()
+
+        composeTestRule.onNodeWithTag(CreateEventTypeScreenTestTags.CREATE_EVENT_TYPE_TITLE)
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun `navigate back from CreateEventFormTypeScreen to CreateEventFormScreen`() {
+        setNavigationFromDestination(Navigation.CreateEventFormTitleScreen)
+        composeTestRule.waitForIdle()
+
+        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_NAME)
+            .performTextInput("Test Name")
+        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_DESCRIPTION)
+            .performTextInput("Test Description")
+        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_NEXT_BUTTON)
+            .performClick()
+
+        composeTestRule.onNodeWithTag(CreateEventTypeScreenTestTags.CREATE_EVENT_TYPE_TITLE)
+            .assertIsDisplayed()
+
+        composeTestRule.onNodeWithTag(CreateEventTypeScreenTestTags.CREATE_EVENT_TYPE_BACK_BUTTON)
+            .performClick()
+        composeTestRule.waitForIdle()
+
+        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_TITLE)
+            .assertIsDisplayed()
+    }
 
     private fun setNavigationFromAppLaunch(loggedIn: Boolean) {
         composeTestRule.setContent {
