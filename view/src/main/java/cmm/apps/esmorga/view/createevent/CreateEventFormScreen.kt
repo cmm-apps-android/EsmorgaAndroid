@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -80,6 +81,7 @@ fun CreateEventFormScreenContent(
     onNextClick: () -> Unit,
 ) {
     Scaffold(
+        modifier = Modifier.imePadding(),
         topBar = {
             TopAppBar(
                 title = {},
@@ -94,13 +96,13 @@ fun CreateEventFormScreenContent(
         Column(
             modifier = Modifier
                 .padding(padding)
-                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .padding(horizontal = 16.dp, vertical = 12.dp)
                 .verticalScroll(rememberScrollState())
         ) {
             EsmorgaText(
                 text = stringResource(R.string.screen_create_event_title),
                 style = EsmorgaTextStyle.HEADING_1,
-                modifier = Modifier.padding(bottom = 12.dp)
+                modifier = Modifier.padding(bottom = 16.dp)
             )
 
             EsmorgaTextField(
@@ -112,14 +114,13 @@ fun CreateEventFormScreenContent(
                 errorText = eventNameError?.let { stringResource(it) }
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
-
             EsmorgaTextField(
                 value = description,
                 onValueChange = onDescriptionChange,
                 title = R.string.field_title_event_description,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(bottom = 16.dp)
                     .heightIn(min = 120.dp),
                 singleLine = false,
                 maxChars = 5000,

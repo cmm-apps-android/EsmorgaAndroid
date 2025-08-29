@@ -165,7 +165,7 @@ private fun LoggedProfileView(
             style = EsmorgaTextStyle.HEADING_1, modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        EsmorgaRow(title = stringResource(R.string.my_profile_changue_password), onClick = onChangePassword, modifier = Modifier.testTag(PROFILE_CHANGE_PASSWORD_BUTTON))
+        EsmorgaRow(title = stringResource(R.string.my_profile_change_password), onClick = onChangePassword, modifier = Modifier.testTag(PROFILE_CHANGE_PASSWORD_BUTTON))
         EsmorgaRow(title = stringResource(R.string.my_profile_logout), onClick = { shownDialog = true })
     }
 }

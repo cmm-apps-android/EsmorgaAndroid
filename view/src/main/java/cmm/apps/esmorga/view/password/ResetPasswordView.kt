@@ -2,6 +2,7 @@ package cmm.apps.esmorga.view.password
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -88,6 +89,7 @@ fun ResetPasswordView(
     var passwordFieldAlreadyFocussed by remember { mutableStateOf(false) }
     var repeatPasswordFieldAlreadyFocussed by remember { mutableStateOf(false) }
     Scaffold(
+        modifier = Modifier.imePadding(),
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(

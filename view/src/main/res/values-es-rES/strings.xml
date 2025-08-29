@@ -58,7 +58,7 @@
    <string name="my_profile_name">Nombre</string>
    <string name="my_profile_email">Email</string>
    <string name="my_profile_options">Opciones</string>
-   <string name="my_profile_changue_password">Cambiar contraseña</string>
+   <string name="my_profile_change_password">Cambiar contraseña</string>
    <string name="my_profile_logout">Cerrar sesion</string>
    <string name="my_profile_logout_pop_up_title">¿Seguro que quieres cerrar sesión?</string>
    <string name="my_profile_logout_pop_up_confirm">Sí, cerrar sesión</string>
