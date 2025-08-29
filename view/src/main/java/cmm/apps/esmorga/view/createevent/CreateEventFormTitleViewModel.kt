@@ -34,26 +34,17 @@ class CreateEventFormTitleViewModel() : ViewModel() {
     )
     val effect: SharedFlow<CreateEventFormEffect> = _effect.asSharedFlow()
 
-    fun onEventNameChange(name: String) {
-        eventName = name
-        val error = if (name.length < EVENT_NAME_MIN_LENGTH) R.string.inline_error_invalid_length_name else null
-        _uiState.value = _uiState.value.copy(
-            eventName = eventName,
-            eventDescription = eventDescription,
-            eventNameError = error,
-            isFormValid = error == null && _uiState.value.descriptionError == null
-        )
+    fun onEventNameChange(newValue: String) {
+        _uiState.update { it.copy(eventName = newValue) }
+        eventName = newValue
+        validateEventName()
     }
 
-    fun onDescriptionChange(description: String) {
-        eventDescription = description
-        val error = if (description.isBlank()) R.string.inline_error_invalid_length_description else null
-        _uiState.value = _uiState.value.copy(
-            eventName = eventName,
-            eventDescription = eventDescription,
-            descriptionError = error,
-            isFormValid = error == null && _uiState.value.eventNameError == null
-        )
+    fun onDescriptionChange(newValue: String) {
+        _uiState.update { it.copy(eventDescription = newValue) }
+        eventDescription = newValue
+        validateEventDescription()
+
     }
 
 
@@ -62,16 +53,14 @@ class CreateEventFormTitleViewModel() : ViewModel() {
     }
 
     fun onNextClick() {
-        validateForm(finalValidation = true)
         if (_uiState.value.isFormValid) {
             _effect.tryEmit(CreateEventFormEffect.NavigateNext(eventForm = CreateEventForm(name = eventName, description = eventDescription)))
         }
     }
 
-    private fun validateForm(finalValidation: Boolean = false) {
+    private fun validateEventName(){
         val state = _uiState.value
         val name = state.eventName
-        val description = state.eventDescription
 
         val nameError = when {
             name.isBlank() -> R.string.inline_error_empty_field
@@ -79,17 +68,28 @@ class CreateEventFormTitleViewModel() : ViewModel() {
             else -> null
         }
 
+        val isValid = nameError == null && eventDescription.isNotBlank()
+        _uiState.update {
+            it.copy(
+                eventNameError = nameError,
+                isFormValid = isValid
+            )
+        }
+    }
+
+    private fun validateEventDescription(){
+        val state = _uiState.value
+        val description = state.eventDescription
+
         val descriptionError = when {
             description.isBlank() -> R.string.inline_error_empty_field
             description.length < DESCRIPTION_MIN_LENGTH || description.length > DESCRIPTION_MAX_LENGTH -> R.string.inline_error_invalid_length_description
             else -> null
         }
 
-        val isValid = nameError == null && descriptionError == null
-
+        val isValid = descriptionError == null && eventName.isNotBlank()
         _uiState.update {
             it.copy(
-                eventNameError = nameError,
                 descriptionError = descriptionError,
                 isFormValid = isValid
             )

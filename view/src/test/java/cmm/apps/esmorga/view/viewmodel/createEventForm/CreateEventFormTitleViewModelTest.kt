@@ -18,26 +18,27 @@ class CreateEventFormTitleViewModelTest {
     fun setup() {
         viewModel = CreateEventFormTitleViewModel()
     }
-
     @Test
+
     fun `given initial state when event name changes with invalid length then state updates with error`() = runTest {
         viewModel.uiState.test {
             awaitItem()
 
             viewModel.onEventNameChange("ab")
 
-            val state = awaitItem()
+            val stateAfterChange = awaitItem()
+            val stateAfterValidation = awaitItem()
 
-            assertEquals("ab", state.eventName)
-            assertEquals(R.string.inline_error_invalid_length_name, state.eventNameError)
-            assertFalse(state.isFormValid)
+            assertEquals("ab", stateAfterValidation.eventName)
+            assertEquals(R.string.inline_error_invalid_length_name, stateAfterValidation.eventNameError)
+            assertFalse(stateAfterValidation.isFormValid)
 
             cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
-    fun `given initial state when description changes with valid text then state updates without error`() = runTest {
+    fun `given initial state when description changes with valid text but name is empty then form is still invalid`() = runTest {
         viewModel.uiState.test {
             awaitItem()
 
@@ -47,11 +48,12 @@ class CreateEventFormTitleViewModelTest {
 
             assertEquals("This is a good description", state.eventDescription)
             assertNull(state.descriptionError)
-            assertTrue(state.isFormValid)
+            assertFalse(state.isFormValid)
 
             cancelAndIgnoreRemainingEvents()
         }
     }
+
 
     @Test
     fun `given valid form when next clicked then emits navigate to step 2 effect`() = runTest {
