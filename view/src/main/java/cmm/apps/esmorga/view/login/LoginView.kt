@@ -132,6 +132,7 @@ fun LoginView(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     Scaffold(
+        modifier = Modifier.imePadding(),
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
@@ -155,7 +156,6 @@ fun LoginView(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = innerPadding.calculateTopPadding())
-                .imePadding()
         ) {
             Image(
                 painter = painterResource(id = R.drawable.img_login_header),

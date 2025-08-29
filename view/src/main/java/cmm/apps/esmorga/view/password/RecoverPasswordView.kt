@@ -98,6 +98,7 @@ fun RecoverPasswordView(
 ) {
     var email by remember { mutableStateOf("") }
     Scaffold(
+        modifier = Modifier.imePadding(),
         snackbarHost = {
             SnackbarHost(
                 hostState = snackbarHostState,
@@ -135,7 +136,6 @@ fun RecoverPasswordView(
                 )
                 .fillMaxWidth()
                 .verticalScroll(state = rememberScrollState())
-                .imePadding()
         ) {
             EsmorgaText(
                 text = stringResource(id = R.string.forgot_password_screen_title),

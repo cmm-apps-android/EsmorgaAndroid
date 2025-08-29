@@ -89,6 +89,7 @@ fun ResetPasswordView(
     var passwordFieldAlreadyFocussed by remember { mutableStateOf(false) }
     var repeatPasswordFieldAlreadyFocussed by remember { mutableStateOf(false) }
     Scaffold(
+        modifier = Modifier.imePadding(),
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
@@ -107,7 +108,6 @@ fun ResetPasswordView(
                 )
                 .fillMaxWidth()
                 .verticalScroll(state = rememberScrollState())
-                .imePadding()
         ) {
             EsmorgaText(
                 text = stringResource(id = R.string.reset_password_screen_title),
