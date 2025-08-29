@@ -11,7 +11,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -26,6 +25,7 @@ import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.extensions.observeLifecycleEvents
+import cmm.apps.esmorga.view.profile.HomeScreenTestTags.PROFILE_CHANGE_PASSWORD_BUTTON
 import cmm.apps.esmorga.view.profile.HomeScreenTestTags.PROFILE_TITLE
 import cmm.apps.esmorga.view.profile.model.ProfileEffect
 import cmm.apps.esmorga.view.profile.model.ProfileUiState
@@ -37,10 +37,10 @@ import org.koin.androidx.compose.koinViewModel
 fun ProfileScreen(
     rvm: ProfileViewModel = koinViewModel(),
     navigateLogIn: () -> Unit,
-    onNoNetworkError: (EsmorgaErrorScreenArguments) -> Unit
+    onNoNetworkError: (EsmorgaErrorScreenArguments) -> Unit,
+    onChangePasswordClick: () -> Unit
 
 ) {
-    val context = LocalContext.current
     val uiState: ProfileUiState by rvm.uiState.collectAsStateWithLifecycle()
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     rvm.observeLifecycleEvents(lifecycle)
@@ -49,7 +49,7 @@ fun ProfileScreen(
         rvm.effect.collect { eff ->
             when (eff) {
                 ProfileEffect.NavigateToChangePassword -> {
-                    //TODO to be done in MOB-176
+                    onChangePasswordClick()
                 }
 
                 ProfileEffect.NavigateToLogOut -> {
@@ -72,9 +72,7 @@ fun ProfileScreen(
         ProfileView(
             uiState = uiState,
             shownLogOutDialog = { rvm.logout() },
-            onChangePassword = {
-                //TODO To be done in MOB-176
-            },
+            onChangePassword = { rvm.navigateToChangePassword() },
             onNavigateLogin = { rvm.logIn() }
         )
     }
@@ -167,11 +165,12 @@ private fun LoggedProfileView(
             style = EsmorgaTextStyle.HEADING_1, modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        EsmorgaRow(title = stringResource(R.string.my_profile_change_password), onClick = onChangePassword )
-        EsmorgaRow(title = stringResource(R.string.my_profile_logout), onClick =  { shownDialog = true })
+        EsmorgaRow(title = stringResource(R.string.my_profile_change_password), onClick = onChangePassword, modifier = Modifier.testTag(PROFILE_CHANGE_PASSWORD_BUTTON))
+        EsmorgaRow(title = stringResource(R.string.my_profile_logout), onClick = { shownDialog = true })
     }
 }
 
 object HomeScreenTestTags {
     const val PROFILE_TITLE = "profile screen title"
+    const val PROFILE_CHANGE_PASSWORD_BUTTON = "profile change password button"
 }

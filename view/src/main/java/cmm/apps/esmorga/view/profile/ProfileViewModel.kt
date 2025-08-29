@@ -56,6 +56,10 @@ open class ProfileViewModel(
         _effect.tryEmit(ProfileEffect.NavigateToLogIn)
     }
 
+    fun navigateToChangePassword() {
+        _effect.tryEmit(ProfileEffect.NavigateToChangePassword)
+    }
+
     internal fun clearUserData() {
         viewModelScope.launch {
             logOutUseCase.invoke()

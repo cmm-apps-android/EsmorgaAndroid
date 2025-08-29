@@ -88,6 +88,8 @@
    <string name="register_confirmation_error_title">¡Código expirado o no válido!</string>
    <string name="register_confirmation_button_retry">Probar otra vez</string>
    <string name="register_confirmation_button_cancel">Cancelar</string>
+   <string name="registration_password_mismatch_error">¡Las contraseñas no coinciden, inténtalo de nuevo!</string>
+   <string name="registration_reused_password_error">La nueva contraseña debe ser distinta a la actual</string>
    <string name="screen_create_event_title">Crea tu evento</string>
    <string name="step_continue_button">Siguiente</string>
    <string name="field_title_event_name">Nombre de evento</string>
@@ -102,5 +104,4 @@
    <string name="step_2_option_charity">Caridad</string>
    <string name="step_2_option_games">Juegos</string>
    <string name="step_2_screen_titlle">Tipo de Evento</string>
-
 </resources>

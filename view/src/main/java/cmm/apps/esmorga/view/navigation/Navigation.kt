@@ -13,6 +13,7 @@ import androidx.navigation.toRoute
 import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.view.activateaccount.ActivateAccountScreen
+import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen
 import cmm.apps.esmorga.view.createevent.CreateEventFormScreen
 import cmm.apps.esmorga.view.createeventtype.CreateEventFormTypeScreen
 import cmm.apps.esmorga.view.deeplink.DeeplinkManager.navigateFromDeeplink
@@ -69,6 +70,9 @@ sealed class Navigation {
 
     @Serializable
     data class ResetPasswordScreen(val forgotPasswordCode: String) : Navigation()
+
+    @Serializable
+    data object ChangePasswordScreen : Navigation()
 
     @Serializable
     data object CreateEventFormTitleScreen : Navigation()
@@ -206,7 +210,27 @@ private fun NavGraphBuilder.homeFlow(navigationController: NavHostController) {
     composable<Navigation.ProfileScreen> {
         ProfileScreen(
             navigateLogIn = { navigationController.navigate(Navigation.LoginScreen()) },
-            onNoNetworkError = { navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = it)) }
+            onNoNetworkError = { navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = it)) },
+            onChangePasswordClick = { navigationController.navigate(Navigation.ChangePasswordScreen) }
+        )
+    }
+
+    composable<Navigation.ChangePasswordScreen> {
+        ChangePasswordScreen(
+            onChangePasswordSuccess = { message ->
+                navigationController.navigate(Navigation.LoginScreen(message)) {
+                    popUpTo(0) {
+                        inclusive = true
+                    }
+                    launchSingleTop = true
+                }
+            },
+            onChangePasswordError = { errorArguments ->
+                navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = errorArguments))
+            },
+            onBackPressed = {
+                navigationController.popBackStack()
+            }
         )
     }
 }

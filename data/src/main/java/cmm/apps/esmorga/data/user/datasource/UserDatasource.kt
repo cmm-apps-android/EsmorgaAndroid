@@ -40,4 +40,8 @@ interface UserDatasource {
     suspend fun resetPassword(code: String, password: String) {
         throw EsmorgaException(message = "Unsupported operation", source = Source.UNSUPPORTED, code = ErrorCodes.UNSUPPORTED_OPERATION)
     }
+
+    suspend fun changePassword(currentPassword: String, newPassword: String) {
+        throw EsmorgaException(message = "Unsupported operation", source = Source.UNSUPPORTED, code = ErrorCodes.UNSUPPORTED_OPERATION)
+    }
 }
