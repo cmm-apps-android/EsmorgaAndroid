@@ -1,10 +1,12 @@
 package cmm.apps.esmorga.view.di
 
+import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.view.MainViewModel
 import cmm.apps.esmorga.view.activateaccount.ActivateAccountViewModel
 import cmm.apps.esmorga.view.changepassword.ChangePasswordViewModel
-import cmm.apps.esmorga.view.createevent.CreateEventFormViewModel
+import cmm.apps.esmorga.view.createevent.CreateEventFormTitleViewModel
+import cmm.apps.esmorga.view.createeventtype.CreateEventFormTypeViewModel
 import cmm.apps.esmorga.view.eventdetails.EventDetailsViewModel
 import cmm.apps.esmorga.view.eventlist.EventListViewModel
 import cmm.apps.esmorga.view.eventlist.MyEventListViewModel
@@ -60,6 +62,10 @@ object ViewDIModule {
 
         viewModel { ChangePasswordViewModel(get()) }
 
-        viewModel {CreateEventFormViewModel()}
+        viewModel { CreateEventFormTitleViewModel() }
+
+        viewModel { (eventForm: CreateEventForm) ->
+            CreateEventFormTypeViewModel(eventForm)
+        }
     }
 }

@@ -10,10 +10,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.view.activateaccount.ActivateAccountScreen
 import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen
 import cmm.apps.esmorga.view.createevent.CreateEventFormScreen
+import cmm.apps.esmorga.view.createeventtype.CreateEventFormTypeScreen
 import cmm.apps.esmorga.view.deeplink.DeeplinkManager.navigateFromDeeplink
 import cmm.apps.esmorga.view.errors.EsmorgaErrorScreen
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
@@ -73,7 +75,10 @@ sealed class Navigation {
     data object ChangePasswordScreen : Navigation()
 
     @Serializable
-    data object CreateEventFormScreen : Navigation()
+    data object CreateEventFormTitleScreen : Navigation()
+
+    @Serializable
+    data class CreateEventFormTypeScreen(val form: CreateEventForm) : Navigation()
 }
 
 const val GOOGLE_MAPS_PACKAGE = "com.google.android.apps.maps"
@@ -100,6 +105,7 @@ internal fun EsmorgaNavHost(navigationController: NavHostController, startDestin
         errorFlow(navigationController)
         accountActivationFlow(navigationController)
         resetPasswordFlow(navigationController)
+        createEventFlow(navigationController)
     }
 }
 
@@ -120,6 +126,28 @@ private fun NavGraphBuilder.resetPasswordFlow(navigationController: NavHostContr
             }
         )
 
+    }
+}
+
+private fun NavGraphBuilder.createEventFlow(navController: NavHostController) {
+    composable<Navigation.CreateEventFormTitleScreen> {
+        CreateEventFormScreen(
+            onBack = { navController.popBackStack() },
+            onNext = { form ->
+                navController.navigate(Navigation.CreateEventFormTypeScreen(form))
+            }
+        )
+    }
+
+    composable<Navigation.CreateEventFormTypeScreen>(
+        typeMap = mapOf(typeOf<CreateEventForm>() to serializableType<CreateEventForm>())
+    ) { backStackEntry ->
+        val form = backStackEntry.toRoute<Navigation.CreateEventFormTypeScreen>().form
+        CreateEventFormTypeScreen(
+            eventForm = form,
+            onBackClick = { navController.popBackStack() },
+            onNextClick = { updatedForm -> }
+        )
     }
 }
 
@@ -150,14 +178,6 @@ private fun NavGraphBuilder.accountActivationFlow(navigationController: NavHostC
 }
 
 private fun NavGraphBuilder.homeFlow(navigationController: NavHostController) {
-    composable<Navigation.CreateEventFormScreen> {
-        CreateEventFormScreen(
-            onBack = { navigationController.popBackStack() },
-            onNext = { eventName, description ->
-            }
-        )
-    }
-
     composable<Navigation.EventListScreen>(
         typeMap = mapOf(typeOf<Event>() to serializableType<Event>())
     ) {
@@ -184,7 +204,7 @@ private fun NavGraphBuilder.homeFlow(navigationController: NavHostController) {
         }, onSignInClick = {
             navigationController.navigate(Navigation.LoginScreen())
         }, onCreateEventClick = {
-            navigationController.navigate(Navigation.CreateEventFormScreen)
+            navigationController.navigate(Navigation.CreateEventFormTitleScreen)
         })
     }
     composable<Navigation.ProfileScreen> {

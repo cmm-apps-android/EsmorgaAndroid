@@ -98,4 +98,10 @@
    <string name="caption_event_description">$n/5000</string>
    <string name="inline_error_invalid_length_name">El texto debe tener entre 3 y 100 caracteres</string>
    <string name="inline_error_invalid_length_description">El texto debe tener entre 4 y 5000 caracteres</string>
+   <string name="step_2_option_party">Fiesta</string>
+   <string name="step_2_option_sport">Deportes</string>
+   <string name="step_2_option_food">Comida</string>
+   <string name="step_2_option_charity">Caridad</string>
+   <string name="step_2_option_games">Juegos</string>
+   <string name="step_2_screen_titlle">Tipo de Evento</string>
 </resources>
