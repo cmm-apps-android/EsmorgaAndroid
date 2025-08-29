@@ -1,0 +1,26 @@
+package cmm.apps.esmorga.view.createeventtype.model
+
+import android.content.Context
+import cmm.apps.esmorga.domain.event.model.EventType
+import cmm.apps.esmorga.view.R
+import cmm.apps.esmorga.domain.event.model.CreateEventForm
+
+data class CreateEventTypeScreenUiState(
+    val type: EventType,
+)
+
+sealed class CreateEventTypeScreenEffect {
+    object NavigateBack : CreateEventTypeScreenEffect()
+    data class NavigateNext(val eventForm: CreateEventForm) : CreateEventTypeScreenEffect()
+}
+
+object CreateEventTypeHelper {
+
+    fun getUiTextRes(type: EventType, context: Context): String = when (type) {
+        EventType.PARTY -> context.getString(R.string.step_2_option_party)
+        EventType.SPORT -> context.getString(R.string.step_2_option_sport)
+        EventType.FOOD -> context.getString(R.string.step_2_option_food)
+        EventType.CHARITY -> context.getString(R.string.step_2_option_charity)
+        EventType.GAMES -> context.getString(R.string.step_2_option_games)
+    }
+}
