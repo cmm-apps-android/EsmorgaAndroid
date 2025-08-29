@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -97,6 +98,7 @@ fun RecoverPasswordView(
 ) {
     var email by remember { mutableStateOf("") }
     Scaffold(
+        modifier = Modifier.imePadding(),
         snackbarHost = {
             SnackbarHost(
                 hostState = snackbarHostState,
@@ -104,7 +106,7 @@ fun RecoverPasswordView(
                     .testTag(RECOVER_PASSWORD_SHOW_SNACKBAR)
                     .padding(WindowInsets.ime.asPaddingValues())
             )
-        },topBar = {
+        }, topBar = {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
