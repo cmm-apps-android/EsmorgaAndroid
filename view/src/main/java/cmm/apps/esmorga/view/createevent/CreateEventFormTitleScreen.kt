@@ -20,6 +20,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cmm.apps.designsystem.EsmorgaButton
@@ -29,14 +30,15 @@ import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.createevent.model.CreateEventFormEffect
+import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import org.koin.androidx.compose.koinViewModel
 
 @Screen
 @Composable
 fun CreateEventFormScreen(
-    viewModel: CreateEventFormViewModel = koinViewModel(),
+    viewModel: CreateEventFormTitleViewModel = koinViewModel(),
     onBack: () -> Unit,
-    onNext: (String, String) -> Unit
+    onNext: (CreateEventForm) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -44,19 +46,17 @@ fun CreateEventFormScreen(
         viewModel.effect.collect { effect ->
             when (effect) {
                 is CreateEventFormEffect.NavigateBack -> onBack()
-                is CreateEventFormEffect.NavigateEventType -> onNext(
-                    uiState.eventName.trim(),
-                    uiState.description.trim()
-                )
+                is CreateEventFormEffect.NavigateNext -> onNext(effect.eventForm)
             }
         }
     }
 
-    CreateEventFormScreenContent(
+
+    CreateEventFormTitleScreenContent(
         eventName = uiState.eventName,
         onEventNameChange = viewModel::onEventNameChange,
         eventNameError = uiState.eventNameError,
-        description = uiState.description,
+        description = uiState.eventDescription,
         onDescriptionChange = viewModel::onDescriptionChange,
         descriptionError = uiState.descriptionError,
         isFormValid = uiState.isFormValid,
@@ -68,7 +68,7 @@ fun CreateEventFormScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateEventFormScreenContent(
+fun CreateEventFormTitleScreenContent(
     eventName: String,
     onEventNameChange: (String) -> Unit,
     eventNameError: Int?,
@@ -84,7 +84,7 @@ fun CreateEventFormScreenContent(
             TopAppBar(
                 title = {},
                 navigationIcon = {
-                    IconButton(onClick = onBackClick) {
+                    IconButton(onClick = onBackClick, modifier = Modifier.testTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_BACK_BUTTON)) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
@@ -94,13 +94,15 @@ fun CreateEventFormScreenContent(
         Column(
             modifier = Modifier
                 .padding(padding)
-                .padding(horizontal = 16.dp, vertical = 12.dp)
+                .padding(horizontal = 16.dp, vertical = 8.dp)
                 .verticalScroll(rememberScrollState())
         ) {
             EsmorgaText(
                 text = stringResource(R.string.screen_create_event_title),
                 style = EsmorgaTextStyle.HEADING_1,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier
+                    .padding(bottom = 12.dp)
+                    .testTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_TITLE)
             )
 
             EsmorgaTextField(
@@ -108,9 +110,13 @@ fun CreateEventFormScreenContent(
                 onValueChange = onEventNameChange,
                 title = R.string.field_title_event_name,
                 placeholder = R.string.placeholder_event_name,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_NAME),
                 errorText = eventNameError?.let { stringResource(it) }
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             EsmorgaTextField(
                 value = description,
@@ -118,8 +124,8 @@ fun CreateEventFormScreenContent(
                 title = R.string.field_title_event_description,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp)
-                    .heightIn(min = 120.dp),
+                    .heightIn(min = 120.dp)
+                    .testTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_DESCRIPTION),
                 singleLine = false,
                 maxChars = 5000,
                 placeholder = R.string.placeholder_event_name,
@@ -132,8 +138,18 @@ fun CreateEventFormScreenContent(
                 onClick = onNextClick,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 16.dp),
+                    .padding(vertical = 16.dp)
+                    .testTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_NEXT_BUTTON),
             )
         }
     }
+}
+
+object CreateEventFormTitleScreenTestTags {
+    const val CREATE_EVENT_FORM_TITLE = "create_event_form_title"
+    const val CREATE_EVENT_FORM_BACK_BUTTON = "create_event_form_back_button"
+    const val CREATE_EVENT_FORM_NEXT_BUTTON = "create_event_form_next_button"
+    const val CREATE_EVENT_FORM_DESCRIPTION = "create_event_form_description"
+    const val CREATE_EVENT_FORM_NAME = "create_event_form_name"
+
 }
