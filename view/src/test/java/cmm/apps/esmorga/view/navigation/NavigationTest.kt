@@ -28,6 +28,7 @@ import cmm.apps.esmorga.domain.result.EsmorgaResult
 import cmm.apps.esmorga.domain.result.Source
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.domain.user.LogOutUseCase
+import cmm.apps.esmorga.domain.user.PerformChangePasswordUseCase
 import cmm.apps.esmorga.domain.user.PerformLoginUseCase
 import cmm.apps.esmorga.domain.user.PerformRecoverPasswordUseCase
 import cmm.apps.esmorga.domain.user.PerformRegistrationConfirmationUseCase
@@ -37,6 +38,11 @@ import cmm.apps.esmorga.view.activateaccount.RegistrationConfirmationScreenTestT
 import cmm.apps.esmorga.view.activateaccount.RegistrationConfirmationScreenTestTags.ACTIVATE_ACCOUNT_IMAGE
 import cmm.apps.esmorga.view.activateaccount.RegistrationConfirmationScreenTestTags.ACTIVATE_ACCOUNT_SUBTITLE
 import cmm.apps.esmorga.view.activateaccount.RegistrationConfirmationScreenTestTags.ACTIVATE_ACCOUNT_TITLE
+import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD_BUTTON
+import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD_CURRENT_PASS_INPUT
+import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD_NEW_PASS_INPUT
+import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD_REPEAT_PASS_INPUT
+import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD_SCREEN_TITLE
 import cmm.apps.esmorga.view.createevent.CreateEventFormTitleScreenTestTags
 import cmm.apps.esmorga.view.createeventtype.CreateEventTypeScreenTestTags
 import cmm.apps.esmorga.view.di.ViewDIModule
@@ -61,6 +67,7 @@ import cmm.apps.esmorga.view.password.ResetPasswordScreenTestTags.RESET_PASSWORD
 import cmm.apps.esmorga.view.password.ResetPasswordScreenTestTags.RESET_PASSWORD_NEW_PASSWORD_INPUT
 import cmm.apps.esmorga.view.password.ResetPasswordScreenTestTags.RESET_PASSWORD_REPEAT_PASSWORD_INPUT
 import cmm.apps.esmorga.view.password.ResetPasswordScreenTestTags.RESET_PASSWORD_TITLE
+import cmm.apps.esmorga.view.profile.HomeScreenTestTags.PROFILE_CHANGE_PASSWORD_BUTTON
 import cmm.apps.esmorga.view.profile.HomeScreenTestTags.PROFILE_TITLE
 import cmm.apps.esmorga.view.registration.RegistrationConfirmationScreenTestTags.REGISTRATION_CONFIRMATION_OPEN_BUTTON
 import cmm.apps.esmorga.view.registration.RegistrationConfirmationScreenTestTags.REGISTRATION_CONFIRMATION_RESEND_BUTTON
@@ -153,6 +160,10 @@ class NavigationTest {
         coEvery { useCase() } returns EsmorgaResult.success("id-device")
     }
 
+    private val performChangePasswordUseCase = mockk<PerformChangePasswordUseCase>(relaxed = true).also { useCase ->
+        coEvery { useCase(any(), any()) } returns EsmorgaResult.success(Unit)
+    }
+
     @Before
     @Throws(Exception::class)
     fun setUp() {
@@ -177,6 +188,7 @@ class NavigationTest {
                     factory<ActivateAccountUseCase> { activateAccountUseCase }
                     factory<PerformResetPasswordUseCase> { performResetPasswordUseCase }
                     factory<ShowDeviceIdIfNeededUseCase> { showDeviceIdIfNeededUseCase }
+                    factory<PerformChangePasswordUseCase> { performChangePasswordUseCase }
                 }
             )
         }
@@ -463,6 +475,41 @@ class NavigationTest {
     }
 
     @Test
+    fun `given profile screen, when user tap on change password row, then change password screen is shown`() {
+        setNavigationFromDestination(Navigation.ProfileScreen)
+
+        composeTestRule.onNodeWithTag(PROFILE_CHANGE_PASSWORD_BUTTON).performClick()
+        composeTestRule.onNodeWithTag(CHANGE_PASSWORD_SCREEN_TITLE).assertIsDisplayed()
+    }
+
+    @Test
+    fun `given change password screen, when user tap on change password with valid data, then login screen is shown`() {
+        setNavigationFromDestination(Navigation.ChangePasswordScreen)
+
+        composeTestRule.onNodeWithTag(CHANGE_PASSWORD_SCREEN_TITLE).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(CHANGE_PASSWORD_CURRENT_PASS_INPUT).performTextInput("Password!1")
+        composeTestRule.onNodeWithTag(CHANGE_PASSWORD_NEW_PASS_INPUT).performTextInput("Password!2")
+        composeTestRule.onNodeWithTag(CHANGE_PASSWORD_REPEAT_PASS_INPUT).performTextInput("Password!2")
+
+        composeTestRule.onNodeWithTag(CHANGE_PASSWORD_BUTTON).performClick()
+
+        composeTestRule.onNodeWithTag(LOGIN_TITLE).assertIsDisplayed()
+    }
+
+    @Test
+    fun `given change password screen, when user tap on button and use case fails, then error screen is shown`() {
+        coEvery { performChangePasswordUseCase(any(), any()) } returns EsmorgaResult.failure(EsmorgaException("Error", Source.REMOTE, 400))
+        setNavigationFromDestination(Navigation.ChangePasswordScreen)
+
+        composeTestRule.onNodeWithTag(CHANGE_PASSWORD_CURRENT_PASS_INPUT).performTextInput("Password!1")
+        composeTestRule.onNodeWithTag(CHANGE_PASSWORD_NEW_PASS_INPUT).performTextInput("Password!2")
+        composeTestRule.onNodeWithTag(CHANGE_PASSWORD_REPEAT_PASS_INPUT).performTextInput("Password!2")
+
+        composeTestRule.onNodeWithTag(CHANGE_PASSWORD_BUTTON).performClick()
+
+        composeTestRule.onNodeWithTag(ERROR_TITLE).assertIsDisplayed()
+    }
+
     fun `given user is in CreateEventFormTitleScreen when clicks next then navigates to CreateEventFormTypeScreen`() {
         setNavigationFromDestination(Navigation.CreateEventFormTitleScreen)
         composeTestRule.waitForIdle()
