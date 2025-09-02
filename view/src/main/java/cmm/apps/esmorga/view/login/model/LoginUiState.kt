@@ -24,8 +24,8 @@ sealed class LoginEffect {
     data class ShowInitSnackbar(val message: String) : LoginEffect()
 }
 
-object LoginViewHelper : KoinComponent{
-    private val context : Context by inject()
+object LoginViewHelper : KoinComponent {
+    private val context: Context by inject()
 
     fun getEmailErrorText() = context.getString(R.string.inline_error_email)
     fun getPasswordErrorText() = context.getString(R.string.inline_error_password)

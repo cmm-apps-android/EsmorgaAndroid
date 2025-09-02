@@ -11,4 +11,6 @@ interface UserRepository {
     suspend fun recoverPassword(email: String)
     suspend fun activateAccount(verificationCode: String)
     suspend fun resetPassword(code: String, password: String)
+    suspend fun changePassword(currentPassword: String, newPassword: String)
+
 }
