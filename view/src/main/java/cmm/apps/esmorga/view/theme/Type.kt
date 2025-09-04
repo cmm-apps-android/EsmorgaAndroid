@@ -3,65 +3,42 @@ package cmm.apps.esmorga.view.theme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import cmm.apps.esmorga.view.R
 
-@OptIn(ExperimentalTextApi::class)
 val EpilogueFontFamily =
     FontFamily(
         Font(
-            resId = R.font.epilogue_flex,
-            weight = FontWeight.Bold,
-            variationSettings = FontVariation.Settings(
-                FontVariation.weight(FontWeight.Bold.weight)
-            )
+            resId = R.font.epilogue_bold,
+            weight = FontWeight.Bold
         ),
         Font(
-            resId = R.font.epilogue_flex,
-            weight = FontWeight.Medium,
-            variationSettings = FontVariation.Settings(
-                FontVariation.weight(FontWeight.Medium.weight)
-            )
+            resId = R.font.epilogue_medium,
+            weight = FontWeight.Medium
         ),
         Font(
-            resId = R.font.epilogue_flex,
-            weight = FontWeight.Normal,
-            variationSettings = FontVariation.Settings(
-                FontVariation.weight(FontWeight.Normal.weight)
-            )
+            resId = R.font.epilogue_regular,
+            weight = FontWeight.Normal
         ),
     )
 
-@OptIn(ExperimentalTextApi::class)
 val JackartaFontFamily =
     FontFamily(
         Font(
-            resId = R.font.plus_jakarta_flex,
-            weight = FontWeight.Bold,
-            variationSettings = FontVariation.Settings(
-                FontVariation.weight(FontWeight.Bold.weight)
-            )
+            resId = R.font.plus_jakarta_sans_bold,
+            weight = FontWeight.Bold
         ),
         Font(
-            resId = R.font.plus_jakarta_flex,
-            weight = FontWeight.Medium,
-            variationSettings = FontVariation.Settings(
-                FontVariation.weight(FontWeight.Medium.weight)
-            )
+            resId = R.font.plus_jakarta_sans_medium,
+            weight = FontWeight.Medium
         ),
         Font(
-            resId = R.font.plus_jakarta_flex,
-            weight = FontWeight.Normal,
-            variationSettings = FontVariation.Settings(
-                FontVariation.weight(FontWeight.Normal.weight)
-            )
+            resId = R.font.plus_jakarta_sans_regular,
+            weight = FontWeight.Normal
         ),
     )
 
