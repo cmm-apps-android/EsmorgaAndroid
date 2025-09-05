@@ -130,7 +130,7 @@ fun CreateEventFormTitleScreenContent(
                     .testTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_DESCRIPTION),
                 singleLine = false,
                 maxChars = 5000,
-                placeholder = R.string.placeholder_event_name,
+                placeholder = R.string.placeholder_event_description,
                 errorText = descriptionError?.let { stringResource(it) }
             )
 
