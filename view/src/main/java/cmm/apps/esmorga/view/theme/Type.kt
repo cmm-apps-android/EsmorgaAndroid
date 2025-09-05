@@ -7,63 +7,55 @@ import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import cmm.apps.esmorga.view.R
 
 @OptIn(ExperimentalTextApi::class)
-val EpilogueFontFamily =
+val EpilogueBoldFontFamily =
     FontFamily(
         Font(
             resId = R.font.epilogue_flex,
-            weight = FontWeight.Bold,
             variationSettings = FontVariation.Settings(
                 FontVariation.weight(FontWeight.Bold.weight)
             )
         ),
+    )
+
+@OptIn(ExperimentalTextApi::class)
+val EpilogueNormalFontFamily =
+    FontFamily(
         Font(
             resId = R.font.epilogue_flex,
-            weight = FontWeight.Medium,
             variationSettings = FontVariation.Settings(
-                FontVariation.weight(FontWeight.Medium.weight)
+                FontVariation.weight(FontWeight.Normal.weight)
+            )
+        )
+    )
+
+@OptIn(ExperimentalTextApi::class)
+val JakartaBoldFontFamily =
+    FontFamily(
+        Font(
+            resId = R.font.plus_jakarta_flex,
+            variationSettings = FontVariation.Settings(
+                FontVariation.weight(FontWeight.Bold.weight)
             )
         ),
+    )
+
+@OptIn(ExperimentalTextApi::class)
+val JakartaNormalFontFamily =
+    FontFamily(
         Font(
-            resId = R.font.epilogue_flex,
-            weight = FontWeight.Normal,
+            resId = R.font.plus_jakarta_flex,
             variationSettings = FontVariation.Settings(
                 FontVariation.weight(FontWeight.Normal.weight)
             )
         ),
     )
 
-@OptIn(ExperimentalTextApi::class)
-val JackartaFontFamily =
-    FontFamily(
-        Font(
-            resId = R.font.plus_jakarta_flex,
-            weight = FontWeight.Bold,
-            variationSettings = FontVariation.Settings(
-                FontVariation.weight(FontWeight.Bold.weight)
-            )
-        ),
-        Font(
-            resId = R.font.plus_jakarta_flex,
-            weight = FontWeight.Medium,
-            variationSettings = FontVariation.Settings(
-                FontVariation.weight(FontWeight.Medium.weight)
-            )
-        ),
-        Font(
-            resId = R.font.plus_jakarta_flex,
-            weight = FontWeight.Normal,
-            variationSettings = FontVariation.Settings(
-                FontVariation.weight(FontWeight.Normal.weight)
-            )
-        ),
-    )
 
 // Set of Material typography styles to start with
 /*
@@ -73,42 +65,36 @@ val JackartaFontFamily =
 fun getEsmorgaTypography(colorScheme: ColorScheme): Typography {
     return Typography(
         titleLarge = TextStyle(
-            fontFamily = JackartaFontFamily,
-            fontWeight = FontWeight.Bold,
+            fontFamily = JakartaBoldFontFamily,
             fontSize = 32.sp,
             lineHeight = 40.sp,
             letterSpacing = (-0.33).sp
         ),
         headlineLarge = TextStyle(
-            fontFamily = JackartaFontFamily,
-            fontWeight = FontWeight.Bold,
+            fontFamily = JakartaBoldFontFamily,
             fontSize = 22.sp,
             lineHeight = 27.5.sp,
             letterSpacing = (-0.33).sp
         ),
         headlineMedium = TextStyle(
-            fontFamily = JackartaFontFamily,
-            fontWeight = FontWeight.Bold,
+            fontFamily = JakartaBoldFontFamily,
             fontSize = 18.sp,
             lineHeight = 22.5.sp,
             letterSpacing = (-0.27).sp
         ),
         bodyMedium = TextStyle(
-            fontFamily = JackartaFontFamily,
-            fontWeight = FontWeight.Normal,
+            fontFamily = JakartaNormalFontFamily,
             fontSize = 16.sp,
             lineHeight = 24.sp
         ),
         labelLarge = TextStyle(
-            fontFamily = EpilogueFontFamily,
-            fontWeight = FontWeight.Bold,
+            fontFamily = EpilogueBoldFontFamily,
             fontSize = 14.sp,
             lineHeight = 21.sp,
             letterSpacing = 0.20.sp
         ),
         labelSmall = TextStyle(
-            fontFamily = EpilogueFontFamily,
-            fontWeight = FontWeight.Normal,
+            fontFamily = EpilogueNormalFontFamily,
             fontSize = 14.sp,
             lineHeight = 21.sp
         )
