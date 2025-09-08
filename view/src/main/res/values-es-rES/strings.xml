@@ -103,6 +103,6 @@
    <string name="step_2_option_food">Comida</string>
    <string name="step_2_option_charity">Caridad</string>
    <string name="step_2_option_games">Juegos</string>
-   <string name="step_2_screen_titlle">Tipo de Evento</string>
+   <string name="step_2_screen_title">Tipo de Evento</string>
    <string name="placeholder_event_description">Introduce una descripción del evento</string>
 </resources>
