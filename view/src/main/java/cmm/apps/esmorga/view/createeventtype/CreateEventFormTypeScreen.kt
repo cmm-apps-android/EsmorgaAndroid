@@ -106,7 +106,7 @@ fun CreateEventFormTypeView(
             )
 
             EsmorgaText(
-                text = stringResource(R.string.step_2_screen_titlle),
+                text = stringResource(R.string.step_2_screen_title),
                 style = EsmorgaTextStyle.BODY_1,
                 modifier = Modifier.padding(bottom = 15.dp)
             )
