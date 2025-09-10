@@ -104,7 +104,6 @@ fun RecoverPasswordView(
                 hostState = snackbarHostState,
                 modifier = Modifier
                     .testTag(RECOVER_PASSWORD_SHOW_SNACKBAR)
-                    .padding(WindowInsets.ime.asPaddingValues())
             )
         }, topBar = {
             Box(
