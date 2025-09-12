@@ -58,7 +58,7 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging.interceptor)
     implementation(libs.kotlinx.coroutines)
-    implementation(libs.firebase.crashlytics.ktx)
+    implementation(libs.google.firebase.crashlytics.ktx)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
