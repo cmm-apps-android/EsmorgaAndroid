@@ -40,7 +40,6 @@ class EventListViewModelTest {
     }
     @Test
     fun `given events are loaded when onEventClick is called with existing event then description is URL encoded in the emitted effect`() = runTest {
-        // Arrange
         val eventId = "testId123"
         val originalDescription = "Description with spaces and special characters: áéíóú & ñ & ?"
         val expectedEncodedDescription = URLEncoder.encode(originalDescription, StandardCharsets.UTF_8.toString())
