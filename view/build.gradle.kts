@@ -67,7 +67,6 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.gson)
     implementation(libs.play.services.measurement.api)
-    implementation(libs.firebase.crashlytics.ktx)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
