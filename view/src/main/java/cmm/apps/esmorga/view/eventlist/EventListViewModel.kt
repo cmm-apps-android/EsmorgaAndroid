@@ -18,6 +18,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 class EventListViewModel(private val getEventListUseCase: GetEventListUseCase) : ViewModel(), DefaultLifecycleObserver {
 
@@ -53,7 +55,8 @@ class EventListViewModel(private val getEventListUseCase: GetEventListUseCase) :
 
     fun onEventClick(event: EventListUiModel) {
         val eventFound = events.find { event.id == it.id }
-        eventFound?.let {
+        val eventEncoded = eventFound?.copy(description = URLEncoder.encode(eventFound.description, StandardCharsets.UTF_8.toString()))
+        eventEncoded?.let {
             _effect.tryEmit(EventListEffect.NavigateToEventDetail(it))
         }
     }
