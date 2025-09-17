@@ -15,6 +15,7 @@ import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.view.activateaccount.ActivateAccountScreen
 import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen
 import cmm.apps.esmorga.view.createevent.CreateEventFormScreen
+import cmm.apps.esmorga.view.createeventdate.CreateEventFormDateScreen
 import cmm.apps.esmorga.view.createeventtype.CreateEventFormTypeScreen
 import cmm.apps.esmorga.view.deeplink.DeeplinkManager.navigateFromDeeplink
 import cmm.apps.esmorga.view.errors.EsmorgaErrorScreen
@@ -79,6 +80,9 @@ sealed class Navigation {
 
     @Serializable
     data class CreateEventFormTypeScreen(val form: CreateEventForm) : Navigation()
+
+    @Serializable
+    data class CreateEventFormDateScreen(val form: CreateEventForm) : Navigation()
 }
 
 const val GOOGLE_MAPS_PACKAGE = "com.google.android.apps.maps"
@@ -146,6 +150,19 @@ private fun NavGraphBuilder.createEventFlow(navController: NavHostController) {
         CreateEventFormTypeScreen(
             eventForm = form,
             onBackClick = { navController.popBackStack() },
+            onNextClick = { updatedForm ->
+                navController.navigate(Navigation.CreateEventFormDateScreen(updatedForm))
+            }
+        )
+    }
+
+    composable<Navigation.CreateEventFormDateScreen>(
+        typeMap = mapOf(typeOf<CreateEventForm>() to serializableType<CreateEventForm>())
+    ) { backStackEntry ->
+        val eventForm = backStackEntry.toRoute<Navigation.CreateEventFormTypeScreen>().form
+        CreateEventFormDateScreen(
+            eventForm = eventForm,
+            onBackPressed = { navController.popBackStack() },
             onNextClick = { updatedForm -> }
         )
     }

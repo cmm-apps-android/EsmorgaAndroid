@@ -105,4 +105,6 @@
    <string name="step_2_option_games">Games</string>
    <string name="step_2_screen_title">Event Type</string>
    <string name="placeholder_event_description">Enter a description of the event</string>
+   <string name="step_3_screen_title">Event date</string>
+   <string name="step_3_screen_row_time">Event time</string>
 </resources>
