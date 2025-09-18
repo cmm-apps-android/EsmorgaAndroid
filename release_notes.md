@@ -1,4 +1,4 @@
-# Changelog
+# Release notes
 
 User‑facing changes only. This file lists what publishers / end users can notice: new or updated functionality, and bug fixes. Internal refactors, performance tweaks or build/dependency work are intentionally excluded.
 
