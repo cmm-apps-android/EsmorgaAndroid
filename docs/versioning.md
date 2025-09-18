@@ -32,7 +32,17 @@ Only increment if changes occurred since previous pre-release of same track.
 
 ## VersionCode (Android)
 ```
-versionCode = X * 10000 + Y * 100 + Z
+versionCode = 10000 // 1 Major, 00 Minor, 00 Patch
+versionName = "1.0.0"
+
+versionCode = 10000 // 1 Major, 00 Minor, 00 Patch
+versionName = "1.0.0-rc.1"
+
+versionCode = 10203 // 1 Major, 02 Minor, 03 Patch
+versionName = "1.2.3"
+
+versionCode = 20304 // 2 Major, 03 Minor, 04 Patch
+versionName = "2.3.4"
 ```
 
 ## Release steps
