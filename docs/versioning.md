@@ -48,7 +48,7 @@ versionName = "2.3.4"
 ## Release steps
 1. Choose bump (rule above).
 2. Update `versionName` / `versionCode` in `app/build.gradle.kts`.
-3. Update `CHANGELOG.md` (sections: Added / Improved / Fixed / Maintenance / Security; add Milestone Highlights if X).
+3. Update `release_notes.md` (sections: Added / Improved / Fixed / Maintenance / Security; add Milestone Highlights if X).
 4. Commit: `chore(release): vX.Y.Z`.
 5. Tag + push: `git tag -a vX.Y.Z -m "Release vX.Y.Z" && git push && git push --tags`.
 6. CI artifacts & internal announcement.
