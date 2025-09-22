@@ -13,14 +13,6 @@ runs:
           token: ${{ inputs.PAT }}
           ref: ${{ github.head_ref }}
 
-      - name: Check branch name
-        shell: bash
-        run: |
-          if ! echo "${{ github.head_ref }}" | egrep '^((feature|bugfix|hotfix)/MOB-[0-9]*(\(.*\))*|release/[\.0-9]*)$' ; 
-          then 
-          exit 1
-          fi
-          
       - name: Push branch name if needed to github
         shell: bash
         run: |          
