@@ -8,6 +8,7 @@ data class CreateEventFormDateUiState(
 )
 
 sealed class CreateEventFormDateEffect {
-    data object NavigateBack : CreateEventFormDateEffect()
     data class NavigateNext(val eventForm: CreateEventForm) : CreateEventFormDateEffect()
+    data object NavigateBack : CreateEventFormDateEffect()
+
 }

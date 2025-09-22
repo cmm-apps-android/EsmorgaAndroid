@@ -27,6 +27,10 @@ class CreateEventFormDateViewModel(
     private val _effect = MutableSharedFlow<CreateEventFormDateEffect>(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val effect: SharedFlow<CreateEventFormDateEffect> = _effect.asSharedFlow()
 
+    fun onBackClick() {
+        _effect.tryEmit(CreateEventFormDateEffect.NavigateBack)
+    }
+
     fun isTimeSelected(selectedTime: String) {
         if (selectedTime.isNotEmpty()) {
             _uiState.value = _uiState.value.copy(
@@ -43,7 +47,7 @@ class CreateEventFormDateViewModel(
         val datePartFormatter = DateTimeFormatter.ISO_LOCAL_DATE
         val datePart = localDateTimeFromDate.format(datePartFormatter)
 
-        val dateTime = "${datePart}T${time}Z"
+        val dateTime = "${datePart}T${time}"
 
         _uiState.value = _uiState.value.copy(
             dateTime = dateTime

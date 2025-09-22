@@ -60,7 +60,7 @@ fun CreateEventFormTypeScreen(
     EsmorgaTheme {
         CreateEventFormTypeView(
             eventType = uiState.type,
-            onBackClick = { onBackClick() },
+            onBackClick = { createEventviewModel.onBackClick() },
             onNextClick = { createEventviewModel.onNextClick() },
             onEventTypeSelected = { createEventviewModel.onEventTypeSelected(it) },
         )

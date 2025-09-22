@@ -17,8 +17,6 @@ import java.util.concurrent.TimeUnit
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EsmorgaDatePicker(state: DatePickerState) {
-    val dateFormatter: DatePickerFormatter = remember { DatePickerDefaults.dateFormatter() }
-
     DatePicker(
         modifier = Modifier.padding(top = 16.dp),
         state = state,

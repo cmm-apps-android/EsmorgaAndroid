@@ -46,6 +46,9 @@ import cmm.apps.designsystem.PossibleSelectableDates
 import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
+import cmm.apps.esmorga.view.createeventdate.CreateEventDateScreenTestTags.CREATE_EVENT_DATE_BACK_BUTTON
+import cmm.apps.esmorga.view.createeventdate.CreateEventDateScreenTestTags.CREATE_EVENT_DATE_NEXT_BUTTON
+import cmm.apps.esmorga.view.createeventdate.CreateEventDateScreenTestTags.CREATE_EVENT_DATE_TITLE
 import cmm.apps.esmorga.view.createeventdate.model.CreateEventFormDateEffect
 import cmm.apps.esmorga.view.createeventdate.model.CreateEventFormDateUiState
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAILS_BACK_BUTTON
@@ -70,15 +73,15 @@ fun CreateEventFormDateScreen(
     LaunchedEffect(Unit) {
         viewModel.effect.collect { eff ->
             when (eff) {
-                is CreateEventFormDateEffect.NavigateBack -> onBackPressed()
                 is CreateEventFormDateEffect.NavigateNext -> onNextClick(eff.eventForm)
+                is CreateEventFormDateEffect.NavigateBack -> onBackPressed()
             }
         }
     }
 
     EsmorgaTheme {
         CreateEventFormDateView(
-            onBackPressed = onBackPressed,
+            onBackPressed = { viewModel.onBackClick() },
             isButtonEnabled = uiState.isButtonEnabled,
             isTimeSelected = { viewModel.isTimeSelected(it) },
             onNextClick = { date, time -> viewModel.onNextClick(date, time) }
@@ -125,7 +128,7 @@ fun CreateEventFormDateView(
                         onClick = {
                             onBackPressed()
                         },
-                        modifier = Modifier.testTag(EVENT_DETAILS_BACK_BUTTON)
+                        modifier = Modifier.testTag(CREATE_EVENT_DATE_BACK_BUTTON)
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -156,6 +159,7 @@ fun CreateEventFormDateView(
                 style = EsmorgaTextStyle.HEADING_1,
                 modifier = Modifier
                     .padding(bottom = 12.dp, top = 8.dp)
+                    .testTag(CREATE_EVENT_DATE_TITLE)
             )
 
             EsmorgaText(
@@ -170,7 +174,7 @@ fun CreateEventFormDateView(
             EsmorgaButton(
                 text = stringResource(R.string.step_continue_button),
                 isEnabled = isButtonEnabled,
-                modifier = Modifier.padding(top = 32.dp, bottom = 16.dp)
+                modifier = Modifier.padding(top = 32.dp, bottom = 16.dp).testTag(CREATE_EVENT_DATE_NEXT_BUTTON),
             ) {
                 val date = Date(datePickerState.selectedDateMillis ?: 0)
                 onNextClick(date, timeSelected)
@@ -242,3 +246,8 @@ private fun formattedTime(hour: Int, minute: Int): String {
     return time
 }
 
+object CreateEventDateScreenTestTags {
+    const val CREATE_EVENT_DATE_TITLE = "create_event_date_title"
+    const val CREATE_EVENT_DATE_BACK_BUTTON = "create_event_date_back_button"
+    const val CREATE_EVENT_DATE_NEXT_BUTTON = "create_event_date_next_button"
+}
