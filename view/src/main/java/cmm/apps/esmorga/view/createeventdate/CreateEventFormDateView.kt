@@ -84,6 +84,7 @@ fun CreateEventFormDateScreen(
             onBackPressed = { viewModel.onBackClick() },
             isButtonEnabled = uiState.isButtonEnabled,
             isTimeSelected = { viewModel.isTimeSelected(it) },
+            formattedTime = { hour, minute -> viewModel.formattedTime(hour, minute) },
             onNextClick = { date, time -> viewModel.onNextClick(date, time) }
         )
     }
@@ -95,6 +96,7 @@ fun CreateEventFormDateView(
     onBackPressed: () -> Unit,
     isButtonEnabled: Boolean,
     isTimeSelected: (String) -> Unit,
+    formattedTime: (Int, Int) -> String,
     onNextClick: (Date, String) -> Unit
 ) {
     var shownDialog by remember { mutableStateOf(false) }
@@ -114,6 +116,7 @@ fun CreateEventFormDateView(
                 timeSelected = time
                 isTimeSelected(time)
             },
+            formattedTime = formattedTime,
             timeState = timeState
         )
     }
@@ -190,6 +193,7 @@ fun EsmorgaTimePickerDialog(
     modifier: Modifier,
     onDismiss: () -> Unit,
     onConfirm: (String) -> Unit,
+    formattedTime: (Int, Int) -> String,
     timeState: TimePickerState
 ) {
 
@@ -238,12 +242,6 @@ fun EsmorgaTimePickerDialog(
             }
         }
     }
-}
-
-private fun formattedTime(hour: Int, minute: Int): String {
-    val formatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS'Z'")
-    val time = LocalTime.of(hour, minute).format(formatter)
-    return time
 }
 
 object CreateEventDateScreenTestTags {

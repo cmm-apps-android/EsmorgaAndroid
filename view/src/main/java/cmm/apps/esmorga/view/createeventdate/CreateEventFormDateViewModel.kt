@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.time.Instant
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Date
@@ -39,6 +40,12 @@ class CreateEventFormDateViewModel(
         }
     }
 
+    fun formattedTime(hour: Int, minute: Int): String {
+        val formatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS'Z'")
+        val time = LocalTime.of(hour, minute).format(formatter)
+        return time
+    }
+
     private fun formattedDateTime(date: Date, time: String) {
         val instant: Instant = date.toInstant()
         val systemZone: ZoneId = ZoneId.systemDefault()
@@ -52,6 +59,7 @@ class CreateEventFormDateViewModel(
         _uiState.value = _uiState.value.copy(
             dateTime = dateTime
         )
+        println("MERCHI ----> $dateTime")
     }
 
     fun onNextClick(date: Date, time: String) {

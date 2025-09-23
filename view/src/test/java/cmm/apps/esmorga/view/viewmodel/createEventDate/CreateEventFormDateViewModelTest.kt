@@ -92,4 +92,14 @@ class CreateEventFormDateViewModelTest {
             cancelAndIgnoreRemainingEvents()
         }
     }
+
+    @Test
+    fun `given create event date screen when clicked confirm dialog then return time formated`(){
+        val hour = 12
+        val minute = 30
+        val formatedTime = "${hour}:${minute}:00.000Z"
+
+        val time = viewModel.formattedTime(hour, minute)
+        assertEquals(formatedTime, time)
+    }
 }
