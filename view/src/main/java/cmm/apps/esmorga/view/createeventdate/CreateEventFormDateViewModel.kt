@@ -59,7 +59,6 @@ class CreateEventFormDateViewModel(
         _uiState.value = _uiState.value.copy(
             dateTime = dateTime
         )
-        println("MERCHI ----> $dateTime")
     }
 
     fun onNextClick(date: Date, time: String) {
