@@ -51,13 +51,10 @@ import cmm.apps.esmorga.view.createeventdate.CreateEventDateScreenTestTags.CREAT
 import cmm.apps.esmorga.view.createeventdate.CreateEventDateScreenTestTags.CREATE_EVENT_DATE_TITLE
 import cmm.apps.esmorga.view.createeventdate.model.CreateEventFormDateEffect
 import cmm.apps.esmorga.view.createeventdate.model.CreateEventFormDateUiState
-import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAILS_BACK_BUTTON
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
-import java.time.LocalTime
 import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
 import java.util.Date
 
 @Screen
@@ -177,7 +174,9 @@ fun CreateEventFormDateView(
             EsmorgaButton(
                 text = stringResource(R.string.step_continue_button),
                 isEnabled = isButtonEnabled,
-                modifier = Modifier.padding(top = 32.dp, bottom = 16.dp).testTag(CREATE_EVENT_DATE_NEXT_BUTTON),
+                modifier = Modifier
+                    .padding(top = 32.dp, bottom = 16.dp)
+                    .testTag(CREATE_EVENT_DATE_NEXT_BUTTON),
             ) {
                 val date = Date(datePickerState.selectedDateMillis ?: 0)
                 onNextClick(date, timeSelected)
