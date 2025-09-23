@@ -42,7 +42,7 @@ class CreateEventFormDateViewModelTest {
     fun `given create event form date screen, when time is selected, then the button is enable`() = runTest {
         viewModel.uiState.test {
             awaitItem()
-            viewModel.isTimeSelected("12:00")
+            viewModel.onTimeSelected("12:00")
             val updatedState = awaitItem()
 
             assertTrue(updatedState.isButtonEnabled)
@@ -94,7 +94,7 @@ class CreateEventFormDateViewModelTest {
     }
 
     @Test
-    fun `given create event date screen when clicked confirm dialog then return time formated`(){
+    fun `given create event date screen when clicked confirm dialog then return time formated`() {
         val hour = 12
         val minute = 30
         val formatedTime = "${hour}:${minute}:00.000Z"

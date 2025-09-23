@@ -30,7 +30,7 @@ class CreateEventFormDateScreenScreenshotTest : BaseScreenshotTest() {
                     isButtonEnabled = isButtonEnabled,
                     onBackPressed = {},
                     onNextClick = { _, _ -> },
-                    isTimeSelected = { _ -> },
+                    onTimeSelected = { _ -> },
                     formattedTime = { _, _ -> "" }
                 )
             }

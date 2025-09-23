@@ -1,13 +1,8 @@
 package cmm.apps.esmorga.view.createeventdate
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -15,12 +10,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.TimePicker
-import androidx.compose.material3.TimePickerLayoutType
-import androidx.compose.material3.TimePickerState
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
@@ -30,18 +20,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmm.apps.designsystem.EsmorgaButton
 import cmm.apps.designsystem.EsmorgaDatePicker
 import cmm.apps.designsystem.EsmorgaRow
 import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextStyle
+import cmm.apps.designsystem.EsmorgaTimePickerDialog
 import cmm.apps.designsystem.PossibleSelectableDates
 import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.view.R
@@ -80,7 +69,7 @@ fun CreateEventFormDateScreen(
         CreateEventFormDateView(
             onBackPressed = { viewModel.onBackClick() },
             isButtonEnabled = uiState.isButtonEnabled,
-            isTimeSelected = { viewModel.isTimeSelected(it) },
+            onTimeSelected = { viewModel.onTimeSelected(it) },
             formattedTime = { hour, minute -> viewModel.formattedTime(hour, minute) },
             onNextClick = { date, time -> viewModel.onNextClick(date, time) }
         )
@@ -92,7 +81,7 @@ fun CreateEventFormDateScreen(
 fun CreateEventFormDateView(
     onBackPressed: () -> Unit,
     isButtonEnabled: Boolean,
-    isTimeSelected: (String) -> Unit,
+    onTimeSelected: (String) -> Unit,
     formattedTime: (Int, Int) -> String,
     onNextClick: (Date, String) -> Unit
 ) {
@@ -111,7 +100,7 @@ fun CreateEventFormDateView(
             onConfirm = { time ->
                 shownDialog = false
                 timeSelected = time
-                isTimeSelected(time)
+                onTimeSelected(time)
             },
             formattedTime = formattedTime,
             timeState = timeState
@@ -183,63 +172,6 @@ fun CreateEventFormDateView(
             }
         }
 
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun EsmorgaTimePickerDialog(
-    modifier: Modifier,
-    onDismiss: () -> Unit,
-    onConfirm: (String) -> Unit,
-    formattedTime: (Int, Int) -> String,
-    timeState: TimePickerState
-) {
-
-
-    Dialog(
-        onDismissRequest = { onDismiss() },
-    ) {
-        Surface(
-            shape = MaterialTheme.shapes.small,
-            color = MaterialTheme.colorScheme.surfaceContainerLow,
-            tonalElevation = 8.dp
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(end = 16.dp, start = 16.dp, top = 32.dp, bottom = 16.dp)
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                TimePicker(
-                    state = timeState,
-                    layoutType = TimePickerLayoutType.Vertical,
-                )
-                Row(
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    EsmorgaButton(
-                        text = "Cancel",
-                        onClick = {
-                            onDismiss()
-                        },
-                        modifier = modifier.weight(1F),
-                        primary = false
-                    )
-                    Spacer(Modifier.width(12.dp))
-                    EsmorgaButton(
-                        text = "Confirmar",
-                        modifier = modifier.weight(1F),
-                        onClick = {
-                            onConfirm(formattedTime(timeState.hour, timeState.minute))
-                        }
-                    )
-                }
-            }
-        }
     }
 }
 
