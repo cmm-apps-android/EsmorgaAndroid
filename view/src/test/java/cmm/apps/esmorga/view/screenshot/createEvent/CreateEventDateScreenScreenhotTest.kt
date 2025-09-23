@@ -6,15 +6,19 @@ import androidx.compose.material3.SelectableDates
 import cmm.apps.esmorga.view.createeventdate.CreateEventFormDateView
 import cmm.apps.esmorga.view.screenshot.BaseScreenshotTest
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
+import org.junit.Before
 import org.junit.Test
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.Locale
+import java.util.TimeZone
 
 @OptIn(ExperimentalMaterial3Api::class)
 class CreateEventFormDateScreenScreenshotTest : BaseScreenshotTest() {
-    private val fixedDate = LocalDate.of(2025, 8, 20)
-    private val fixedMillis = fixedDate.atStartOfDay(ZoneId.systemDefault())
+    private val fixedZone: ZoneId = ZoneId.of("UTC")
+    private val fixedDate: LocalDate = LocalDate.of(2025, 8, 20)
+    private val fixedMillis: Long = fixedDate
+        .atStartOfDay(fixedZone)
         .toInstant()
         .toEpochMilli()
 
@@ -27,8 +31,13 @@ class CreateEventFormDateScreenScreenshotTest : BaseScreenshotTest() {
     private val fixedDatePickerState = DatePickerState(
         initialSelectedDateMillis = fixedMillis,
         selectableDates = fixedSelectableDates,
-        locale = Locale.getDefault()
+        locale = Locale("es", "ES")
     )
+
+    @Before
+    fun setUpTimeZone() {
+        TimeZone.setDefault(TimeZone.getTimeZone(fixedZone))
+    }
 
     @Test
     fun createEventDateScreenDefault() {
