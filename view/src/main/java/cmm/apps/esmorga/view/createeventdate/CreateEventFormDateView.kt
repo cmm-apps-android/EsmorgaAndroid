@@ -7,6 +7,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -46,6 +47,7 @@ import org.koin.core.parameter.parametersOf
 import java.time.ZonedDateTime
 import java.util.Date
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Screen
 @Composable
 fun CreateEventFormDateScreen(
@@ -65,9 +67,15 @@ fun CreateEventFormDateScreen(
         }
     }
 
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = System.currentTimeMillis(),
+        selectableDates = PossibleSelectableDates
+    )
+
     EsmorgaTheme {
         CreateEventFormDateView(
             onBackPressed = { viewModel.onBackClick() },
+            datePickerState = datePickerState,
             isButtonEnabled = uiState.isButtonEnabled,
             onTimeSelected = { viewModel.onTimeSelected(it) },
             formattedTime = { hour, minute -> viewModel.formattedTime(hour, minute) },
@@ -80,6 +88,7 @@ fun CreateEventFormDateScreen(
 @Composable
 fun CreateEventFormDateView(
     onBackPressed: () -> Unit,
+    datePickerState: DatePickerState,
     isButtonEnabled: Boolean,
     onTimeSelected: (String) -> Unit,
     formattedTime: (Int, Int) -> String,
@@ -127,11 +136,6 @@ fun CreateEventFormDateView(
                 },
             )
         }) { innerPadding ->
-
-        val datePickerState = rememberDatePickerState(
-            initialSelectedDateMillis = System.currentTimeMillis(),
-            selectableDates = PossibleSelectableDates
-        )
 
         Column(
             modifier = Modifier
