@@ -10,9 +10,8 @@ import androidx.compose.material3.SelectableDates
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import java.time.Instant
-import java.time.LocalDate
-import java.time.ZoneId
+import java.time.LocalTime
+import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,14 +28,8 @@ fun EsmorgaDatePicker(state: DatePickerState) {
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-object PossibleSelectableDates : SelectableDates {
+class PossibleSelectableDates(private val startOfToday: Long) : SelectableDates {
     override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-        val dateFromPicker = Instant.ofEpochMilli(utcTimeMillis)
-            .atZone(ZoneId.systemDefault())
-            .toLocalDate()
-
-        val today = LocalDate.now(ZoneId.systemDefault())
-
-        return !dateFromPicker.isBefore(today)
+        return utcTimeMillis >= startOfToday
     }
 }

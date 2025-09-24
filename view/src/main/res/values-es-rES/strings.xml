@@ -107,4 +107,6 @@
    <string name="placeholder_event_description">Introduce una descripción del evento</string>
    <string name="step_3_screen_title">Fecha del evento</string>
    <string name="step_3_screen_row_time">Hora del evento</string>
+   <string name="confirm_button_dialog">Confirmar</string>
+   <string name="cancel_button_dialog">Cancelar</string>
 </resources>

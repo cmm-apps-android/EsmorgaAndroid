@@ -44,7 +44,9 @@ import cmm.apps.esmorga.view.createeventdate.model.CreateEventFormDateUiState
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
-import java.time.ZonedDateTime
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.ZoneId
 import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -69,7 +71,7 @@ fun CreateEventFormDateScreen(
 
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = System.currentTimeMillis(),
-        selectableDates = PossibleSelectableDates
+        selectableDates = PossibleSelectableDates(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli())
     )
 
     EsmorgaTheme {
@@ -98,8 +100,8 @@ fun CreateEventFormDateView(
     var timeSelected by remember { mutableStateOf("") }
 
     val timeState = rememberTimePickerState(
-        initialHour = ZonedDateTime.now().hour,
-        initialMinute = ZonedDateTime.now().minute
+        initialHour = LocalTime.now().hour,
+        initialMinute = LocalTime.now().minute
     )
 
     if (shownDialog) {
@@ -112,6 +114,8 @@ fun CreateEventFormDateView(
                 onTimeSelected(time)
             },
             formattedTime = formattedTime,
+            confirmText = stringResource(R.string.confirm_button_dialog),
+            cancelText = stringResource(R.string.cancel_button_dialog),
             timeState = timeState
         )
     }

@@ -7,12 +7,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDefaults
-import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerLayoutType
@@ -22,9 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import java.time.Instant
-import java.time.LocalDate
-import java.time.ZoneId
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,6 +27,8 @@ fun EsmorgaTimePickerDialog(
     onDismiss: () -> Unit,
     onConfirm: (String) -> Unit,
     formattedTime: (Int, Int) -> String,
+    confirmText: String,
+    cancelText: String,
     timeState: TimePickerState
 ) {
     Dialog(
@@ -61,7 +56,7 @@ fun EsmorgaTimePickerDialog(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     EsmorgaButton(
-                        text = "Cancel",
+                        text = cancelText,
                         onClick = {
                             onDismiss()
                         },
@@ -70,7 +65,7 @@ fun EsmorgaTimePickerDialog(
                     )
                     Spacer(Modifier.width(12.dp))
                     EsmorgaButton(
-                        text = "Confirmar",
+                        text = confirmText,
                         modifier = modifier.weight(1F),
                         onClick = {
                             onConfirm(formattedTime(timeState.hour, timeState.minute))
