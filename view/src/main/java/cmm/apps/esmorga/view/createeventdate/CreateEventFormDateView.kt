@@ -14,6 +14,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -114,8 +115,8 @@ fun CreateEventFormDateView(
                 onTimeSelected(time)
             },
             formattedTime = formattedTime,
-            confirmText = stringResource(R.string.confirm_button_dialog),
-            cancelText = stringResource(R.string.cancel_button_dialog),
+            confirmButtonText = stringResource(R.string.confirm_button_dialog),
+            dismissButtonText = stringResource(R.string.cancel_button_dialog),
             timeState = timeState
         )
     }

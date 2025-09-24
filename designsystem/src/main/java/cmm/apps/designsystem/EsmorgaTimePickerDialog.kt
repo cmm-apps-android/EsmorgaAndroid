@@ -27,8 +27,8 @@ fun EsmorgaTimePickerDialog(
     onDismiss: () -> Unit,
     onConfirm: (String) -> Unit,
     formattedTime: (Int, Int) -> String,
-    confirmText: String,
-    cancelText: String,
+    confirmButtonText: String,
+    dismissButtonText: String,
     timeState: TimePickerState
 ) {
     Dialog(
@@ -56,7 +56,7 @@ fun EsmorgaTimePickerDialog(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     EsmorgaButton(
-                        text = cancelText,
+                        text = dismissButtonText,
                         onClick = {
                             onDismiss()
                         },
@@ -65,7 +65,7 @@ fun EsmorgaTimePickerDialog(
                     )
                     Spacer(Modifier.width(12.dp))
                     EsmorgaButton(
-                        text = confirmText,
+                        text = confirmButtonText,
                         modifier = modifier.weight(1F),
                         onClick = {
                             onConfirm(formattedTime(timeState.hour, timeState.minute))
