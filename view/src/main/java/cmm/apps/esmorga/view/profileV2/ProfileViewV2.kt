@@ -5,10 +5,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import cmm.apps.designsystem.EsmorgaDialog
 import cmm.apps.designsystem.EsmorgaGuestError
 import cmm.apps.designsystem.EsmorgaRow
 import cmm.apps.designsystem.EsmorgaText
@@ -23,9 +28,8 @@ import cmm.apps.esmorga.view.theme.EsmorgaTheme
 @Screen
 @Composable
 fun ProfileScreenV2() {
-
     EsmorgaTheme {
-        ProfileViewV2(uiState = ProfileUiStateV2())
+        ProfileViewV2(uiState = ProfileUiStateV2(user = User("Pepe", "Pepe", "pepe@aefa.com", RoleType.ADMIN)))
     }
 }
 
@@ -55,7 +59,8 @@ fun ProfileViewV2(
                     onButtonClicked = {},
                     animation = R.raw.oops)
             } else {
-                LoggedProfileViewV2(name = "Fulano", lastName = "López", email = "fulanolopez@gmail.com", logOutClick = {}, changePasswordClick = {})
+                val user = uiState.user
+                LoggedProfileViewV2(name = user.name, lastName = user.lastName, email = user.email, logOutClick = {}, changePasswordClick = {})
             }
         }
     }
@@ -69,6 +74,21 @@ fun LoggedProfileViewV2(
     logOutClick: () -> Unit,
     changePasswordClick: () -> Unit
 ) {
+    var showLogOut by remember { mutableStateOf(false) }
+
+    if (showLogOut){
+        EsmorgaDialog(
+            title = stringResource(R.string.my_profile_logout_pop_up_title),
+            dismissButtonText = stringResource(R.string.my_profile_logout_pop_up_cancel),
+            confirmButtonText = stringResource(R.string.my_profile_logout_pop_up_confirm),
+            onDismiss = {showLogOut = false},
+            onConfirm = {
+                showLogOut = false
+                logOutClick()
+            }
+        )
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -102,7 +122,7 @@ fun LoggedProfileViewV2(
         )
 
         EsmorgaRow(title = stringResource(R.string.my_profile_change_password), onClick = changePasswordClick)
-        EsmorgaRow(title = stringResource(R.string.my_profile_logout), onClick = logOutClick)
+        EsmorgaRow(title = stringResource(R.string.my_profile_logout), onClick = { showLogOut = true })
     }
 }
 
