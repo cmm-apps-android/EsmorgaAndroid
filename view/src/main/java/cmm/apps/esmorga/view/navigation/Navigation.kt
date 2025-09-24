@@ -25,7 +25,7 @@ import cmm.apps.esmorga.view.eventlist.MyEventListScreen
 import cmm.apps.esmorga.view.login.LoginScreen
 import cmm.apps.esmorga.view.password.RecoverPasswordScreen
 import cmm.apps.esmorga.view.password.ResetPasswordScreen
-import cmm.apps.esmorga.view.profile.ProfileScreen
+import cmm.apps.esmorga.view.profilveV2.ProfileScreenV2
 import cmm.apps.esmorga.view.registration.RegistrationConfirmationScreen
 import cmm.apps.esmorga.view.registration.RegistrationScreen
 import cmm.apps.esmorga.view.welcome.WelcomeScreen
@@ -208,10 +208,7 @@ private fun NavGraphBuilder.homeFlow(navigationController: NavHostController) {
         })
     }
     composable<Navigation.ProfileScreen> {
-        ProfileScreen(
-            navigateLogIn = { navigationController.navigate(Navigation.LoginScreen()) },
-            onNoNetworkError = { navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = it)) },
-            onChangePasswordClick = { navigationController.navigate(Navigation.ChangePasswordScreen) }
+        ProfileScreenV2(
         )
     }
 
