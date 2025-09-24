@@ -25,7 +25,7 @@ import cmm.apps.esmorga.view.eventlist.MyEventListScreen
 import cmm.apps.esmorga.view.login.LoginScreen
 import cmm.apps.esmorga.view.password.RecoverPasswordScreen
 import cmm.apps.esmorga.view.password.ResetPasswordScreen
-import cmm.apps.esmorga.view.profilveV2.ProfileScreenV2
+import cmm.apps.esmorga.view.profileV2.ProfileScreenV2
 import cmm.apps.esmorga.view.registration.RegistrationConfirmationScreen
 import cmm.apps.esmorga.view.registration.RegistrationScreen
 import cmm.apps.esmorga.view.welcome.WelcomeScreen
