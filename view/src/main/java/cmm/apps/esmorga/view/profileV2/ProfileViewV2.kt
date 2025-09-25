@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,12 +26,17 @@ import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.profileV2.model.ProfileUiStateV2
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
+import org.koin.androidx.compose.koinViewModel
 
 @Screen
 @Composable
-fun ProfileScreenV2() {
+fun ProfileScreenV2(viewModel: ProfileViewModelV2 = koinViewModel()) {
+    val uiState by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(Unit) { viewModel.showUser() }
+
     EsmorgaTheme {
-        ProfileViewV2(uiState = ProfileUiStateV2(user = User("Pepe", "Pepe", "pepe@aefa.com", RoleType.ADMIN)))
+        ProfileViewV2(uiState = uiState)
     }
 }
 
@@ -74,16 +81,16 @@ fun LoggedProfileViewV2(
     logOutClick: () -> Unit,
     changePasswordClick: () -> Unit
 ) {
-    var showLogOut by remember { mutableStateOf(false) }
+    var dialogDisplayed by remember { mutableStateOf(false) }
 
-    if (showLogOut){
+    if (dialogDisplayed){
         EsmorgaDialog(
             title = stringResource(R.string.my_profile_logout_pop_up_title),
             dismissButtonText = stringResource(R.string.my_profile_logout_pop_up_cancel),
             confirmButtonText = stringResource(R.string.my_profile_logout_pop_up_confirm),
-            onDismiss = {showLogOut = false},
+            onDismiss = {dialogDisplayed = false},
             onConfirm = {
-                showLogOut = false
+                dialogDisplayed = false
                 logOutClick()
             }
         )
@@ -122,7 +129,7 @@ fun LoggedProfileViewV2(
         )
 
         EsmorgaRow(title = stringResource(R.string.my_profile_change_password), onClick = changePasswordClick)
-        EsmorgaRow(title = stringResource(R.string.my_profile_logout), onClick = { showLogOut = true })
+        EsmorgaRow(title = stringResource(R.string.my_profile_logout), onClick = { dialogDisplayed = true })
     }
 }
 
