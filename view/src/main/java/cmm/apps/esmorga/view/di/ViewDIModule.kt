@@ -14,6 +14,7 @@ import cmm.apps.esmorga.view.login.LoginViewModel
 import cmm.apps.esmorga.view.password.RecoverPasswordViewModel
 import cmm.apps.esmorga.view.password.ResetPasswordViewModel
 import cmm.apps.esmorga.view.profile.ProfileViewModel
+import cmm.apps.esmorga.view.profileV2.ProfileViewModelV2
 import cmm.apps.esmorga.view.registration.RegistrationConfirmationViewModel
 import cmm.apps.esmorga.view.registration.RegistrationViewModel
 import cmm.apps.esmorga.view.welcome.WelcomeViewModel
@@ -66,6 +67,10 @@ object ViewDIModule {
 
         viewModel { (eventForm: CreateEventForm) ->
             CreateEventFormTypeViewModel(eventForm)
+        }
+
+        viewModel {
+            ProfileViewModelV2(get())
         }
     }
 }
