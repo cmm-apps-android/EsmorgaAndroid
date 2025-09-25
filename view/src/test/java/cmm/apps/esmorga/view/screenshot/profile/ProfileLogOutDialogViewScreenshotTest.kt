@@ -21,4 +21,19 @@ class ProfileLogOutDialogViewScreenshotTest : BaseScreenshotTest() {
             }
         }
     }
+
+    @Test
+    fun logoutDialog_longText() {
+        paparazzi.snapshot {
+            EsmorgaTheme {
+                EsmorgaDialog(
+                    title = "Are you sure you want to log out?",
+                    confirmButtonText = "Yes, log out with long text",
+                    dismissButtonText = "No, cancel with long text",
+                    onConfirm = {},
+                    onDismiss = {}
+                )
+            }
+        }
+    }
 }
