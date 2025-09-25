@@ -7,13 +7,16 @@ import androidx.lifecycle.viewModelScope
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCaseV2
 import cmm.apps.esmorga.view.profileV2.model.ProfileUiStateV2
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class ProfileViewModelV2(
     private val getSavedUserCaseV2: GetSavedUserUseCaseV2
 ) : ViewModel(), DefaultLifecycleObserver {
 
-    val uiState = MutableStateFlow(ProfileUiStateV2())
+    private val _uiState = MutableStateFlow(ProfileUiStateV2())
+    val uiState: StateFlow<ProfileUiStateV2> = _uiState.asStateFlow()
 
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
@@ -24,10 +27,10 @@ class ProfileViewModelV2(
         viewModelScope.launch {
             getSavedUserCaseV2.invoke()
                 .onSuccess { user ->
-                    uiState.value = ProfileUiStateV2(user = user)
+                    _uiState.value = ProfileUiStateV2(user = user)
                 }
                 .onFailure {
-                    uiState.value = ProfileUiStateV2(user = null)
+                    _uiState.value = ProfileUiStateV2(user = null)
                 }
         }
     }
