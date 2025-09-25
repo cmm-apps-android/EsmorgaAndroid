@@ -27,7 +27,7 @@
    <string name="inline_error_password_invalid">Min 8 chars, must include at least 1 digit, 1 letter and 1 symbol</string>
    <string name="inline_error_password_mismatch">passwords do not match, try again!</string>
    <string name="placeholder_confirm_password">Confirm your password</string>
-   <string name="placeholder_email">Input your email, e.g. example@domain.com</string>
+   <string name="placeholder_email">Input your email</string>
    <string name="placeholder_last_name">Input your last name</string>
    <string name="placeholder_name">Input your name</string>
    <string name="placeholder_password">Input your password</string>
