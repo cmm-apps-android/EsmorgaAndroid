@@ -56,6 +56,7 @@ fun EsmorgaDialog(
                         onClick = {
                             onDismiss()
                         },
+                        oneLine = true,
                         modifier = modifier.weight(1F),
                         primary = false
                     )
@@ -63,6 +64,7 @@ fun EsmorgaDialog(
                     EsmorgaButton(
                         text = confirmButtonText,
                         modifier = modifier.weight(1F),
+                        oneLine = true,
                         onClick = {
                             onConfirm()
                         }
