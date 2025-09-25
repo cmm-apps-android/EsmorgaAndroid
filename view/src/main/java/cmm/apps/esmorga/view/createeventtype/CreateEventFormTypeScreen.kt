@@ -47,7 +47,6 @@ fun CreateEventFormTypeScreen(
     onBackClick: () -> Unit,
     onNextClick: (CreateEventForm) -> Unit
 ) {
-    var selectedEventType by remember { mutableStateOf(eventForm.type ?: EventType.PARTY) }
     val uiState: CreateEventTypeScreenUiState by createEventviewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
@@ -61,7 +60,7 @@ fun CreateEventFormTypeScreen(
     EsmorgaTheme {
         CreateEventFormTypeView(
             eventType = uiState.type,
-            onBackClick = { onBackClick() },
+            onBackClick = { createEventviewModel.onBackClick() },
             onNextClick = { createEventviewModel.onNextClick() },
             onEventTypeSelected = { createEventviewModel.onEventTypeSelected(it) },
         )
