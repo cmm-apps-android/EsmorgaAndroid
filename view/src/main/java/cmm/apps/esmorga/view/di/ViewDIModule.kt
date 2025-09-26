@@ -70,7 +70,7 @@ object ViewDIModule {
         }
 
         viewModel {
-            ProfileViewModelV2(get())
+            ProfileViewModelV2(get(), get())
         }
     }
 }

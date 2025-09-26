@@ -20,6 +20,8 @@ import cmm.apps.esmorga.domain.user.GetSavedUserUseCaseV2
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCaseV2Impl
 import cmm.apps.esmorga.domain.user.LogOutUseCase
 import cmm.apps.esmorga.domain.user.LogOutUseCaseImpl
+import cmm.apps.esmorga.domain.user.LogOutUseCaseV2
+import cmm.apps.esmorga.domain.user.LogOutUseCaseV2Impl
 import cmm.apps.esmorga.domain.user.PerformChangePasswordUseCase
 import cmm.apps.esmorga.domain.user.PerformChangePasswordUseCaseImpl
 import cmm.apps.esmorga.domain.user.PerformLoginUseCase
@@ -55,5 +57,6 @@ object DomainDIModule {
         factory<PerformChangePasswordUseCase> { PerformChangePasswordUseCaseImpl(get()) }
         factory<ShowDeviceIdIfNeededUseCase> { ShowDeviceIdIfNeededUseCaseImpl(get()) }
         factory<GetSavedUserUseCaseV2> {GetSavedUserUseCaseV2Impl(get())}
+        factory<LogOutUseCaseV2> {LogOutUseCaseV2Impl(get())}
     }
 }
