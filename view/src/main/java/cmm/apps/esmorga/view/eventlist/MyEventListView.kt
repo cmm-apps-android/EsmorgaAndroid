@@ -150,7 +150,7 @@ fun MyEventListView(
             } else {
                 when (uiState.error) {
                     MyEventListError.EMPTY_LIST -> MyEventsEmptyView()
-                    MyEventListError.NOT_LOGGED_IN -> EsmorgaGuestError(stringResource(R.string.unauthenticated_error_title), stringResource(R.string.button_login), { onSignInClick() }, R.raw.oops)
+                    MyEventListError.NOT_LOGGED_IN -> EsmorgaGuestError(stringResource(R.string.unauthenticated_error_message), stringResource(R.string.button_login), { onSignInClick() }, R.raw.oops)
                     MyEventListError.UNKNOWN -> EsmorgaGuestError(stringResource(R.string.default_error_title), stringResource(R.string.button_retry), { onRetryClick() }, R.raw.oops)
                     null -> EventList(
                         events = uiState.eventList,
