@@ -36,13 +36,17 @@ fun ProfileScreenV2(viewModel: ProfileViewModelV2 = koinViewModel()) {
     LaunchedEffect(Unit) { viewModel.showUser() }
 
     EsmorgaTheme {
-        ProfileViewV2(uiState = uiState)
+        ProfileViewV2(
+            uiState = uiState,
+            logOutClick = { viewModel.logOut() }
+        )
     }
 }
 
 @Composable
 fun ProfileViewV2(
     uiState: ProfileUiStateV2,
+    logOutClick: () -> Unit
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize()
@@ -59,15 +63,16 @@ fun ProfileViewV2(
                     .padding(vertical = 16.dp, horizontal = 16.dp)
             )
 
-            if (uiState.user == null){
+            if (uiState.user == null) {
                 EsmorgaGuestError(
                     errorMessage = stringResource(R.string.unauthenticated_error_message),
                     buttonText = stringResource(R.string.unauthenticated_error_login_button),
                     onButtonClicked = {},
-                    animation = R.raw.oops)
+                    animation = R.raw.oops
+                )
             } else {
                 val user = uiState.user
-                LoggedProfileViewV2(name = user.name, lastName = user.lastName, email = user.email, logOutClick = {}, changePasswordClick = {})
+                LoggedProfileViewV2(name = user.name, lastName = user.lastName, email = user.email, logOutClick = logOutClick, changePasswordClick = {})
             }
         }
     }
@@ -83,12 +88,12 @@ fun LoggedProfileViewV2(
 ) {
     var dialogDisplayed by remember { mutableStateOf(false) }
 
-    if (dialogDisplayed){
+    if (dialogDisplayed) {
         EsmorgaDialog(
             title = stringResource(R.string.my_profile_logout_pop_up_title),
             dismissButtonText = stringResource(R.string.my_profile_logout_pop_up_cancel),
             confirmButtonText = stringResource(R.string.my_profile_logout_pop_up_confirm),
-            onDismiss = {dialogDisplayed = false},
+            onDismiss = { dialogDisplayed = false },
             onConfirm = {
                 dialogDisplayed = false
                 logOutClick()
@@ -143,6 +148,11 @@ fun ProfileViewV2NotLoguedPreview() {
 @Composable
 fun ProfileViewV2LoguedPreview() {
     EsmorgaTheme {
-        ProfileViewV2(uiState = ProfileUiStateV2(user = User("Fulano", "López", "fulanolopez@gmail.com", role = RoleType.ADMIN)))
+        ProfileViewV2(
+            uiState = ProfileUiStateV2(
+                user = User("Fulano", "López", "fulanolopez@gmail.com", role = RoleType.ADMIN)
+            ),
+            logOutClick = {},
+        )
     }
 }
