@@ -55,7 +55,6 @@ class ProfileViewModelV2(
             logOutUseCaseV2UseCase.invoke()
             _uiState.value = ProfileUiStateV2(user = null)
 
-            _effect.tryEmit(ProfileEffectV2.NavigateToLogIn)
         }
     }
     fun navigateTologIn() {
