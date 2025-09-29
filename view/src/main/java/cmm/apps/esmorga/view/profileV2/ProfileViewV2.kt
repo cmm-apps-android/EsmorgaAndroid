@@ -24,21 +24,31 @@ import cmm.apps.esmorga.domain.user.model.RoleType
 import cmm.apps.esmorga.domain.user.model.User
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
+import cmm.apps.esmorga.view.profileV2.model.ProfileEffectV2
 import cmm.apps.esmorga.view.profileV2.model.ProfileUiStateV2
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import org.koin.androidx.compose.koinViewModel
 
 @Screen
 @Composable
-fun ProfileScreenV2(viewModel: ProfileViewModelV2 = koinViewModel()) {
+fun ProfileScreenV2(viewModel: ProfileViewModelV2 = koinViewModel(), navigateToChangePassword: () -> Unit, navigateToLogin: () -> Unit) {
     val uiState by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(Unit) { viewModel.showUser() }
+    LaunchedEffect(Unit) {
+        viewModel.effect.collect{ effect ->
+            when(effect){
+                ProfileEffectV2.NavigateToLogIn -> navigateToLogin()
+                ProfileEffectV2.NavigateToChangePassword -> navigateToChangePassword()
+            }
+        }
+    }
 
     EsmorgaTheme {
         ProfileViewV2(
             uiState = uiState,
-            logOutClick = { viewModel.logOut() }
+            logOutClick = { viewModel.logOut() },
+            navigateToChangePassword = {viewModel.navigateToChangePassword()},
+            navigateToLogin = {viewModel.navigateTologIn()}
         )
     }
 }
@@ -46,7 +56,9 @@ fun ProfileScreenV2(viewModel: ProfileViewModelV2 = koinViewModel()) {
 @Composable
 fun ProfileViewV2(
     uiState: ProfileUiStateV2,
-    logOutClick: () -> Unit
+    logOutClick: () -> Unit,
+    navigateToLogin: () -> Unit,
+    navigateToChangePassword: () -> Unit
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize()
@@ -67,12 +79,12 @@ fun ProfileViewV2(
                 EsmorgaGuestError(
                     errorMessage = stringResource(R.string.unauthenticated_error_message),
                     buttonText = stringResource(R.string.unauthenticated_error_login_button),
-                    onButtonClicked = {},
+                    onButtonClicked = { navigateToLogin() },
                     animation = R.raw.oops
                 )
             } else {
                 val user = uiState.user
-                LoggedProfileViewV2(name = user.name, lastName = user.lastName, email = user.email, logOutClick = logOutClick, changePasswordClick = {})
+                LoggedProfileViewV2(name = user.name, lastName = user.lastName, email = user.email, logOutClick = logOutClick, changePasswordClick = { navigateToChangePassword() })
             }
         }
     }
@@ -141,7 +153,7 @@ fun LoggedProfileViewV2(
 @Preview
 @Composable
 fun ProfileViewV2NotLoguedPreview() {
-    EsmorgaTheme { ProfileScreenV2() }
+    EsmorgaTheme { ProfileScreenV2(navigateToLogin = {}, navigateToChangePassword = {}) }
 }
 
 @Preview
@@ -153,6 +165,8 @@ fun ProfileViewV2LoguedPreview() {
                 user = User("Fulano", "López", "fulanolopez@gmail.com", role = RoleType.ADMIN)
             ),
             logOutClick = {},
+            navigateToLogin = {},
+            navigateToChangePassword = {}
         )
     }
 }

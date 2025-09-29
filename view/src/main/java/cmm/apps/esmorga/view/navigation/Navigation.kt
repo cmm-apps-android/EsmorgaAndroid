@@ -209,6 +209,12 @@ private fun NavGraphBuilder.homeFlow(navigationController: NavHostController) {
     }
     composable<Navigation.ProfileScreen> {
         ProfileScreenV2(
+            navigateToLogin = {
+                navigationController.navigate(Navigation.LoginScreen())
+            },
+            navigateToChangePassword = {
+                navigationController.navigate(Navigation.ChangePasswordScreen)
+            }
         )
     }
 
