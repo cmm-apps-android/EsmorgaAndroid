@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCaseV2
 import cmm.apps.esmorga.domain.user.LogOutUseCaseV2
-import cmm.apps.esmorga.view.profile.model.ProfileEffect
 import cmm.apps.esmorga.view.profileV2.model.ProfileEffectV2
 import cmm.apps.esmorga.view.profileV2.model.ProfileUiStateV2
 import kotlinx.coroutines.channels.BufferOverflow
