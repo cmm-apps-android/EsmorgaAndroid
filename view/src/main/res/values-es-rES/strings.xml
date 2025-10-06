@@ -27,7 +27,7 @@
    <string name="inline_error_password_invalid">Mínimo 8 caracteres, debe incluir al menos 1 dígito, 1 letra y 1 símbolo</string>
    <string name="inline_error_password_mismatch">¡Las contraseñas no coinciden, inténtalo de nuevo!</string>
    <string name="placeholder_confirm_password">Confirma tu contraseña</string>
-   <string name="placeholder_email">Ingresa tu email, ej: ejemplo@dominio.com</string>
+   <string name="placeholder_email">Ingresa tu email</string>
    <string name="placeholder_last_name">Ingresa tu apellido</string>
    <string name="placeholder_name">Ingresa tu nombre</string>
    <string name="placeholder_password">Ingresa tu contraseña</string>
@@ -45,7 +45,6 @@
    <string name="bottom_bar_myprofile">Perfil</string>
    <string name="screen_my_events_empty_text">Todavía no estás apuntado a ningún evento. Anímate para el siguiente!</string>
    <string name="screen_my_events_title">Tus eventos</string>
-   <string name="unauthenticated_error_title">¡OH oh no estas logueado!</string>
    <string name="button_join_event">Apuntarse</string>
    <string name="button_leave_event">Rajarse</string>
    <string name="button_login_to_join">Identifícate para apuntarte</string>
@@ -63,7 +62,7 @@
    <string name="my_profile_logout_pop_up_title">¿Seguro que quieres cerrar sesión?</string>
    <string name="my_profile_logout_pop_up_confirm">Sí, cerrar sesión</string>
    <string name="my_profile_logout_pop_up_cancel">No, cancelar</string>
-   <string name="unauthenticated_error_message">Oh no! No estás logueado</string>
+   <string name="unauthenticated_error_message">Ups… ¡No estás logueado!</string>
    <string name="unauthenticated_error_login_button">Login</string>
    <string name="register_confirmation_email_title">Confirma tu cuenta</string>
    <string name="register_confirmation_email_subtitle">Hemos enviado un enlace de confirmación a tu correo electrónico. Por favor, revisa tu bandeja de entrada y sigue el enlace para activar tu cuenta.</string>
@@ -105,4 +104,8 @@
    <string name="step_2_option_games">Juegos</string>
    <string name="step_2_screen_title">Tipo de Evento</string>
    <string name="placeholder_event_description">Introduce una descripción del evento</string>
+   <string name="step_3_screen_title">Fecha del evento</string>
+   <string name="step_3_screen_row_time">Hora del evento</string>
+   <string name="confirm_button_dialog">Confirmar</string>
+   <string name="cancel_button_dialog">Cancelar</string>
 </resources>

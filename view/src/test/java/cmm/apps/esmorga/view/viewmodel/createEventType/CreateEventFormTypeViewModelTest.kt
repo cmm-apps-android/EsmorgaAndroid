@@ -1,11 +1,10 @@
 package cmm.apps.esmorga.view.viewmodel.createEventType
 
 import app.cash.turbine.test
-import cmm.apps.esmorga.domain.event.model.EventType
 import cmm.apps.esmorga.domain.event.model.CreateEventForm
+import cmm.apps.esmorga.domain.event.model.EventType
 import cmm.apps.esmorga.view.createeventtype.CreateEventFormTypeViewModel
 import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeScreenEffect
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue

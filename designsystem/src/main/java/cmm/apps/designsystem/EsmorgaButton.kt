@@ -17,6 +17,7 @@ fun EsmorgaButton(
     isLoading: Boolean = false,
     isEnabled: Boolean = true,
     primary: Boolean = true,
+    oneLine: Boolean = false,
     onClick: () -> Unit
 ) {
     Button(
@@ -36,7 +37,7 @@ fun EsmorgaButton(
         if (isLoading) {
             EsmorgaCircularLoader(modifier = Modifier.size(24.dp))
         } else {
-            EsmorgaText(text = text, style = EsmorgaTextStyle.BUTTON)
+            EsmorgaText(text = text, style = EsmorgaTextStyle.BUTTON, maxLines = if (oneLine) 1 else Int.MAX_VALUE)
         }
     }
 
