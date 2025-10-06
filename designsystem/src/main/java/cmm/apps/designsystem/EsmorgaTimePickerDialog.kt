@@ -7,26 +7,33 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.TimePicker
+import androidx.compose.material3.TimePickerLayoutType
+import androidx.compose.material3.TimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EsmorgaDialog(
-    title: String,
+fun EsmorgaTimePickerDialog(
+    modifier: Modifier,
+    onDismiss: () -> Unit,
+    onConfirm: (String) -> Unit,
+    formattedTime: (Int, Int) -> String,
     confirmButtonText: String,
     dismissButtonText: String,
-    onConfirm: () -> Unit,
-    onDismiss: () -> Unit,
-    modifier: Modifier = Modifier
+    timeState: TimePickerState
 ) {
-    Dialog(onDismissRequest = {
-        onDismiss()
-    }) {
+    Dialog(
+        onDismissRequest = { onDismiss() },
+    ) {
         Surface(
             shape = MaterialTheme.shapes.small,
             color = MaterialTheme.colorScheme.surfaceContainerLow,
@@ -35,16 +42,13 @@ fun EsmorgaDialog(
             Column(
                 modifier = Modifier
                     .padding(end = 16.dp, start = 16.dp, top = 32.dp, bottom = 16.dp)
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                EsmorgaText(
-                    text = title,
-                    style = EsmorgaTextStyle.BODY_1,
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(bottom = 16.dp)
+                TimePicker(
+                    state = timeState,
+                    layoutType = TimePickerLayoutType.Vertical,
                 )
-
                 Row(
                     modifier = modifier
                         .fillMaxWidth()
@@ -56,7 +60,6 @@ fun EsmorgaDialog(
                         onClick = {
                             onDismiss()
                         },
-                        oneLine = true,
                         modifier = modifier.weight(1F),
                         primary = false
                     )
@@ -64,9 +67,8 @@ fun EsmorgaDialog(
                     EsmorgaButton(
                         text = confirmButtonText,
                         modifier = modifier.weight(1F),
-                        oneLine = true,
                         onClick = {
-                            onConfirm()
+                            onConfirm(formattedTime(timeState.hour, timeState.minute))
                         }
                     )
                 }

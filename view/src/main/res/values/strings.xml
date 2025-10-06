@@ -27,7 +27,7 @@
    <string name="inline_error_password_invalid">Min 8 chars, must include at least 1 digit, 1 letter and 1 symbol</string>
    <string name="inline_error_password_mismatch">passwords do not match, try again!</string>
    <string name="placeholder_confirm_password">Confirm your password</string>
-   <string name="placeholder_email">Input your email, e.g. example@domain.com</string>
+   <string name="placeholder_email">Input your email</string>
    <string name="placeholder_last_name">Input your last name</string>
    <string name="placeholder_name">Input your name</string>
    <string name="placeholder_password">Input your password</string>
@@ -49,7 +49,6 @@
    <string name="snackbar_event_joined">Bravo! You have joined the event!</string>
    <string name="screen_my_events_empty_text">You are not registered for any event yet. Sign up for the next one!</string>
    <string name="screen_my_events_title">Your events</string>
-   <string name="unauthenticated_error_title">Oh no! You are not logged in</string>
    <string name="screen_no_connection_title">No network connection</string>
    <string name="screen_no_connection_body">Please, check your connection and try again.</string>
    <string name="button_ok">OK</string>
@@ -63,7 +62,7 @@
    <string name="my_profile_logout_pop_up_title">Are you sure you want to log out?</string>
    <string name="my_profile_logout_pop_up_confirm">Yes, log out</string>
    <string name="my_profile_logout_pop_up_cancel">No, cancel</string>
-   <string name="unauthenticated_error_message">Oh no! You are not logged in</string>
+   <string name="unauthenticated_error_message">Ups… You are not logged in!</string>
    <string name="unauthenticated_error_login_button">Login</string>
    <string name="register_confirmation_email_title">Confirm your account</string>
    <string name="register_confirmation_email_subtitle">We have sent a confirmation link to your email. Please check your inbox and follow the link to activate your account.</string>
@@ -105,4 +104,8 @@
    <string name="step_2_option_games">Games</string>
    <string name="step_2_screen_title">Event Type</string>
    <string name="placeholder_event_description">Enter a description of the event</string>
+   <string name="step_3_screen_title">Event date</string>
+   <string name="step_3_screen_row_time">Event time</string>
+   <string name="confirm_button_dialog">Confirm</string>
+   <string name="cancel_button_dialog">Cancel</string>
 </resources>

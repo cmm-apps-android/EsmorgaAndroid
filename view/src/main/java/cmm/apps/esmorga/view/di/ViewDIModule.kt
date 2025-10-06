@@ -6,6 +6,7 @@ import cmm.apps.esmorga.view.MainViewModel
 import cmm.apps.esmorga.view.activateaccount.ActivateAccountViewModel
 import cmm.apps.esmorga.view.changepassword.ChangePasswordViewModel
 import cmm.apps.esmorga.view.createevent.CreateEventFormTitleViewModel
+import cmm.apps.esmorga.view.createeventdate.CreateEventFormDateViewModel
 import cmm.apps.esmorga.view.createeventtype.CreateEventFormTypeViewModel
 import cmm.apps.esmorga.view.eventdetails.EventDetailsViewModel
 import cmm.apps.esmorga.view.eventlist.EventListViewModel
