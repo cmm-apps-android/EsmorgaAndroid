@@ -103,7 +103,7 @@ fun ProfileView(
             if (uiState.user == null) {
                 EsmorgaGuestError(
                     stringResource(R.string.unauthenticated_error_message),
-                    stringResource(R.string.unauthenticated_error_login_button),
+                    stringResource(R.string.button_login),
                     { onNavigateLogin() },
                     R.raw.oops
                 )
