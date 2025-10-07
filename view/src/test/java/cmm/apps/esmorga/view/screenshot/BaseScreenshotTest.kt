@@ -26,7 +26,8 @@ open class BaseScreenshotTest {
     val paparazzi = Paparazzi(
         deviceConfig = DeviceConfig.PIXEL_6,
         renderingMode = SessionParams.RenderingMode.NORMAL,
-        showSystemUi = false
+        showSystemUi = false,
+        maxPercentDifference = 0.01
     )
 
     @OptIn(ExperimentalCoilApi::class, ExperimentalCoroutinesApi::class)
