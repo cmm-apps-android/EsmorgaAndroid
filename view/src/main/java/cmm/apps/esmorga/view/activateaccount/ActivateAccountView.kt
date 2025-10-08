@@ -66,18 +66,14 @@ fun ActivateAccountScreen(
         }
     }
     EsmorgaTheme {
-        ActivateAccountView(
-            uiState = uiState,
-            onContinueClick = {
-                viewModel.onContinueClicked()
-            })
+        ActivateAccountView(uiState = uiState)
     }
+
 }
 
 @Composable
 fun ActivateAccountView(
     uiState: ActivateAccountUiState,
-    onContinueClick: () -> Unit
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -119,13 +115,6 @@ fun ActivateAccountView(
                         .testTag(ACTIVATE_ACCOUNT_SUBTITLE)
                 )
 
-                EsmorgaButton(
-                    text = stringResource(R.string.activate_account_continue), modifier = Modifier
-                        .padding(top = 32.dp, bottom = 16.dp)
-                        .testTag(ACTIVATE_ACCOUNT_BUTTON), isLoading = uiState.isLoading
-                ) {
-                    onContinueClick()
-                }
             }
         }
 
