@@ -32,11 +32,26 @@ jobs:
         with:
           PAT: ${{ secrets.E2E_Github_Token }}
 
-      - uses: ./.github/actions/runTests
+      - name: Run Tests
+        id: tests
+        uses: ./.github/actions/runTests
+        continue-on-error: true
         with:
           Build-GOOGLE-SERVICES: ${{ secrets.GOOGLE_SERVICES_JSON }}
 
+      - name: Publish JUnit Report (on failure)
+        if: steps.tests.outcome == 'failure'
+        uses: mikepenz/action-junit-report@v4
+        with:
+          report_paths: |
+            **/build/test-results/**/*.xml
+          check_name: Failed Test Report
+          detailed_summary: true
+          require_tests: true
+          fail_on_failure: false
+
       - name: Add coverage report to PR
+        if: steps.tests.outcome == 'success'
         id: kover
         uses: mi-kas/kover-report@v1
         with:
@@ -47,3 +62,7 @@ jobs:
           min-coverage-overall: 75
           min-coverage-changed-files: 75
           coverage-counter-type: LINE
+
+      - name: Fail job if tests failed
+        if: steps.tests.outcome == 'failure'
+        run: exit 1
