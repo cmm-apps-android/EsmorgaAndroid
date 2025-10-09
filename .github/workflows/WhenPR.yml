@@ -63,3 +63,7 @@ jobs:
           min-coverage-overall: 75
           min-coverage-changed-files: 75
           coverage-counter-type: LINE
+
+      - name: Fail job if tests failed
+        if: steps.tests.outcome == 'failure'
+        run: exit 1
