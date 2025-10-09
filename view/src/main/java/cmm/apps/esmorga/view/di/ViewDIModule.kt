@@ -8,6 +8,8 @@ import cmm.apps.esmorga.view.changepassword.ChangePasswordViewModel
 import cmm.apps.esmorga.view.createevent.CreateEventFormTitleViewModel
 import cmm.apps.esmorga.view.createeventdate.CreateEventFormDateViewModel
 import cmm.apps.esmorga.view.createeventtype.CreateEventFormTypeViewModel
+import cmm.apps.esmorga.view.dateformatting.DateFormatterImpl
+import cmm.apps.esmorga.view.dateformatting.EsmorgaDateTimeFormatter
 import cmm.apps.esmorga.view.eventdetails.EventDetailsViewModel
 import cmm.apps.esmorga.view.eventlist.EventListViewModel
 import cmm.apps.esmorga.view.eventlist.MyEventListViewModel
@@ -70,7 +72,9 @@ object ViewDIModule {
         }
 
         viewModel { (eventForm: CreateEventForm) ->
-            CreateEventFormDateViewModel(eventForm)
+            CreateEventFormDateViewModel(eventForm, get())
         }
+
+        single<EsmorgaDateTimeFormatter> { DateFormatterImpl() }
     }
 }

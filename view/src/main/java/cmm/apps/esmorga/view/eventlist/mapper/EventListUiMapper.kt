@@ -1,7 +1,7 @@
 package cmm.apps.esmorga.view.eventlist.mapper
 
-import cmm.apps.esmorga.domain.datetime.EventDateTimeFormatter
 import cmm.apps.esmorga.domain.event.model.Event
+import cmm.apps.esmorga.view.dateformatting.EsmorgaDateTimeFormatter
 import cmm.apps.esmorga.view.eventlist.model.EventListUiModel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets
 object EventListUiMapper : KoinComponent {
 
     fun formatDate(date: Long): String {
-        val formatter: EventDateTimeFormatter by inject()
+        val formatter: EsmorgaDateTimeFormatter by inject()
         return formatter.formatEventDate(date)
     }
 

@@ -30,8 +30,6 @@ import cmm.apps.esmorga.domain.user.PerformRegistrationUserCase
 import cmm.apps.esmorga.domain.user.PerformRegistrationUserCaseImpl
 import cmm.apps.esmorga.domain.user.repository.PerformResetPasswordUseCase
 import cmm.apps.esmorga.domain.user.repository.PerformResetPasswordUseCaseImpl
-import cmm.apps.esmorga.domain.datetime.EventDateTimeFormatter
-import cmm.apps.esmorga.domain.datetime.EventDateTimeFormatterImpl
 import org.koin.dsl.module
 
 
@@ -54,6 +52,5 @@ object DomainDIModule {
         factory<ShowDeviceIdIfNeededUseCase> { ShowDeviceIdIfNeededUseCaseImpl(get()) }
         factory<PerformChangePasswordUseCase> { PerformChangePasswordUseCaseImpl(get()) }
         factory<ShowDeviceIdIfNeededUseCase> { ShowDeviceIdIfNeededUseCaseImpl(get()) }
-        factory<EventDateTimeFormatter> { EventDateTimeFormatterImpl() }
     }
 }
