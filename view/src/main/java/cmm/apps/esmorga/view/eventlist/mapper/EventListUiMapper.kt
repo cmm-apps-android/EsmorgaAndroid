@@ -1,19 +1,18 @@
 package cmm.apps.esmorga.view.eventlist.mapper
 
+import cmm.apps.esmorga.domain.datetime.EventDateTimeFormatter
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.view.eventlist.model.EventListUiModel
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
-import java.time.Instant
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
-import java.util.TimeZone
 
-object EventListUiMapper {
+object EventListUiMapper : KoinComponent {
 
     fun formatDate(date: Long): String {
-        val zonedDateTime: ZonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), TimeZone.getDefault().toZoneId())
-        return zonedDateTime.format(DateTimeFormatter.ofPattern("d' de 'MMMM' a las 'HH:mm").withZone(TimeZone.getDefault().toZoneId()))
+        val formatter: EventDateTimeFormatter by inject()
+        return formatter.formatEventDate(date)
     }
 
     private fun Event.toEventUi(): EventListUiModel {

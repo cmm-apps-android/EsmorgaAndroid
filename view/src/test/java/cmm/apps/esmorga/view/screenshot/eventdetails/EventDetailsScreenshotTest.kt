@@ -41,7 +41,7 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
                     uiState = EventDetailsUiState(
                         id = "1",
                         title = "Mobgen fest",
-                        subtitle = "35 de Mayo a las 27:00",
+                        subtitle = "Fri, Sep 26, 2025, 16:44",
                         description = "El mejor evento del año",
                         image = "test.png",
                         locationName = "Mi casa",
