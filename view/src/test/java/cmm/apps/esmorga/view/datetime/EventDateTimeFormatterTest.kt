@@ -1,6 +1,10 @@
-package cmm.apps.esmorga.domain.datetime
+package cmm.apps.esmorga.view.datetime
 
+import cmm.apps.esmorga.view.dateformatting.DateFormatterImpl
+import cmm.apps.esmorga.view.dateformatting.EsmorgaDateTimeFormatter
 import org.junit.After
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import java.text.DateFormat
@@ -9,15 +13,13 @@ import java.time.ZonedDateTime
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 
 class EventDateTimeFormatterTest {
 
     private val previousLocale: Locale = Locale.getDefault()
     private val previousTimeZone: TimeZone = TimeZone.getDefault()
 
-    private val sut: EventDateTimeFormatter = EventDateTimeFormatterImpl()
+    private val sut: EsmorgaDateTimeFormatter = DateFormatterImpl()
 
     private var epoch: Long = 0L
 
@@ -73,7 +75,7 @@ class EventDateTimeFormatterTest {
     // MOB-343
     @Test
     fun `given epoch millis when formatted in Spanish locale then medium date and short time are localized`() {
-        Locale.setDefault(Locale("es", "ES"))
+        Locale.setDefault(Locale.forLanguageTag("es-ES"))
         val result = sut.formatEventDate(epoch)
         val remainder = result.substringAfter(", ")
         val expectedDate = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault()).format(Date(epoch))
@@ -98,7 +100,7 @@ class EventDateTimeFormatterTest {
     // MOB-343
     @Test
     fun `given epoch millis when formatted in Spanish locale then day and separators present`() {
-        Locale.setDefault(Locale("es", "ES"))
+        Locale.setDefault(Locale.forLanguageTag("es-ES"))
         val result = sut.formatEventDate(epoch)
         assertTrue(result.count { it == ',' } == 2)
         val parts = result.split(", ")
