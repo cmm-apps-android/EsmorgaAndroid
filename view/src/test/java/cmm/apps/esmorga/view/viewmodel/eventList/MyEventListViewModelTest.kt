@@ -1,5 +1,8 @@
 package cmm.apps.esmorga.view.viewmodel.eventList
 
+import android.content.Context
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import app.cash.turbine.test
 import cmm.apps.esmorga.domain.event.GetMyEventListUseCase
 import cmm.apps.esmorga.domain.result.ErrorCodes
@@ -7,6 +10,8 @@ import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.EsmorgaResult
 import cmm.apps.esmorga.domain.result.Source
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
+import cmm.apps.esmorga.view.dateformatting.DateFormatterImpl
+import cmm.apps.esmorga.view.dateformatting.EsmorgaDateTimeFormatter
 import cmm.apps.esmorga.view.eventlist.MyEventListViewModel
 import cmm.apps.esmorga.view.eventlist.model.MyEventListEffect
 import cmm.apps.esmorga.view.eventlist.model.MyEventListError
@@ -15,15 +20,38 @@ import cmm.apps.esmorga.view.viewmodel.util.MainDispatcherRule
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
+import org.junit.After
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
+import org.koin.core.context.stopKoin
+import org.koin.dsl.module
 
+@RunWith(AndroidJUnit4::class)
 class MyEventListViewModelTest {
 
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
+    private lateinit var mockContext: Context
+    @Before
+    fun init() {
+        mockContext = ApplicationProvider.getApplicationContext()
+        startKoin {
+            androidContext(mockContext)
+            modules(module {
+                single<EsmorgaDateTimeFormatter> { DateFormatterImpl() }
+            })
+        }
+    }
 
+    @After
+    fun shutDown() {
+        stopKoin()
+    }
     @Test
     fun `given a successful usecase when load method is called then UI state containing events is emitted`() = runTest {
         val domainEventName = "DomainEvent"

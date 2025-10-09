@@ -1,11 +1,16 @@
 package cmm.apps.esmorga.view.viewmodel.eventList
 
+import android.content.Context
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import app.cash.turbine.test
 import cmm.apps.esmorga.domain.event.GetEventListUseCase
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.domain.event.model.EventLocation
 import cmm.apps.esmorga.domain.event.model.EventType
 import cmm.apps.esmorga.domain.result.EsmorgaResult
+import cmm.apps.esmorga.view.dateformatting.DateFormatterImpl
+import cmm.apps.esmorga.view.dateformatting.EsmorgaDateTimeFormatter
 import cmm.apps.esmorga.view.eventlist.EventListViewModel
 import cmm.apps.esmorga.view.eventlist.model.EventListEffect
 import cmm.apps.esmorga.view.eventlist.model.EventListUiModel
@@ -14,16 +19,41 @@ import cmm.apps.esmorga.view.viewmodel.util.MainDispatcherRule
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
+import org.junit.After
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
+import org.koin.core.context.stopKoin
+import org.koin.dsl.module
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
+@RunWith(AndroidJUnit4::class)
 class EventListViewModelTest {
 
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
+
+    private lateinit var mockContext: Context
+    @Before
+    fun init() {
+        mockContext = ApplicationProvider.getApplicationContext()
+        startKoin {
+            androidContext(mockContext)
+            modules(module {
+                single<EsmorgaDateTimeFormatter> { DateFormatterImpl() }
+            })
+        }
+    }
+
+    @After
+    fun shutDown() {
+        stopKoin()
+    }
 
     @Test
     fun `given a successful usecase when load method is called usecase executed and UI state containing events is emitted`() = runTest {
