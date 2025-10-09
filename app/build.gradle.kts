@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "cmm.apps.esmorga"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "cmm.apps.esmorga"
