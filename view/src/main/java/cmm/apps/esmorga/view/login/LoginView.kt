@@ -61,7 +61,7 @@ import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
-
+import cmm.apps.designsystem.R as DesignSystem
 @Screen
 @Composable
 fun LoginScreen(
@@ -158,7 +158,7 @@ fun LoginView(
                 .padding(top = innerPadding.calculateTopPadding())
         ) {
             Image(
-                painter = painterResource(id = R.drawable.img_login_header),
+                painter = painterResource(id = DesignSystem.drawable.img_login_header),
                 contentDescription = "Login header",
                 modifier = Modifier
                     .fillMaxWidth()
