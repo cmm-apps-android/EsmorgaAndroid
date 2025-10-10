@@ -33,7 +33,6 @@ class ActivateAccountViewScreenshotTest : BaseScreenshotTest() {
             EsmorgaTheme(darkTheme = false) {
                 ActivateAccountView(
                     uiState = uiState,
-                    onContinueClick = {}
                 )
             }
         }
