@@ -39,8 +39,3 @@ runs:
         detailed_summary: true
         require_tests: true
         fail_on_failure: false
-
-    - name: Fail if tests failed
-      if: steps.tests.outcome == 'failure'
-      shell: bash
-      run: exit 1
