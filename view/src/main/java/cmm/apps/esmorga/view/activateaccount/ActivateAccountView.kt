@@ -18,12 +18,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import cmm.apps.designsystem.EsmorgaButton
 import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
-import cmm.apps.esmorga.view.activateaccount.RegistrationConfirmationScreenTestTags.ACTIVATE_ACCOUNT_BUTTON
 import cmm.apps.esmorga.view.activateaccount.RegistrationConfirmationScreenTestTags.ACTIVATE_ACCOUNT_IMAGE
 import cmm.apps.esmorga.view.activateaccount.RegistrationConfirmationScreenTestTags.ACTIVATE_ACCOUNT_SUBTITLE
 import cmm.apps.esmorga.view.activateaccount.RegistrationConfirmationScreenTestTags.ACTIVATE_ACCOUNT_TITLE
@@ -123,7 +121,6 @@ fun ActivateAccountView(
 
 object RegistrationConfirmationScreenTestTags {
     const val ACTIVATE_ACCOUNT_TITLE = "activate account screen title"
-    const val ACTIVATE_ACCOUNT_BUTTON = "activate account screen button"
     const val ACTIVATE_ACCOUNT_IMAGE = "activate account screen image"
     const val ACTIVATE_ACCOUNT_SUBTITLE = "activate account screen subtitle"
 }
