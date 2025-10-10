@@ -27,11 +27,6 @@ jobs:
       - name: Clean project
         run: ./gradlew clean
 
-      - name: OAS
-        uses: ./.github/actions/OAS
-        with:
-          PAT: ${{ secrets.E2E_Github_Token }}
-
       - uses: ./.github/actions/runTests
         with:
           Build-GOOGLE-SERVICES: ${{ secrets.GOOGLE_SERVICES_JSON }}
