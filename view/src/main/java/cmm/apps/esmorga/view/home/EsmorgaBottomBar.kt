@@ -16,7 +16,7 @@ import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.navigation.Navigation
-
+import cmm.apps.designsystem.R as DesignSystem
 @Composable
 fun EsmorgaBottomBar(navigationController: NavHostController, items: List<BottomNavItem>, currentRoute: BottomNavItemRoute?) {
     NavigationBar(
@@ -63,9 +63,9 @@ fun EsmorgaBottomBar(navigationController: NavHostController, items: List<Bottom
 }
 
 sealed class BottomNavItem(val route: BottomNavItemRoute, val icon: Int, val label: Int) {
-    object Explore : BottomNavItem(BottomNavItemRoute.EVENT_LIST, R.drawable.ic_explore, R.string.bottom_bar_explore)
-    object MyEvents : BottomNavItem(BottomNavItemRoute.MY_EVENTS, R.drawable.ic_my_events, R.string.bottom_bar_myevents)
-    object Profile : BottomNavItem(BottomNavItemRoute.PROFILE, R.drawable.ic_profile, R.string.bottom_bar_myprofile)
+    object Explore : BottomNavItem(BottomNavItemRoute.EVENT_LIST, DesignSystem.drawable.ic_explore, R.string.bottom_bar_explore)
+    object MyEvents : BottomNavItem(BottomNavItemRoute.MY_EVENTS, DesignSystem.drawable.ic_my_events, R.string.bottom_bar_myevents)
+    object Profile : BottomNavItem(BottomNavItemRoute.PROFILE, DesignSystem.drawable.ic_profile, R.string.bottom_bar_myprofile)
 }
 
 enum class BottomNavItemRoute(val screen: String, val navigation: Navigation) {

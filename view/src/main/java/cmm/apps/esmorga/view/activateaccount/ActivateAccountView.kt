@@ -22,6 +22,7 @@ import cmm.apps.designsystem.EsmorgaButton
 import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.view.R
+import cmm.apps.designsystem.R as DesignSystem
 import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.activateaccount.RegistrationConfirmationScreenTestTags.ACTIVATE_ACCOUNT_BUTTON
 import cmm.apps.esmorga.view.activateaccount.RegistrationConfirmationScreenTestTags.ACTIVATE_ACCOUNT_IMAGE
@@ -90,7 +91,7 @@ fun ActivateAccountView(
 
             Image(
                 painter = painterResource(
-                    id = R.drawable.activate_account_image
+                    id = DesignSystem.drawable.activate_account_image
                 ),
                 contentDescription = null,
                 contentScale = ContentScale.FillWidth,

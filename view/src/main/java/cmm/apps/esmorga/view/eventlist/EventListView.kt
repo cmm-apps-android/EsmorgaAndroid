@@ -12,8 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -56,7 +54,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
-
+import cmm.apps.designsystem.R as DesignSystem
 @Screen
 @Composable
 fun EventListScreen(elvm: EventListViewModel = koinViewModel(), onEventClick: (event: Event) -> Unit) {
@@ -94,7 +92,6 @@ fun EventListScreen(elvm: EventListViewModel = koinViewModel(), onEventClick: (e
 
 @Composable
 fun EventListView(uiState: EventListUiState, snackbarHostState: SnackbarHostState, onRetryClick: () -> Unit, onEventClick: (event: EventListUiModel) -> Unit) {
-    val listState = rememberLazyListState()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -147,7 +144,7 @@ fun EventListEmpty() {
             .padding(horizontal = 16.dp)
     ) {
         Image(
-            painter = painterResource(id = R.drawable.img_event_list_empty),
+            painter = painterResource(id = DesignSystem.drawable.img_event_list_empty),
             contentDescription = stringResource(id = R.string.screen_event_list_empty_text),
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -187,7 +184,7 @@ fun EventListError(onRetryClick: () -> Unit) {
                     .size(48.dp)
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.ic_error),
+                    painter = painterResource(id = DesignSystem.drawable.ic_error),
                     contentDescription = stringResource(R.string.default_error_title),
                     modifier = Modifier.align(Alignment.Center)
                 )
@@ -222,8 +219,8 @@ fun EventList(events: List<EventListUiModel>, onEventClick: (event: EventListUiM
                         .data(event.imageUrl)
                         //.crossfade(true) //Open bug in Coil https://github.com/coil-kt/coil/issues/1688 leads to image not being properly scaled if crossfade is used
                         .build(),
-                    placeholder = painterResource(R.drawable.img_event_list_empty),
-                    error = painterResource(R.drawable.img_event_list_empty),
+                    placeholder = painterResource(DesignSystem.drawable.img_event_list_empty),
+                    error = painterResource(DesignSystem.drawable.img_event_list_empty),
                     contentDescription = stringResource(id = R.string.content_description_event_image).format(event.cardTitle),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
