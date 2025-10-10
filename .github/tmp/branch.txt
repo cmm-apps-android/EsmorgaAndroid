@@ -1,1 +1,1 @@
-fix/deprecated-viewmodel-di
+feature/MOB-428
