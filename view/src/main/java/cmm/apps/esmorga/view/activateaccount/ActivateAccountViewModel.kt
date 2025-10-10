@@ -40,6 +40,7 @@ class ActivateAccountViewModel(
 
             result.onSuccess {
                 _uiState.value = ActivateAccountUiState(isLoading = false)
+                _effect.tryEmit(ActivateAccountEffect.NavigateToWelcomeScreen)
             }.onFailure {
                 if (failedAttempts < 2) {
                     failedAttempts++
@@ -47,12 +48,9 @@ class ActivateAccountViewModel(
                 } else {
                     _effect.tryEmit(ActivateAccountEffect.ShowLastTryFullScreenError())
                 }
-
             }
         }
     }
 
-    fun onContinueClicked(){
-        _effect.tryEmit(ActivateAccountEffect.NavigateToWelcomeScreen)
-    }
+
 }

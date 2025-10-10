@@ -15,6 +15,8 @@ import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.domain.user.model.RoleType
 import cmm.apps.esmorga.domain.user.model.User
 import cmm.apps.esmorga.view.R
+import cmm.apps.esmorga.view.dateformatting.DateFormatterImpl
+import cmm.apps.esmorga.view.dateformatting.EsmorgaDateTimeFormatter
 import cmm.apps.esmorga.view.eventdetails.EventDetailsViewModel
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsEffect
 import cmm.apps.esmorga.view.viewmodel.mock.EventViewMock
@@ -31,6 +33,7 @@ import org.junit.runner.RunWith
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
+import org.koin.dsl.module
 
 @RunWith(AndroidJUnit4::class)
 class EventDetailsViewModelTest {
@@ -40,8 +43,6 @@ class EventDetailsViewModelTest {
 
     private lateinit var mockContext: Context
     private lateinit var sut: EventDetailsViewModel
-
-    private val event = EventViewMock.provideEvent("DomainEvent")
 
     private val getSavedUserUseCase = mockk<GetSavedUserUseCase>(relaxed = true).also { useCase ->
         coEvery { useCase() } returns EsmorgaResult.success(User("", "", "", RoleType.USER))
@@ -56,6 +57,9 @@ class EventDetailsViewModelTest {
         mockContext = ApplicationProvider.getApplicationContext()
         startKoin {
             androidContext(mockContext)
+            modules(module {
+                single<EsmorgaDateTimeFormatter> { DateFormatterImpl() }
+            })
         }
         sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, EventViewMock.provideEvent("Event Name"))
     }

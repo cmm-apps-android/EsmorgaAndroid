@@ -2,6 +2,7 @@ package cmm.apps.esmorga.view.navigation
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
@@ -34,10 +35,11 @@ import cmm.apps.esmorga.domain.user.PerformRecoverPasswordUseCase
 import cmm.apps.esmorga.domain.user.PerformRegistrationConfirmationUseCase
 import cmm.apps.esmorga.domain.user.PerformRegistrationUserCase
 import cmm.apps.esmorga.domain.user.repository.PerformResetPasswordUseCase
-import cmm.apps.esmorga.view.activateaccount.RegistrationConfirmationScreenTestTags.ACTIVATE_ACCOUNT_BUTTON
+import cmm.apps.esmorga.view.activateaccount.ActivateAccountView
 import cmm.apps.esmorga.view.activateaccount.RegistrationConfirmationScreenTestTags.ACTIVATE_ACCOUNT_IMAGE
 import cmm.apps.esmorga.view.activateaccount.RegistrationConfirmationScreenTestTags.ACTIVATE_ACCOUNT_SUBTITLE
 import cmm.apps.esmorga.view.activateaccount.RegistrationConfirmationScreenTestTags.ACTIVATE_ACCOUNT_TITLE
+import cmm.apps.esmorga.view.activateaccount.model.ActivateAccountUiState
 import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD_BUTTON
 import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD_CURRENT_PASS_INPUT
 import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD_NEW_PASS_INPUT
@@ -426,19 +428,15 @@ class NavigationTest {
     }
 
     @Test
-    fun `given account not activated, when user clicks the email deeplink, then activation screen is shown`() {
-        setNavigationFromDestination(Navigation.ActivateAccountScreen("VerificationCode"))
+    fun `given activate account screen, when view is rendered, then all ui elements are displayed`() {        composeTestRule.setContent {
+            ActivateAccountView(
+                uiState = ActivateAccountUiState(isLoading = false)
+            )
+        }
+
         composeTestRule.onNodeWithTag(ACTIVATE_ACCOUNT_IMAGE).assertIsDisplayed()
         composeTestRule.onNodeWithTag(ACTIVATE_ACCOUNT_TITLE).assertIsDisplayed()
         composeTestRule.onNodeWithTag(ACTIVATE_ACCOUNT_SUBTITLE).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(ACTIVATE_ACCOUNT_BUTTON).assertIsDisplayed()
-    }
-
-    @Test
-    fun `given account not activated, when activation screen is visited and button clicked, then navigate to EventsScreen`() {
-        setNavigationFromDestination(Navigation.ActivateAccountScreen("VerificationCode"))
-        composeTestRule.onNodeWithTag(ACTIVATE_ACCOUNT_BUTTON).performClick()
-        composeTestRule.onNodeWithTag(EVENT_LIST_TITLE).assertIsDisplayed()
     }
 
     @Test
