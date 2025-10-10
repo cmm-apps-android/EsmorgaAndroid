@@ -18,9 +18,8 @@ import cmm.apps.esmorga.view.profile.ProfileViewModel
 import cmm.apps.esmorga.view.registration.RegistrationConfirmationViewModel
 import cmm.apps.esmorga.view.registration.RegistrationViewModel
 import cmm.apps.esmorga.view.welcome.WelcomeViewModel
-import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
-
+import org.koin.core.module.dsl.viewModel
 
 object ViewDIModule {
 

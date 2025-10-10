@@ -1,11 +1,11 @@
 package cmm.apps.esmorga.view.screenshot.welcome
 
-import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.screenshot.BaseScreenshotTest
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import cmm.apps.esmorga.view.welcome.WelcomeView
 import cmm.apps.esmorga.view.welcome.model.WelcomeUiState
 import org.junit.Test
+import cmm.apps.designsystem.R
 
 class WelcomeViewScreenshotTest : BaseScreenshotTest() {
 
