@@ -11,7 +11,7 @@ plugins {
 
 android {
     namespace = "cmm.apps.esmorga.view"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 28
@@ -58,6 +58,7 @@ dependencies {
     implementation(libs.compose.ui.graphics)
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.material3)
+    implementation(libs.compose.material.icons)
     implementation(libs.lottie.compose)
     implementation(libs.core.splashscreen)
     implementation(platform(libs.koin.bom))
@@ -78,5 +79,4 @@ dependencies {
     testImplementation(libs.androidx.junit.ktx)
     testImplementation(libs.compose.ui.junit)
     testImplementation(libs.compose.ui.test.manifest)
-    testImplementation(libs.hamcrest)
 }
