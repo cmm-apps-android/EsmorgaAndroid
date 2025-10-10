@@ -51,16 +51,22 @@ class ActivateAccountViewModelTest {
     }
 
     @Test
-    fun `given valid verification code when activateAccount is called then UI state is not loading`() = runTest {
+    fun `given valid verification code when activateAccount is called then UI state is not loading and navigates to welcome`() = runTest {
         val verificationCode = "validCode"
         val activateAccountUseCase = mockk<ActivateAccountUseCase>()
         coEvery { activateAccountUseCase(verificationCode) } returns EsmorgaResult.success(Unit)
 
         val sut = ActivateAccountViewModel(verificationCode, activateAccountUseCase)
-        sut.onStart(lifeCycleOwner)
 
-        val state = sut.uiState.value
-        Assert.assertFalse(state.isLoading)
+        sut.effect.test {
+            sut.onStart(lifeCycleOwner)
+
+            val state = sut.uiState.value
+            Assert.assertFalse(state.isLoading)
+
+            val effect = awaitItem()
+            Assert.assertTrue(effect is ActivateAccountEffect.NavigateToWelcomeScreen)
+        }
     }
 
     @Test
@@ -74,16 +80,20 @@ class ActivateAccountViewModelTest {
 
         val sut = ActivateAccountViewModel(verificationCode, activateAccountUseCase)
 
-
         sut.effect.test {
             sut.onStart(lifeCycleOwner)
             val effect = awaitItem()
             Assert.assertTrue(effect is ActivateAccountEffect.ShowFullScreenError)
-            assertEquals(mockContext.getString(R.string.register_confirmation_error_title), (effect as ActivateAccountEffect.ShowFullScreenError).esmorgaErrorScreenArguments.title)
-            assertEquals(mockContext.getString(R.string.register_confirmation_button_retry), effect.esmorgaErrorScreenArguments.buttonText)
+            assertEquals(
+                mockContext.getString(R.string.register_confirmation_error_title),
+                (effect as ActivateAccountEffect.ShowFullScreenError).esmorgaErrorScreenArguments.title
+            )
+            assertEquals(
+                mockContext.getString(R.string.register_confirmation_button_retry),
+                effect.esmorgaErrorScreenArguments.buttonText
+            )
         }
     }
-
 
     @Test
     fun `given multiple failed attempts when activateAccount is called then last try full screen error is shown`() = runTest {
@@ -106,11 +116,16 @@ class ActivateAccountViewModelTest {
             val effect = awaitItem()
 
             Assert.assertTrue(effect is ActivateAccountEffect.ShowLastTryFullScreenError)
-            assertEquals(mockContext.getString(R.string.default_error_title), (effect as ActivateAccountEffect.ShowLastTryFullScreenError).esmorgaErrorScreenArguments.title)
-            assertEquals(mockContext.getString(R.string.register_confirmation_button_cancel), effect.esmorgaErrorScreenArguments.buttonText)
+            assertEquals(
+                mockContext.getString(R.string.default_error_title),
+                (effect as ActivateAccountEffect.ShowLastTryFullScreenError).esmorgaErrorScreenArguments.title
+            )
+            assertEquals(
+                mockContext.getString(R.string.register_confirmation_button_cancel),
+                effect.esmorgaErrorScreenArguments.buttonText
+            )
         }
     }
-
 
     @Test
     fun `given network failure when activateAccount is called then full screen error is shown`() = runTest {
@@ -127,25 +142,14 @@ class ActivateAccountViewModelTest {
 
             val effect = awaitItem()
             Assert.assertTrue(effect is ActivateAccountEffect.ShowFullScreenError)
-            assertEquals(mockContext.getString(R.string.register_confirmation_error_title), (effect as ActivateAccountEffect.ShowFullScreenError).esmorgaErrorScreenArguments.title)
-            assertEquals(mockContext.getString(R.string.register_confirmation_button_retry), effect.esmorgaErrorScreenArguments.buttonText)
-        }
-    }
-
-    @Test
-    fun `given successful activation when onContinueClicked is called then navigate to welcome screen`() = runTest {
-        val verificationCode = "code"
-        val activateAccountUseCase = mockk<ActivateAccountUseCase>()
-        coEvery {
-            activateAccountUseCase(verificationCode)
-        } returns EsmorgaResult(Unit)
-
-        val sut = ActivateAccountViewModel(verificationCode, activateAccountUseCase)
-
-        sut.effect.test {
-            sut.onContinueClicked()
-            val effect = awaitItem()
-            Assert.assertTrue(effect is ActivateAccountEffect.NavigateToWelcomeScreen)
+            assertEquals(
+                mockContext.getString(R.string.register_confirmation_error_title),
+                (effect as ActivateAccountEffect.ShowFullScreenError).esmorgaErrorScreenArguments.title
+            )
+            assertEquals(
+                mockContext.getString(R.string.register_confirmation_button_retry),
+                effect.esmorgaErrorScreenArguments.buttonText
+            )
         }
     }
 }
