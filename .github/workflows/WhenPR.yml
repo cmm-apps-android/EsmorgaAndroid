@@ -16,6 +16,7 @@ jobs:
       pull-requests: write
       contents: write
       issues: write
+      checks: write
 
     steps:
       - uses: actions/checkout@v4
@@ -32,11 +33,14 @@ jobs:
         with:
           PAT: ${{ secrets.E2E_Github_Token }}
 
-      - uses: ./.github/actions/runTests
+      - name: Run Tests
+        id: tests
+        uses: ./.github/actions/runTests
         with:
           Build-GOOGLE-SERVICES: ${{ secrets.GOOGLE_SERVICES_JSON }}
 
       - name: Add coverage report to PR
+        if: success()
         id: kover
         uses: mi-kas/kover-report@v1
         with:
@@ -47,3 +51,4 @@ jobs:
           min-coverage-overall: 75
           min-coverage-changed-files: 75
           coverage-counter-type: LINE
+

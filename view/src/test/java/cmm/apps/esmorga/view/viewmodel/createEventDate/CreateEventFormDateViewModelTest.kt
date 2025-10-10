@@ -5,6 +5,7 @@ import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.domain.event.model.EventType
 import cmm.apps.esmorga.view.createeventdate.CreateEventFormDateViewModel
 import cmm.apps.esmorga.view.createeventdate.model.CreateEventFormDateEffect
+import cmm.apps.esmorga.view.dateformatting.DateFormatterImpl
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -25,7 +26,7 @@ class CreateEventFormDateViewModelTest {
             description = "Initial Description",
             type = EventType.PARTY
         )
-        viewModel = CreateEventFormDateViewModel(initialForm)
+        viewModel = CreateEventFormDateViewModel(initialForm, DateFormatterImpl())
     }
 
     @Test
