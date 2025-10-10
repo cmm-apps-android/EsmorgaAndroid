@@ -27,8 +27,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="https" android:host="esmorga.canarte.org" android:pathPrefix="/" />
-                <data android:scheme="https" android:host="qa.esmorga.canarte.org" android:pathPrefix="/" />
+                <data android:scheme="https" android:host="api.esmorgaevents.com" android:pathPrefix="/" />
+                <data android:scheme="https" android:host="qa.api.esmorgaevents.com" android:pathPrefix="/" />
             </intent-filter>
         </activity>
     </application>

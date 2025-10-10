@@ -46,7 +46,7 @@ import cmm.apps.esmorga.view.registration.model.RegistrationConfirmationEffect
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
-
+import cmm.apps.designsystem.R as DesignSystem
 @Screen
 @Composable
 fun RegistrationConfirmationScreen(
@@ -125,7 +125,7 @@ fun RegistrationConfirmationView(
                 .verticalScroll(state = rememberScrollState())
         ) {
             Image(
-                painter = painterResource(R.drawable.img_email),
+                painter = painterResource(DesignSystem.drawable.img_email),
                 contentDescription = "image email",
                 modifier = Modifier
                     .fillMaxWidth()
