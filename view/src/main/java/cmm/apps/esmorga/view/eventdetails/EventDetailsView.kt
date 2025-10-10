@@ -46,7 +46,7 @@ import coil.request.ImageRequest
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
-
+import cmm.apps.designsystem.R as DesignSystem
 
 @Screen
 @Composable
@@ -161,8 +161,8 @@ fun EventDetailsView(
                     .data(uiState.image)
                     //.crossfade(true) //Open bug in Coil https://github.com/coil-kt/coil/issues/1688 leads to image not being properly scaled if crossfade is used
                     .build(),
-                placeholder = painterResource(R.drawable.img_event_list_empty),
-                error = painterResource(R.drawable.img_event_list_empty),
+                placeholder = painterResource(DesignSystem.drawable.img_event_list_empty),
+                error = painterResource(DesignSystem.drawable.img_event_list_empty),
                 contentDescription = stringResource(id = R.string.content_description_event_image).format(uiState.title),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
