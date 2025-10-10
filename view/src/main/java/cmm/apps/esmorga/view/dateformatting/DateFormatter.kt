@@ -1,13 +1,14 @@
 package cmm.apps.esmorga.view.dateformatting
 
-import java.text.DateFormat
-import java.text.SimpleDateFormat
+import java.time.Instant
 import java.time.LocalTime
 import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
+import java.time.format.TextStyle
 import java.util.Date
 import java.util.Locale
-import java.util.TimeZone
 
 interface EsmorgaDateTimeFormatter {
     fun formatEventDate(epochMillis: Long): String
@@ -36,18 +37,17 @@ class DateFormatterImpl : EsmorgaDateTimeFormatter {
 
     override fun formatEventDate(epochMillis: Long): String = try {
         val locale: Locale = Locale.getDefault()
-        val tz: TimeZone = TimeZone.getDefault()
-        val date = Date(epochMillis)
+        val zoneId: ZoneId = ZoneId.systemDefault()
+        val zonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(epochMillis), zoneId)
 
-        val dowFormatter = SimpleDateFormat("EEE", locale).apply { timeZone = tz }
-        val mediumDateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM, locale).apply { timeZone = tz }
-        val shortTimeFormatter = DateFormat.getTimeInstance(DateFormat.SHORT, locale).apply { timeZone = tz }
+        val mediumDateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(locale)
+        val shortTimeFormatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).withLocale(locale)
 
-        val dayOfWeek = dowFormatter.format(date).replaceFirstChar { it.uppercase() }
-        val mediumDate = mediumDateFormatter.format(date)
-        val shortTime = shortTimeFormatter.format(date)
+        val dayOfWeek = zonedDateTime.dayOfWeek.getDisplayName(TextStyle.SHORT, locale).replaceFirstChar { it.uppercase() }
+        val mediumDate = zonedDateTime.format(mediumDateFormatter)
+        val shortTime = zonedDateTime.format(shortTimeFormatter)
         "$dayOfWeek, $mediumDate, $shortTime"
     } catch (_: Exception) {
-        Date(epochMillis).toInstant().toString()
+        Instant.ofEpochMilli(epochMillis).toString()
     }
 }
