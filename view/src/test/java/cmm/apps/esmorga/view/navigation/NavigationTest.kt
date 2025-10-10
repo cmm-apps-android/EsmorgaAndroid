@@ -443,13 +443,10 @@ class NavigationTest {
     fun `given account activated when activation screen is visited then navigate automatically to EventsScreen`() {
         setNavigationFromDestination(Navigation.ActivateAccountScreen("VerificationCode"))
 
-        composeTestRule.waitUntil(timeoutMillis = 5_000) {
-            composeTestRule.onAllNodesWithTag(EVENT_LIST_TITLE).fetchSemanticsNodes().isNotEmpty()
-        }
+        composeTestRule.onAllNodesWithTag(EVENT_LIST_TITLE).fetchSemanticsNodes().isNotEmpty()
 
         composeTestRule.onNodeWithTag(EVENT_LIST_TITLE).assertIsDisplayed()
     }
-
 
     @Test
     fun `given invalid activation code, when activation attempted, then navigate to FullScreenError`() {
