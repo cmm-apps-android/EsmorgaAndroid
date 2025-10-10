@@ -10,7 +10,7 @@ User‑facing changes only. This file lists what publishers / end users can noti
 ### Fixes
 - _(Add here crashes resolved, incorrect behaviors fixed, visual glitches corrected, wording corrections, etc.)_
 
-## 1.0.0 - 2025-09-18
+## 1.0.0 - 2025-10-10
 ### New / Updated Features
 - Initial milestone release.
 - Core foundation established (baseline functionality available to start internal validation).
