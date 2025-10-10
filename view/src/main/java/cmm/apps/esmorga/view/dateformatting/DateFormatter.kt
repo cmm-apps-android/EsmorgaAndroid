@@ -35,19 +35,21 @@ class DateFormatterImpl : EsmorgaDateTimeFormatter {
         return "${datePart}T${time}"
     }
 
-    override fun formatEventDate(epochMillis: Long): String = try {
-        val locale: Locale = Locale.getDefault()
-        val zoneId: ZoneId = ZoneId.systemDefault()
-        val zonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(epochMillis), zoneId)
+    override fun formatEventDate(epochMillis: Long): String {
+        try {
+            val locale: Locale = Locale.getDefault()
+            val zoneId: ZoneId = ZoneId.systemDefault()
+            val zonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(epochMillis), zoneId)
 
-        val mediumDateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(locale)
-        val shortTimeFormatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).withLocale(locale)
+            val mediumDateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(locale)
+            val shortTimeFormatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).withLocale(locale)
 
-        val dayOfWeek = zonedDateTime.dayOfWeek.getDisplayName(TextStyle.SHORT, locale).replaceFirstChar { it.uppercase() }
-        val mediumDate = zonedDateTime.format(mediumDateFormatter)
-        val shortTime = zonedDateTime.format(shortTimeFormatter)
-        "$dayOfWeek, $mediumDate, $shortTime"
-    } catch (_: Exception) {
-        Instant.ofEpochMilli(epochMillis).toString()
+            val dayOfWeek = zonedDateTime.dayOfWeek.getDisplayName(TextStyle.SHORT, locale).replaceFirstChar { it.uppercase() }
+            val mediumDate = zonedDateTime.format(mediumDateFormatter)
+            val shortTime = zonedDateTime.format(shortTimeFormatter)
+            return "$dayOfWeek, $mediumDate, $shortTime"
+        } catch (_: Exception) {
+            return Instant.ofEpochMilli(epochMillis).toString()
+        }
     }
 }
