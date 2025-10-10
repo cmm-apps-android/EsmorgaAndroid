@@ -5,7 +5,7 @@ User‑facing changes only. This file lists what publishers / end users can noti
 ## Unreleased
 
 ### New / Updated Features
-- _(Add here any new screen, workflow, capability or meaningful UX enhancement)_
+- Create event flow
 
 ### Fixes
 - _(Add here crashes resolved, incorrect behaviors fixed, visual glitches corrected, wording corrections, etc.)_

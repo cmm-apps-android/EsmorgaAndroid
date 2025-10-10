@@ -129,7 +129,7 @@ fun MyEventListView(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButton = {
             if (uiState.isAdmin) {
-//                AnimatedFloatingActionButton(isVisible, onAddEventClick)
+                AnimatedFloatingActionButton(isVisible, onAddEventClick)
             }
         }
     ) { innerPadding ->
