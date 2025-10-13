@@ -37,7 +37,9 @@ fun EventRemoteModel.toEventDataModel(): EventDataModel {
         dataImageUrl = this.remoteImageUrl?.let { URLEncoder.encode(it, StandardCharsets.UTF_8.toString()) },
         dataLocation = this.remoteLocation.toEventLocationDataModel(),
         dataTags = this.remoteTags ?: listOf(),
-        dataUserJoined = false
+        dataUserJoined = false,
+        dataCurrentAttendeeCount = this.remoteCurrentAttendeeCount,
+        dataMaxCapacity = this.remoteMaxCapacity
     )
 }
 

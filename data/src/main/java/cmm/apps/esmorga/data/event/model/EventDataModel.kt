@@ -13,7 +13,9 @@ data class EventDataModel(
     val dataLocation: EventLocationDataModel,
     val dataTags: List<String> = listOf(),
     val dataCreationTime: Long = System.currentTimeMillis(),
-    val dataUserJoined: Boolean
+    val dataUserJoined: Boolean,
+    val dataCurrentAttendeeCount: Int,
+    val dataMaxCapacity: Int?
 )
 
 data class EventLocationDataModel(
