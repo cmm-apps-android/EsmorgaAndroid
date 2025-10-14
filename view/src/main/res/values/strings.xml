@@ -107,4 +107,6 @@
    <string name="step_3_screen_row_time">Event time</string>
    <string name="confirm_button_dialog">Confirm</string>
    <string name="cancel_button_dialog">Cancel</string>
+   <string name="button_join_event_disabled">Full</string>
+   <string name="snackbar_event_full">The event has already reached its maximum capacity.</string>
 </resources>
