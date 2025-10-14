@@ -33,15 +33,19 @@ object EventDetailsUiStateHelper : KoinComponent {
         userJoined: Boolean,
         eventFull: Boolean
     ): String {
-        return if (isAuthenticated) {
-            when {
-                userJoined -> context.getString(R.string.button_leave_event)
-                eventFull -> context.getString(R.string.button_join_event_disabled)
-                else -> context.getString(R.string.button_join_event)
-            }
-        } else {
-            context.getString(R.string.button_login_to_join)
+        return when {
+            !isAuthenticated -> context.getString(R.string.button_login_to_join)
+            userJoined -> context.getString(R.string.button_leave_event)
+            !userJoined && eventFull -> context.getString(R.string.button_join_event_disabled)
+            else -> context.getString(R.string.button_join_event)
         }
+    }
+
+    fun getButtonEnableStatus(
+        eventFull: Boolean,
+        userJoined: Boolean
+    ): Boolean{
+        return userJoined || !eventFull
     }
 
     fun getEsmorgaNoNetworkScreenArguments() = EsmorgaErrorScreenArguments(

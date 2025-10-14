@@ -36,7 +36,7 @@ android {
         }
         create("qa") {
             dimension = "environment"
-            buildConfigField("String", "ESMORGA_API_BASE_URL", "\"https://qa.api.esmorgaevents.com/v1/\"")
+            buildConfigField("String", "ESMORGA_API_BASE_URL", "\"https://qa.esmorga.canarte.org/v1/\"")
         }
     }
     kotlin {

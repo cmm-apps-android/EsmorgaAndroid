@@ -1,5 +1,6 @@
 package cmm.apps.esmorga.view.eventdetails
 
+import androidx.compose.runtime.currentComposer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cmm.apps.esmorga.domain.event.JoinEventUseCase
@@ -13,6 +14,7 @@ import cmm.apps.esmorga.view.eventdetails.mapper.EventDetailsUiMapper.toEventUiD
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsEffect
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiState
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiStateHelper
+import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiStateHelper.getPrimaryButtonTitle
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,26 +39,11 @@ class EventDetailsViewModel(
     private var isAuthenticated: Boolean = false
     private var userJoined: Boolean = false
 
+    private var isEventFull: Boolean = event.currentAttendeeCount <= event.maxCapacity!!
+    private var eventAttendeeCount = event.currentAttendeeCount
+
     init {
         getEventDetails()
-    }
-
-    private fun updatePrimaryButton() {
-        val maxCapacity = event.maxCapacity
-        val currentCount = event.currentAttendeeCount
-        val eventFull = maxCapacity != null && currentCount >= maxCapacity
-
-        val buttonTitle = EventDetailsUiStateHelper.getPrimaryButtonTitle(
-            isAuthenticated = isAuthenticated,
-            userJoined = userJoined,
-            eventFull = eventFull
-        )
-
-        _uiState.value = event.toEventUiDetails(isAuthenticated, userJoined, eventFull).copy(
-            primaryButtonTitle = buttonTitle,
-            isJoinButtonEnabled = isAuthenticated && (userJoined || !eventFull),
-            isEventFull = eventFull
-        )
     }
 
     fun onNavigateClick() {
@@ -74,21 +61,15 @@ class EventDetailsViewModel(
     }
 
     fun onPrimaryButtonClicked() {
-        if (!isAuthenticated) {
+        if (isAuthenticated) {
+            if (userJoined) {
+                leaveEvent()
+            } else {
+                joinEvent()
+            }
+        } else {
             _effect.tryEmit(EventDetailsEffect.NavigateToLoginScreen)
-            return
         }
-
-        if (!_uiState.value.isJoinButtonEnabled && !userJoined) {
-            _effect.tryEmit(
-                EventDetailsEffect.ShowFullScreenError(
-                    esmorgaErrorScreenArguments = getEsmorgaDefaultErrorScreenArguments()
-                )
-            )
-            return
-        }
-
-        if (userJoined) leaveEvent() else joinEvent()
     }
 
     private fun getEventDetails() {
@@ -96,7 +77,7 @@ class EventDetailsViewModel(
             val user = getSavedUserUseCase()
             isAuthenticated = user.data != null
             userJoined = event.userJoined
-            updatePrimaryButton()
+            _uiState.value = event.toEventUiDetails(isAuthenticated, userJoined, isEventFull)
         }
     }
 
@@ -106,10 +87,12 @@ class EventDetailsViewModel(
             val result = joinEventUseCase(event)
             result.onSuccess {
                 userJoined = true
-                updatePrimaryButton()
+                eventAttendeeCount = eventAttendeeCount+1
+                isEventFull = eventAttendeeCount == event.maxCapacity!!
+                _uiState.value = _uiState.value.copy(primaryButtonLoading = false, primaryButtonTitle = getPrimaryButtonTitle(isAuthenticated = true, userJoined = true, isEventFull), currentAttendeeCount = eventAttendeeCount)
                 _effect.tryEmit(EventDetailsEffect.ShowJoinEventSuccess)
             }.onFailure { error ->
-                handleJoinLeaveError(error)
+                showErrorScreen(error)
             }
         }
     }
@@ -120,24 +103,13 @@ class EventDetailsViewModel(
             val result = leaveEventUseCase(event)
             result.onSuccess {
                 userJoined = false
-                updatePrimaryButton()
+                eventAttendeeCount = eventAttendeeCount-1
+                isEventFull = eventAttendeeCount == event.maxCapacity!!
+                _uiState.value = _uiState.value.copy(primaryButtonLoading = false, primaryButtonTitle = getPrimaryButtonTitle(isAuthenticated = true, userJoined = false, isEventFull), isJoinButtonEnabled = !isEventFull, currentAttendeeCount = eventAttendeeCount)
                 _effect.tryEmit(EventDetailsEffect.ShowLeaveEventSuccess)
             }.onFailure { error ->
-                handleJoinLeaveError(error)
+                showErrorScreen(error)
             }
-        }
-    }
-
-    private fun handleJoinLeaveError(error: EsmorgaException) {
-        _uiState.value = _uiState.value.copy(primaryButtonLoading = false)
-
-        if (error.code == 422 ) {
-            _effect.tryEmit(EventDetailsEffect.ShowFullScreenError())
-            _uiState.value = _uiState.value.copy(
-                currentAttendeeCount = event.currentAttendeeCount
-            )
-        } else {
-            showErrorScreen(error)
         }
     }
 
