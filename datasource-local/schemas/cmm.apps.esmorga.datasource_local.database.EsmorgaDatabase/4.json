@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 4,
-    "identityHash": "4c67c36ac3cdd329b7971d08d729c709",
+    "identityHash": "ca4d7310fb66b6f96a0d51362a084e8d",
     "entities": [
       {
         "tableName": "EventLocalModel",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`localId` TEXT NOT NULL, `localName` TEXT NOT NULL, `localDate` INTEGER NOT NULL, `localDescription` TEXT NOT NULL, `localType` TEXT NOT NULL, `localImageUrl` TEXT, `localLocationName` TEXT NOT NULL, `localLocationLat` REAL, `localLocationLong` REAL, `localTags` TEXT NOT NULL, `localCreationTime` INTEGER NOT NULL, `localUserJoined` INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(`localId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`localId` TEXT NOT NULL, `localName` TEXT NOT NULL, `localDate` INTEGER NOT NULL, `localDescription` TEXT NOT NULL, `localType` TEXT NOT NULL, `localImageUrl` TEXT, `localLocationName` TEXT NOT NULL, `localLocationLat` REAL, `localLocationLong` REAL, `localTags` TEXT NOT NULL, `localCreationTime` INTEGER NOT NULL, `localUserJoined` INTEGER NOT NULL DEFAULT 0, `localCurrentAttendeeCount` INTEGER NOT NULL, `localMaxCapacity` INTEGER, PRIMARY KEY(`localId`))",
         "fields": [
           {
             "fieldPath": "localId",
@@ -77,6 +77,17 @@
             "affinity": "INTEGER",
             "notNull": true,
             "defaultValue": "0"
+          },
+          {
+            "fieldPath": "localCurrentAttendeeCount",
+            "columnName": "localCurrentAttendeeCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localMaxCapacity",
+            "columnName": "localMaxCapacity",
+            "affinity": "INTEGER"
           }
         ],
         "primaryKey": {
@@ -126,7 +137,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4c67c36ac3cdd329b7971d08d729c709')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ca4d7310fb66b6f96a0d51362a084e8d')"
     ]
   }
 }
