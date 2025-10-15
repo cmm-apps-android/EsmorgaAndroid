@@ -19,7 +19,7 @@ object EventDataMock {
         dataLocation = EventLocationDataModel("Location"),
         dataUserJoined = false,
         dataCurrentAttendeeCount = 0,
-        dataMaxCapacity = null
+        dataMaxCapacity = 10
     )
 
 }

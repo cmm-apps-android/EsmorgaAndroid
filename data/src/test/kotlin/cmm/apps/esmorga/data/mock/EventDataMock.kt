@@ -17,7 +17,9 @@ object EventDataMock {
         dataDescription = "description",
         dataType = EventType.SPORT,
         dataLocation = EventLocationDataModel("Location"),
-        dataUserJoined = userJoined
+        dataUserJoined = userJoined,
+        dataCurrentAttendeeCount = 0,
+        dataMaxCapacity = 10
     )
 
 }
