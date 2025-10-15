@@ -86,7 +86,9 @@ class EventListViewModelTest {
                 lat = 0.0,
                 long = 0.0
             ),
-            userJoined = false
+            userJoined = false,
+            currentAttendeeCount = 0,
+            maxCapacity = null
         )
 
         val useCase = mockk<GetEventListUseCase>()

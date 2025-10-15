@@ -1,6 +1,5 @@
 package cmm.apps.esmorga.view.eventdetails
 
-import androidx.compose.runtime.currentComposer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cmm.apps.esmorga.domain.event.JoinEventUseCase
@@ -9,11 +8,9 @@ import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
-import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArgumentsHelper.getEsmorgaDefaultErrorScreenArguments
 import cmm.apps.esmorga.view.eventdetails.mapper.EventDetailsUiMapper.toEventUiDetails
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsEffect
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiState
-import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiStateHelper
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiStateHelper.getPrimaryButtonTitle
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -39,7 +36,7 @@ class EventDetailsViewModel(
     private var isAuthenticated: Boolean = false
     private var userJoined: Boolean = false
 
-    private var isEventFull: Boolean = event.currentAttendeeCount <= event.maxCapacity!!
+    private var isEventFull: Boolean = event.maxCapacity?.let { max -> event.currentAttendeeCount >= max } ?: false
     private var eventAttendeeCount = event.currentAttendeeCount
 
     init {
@@ -87,8 +84,8 @@ class EventDetailsViewModel(
             val result = joinEventUseCase(event)
             result.onSuccess {
                 userJoined = true
-                eventAttendeeCount = eventAttendeeCount+1
-                isEventFull = eventAttendeeCount == event.maxCapacity!!
+                eventAttendeeCount = eventAttendeeCount + 1
+                isEventFull = event.maxCapacity?.let { eventAttendeeCount >= it } ?: false
                 _uiState.value = _uiState.value.copy(primaryButtonLoading = false, primaryButtonTitle = getPrimaryButtonTitle(isAuthenticated = true, userJoined = true, isEventFull), currentAttendeeCount = eventAttendeeCount)
                 _effect.tryEmit(EventDetailsEffect.ShowJoinEventSuccess)
             }.onFailure { error ->
@@ -103,9 +100,10 @@ class EventDetailsViewModel(
             val result = leaveEventUseCase(event)
             result.onSuccess {
                 userJoined = false
-                eventAttendeeCount = eventAttendeeCount-1
-                isEventFull = eventAttendeeCount == event.maxCapacity!!
-                _uiState.value = _uiState.value.copy(primaryButtonLoading = false, primaryButtonTitle = getPrimaryButtonTitle(isAuthenticated = true, userJoined = false, isEventFull), isJoinButtonEnabled = !isEventFull, currentAttendeeCount = eventAttendeeCount)
+                eventAttendeeCount = eventAttendeeCount - 1
+                isEventFull = event.maxCapacity?.let { eventAttendeeCount >= it } ?: false
+                _uiState.value =
+                    _uiState.value.copy(primaryButtonLoading = false, primaryButtonTitle = getPrimaryButtonTitle(isAuthenticated = true, userJoined = false, isEventFull), isJoinButtonEnabled = !isEventFull, currentAttendeeCount = eventAttendeeCount)
                 _effect.tryEmit(EventDetailsEffect.ShowLeaveEventSuccess)
             }.onFailure { error ->
                 showErrorScreen(error)
