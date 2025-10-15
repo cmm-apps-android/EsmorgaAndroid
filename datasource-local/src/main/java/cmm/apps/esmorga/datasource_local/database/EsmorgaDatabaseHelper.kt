@@ -14,7 +14,6 @@ object EsmorgaDatabaseHelper {
     fun getDatabase(context: Context) =
         Room.databaseBuilder(context, EsmorgaDatabase::class.java, DATABASE_NAME)
             .addMigrations(MIGRATION_3_4, MIGRATION_4_5)
-            .fallbackToDestructiveMigration()
             .build()
 
     private val MIGRATION_3_4 = object : Migration(3, 4) {
