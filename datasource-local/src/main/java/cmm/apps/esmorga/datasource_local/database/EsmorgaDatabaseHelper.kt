@@ -25,6 +25,7 @@ object EsmorgaDatabaseHelper {
 
     private val MIGRATION_4_5 = object : Migration(4, 5) {
         override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL("DROP TABLE IF EXISTS EventLocalModel")
             database.execSQL(
                 "ALTER TABLE EventLocalModel ADD COLUMN localCurrentAttendeeCount INTEGER NOT NULL DEFAULT 0"
             )
