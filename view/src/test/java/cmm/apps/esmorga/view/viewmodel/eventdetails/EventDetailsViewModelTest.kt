@@ -234,7 +234,7 @@ class EventDetailsViewModelTest {
     @Test
     fun `given event with capacity when getEventDetails is called then capacity info is shown in UI state`() = runTest {
         val event = EventViewMock.provideEvent(
-            name = "CapacidadTest",
+            name = "CapacityTest",
             currentAttendeeCount = 5,
             maxCapacity = 10,
         )

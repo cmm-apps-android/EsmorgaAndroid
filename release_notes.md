@@ -18,6 +18,11 @@ User‑facing changes only. This file lists what publishers / end users can noti
 ### Fixes
 - N/A (first public milestone).
 
+## 1.0.0 - 2025-15-10
+### New / Updated Features
+- Added event capacity display in the Event Details screen, showing current attendees versus maximum capacity.
+- Disabled the Join button when an event reaches full capacity and updated the label to “Event full.”
+
 ---
 Guidelines:
 - Start each bullet with an action or outcome ("Added", "Enabled", "Improved", "Fixed").

@@ -1,6 +1,5 @@
 package cmm.apps.esmorga.view.eventdetails
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -8,7 +7,6 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -166,33 +164,41 @@ fun EventDetailsView(
 
             uiState.maxCapacity?.let { max ->
                 Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-                    Icon(
-                        painter = painterResource(id = cmm.apps.designsystem.R.drawable.group),
-                        contentDescription = null
-                    )
+                    Icon(painter = painterResource(DesignSystem.drawable.group), contentDescription = null)
                     Spacer(modifier = Modifier.width(5.dp))
                     EsmorgaText(
-                        text = "${uiState.currentAttendeeCount}/$max asistentes",
+                        text = stringResource(
+                            id = R.string.screen_event_details_capacity,
+                            uiState.currentAttendeeCount,
+                            max
+                        ),
                         style = EsmorgaTextStyle.CAPTION,
                     )
                 }
             }
 
             EsmorgaText(
-                text = stringResource(id = R.string.screen_event_details_description), style = EsmorgaTextStyle.HEADING_1, modifier = Modifier.padding(start = 16.dp, top = 32.dp, end = 16.dp)
+                text = stringResource(id = R.string.screen_event_details_description),
+                style = EsmorgaTextStyle.HEADING_1,
+                modifier = Modifier.padding(start = 16.dp, top = 32.dp, end = 16.dp)
             )
             EsmorgaText(
                 text = uiState.description, style = EsmorgaTextStyle.BODY_1, modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)
             )
             EsmorgaText(
-                text = stringResource(id = R.string.screen_event_details_location), style = EsmorgaTextStyle.HEADING_1, modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)
+                text = stringResource(id = R.string.screen_event_details_location),
+                style = EsmorgaTextStyle.HEADING_1,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)
             )
             EsmorgaText(
                 text = uiState.locationName, style = EsmorgaTextStyle.BODY_1, modifier = Modifier.padding(horizontal = 16.dp)
             )
             if (uiState.navigateButton) {
                 EsmorgaButton(
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 32.dp), text = stringResource(id = R.string.button_navigate), primary = false, isEnabled = !uiState.primaryButtonLoading
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 32.dp),
+                    text = stringResource(id = R.string.button_navigate),
+                    primary = false,
+                    isEnabled = !uiState.primaryButtonLoading
                 ) {
                     onNavigateClicked()
                 }

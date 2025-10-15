@@ -109,4 +109,5 @@
    <string name="cancel_button_dialog">Cancelar</string>
    <string name="button_join_event_disabled">Lleno</string>
    <string name="snackbar_event_full">El evento ya ha alcanzado el aforo máximo.</string>
+   <string name="screen_event_details_capacity">%1$d/%2$d asistentes</string>
 </resources>

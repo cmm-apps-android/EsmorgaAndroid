@@ -53,6 +53,16 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
         )
     }
 
+    @Test
+    fun eventDetailsView_lightTheme_event_not_full_user_not_joined() {
+        snapshotWithState(
+            currentAttendeeCount = 4,
+            maxCapacity = 10,
+            buttonTitle = "Join Event",
+            isJoinButtonEnabled = true
+        )
+    }
+
     private fun snapshotWithState(
         lat: Double? = 0.0,
         lng: Double? = 2.88,
