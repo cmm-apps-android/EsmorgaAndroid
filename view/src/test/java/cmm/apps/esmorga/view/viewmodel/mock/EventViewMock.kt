@@ -10,7 +10,13 @@ object EventViewMock {
 
     fun provideEventList(nameList: List<String>): List<Event> = nameList.map { name -> provideEvent(name) }
 
-    fun provideEvent(name: String, userJoined: Boolean = false, currentAttendeeCount: Int = 0, maxCapacity: Int? = null): Event = Event(
+    fun provideEvent(
+        name: String,
+        userJoined: Boolean = false,
+        currentAttendeeCount: Int = 0,
+        maxCapacity: Int? = null,
+        joinDeadline: Long = ZonedDateTime.now().plusDays(7).toInstant().toEpochMilli()
+    ): Event = Event(
         id = "$name-${System.currentTimeMillis()}",
         name = name,
         date = System.currentTimeMillis(),
@@ -20,7 +26,7 @@ object EventViewMock {
         userJoined = userJoined,
         maxCapacity = maxCapacity,
         currentAttendeeCount = currentAttendeeCount,
-        joinDeadline = ZonedDateTime.now().plusDays(7).toInstant().toEpochMilli()
+        joinDeadline = joinDeadline
     )
 
 }

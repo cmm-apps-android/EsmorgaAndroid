@@ -7,6 +7,8 @@ import cmm.apps.esmorga.view.screenshot.BaseScreenshotTest
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import org.junit.Test
 
+private const val SEVEN_DAYS_MILLIS = 7L * 24 * 60 * 60 * 1000
+
 class EventDetailsScreenshotTest : BaseScreenshotTest() {
 
     @Test
@@ -33,6 +35,7 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
     fun eventDetailsView_lightTheme_data_primary_button_loading_state() {
         snapshotWithState(buttonLoading = true)
     }
+
     @Test
     fun eventDetailsView_lightTheme_event_full_user_not_joined() {
         snapshotWithState(
@@ -70,7 +73,8 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
         buttonLoading: Boolean = false,
         currentAttendeeCount: Int? = null,
         maxCapacity: Int? = null,
-        isJoinButtonEnabled: Boolean = true
+        isJoinButtonEnabled: Boolean = true,
+        joinDeadline: Long = System.currentTimeMillis() + SEVEN_DAYS_MILLIS
     ) {
         paparazzi.snapshot {
             EsmorgaTheme(darkTheme = false) {
@@ -86,9 +90,11 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
                         locationLng = lng,
                         primaryButtonTitle = buttonTitle,
                         primaryButtonLoading = buttonLoading,
-                        currentAttendeeCount = currentAttendeeCount?: 0,
+                        currentAttendeeCount = currentAttendeeCount ?: 0,
                         maxCapacity = maxCapacity,
-                        isJoinButtonEnabled = isJoinButtonEnabled
+                        isJoinButtonEnabled = isJoinButtonEnabled,
+                        joinDeadline = joinDeadline,
+                        isJoinDeadlinePassed = System.currentTimeMillis() > joinDeadline
                     ),
                     snackbarHostState = SnackbarHostState(),
                     onNavigateClicked = {},
