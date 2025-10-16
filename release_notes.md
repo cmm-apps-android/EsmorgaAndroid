@@ -22,6 +22,10 @@ User‑facing changes only. This file lists what publishers / end users can noti
 ### New / Updated Features
 - Added event capacity display in the Event Details screen.
 
+## 1.0.0 - 2025-16-10
+### New / Updated Features
+- Added a join deadline display in the Event Details screen.
+
 ---
 Guidelines:
 - Start each bullet with an action or outcome ("Added", "Enabled", "Improved", "Fixed").
