@@ -3,6 +3,7 @@ package cmm.apps.esmorga.view.viewmodel.mock
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.domain.event.model.EventLocation
 import cmm.apps.esmorga.domain.event.model.EventType
+import java.time.ZonedDateTime
 
 
 object EventViewMock {
@@ -18,7 +19,8 @@ object EventViewMock {
         location = EventLocation("Location"),
         userJoined = userJoined,
         maxCapacity = maxCapacity,
-        currentAttendeeCount = currentAttendeeCount
+        currentAttendeeCount = currentAttendeeCount,
+        joinDeadline = ZonedDateTime.now().plusDays(7).toInstant().toEpochMilli()
     )
 
 }

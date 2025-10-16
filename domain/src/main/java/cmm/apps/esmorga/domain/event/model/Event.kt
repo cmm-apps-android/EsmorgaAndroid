@@ -19,7 +19,7 @@ data class Event(
     val userJoined: Boolean,
     val currentAttendeeCount: Int,
     val maxCapacity: Int?,
-    val joinDeadline: String
+    val joinDeadline: Long
 )
 
 @Serializable

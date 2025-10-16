@@ -8,6 +8,8 @@ import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiStateHelper.getEsm
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 data class EventDetailsUiState(
     val id: String = "",
@@ -25,7 +27,7 @@ data class EventDetailsUiState(
     val maxCapacity: Int? = null,
     val isJoinButtonEnabled: Boolean = true,
     val isEventFull: Boolean = false,
-    val joinDeadline: String,
+    val joinDeadline: Long,
     val isJoinDeadlinePassed: Boolean = false
 )
 
@@ -50,7 +52,7 @@ object EventDetailsUiStateHelper : KoinComponent {
         eventFull: Boolean,
         userJoined: Boolean,
         isDeadlinePassed: Boolean
-    ): Boolean{
+    ): Boolean {
         return userJoined || (!eventFull && !isDeadlinePassed)
     }
 
@@ -61,10 +63,16 @@ object EventDetailsUiStateHelper : KoinComponent {
         buttonText = context.getString(R.string.button_ok)
     )
 
-    fun hasJoinDeadlinePassed(joinDeadline: String): Boolean {
-        if (joinDeadline.isBlank()) return false
-        return Instant.now().isAfter(Instant.parse(joinDeadline))
+    fun hasJoinDeadlinePassed(joinDeadline: Long): Boolean {
+        return System.currentTimeMillis() > joinDeadline
     }
+
+    fun formatJoinDeadline(joinDeadline: Long): String {
+        val formatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy, HH:mm")
+            .withZone(ZoneId.systemDefault())
+        return formatter.format(Instant.ofEpochMilli(joinDeadline))
+    }
+
 }
 
 sealed class EventDetailsEffect {

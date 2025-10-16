@@ -28,6 +28,12 @@ fun EventRemoteModel.toEventDataModel(): EventDataModel {
         throw EsmorgaException(message = "Error parsing type [${this.remoteType.uppercase()}] in EventRemoteModel", source = Source.REMOTE, code = ErrorCodes.PARSE_ERROR)
     }
 
+    val parsedJoinDeadline = try {
+        ZonedDateTime.from(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSVV").parse(this.joinDeadline))
+    } catch (e: Exception) {
+        throw DateTimeParseException("Error parsing date in EventRemoteModel", this.joinDeadline, 0, e)
+    }
+
     return EventDataModel(
         dataId = this.remoteId,
         dataName = this.remoteName,
@@ -40,7 +46,7 @@ fun EventRemoteModel.toEventDataModel(): EventDataModel {
         dataUserJoined = false,
         dataCurrentAttendeeCount = this.remoteCurrentAttendeeCount,
         dataMaxCapacity = this.remoteMaxCapacity,
-        joinDeadline = this.joinDeadline
+        joinDeadline = parsedJoinDeadline.toInstant().toEpochMilli()
     )
 }
 

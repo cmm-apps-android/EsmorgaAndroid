@@ -3,7 +3,6 @@ package cmm.apps.esmorga.data.mock
 import cmm.apps.esmorga.data.event.model.EventDataModel
 import cmm.apps.esmorga.data.event.model.EventLocationDataModel
 import cmm.apps.esmorga.domain.event.model.EventType
-import java.time.ZonedDateTime
 
 
 object EventDataMock {

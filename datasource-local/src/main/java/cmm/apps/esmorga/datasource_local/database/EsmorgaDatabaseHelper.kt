@@ -43,7 +43,7 @@ object EsmorgaDatabaseHelper {
                 localUserJoined INTEGER NOT NULL DEFAULT 0,
                 localCurrentAttendeeCount INTEGER NOT NULL DEFAULT 0,
                 localMaxCapacity INTEGER,
-                localJoinDeadline TEXT NOT NULL DEFAULT ''
+                localJoinDeadline INTEGER NOT NULL DEFAULT 0
             )
             """.trimIndent()
             )

@@ -16,7 +16,7 @@ data class EventDataModel(
     val dataUserJoined: Boolean,
     val dataCurrentAttendeeCount: Int,
     val dataMaxCapacity: Int?,
-    val joinDeadline: String
+    val joinDeadline: Long
 )
 
 data class EventLocationDataModel(
