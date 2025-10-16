@@ -77,17 +77,6 @@
             "affinity": "INTEGER",
             "notNull": true,
             "defaultValue": "0"
-          },
-          {
-            "fieldPath": "localCurrentAttendeeCount",
-            "columnName": "localCurrentAttendeeCount",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "localMaxCapacity",
-            "columnName": "localMaxCapacity",
-            "affinity": "INTEGER"
           }
         ],
         "primaryKey": {

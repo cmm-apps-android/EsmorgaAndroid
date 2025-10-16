@@ -20,8 +20,7 @@ User‑facing changes only. This file lists what publishers / end users can noti
 
 ## 1.0.0 - 2025-15-10
 ### New / Updated Features
-- Added event capacity display in the Event Details screen, showing current attendees versus maximum capacity.
-- Disabled the Join button when an event reaches full capacity and updated the label to “Event full.”
+- Added event capacity display in the Event Details screen.
 
 ---
 Guidelines:
