@@ -22,16 +22,20 @@ object EventDetailsUiMapper {
         locationName = this.location.name,
         locationLat = this.location.lat,
         locationLng = this.location.long,
+        joinDeadline = this.joinDeadline,
+        isJoinDeadlinePassed = EventDetailsUiStateHelper.hasJoinDeadlinePassed(this.joinDeadline),
         primaryButtonTitle = EventDetailsUiStateHelper.getPrimaryButtonTitle(
             isAuthenticated = isAuthenticated,
             userJoined = userJoined,
-            eventFull = eventFull
+            eventFull = eventFull,
+            isDeadlinePassed = EventDetailsUiStateHelper.hasJoinDeadlinePassed(this.joinDeadline)
         ),
         currentAttendeeCount = this.currentAttendeeCount,
         maxCapacity = this.maxCapacity,
         isJoinButtonEnabled = EventDetailsUiStateHelper.getButtonEnableStatus(
             eventFull = eventFull,
-            userJoined = userJoined
+            userJoined = userJoined,
+            isDeadlinePassed = EventDetailsUiStateHelper.hasJoinDeadlinePassed(this.joinDeadline)
         )
     )
 }

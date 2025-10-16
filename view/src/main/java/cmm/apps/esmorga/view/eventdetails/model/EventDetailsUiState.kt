@@ -7,6 +7,7 @@ import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArgumentsHelper.getE
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiStateHelper.getEsmorgaNoNetworkScreenArguments
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import java.time.Instant
 
 data class EventDetailsUiState(
     val id: String = "",
@@ -23,7 +24,9 @@ data class EventDetailsUiState(
     val currentAttendeeCount: Int = 0,
     val maxCapacity: Int? = null,
     val isJoinButtonEnabled: Boolean = true,
-    val isEventFull: Boolean = false
+    val isEventFull: Boolean = false,
+    val joinDeadline: String = "",
+    val isJoinDeadlinePassed: Boolean = false
 )
 
 object EventDetailsUiStateHelper : KoinComponent {
@@ -31,11 +34,13 @@ object EventDetailsUiStateHelper : KoinComponent {
     fun getPrimaryButtonTitle(
         isAuthenticated: Boolean,
         userJoined: Boolean,
-        eventFull: Boolean
+        eventFull: Boolean,
+        isDeadlinePassed: Boolean
     ): String {
         return when {
             !isAuthenticated -> context.getString(R.string.button_login_to_join)
             userJoined -> context.getString(R.string.button_leave_event)
+            isDeadlinePassed -> context.getString(R.string.button_join_event_closed)
             !userJoined && eventFull -> context.getString(R.string.button_join_event_disabled)
             else -> context.getString(R.string.button_join_event)
         }
@@ -43,9 +48,10 @@ object EventDetailsUiStateHelper : KoinComponent {
 
     fun getButtonEnableStatus(
         eventFull: Boolean,
-        userJoined: Boolean
+        userJoined: Boolean,
+        isDeadlinePassed: Boolean
     ): Boolean{
-        return userJoined || !eventFull
+        return userJoined || (!eventFull && !isDeadlinePassed)
     }
 
     fun getEsmorgaNoNetworkScreenArguments() = EsmorgaErrorScreenArguments(
@@ -54,6 +60,11 @@ object EventDetailsUiStateHelper : KoinComponent {
         subtitle = context.getString(R.string.screen_no_connection_body),
         buttonText = context.getString(R.string.button_ok)
     )
+
+    fun hasJoinDeadlinePassed(joinDeadline: String): Boolean {
+        if (joinDeadline.isBlank()) return false
+        return Instant.now().isAfter(Instant.parse(joinDeadline))
+    }
 }
 
 sealed class EventDetailsEffect {
