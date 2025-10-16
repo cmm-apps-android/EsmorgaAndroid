@@ -25,7 +25,7 @@ data class EventDetailsUiState(
     val maxCapacity: Int? = null,
     val isJoinButtonEnabled: Boolean = true,
     val isEventFull: Boolean = false,
-    val joinDeadline: String = "",
+    val joinDeadline: String,
     val isJoinDeadlinePassed: Boolean = false
 )
 
