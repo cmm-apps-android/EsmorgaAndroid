@@ -4,6 +4,7 @@ import cmm.apps.esmorga.data.event.model.EventDataModel
 import cmm.apps.esmorga.data.event.model.EventLocationDataModel
 import cmm.apps.esmorga.domain.event.model.EventType
 import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 
 object EventDataMock {
@@ -19,7 +20,8 @@ object EventDataMock {
         dataLocation = EventLocationDataModel("Location"),
         dataUserJoined = false,
         dataCurrentAttendeeCount = 0,
-        dataMaxCapacity = 10
+        dataMaxCapacity = 10,
+        joinDeadline = ZonedDateTime.now().plusDays(7).format(DateTimeFormatter.ISO_INSTANT)
     )
 
 }

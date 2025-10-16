@@ -28,7 +28,8 @@ fun EventLocalModel.toEventDataModel(): EventDataModel {
         dataCreationTime = localCreationTime,
         dataUserJoined = this.localUserJoined,
         dataCurrentAttendeeCount = this.localCurrentAttendeeCount,
-        dataMaxCapacity = this.localMaxCapacity
+        dataMaxCapacity = this.localMaxCapacity,
+        joinDeadline = this.joinDeadline
     )
 }
 
@@ -47,7 +48,8 @@ fun EventDataModel.toEventLocalModel(): EventLocalModel {
         localLocationLong = this.dataLocation.long,
         localTags = this.dataTags,
         localCreationTime = dataCreationTime,
-        localUserJoined = this.dataUserJoined
+        localUserJoined = this.dataUserJoined,
+        joinDeadline = this.joinDeadline
     )
 }
 
