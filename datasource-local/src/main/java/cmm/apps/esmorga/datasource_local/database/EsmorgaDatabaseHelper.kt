@@ -9,11 +9,11 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 object EsmorgaDatabaseHelper {
 
     private const val DATABASE_NAME = "esmorga_database"
-    const val DATABASE_VERSION = 6
+    const val DATABASE_VERSION = 5
 
     fun getDatabase(context: Context) =
         Room.databaseBuilder(context, EsmorgaDatabase::class.java, DATABASE_NAME)
-            .addMigrations(MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
+            .addMigrations(MIGRATION_3_4, MIGRATION_4_5)
             .fallbackToDestructiveMigration()
             .build()
 
@@ -42,15 +42,11 @@ object EsmorgaDatabaseHelper {
                 localCreationTime INTEGER NOT NULL,
                 localUserJoined INTEGER NOT NULL DEFAULT 0,
                 localCurrentAttendeeCount INTEGER NOT NULL DEFAULT 0,
-                localMaxCapacity INTEGER
+                localMaxCapacity INTEGER,
+                localJoinDeadline TEXT NOT NULL DEFAULT ''
             )
             """.trimIndent()
             )
-        }
-    }
-    private val MIGRATION_5_6 = object : Migration(5, 6) {
-        override fun migrate(database: SupportSQLiteDatabase) {
-            database.execSQL("ALTER TABLE EventLocalModel ADD COLUMN localJoinDeadline TEXT NOT NULL DEFAULT ''")
         }
     }
 }
