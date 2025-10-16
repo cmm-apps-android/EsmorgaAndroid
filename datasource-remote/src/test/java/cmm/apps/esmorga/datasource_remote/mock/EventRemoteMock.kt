@@ -24,6 +24,8 @@ object EventRemoteMock {
         remoteImageUrl = null,
         remoteLocation = EventLocationRemoteModel("Location"),
         remoteTags = listOf(),
+        remoteCurrentAttendeeCount = 40,
+        remoteMaxCapacity = 50
     )
 
 }

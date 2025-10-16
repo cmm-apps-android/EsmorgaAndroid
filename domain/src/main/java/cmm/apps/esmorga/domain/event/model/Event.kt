@@ -16,7 +16,9 @@ data class Event(
     val imageUrl: String? = null,
     val location: EventLocation,
     val tags: List<String> = listOf(),
-    val userJoined: Boolean
+    val userJoined: Boolean,
+    val currentAttendeeCount: Int,
+    val maxCapacity: Int?
 )
 
 @Serializable

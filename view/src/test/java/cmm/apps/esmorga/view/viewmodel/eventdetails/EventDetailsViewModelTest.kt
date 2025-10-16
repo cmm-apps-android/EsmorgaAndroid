@@ -230,5 +230,100 @@ class EventDetailsViewModelTest {
             Assert.assertEquals(event.location.name, location.locationName)
         }
     }
+
+    @Test
+    fun `given event with capacity when getEventDetails is called then capacity info is shown in UI state`() = runTest {
+        val event = EventViewMock.provideEvent(
+            name = "CapacityTest",
+            currentAttendeeCount = 5,
+            maxCapacity = 10,
+        )
+
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event)
+        val uiState = sut.uiState.value
+
+        Assert.assertEquals(5, uiState.currentAttendeeCount)
+        Assert.assertEquals(10, uiState.maxCapacity)
+    }
+
+
+    @Test
+    fun `given user not joined when joins event then attendee count increases and success effect emitted`() = runTest {
+        val event = EventViewMock.provideEvent(
+            name = "JoinEventFlow",
+            currentAttendeeCount = 4,
+            maxCapacity = 10,
+            userJoined = false
+        )
+        val joinEventUseCase = mockk<JoinEventUseCase>(relaxed = true)
+        coEvery { joinEventUseCase(event) } returns EsmorgaResult.success(Unit)
+
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event)
+
+        sut.effect.test {
+            sut.onPrimaryButtonClicked()
+
+            val effect = awaitItem()
+            Assert.assertTrue(effect is EventDetailsEffect.ShowJoinEventSuccess)
+
+            val uiState = sut.uiState.value
+            Assert.assertTrue(uiState.primaryButtonTitle.contains("Leave", ignoreCase = true))
+            Assert.assertEquals(5, uiState.currentAttendeeCount)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `given user joined when leaves event then attendee count decreases and success effect emitted`() = runTest {
+        val event = EventViewMock.provideEvent(
+            name = "LeaveEventFlow",
+            currentAttendeeCount = 5,
+            maxCapacity = 10,
+            userJoined = true
+        )
+
+        val leaveEventUseCase = mockk<LeaveEventUseCase>(relaxed = true)
+        coEvery { leaveEventUseCase(event) } returns EsmorgaResult.success(Unit)
+
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event)
+
+        sut.effect.test {
+            sut.onPrimaryButtonClicked()
+
+            val effect = awaitItem()
+            Assert.assertTrue(effect is EventDetailsEffect.ShowLeaveEventSuccess)
+
+            val uiState = sut.uiState.value
+            Assert.assertTrue(uiState.primaryButtonTitle.contains("Join", ignoreCase = true))
+            Assert.assertEquals(4, uiState.currentAttendeeCount)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+    @Test
+    fun `end to end flow join and leave event`() = runTest {
+        val event = EventViewMock.provideEvent(
+            name = "FullFlowEvent",
+            currentAttendeeCount = 2,
+            maxCapacity = 10,
+            userJoined = false
+        )
+        coEvery { joinEventUseCase(event) } returns EsmorgaResult.success(Unit)
+        coEvery { leaveEventUseCase(event) } returns EsmorgaResult.success(Unit)
+
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event)
+
+        sut.effect.test {
+            sut.onPrimaryButtonClicked()
+            Assert.assertTrue(awaitItem() is EventDetailsEffect.ShowJoinEventSuccess)
+            Assert.assertEquals(3, sut.uiState.value.currentAttendeeCount)
+
+            sut.onPrimaryButtonClicked()
+            Assert.assertTrue(awaitItem() is EventDetailsEffect.ShowLeaveEventSuccess)
+            Assert.assertEquals(2, sut.uiState.value.currentAttendeeCount)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
 }
 

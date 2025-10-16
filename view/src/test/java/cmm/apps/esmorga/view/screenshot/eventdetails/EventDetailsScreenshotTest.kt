@@ -33,8 +33,45 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
     fun eventDetailsView_lightTheme_data_primary_button_loading_state() {
         snapshotWithState(buttonLoading = true)
     }
+    @Test
+    fun eventDetailsView_lightTheme_event_full_user_not_joined() {
+        snapshotWithState(
+            currentAttendeeCount = 10,
+            maxCapacity = 10,
+            buttonTitle = "Full",
+            isJoinButtonEnabled = false
+        )
+    }
 
-    private fun snapshotWithState(lat: Double? = 0.0, lng: Double? = 2.88, buttonTitle: String = "Sign in to sign up", buttonLoading: Boolean = false) {
+    @Test
+    fun eventDetailsView_lightTheme_event_full_user_joined() {
+        snapshotWithState(
+            currentAttendeeCount = 10,
+            maxCapacity = 10,
+            buttonTitle = "Leave Event",
+            isJoinButtonEnabled = true
+        )
+    }
+
+    @Test
+    fun eventDetailsView_lightTheme_event_not_full_user_not_joined() {
+        snapshotWithState(
+            currentAttendeeCount = 4,
+            maxCapacity = 10,
+            buttonTitle = "Join Event",
+            isJoinButtonEnabled = true
+        )
+    }
+
+    private fun snapshotWithState(
+        lat: Double? = 0.0,
+        lng: Double? = 2.88,
+        buttonTitle: String = "Sign in to sign up",
+        buttonLoading: Boolean = false,
+        currentAttendeeCount: Int? = null,
+        maxCapacity: Int? = null,
+        isJoinButtonEnabled: Boolean = true
+    ) {
         paparazzi.snapshot {
             EsmorgaTheme(darkTheme = false) {
                 EventDetailsView(
@@ -48,7 +85,10 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
                         locationLat = lat,
                         locationLng = lng,
                         primaryButtonTitle = buttonTitle,
-                        primaryButtonLoading = buttonLoading
+                        primaryButtonLoading = buttonLoading,
+                        currentAttendeeCount = currentAttendeeCount?: 0,
+                        maxCapacity = maxCapacity,
+                        isJoinButtonEnabled = isJoinButtonEnabled
                     ),
                     snackbarHostState = SnackbarHostState(),
                     onNavigateClicked = {},

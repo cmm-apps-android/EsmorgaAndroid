@@ -1,10 +1,13 @@
 package cmm.apps.esmorga.view.eventdetails
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -103,19 +106,13 @@ fun EventDetailsScreen(
         }
     }
     EsmorgaTheme {
-        EventDetailsView(
-            uiState = uiState,
-            snackbarHostState = snackbarHostState,
-            onNavigateClicked = {
-                edvm.onNavigateClick()
-            },
-            onBackPressed = {
-                edvm.onBackPressed()
-            },
-            onPrimaryButtonClicked = {
-                edvm.onPrimaryButtonClicked()
-            }
-        )
+        EventDetailsView(uiState = uiState, snackbarHostState = snackbarHostState, onNavigateClicked = {
+            edvm.onNavigateClick()
+        }, onBackPressed = {
+            edvm.onBackPressed()
+        }, onPrimaryButtonClicked = {
+            edvm.onPrimaryButtonClicked()
+        })
     }
 
 }
@@ -123,32 +120,22 @@ fun EventDetailsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EventDetailsView(
-    uiState: EventDetailsUiState,
-    snackbarHostState: SnackbarHostState,
-    onNavigateClicked: () -> Unit,
-    onBackPressed: () -> Unit,
-    onPrimaryButtonClicked: () -> Unit
+    uiState: EventDetailsUiState, snackbarHostState: SnackbarHostState, onNavigateClicked: () -> Unit, onBackPressed: () -> Unit, onPrimaryButtonClicked: () -> Unit
 ) {
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
-            TopAppBar(
-                title = {},
-                navigationIcon = {
-                    IconButton(
-                        onClick = { onBackPressed() },
-                        modifier = Modifier.testTag(EVENT_DETAILS_BACK_BUTTON)
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.content_description_back_icon)
-                        )
-                    }
-                },
-            )
-        },
-        snackbarHost = { SnackbarHost(snackbarHostState) }
-    ) { innerPadding ->
+    Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
+        TopAppBar(
+            title = {},
+            navigationIcon = {
+                IconButton(
+                    onClick = { onBackPressed() }, modifier = Modifier.testTag(EVENT_DETAILS_BACK_BUTTON)
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.content_description_back_icon)
+                    )
+                }
+            },
+        )
+    }, snackbarHost = { SnackbarHost(snackbarHostState) }) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(
@@ -157,8 +144,7 @@ fun EventDetailsView(
                 .verticalScroll(state = rememberScrollState())
         ) {
             AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(uiState.image)
+                model = ImageRequest.Builder(LocalContext.current).data(uiState.image)
                     //.crossfade(true) //Open bug in Coil https://github.com/coil-kt/coil/issues/1688 leads to image not being properly scaled if crossfade is used
                     .build(),
                 placeholder = painterResource(DesignSystem.drawable.img_event_list_empty),
@@ -170,13 +156,27 @@ fun EventDetailsView(
                     .aspectRatio(16 / 9f)
             )
             EsmorgaText(
-                text = uiState.title,
-                style = EsmorgaTextStyle.TITLE,
-                modifier = Modifier
+                text = uiState.title, style = EsmorgaTextStyle.TITLE, modifier = Modifier
                     .padding(top = 32.dp, start = 16.dp, bottom = 16.dp, end = 16.dp)
                     .testTag(EventDetailsScreenTestTags.EVENT_DETAILS_EVENT_NAME)
             )
             EsmorgaText(text = uiState.subtitle, style = EsmorgaTextStyle.BODY_1_ACCENT, modifier = Modifier.padding(horizontal = 16.dp))
+
+            uiState.maxCapacity?.let { max ->
+                Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+                    Icon(painter = painterResource(DesignSystem.drawable.group), contentDescription = null)
+                    Spacer(modifier = Modifier.width(5.dp))
+                    EsmorgaText(
+                        text = stringResource(
+                            id = R.string.screen_event_details_capacity,
+                            uiState.currentAttendeeCount,
+                            max
+                        ),
+                        style = EsmorgaTextStyle.CAPTION,
+                    )
+                }
+            }
+
             EsmorgaText(
                 text = stringResource(id = R.string.screen_event_details_description),
                 style = EsmorgaTextStyle.HEADING_1,
@@ -206,11 +206,12 @@ fun EventDetailsView(
 
             EsmorgaButton(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = if (!uiState.navigateButton) 32.dp else 0.dp)
+                    .padding(horizontal = 16.dp, vertical = if (!uiState.navigateButton) 32.dp else 16.dp)
                     .testTag(EventDetailsScreenTestTags.EVENT_DETAIL_PRIMARY_BUTTON),
                 text = uiState.primaryButtonTitle,
                 primary = true,
-                isLoading = uiState.primaryButtonLoading
+                isLoading = uiState.primaryButtonLoading,
+                isEnabled = uiState.isJoinButtonEnabled
             ) {
                 onPrimaryButtonClicked()
             }

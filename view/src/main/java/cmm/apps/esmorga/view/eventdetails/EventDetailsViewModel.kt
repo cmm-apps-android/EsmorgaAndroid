@@ -36,6 +36,9 @@ class EventDetailsViewModel(
     private var isAuthenticated: Boolean = false
     private var userJoined: Boolean = false
 
+    private var isEventFull: Boolean = event.maxCapacity?.let { max -> event.currentAttendeeCount >= max } ?: false
+    private var eventAttendeeCount = event.currentAttendeeCount
+
     init {
         getEventDetails()
     }
@@ -71,7 +74,7 @@ class EventDetailsViewModel(
             val user = getSavedUserUseCase()
             isAuthenticated = user.data != null
             userJoined = event.userJoined
-            _uiState.value = event.toEventUiDetails(isAuthenticated, userJoined)
+            _uiState.value = event.toEventUiDetails(isAuthenticated, userJoined, isEventFull)
         }
     }
 
@@ -81,7 +84,9 @@ class EventDetailsViewModel(
             val result = joinEventUseCase(event)
             result.onSuccess {
                 userJoined = true
-                _uiState.value = _uiState.value.copy(primaryButtonLoading = false, primaryButtonTitle = getPrimaryButtonTitle(isAuthenticated = true, userJoined = true))
+                eventAttendeeCount = eventAttendeeCount + 1
+                isEventFull = event.maxCapacity?.let { eventAttendeeCount >= it } ?: false
+                _uiState.value = _uiState.value.copy(primaryButtonLoading = false, primaryButtonTitle = getPrimaryButtonTitle(isAuthenticated = true, userJoined = true, isEventFull), currentAttendeeCount = eventAttendeeCount)
                 _effect.tryEmit(EventDetailsEffect.ShowJoinEventSuccess)
             }.onFailure { error ->
                 showErrorScreen(error)
@@ -95,7 +100,10 @@ class EventDetailsViewModel(
             val result = leaveEventUseCase(event)
             result.onSuccess {
                 userJoined = false
-                _uiState.value = _uiState.value.copy(primaryButtonLoading = false, primaryButtonTitle = getPrimaryButtonTitle(isAuthenticated = true, userJoined = false))
+                eventAttendeeCount = eventAttendeeCount - 1
+                isEventFull = event.maxCapacity?.let { eventAttendeeCount >= it } ?: false
+                _uiState.value =
+                    _uiState.value.copy(primaryButtonLoading = false, primaryButtonTitle = getPrimaryButtonTitle(isAuthenticated = true, userJoined = false, isEventFull), isJoinButtonEnabled = !isEventFull, currentAttendeeCount = eventAttendeeCount)
                 _effect.tryEmit(EventDetailsEffect.ShowLeaveEventSuccess)
             }.onFailure { error ->
                 showErrorScreen(error)

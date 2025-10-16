@@ -17,7 +17,9 @@ object EventDomainMock {
         description = "description",
         type = EventType.SPORT,
         location = EventLocation("Location"),
-        userJoined = false
+        userJoined = false,
+        currentAttendeeCount = 0,
+        maxCapacity = 10
     )
 
 }

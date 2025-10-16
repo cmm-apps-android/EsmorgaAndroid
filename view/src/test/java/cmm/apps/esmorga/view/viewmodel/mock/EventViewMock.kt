@@ -9,14 +9,16 @@ object EventViewMock {
 
     fun provideEventList(nameList: List<String>): List<Event> = nameList.map { name -> provideEvent(name) }
 
-    fun provideEvent(name: String, userJoined: Boolean = false): Event = Event(
+    fun provideEvent(name: String, userJoined: Boolean = false, currentAttendeeCount: Int = 0, maxCapacity: Int? = null): Event = Event(
         id = "$name-${System.currentTimeMillis()}",
         name = name,
         date = System.currentTimeMillis(),
         description = "description",
         type = EventType.SPORT,
         location = EventLocation("Location"),
-        userJoined = userJoined
+        userJoined = userJoined,
+        maxCapacity = maxCapacity,
+        currentAttendeeCount = currentAttendeeCount
     )
 
 }

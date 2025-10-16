@@ -17,7 +17,9 @@ fun EventDataModel.toEvent(): Event = Event(
     imageUrl = this.dataImageUrl,
     location = EventLocation(this.dataLocation.name, this.dataLocation.lat, this.dataLocation.long),
     tags = this.dataTags,
-    userJoined = this.dataUserJoined
+    userJoined = this.dataUserJoined,
+    currentAttendeeCount = this.dataCurrentAttendeeCount,
+    maxCapacity = this.dataMaxCapacity
 )
 
 fun List<EventDataModel>.toEventList(): List<Event> = map { edm -> edm.toEvent() }
@@ -32,5 +34,7 @@ fun Event.toEventDataModel(): EventDataModel =
         dataImageUrl = this.imageUrl?.let { URLEncoder.encode(it, StandardCharsets.UTF_8.toString()) },
         dataLocation = EventLocationDataModel(this.location.name, this.location.lat, this.location.long),
         dataTags = this.tags,
-        dataUserJoined = this.userJoined
+        dataUserJoined = this.userJoined,
+        dataCurrentAttendeeCount = this.currentAttendeeCount,
+        dataMaxCapacity = this.maxCapacity
     )
