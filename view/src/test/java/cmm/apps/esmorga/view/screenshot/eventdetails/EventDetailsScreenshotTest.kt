@@ -1,15 +1,39 @@
 package cmm.apps.esmorga.view.screenshot.eventdetails
 
 import androidx.compose.material3.SnackbarHostState
+import cmm.apps.esmorga.view.dateformatting.EsmorgaDateTimeFormatter
 import cmm.apps.esmorga.view.eventdetails.EventDetailsView
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiState
 import cmm.apps.esmorga.view.screenshot.BaseScreenshotTest
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
+import io.mockk.mockk
+import org.junit.After
+import org.junit.Before
 import org.junit.Test
+import org.junit.runner.manipulation.Ordering
+import org.koin.core.context.GlobalContext.startKoin
+import org.koin.core.context.GlobalContext.stopKoin
+import org.koin.dsl.module
 
 private const val JULY_2025_TIMESTAMP = 1_700_000_000_000L
 
 class EventDetailsScreenshotTest : BaseScreenshotTest() {
+    @Before
+    fun setup() {
+        startKoin {
+            modules(
+                module {
+                    single { mockk<Ordering.Context>(relaxed = true) }
+                    single { mockk<EsmorgaDateTimeFormatter>(relaxed = true) }
+                }
+            )
+        }
+    }
+
+    @After
+    fun tearDown() {
+        stopKoin()
+    }
 
     @Test
     fun eventDetailsView_lightTheme_no_location() {
