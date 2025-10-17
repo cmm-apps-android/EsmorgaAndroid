@@ -49,6 +49,8 @@ fun EventDataModel.toEventLocalModel(): EventLocalModel {
         localTags = this.dataTags,
         localCreationTime = dataCreationTime,
         localUserJoined = this.dataUserJoined,
+        localCurrentAttendeeCount = this.dataCurrentAttendeeCount,
+        localMaxCapacity = this.dataMaxCapacity,
         joinDeadline = this.joinDeadline
     )
 }
