@@ -7,7 +7,7 @@ import cmm.apps.esmorga.view.screenshot.BaseScreenshotTest
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import org.junit.Test
 
-private const val SEVEN_DAYS_MILLIS = 7L * 24 * 60 * 60 * 1000
+private const val JULY_2025_TIMESTAMP = 1_700_000_000_000L
 
 class EventDetailsScreenshotTest : BaseScreenshotTest() {
 
@@ -66,6 +66,28 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
         )
     }
 
+    @Test
+    fun eventDetailsView_lightTheme_deadline_passed() {
+        snapshotWithState(
+            currentAttendeeCount = 4,
+            maxCapacity = 10,
+            joinDeadline = JULY_2025_TIMESTAMP,
+            buttonTitle = "Too late",
+            isJoinDeadlinePassed = true
+        )
+    }
+
+    @Test
+    fun eventDetailsView_lightTheme_deadline_not_passed() {
+        snapshotWithState(
+            currentAttendeeCount = 4,
+            maxCapacity = 10,
+            buttonTitle = "Join Event",
+            joinDeadline = JULY_2025_TIMESTAMP,
+            isJoinDeadlinePassed = false
+        )
+    }
+
     private fun snapshotWithState(
         lat: Double? = 0.0,
         lng: Double? = 2.88,
@@ -74,7 +96,8 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
         currentAttendeeCount: Int? = null,
         maxCapacity: Int? = null,
         isJoinButtonEnabled: Boolean = true,
-        joinDeadline: Long = System.currentTimeMillis() + SEVEN_DAYS_MILLIS
+        joinDeadline: Long = JULY_2025_TIMESTAMP,
+        isJoinDeadlinePassed: Boolean = false
     ) {
         paparazzi.snapshot {
             EsmorgaTheme(darkTheme = false) {
@@ -94,7 +117,7 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
                         maxCapacity = maxCapacity,
                         isJoinButtonEnabled = isJoinButtonEnabled,
                         joinDeadline = joinDeadline,
-                        isJoinDeadlinePassed = System.currentTimeMillis() > joinDeadline
+                        isJoinDeadlinePassed = isJoinDeadlinePassed
                     ),
                     snackbarHostState = SnackbarHostState(),
                     onNavigateClicked = {},

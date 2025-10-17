@@ -2,14 +2,12 @@ package cmm.apps.esmorga.view.eventdetails.model
 
 import android.content.Context
 import cmm.apps.esmorga.view.R
+import cmm.apps.esmorga.view.dateformatting.EsmorgaDateTimeFormatter
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArgumentsHelper.getEsmorgaDefaultErrorScreenArguments
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiStateHelper.getEsmorgaNoNetworkScreenArguments
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 
 data class EventDetailsUiState(
     val id: String = "",
@@ -33,6 +31,7 @@ data class EventDetailsUiState(
 
 object EventDetailsUiStateHelper : KoinComponent {
     val context: Context by inject()
+    private val dateFormatter: EsmorgaDateTimeFormatter by inject()
     fun getPrimaryButtonTitle(
         isAuthenticated: Boolean,
         userJoined: Boolean,
@@ -68,9 +67,7 @@ object EventDetailsUiStateHelper : KoinComponent {
     }
 
     fun formatJoinDeadline(joinDeadline: Long): String {
-        val formatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy, HH:mm")
-            .withZone(ZoneId.systemDefault())
-        return formatter.format(Instant.ofEpochMilli(joinDeadline))
+        return dateFormatter.formatEventDate(joinDeadline)
     }
 
 }
