@@ -1,1 +1,78 @@
-{"totalEvents":8,"events":[{"eventId":"66ffd9844bd73c0dbe7e2d82","eventName":"Mocked Event from events.json","eventDate":"2025-03-08T10:05:30.915Z","description":"Join us for an unforgettable celebration as we dance into the apocalypse.","eventType":"Party","imageUrl":"image.url","location":{"lat":43.35525182148881,"long":-8.41937931298951,"name":"A Coruña"},"tags":["DANCE","MUSIC"]},{"eventId":"66ffda254bd73c0dbe7e2d89","eventName":"lololo","eventDate":"2025-03-08T10:05:30.915Z","description":"Join us for an unforgettable celebration as we dance into the apocalypse.","eventType":"Party","imageUrl":"image.url","location":{"lat":43.35525182148881,"long":-8.41937931298951,"name":"A Coruña"},"tags":["DANCE","MUSIC"]},{"eventId":"66ffda404bd73c0dbe7e2d90","eventName":"lololo","eventDate":"2025-03-08T10:05:30.915Z","description":"Join us for an unforgettable celebration as we dance into the apocalypse.","eventType":"Party","imageUrl":"image.url","location":{"lat":43.35525182148881,"long":-8.41937931298951,"name":"A Coruña"},"tags":["DANCE","MUSIC"]},{"eventId":"678642cae3ba1cd9e553376f","eventName":"End of the World Party","eventDate":"2025-03-08T10:05:30.915Z","description":"Join us for an unforgettable celebration as we dance into the apocalypse.","eventType":"Party","location":{"name":"A Coruña"}}]}
+{
+  "totalEvents": 8,
+  "events": [
+    {
+      "eventId": "66ffd9844bd73c0dbe7e2d82",
+      "eventName": "Mocked Event from events.json",
+      "eventDate": "2025-03-08T10:05:30.915Z",
+      "description": "Join us for an unforgettable celebration as we dance into the apocalypse.",
+      "eventType": "Party",
+      "imageUrl": "image.url",
+      "location": {
+        "lat": 43.35525182148881,
+        "long": -8.41937931298951,
+        "name": "A Coruña"
+      },
+      "currentAttendeeCount": 44,
+      "maxCapacity": 44,
+      "joinDeadline": "2025-12-10T00:00:00.000Z",
+      "tags": [
+        "DANCE",
+        "MUSIC"
+      ]
+    },
+    {
+      "eventId": "66ffda254bd73c0dbe7e2d89",
+      "eventName": "lololo",
+      "eventDate": "2025-03-08T10:05:30.915Z",
+      "description": "Join us for an unforgettable celebration as we dance into the apocalypse.",
+      "eventType": "Party",
+      "imageUrl": "image.url",
+      "location": {
+        "lat": 43.35525182148881,
+        "long": -8.41937931298951,
+        "name": "A Coruña"
+      },
+      "currentAttendeeCount": 41,
+      "maxCapacity": 44,
+      "joinDeadline": "2026-12-10T00:00:00.000Z",
+      "tags": [
+        "DANCE",
+        "MUSIC"
+      ]
+    },
+    {
+      "eventId": "66ffda404bd73c0dbe7e2d90",
+      "eventName": "lololo",
+      "eventDate": "2025-03-08T10:05:30.915Z",
+      "description": "Join us for an unforgettable celebration as we dance into the apocalypse.",
+      "eventType": "Party",
+      "imageUrl": "image.url",
+      "location": {
+        "lat": 43.35525182148881,
+        "long": -8.41937931298951,
+        "name": "A Coruña"
+      },
+      "currentAttendeeCount": 41,
+      "maxCapacity": 50,
+      "joinDeadline": "2025-12-10T00:00:00.000Z",
+      "tags": [
+        "DANCE",
+        "MUSIC"
+      ]
+    },
+    {
+      "eventId": "678642cae3ba1cd9e553376f",
+      "eventName": "End of the World Party",
+      "eventDate": "2025-03-08T10:05:30.915Z",
+      "description": "Join us for an unforgettable celebration as we dance into the apocalypse.",
+      "eventType": "Party",
+      "location": {
+        "name": "A Coruña"
+      },
+      "currentAttendeeCount": 41,
+      "maxCapacity": 44,
+      "joinDeadline": "2026-12-10T00:00:00.000Z"
+    }
+  ]
+}

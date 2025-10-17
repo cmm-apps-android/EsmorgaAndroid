@@ -19,7 +19,8 @@ object EventDomainMock {
         location = EventLocation("Location"),
         userJoined = false,
         currentAttendeeCount = 0,
-        maxCapacity = 10
+        maxCapacity = 10,
+        joinDeadline = ZonedDateTime.now().plusDays(7).toInstant().toEpochMilli()
     )
 
 }

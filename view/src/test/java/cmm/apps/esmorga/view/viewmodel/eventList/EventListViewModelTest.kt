@@ -32,6 +32,8 @@ import org.koin.dsl.module
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
+const val SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000L
+
 @RunWith(AndroidJUnit4::class)
 class EventListViewModelTest {
 
@@ -88,7 +90,8 @@ class EventListViewModelTest {
             ),
             userJoined = false,
             currentAttendeeCount = 0,
-            maxCapacity = null
+            maxCapacity = null,
+            joinDeadline = System.currentTimeMillis() + SEVEN_DAYS_MS
         )
 
         val useCase = mockk<GetEventListUseCase>()

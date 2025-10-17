@@ -6,6 +6,8 @@ User‑facing changes only. This file lists what publishers / end users can noti
 
 ### New / Updated Features
 - Create event flow
+- The user will be able to see the number and capacity of attendees at an event.
+- A deadline has been added to sign up for an event.
 
 ### Fixes
 - _(Add here crashes resolved, incorrect behaviors fixed, visual glitches corrected, wording corrections, etc.)_
@@ -17,10 +19,6 @@ User‑facing changes only. This file lists what publishers / end users can noti
 
 ### Fixes
 - N/A (first public milestone).
-
-## 1.0.0 - 2025-15-10
-### New / Updated Features
-- Added event capacity display in the Event Details screen.
 
 ---
 Guidelines:

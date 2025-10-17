@@ -19,7 +19,8 @@ object EventDataMock {
         dataLocation = EventLocationDataModel("Location"),
         dataUserJoined = false,
         dataCurrentAttendeeCount = 0,
-        dataMaxCapacity = 10
+        dataMaxCapacity = 10,
+        joinDeadline = ZonedDateTime.now().plusDays(7).toInstant().toEpochMilli()
     )
 
 }
