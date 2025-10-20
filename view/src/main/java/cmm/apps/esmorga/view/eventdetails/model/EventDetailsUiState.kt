@@ -25,7 +25,7 @@ data class EventDetailsUiState(
     val maxCapacity: Int? = null,
     val isJoinButtonEnabled: Boolean = true,
     val isEventFull: Boolean = false,
-    val joinDeadline: Long,
+    val joinDeadline: Long? = null,
     val isJoinDeadlinePassed: Boolean = false
 )
 
@@ -62,14 +62,13 @@ object EventDetailsUiStateHelper : KoinComponent {
         buttonText = context.getString(R.string.button_ok)
     )
 
-    fun hasJoinDeadlinePassed(joinDeadline: Long): Boolean {
-        return System.currentTimeMillis() > joinDeadline
+    fun hasJoinDeadlinePassed(joinDeadline: Long?): Boolean {
+        return joinDeadline?.let { System.currentTimeMillis() > it } ?: false
     }
 
-    fun formatJoinDeadline(joinDeadline: Long): String {
-        return dateFormatter.formatEventDate(joinDeadline)
+    fun formatJoinDeadline(joinDeadline: Long?): String {
+        return joinDeadline?.let { dateFormatter.formatEventDate(it) } ?: ""
     }
-
 }
 
 sealed class EventDetailsEffect {
