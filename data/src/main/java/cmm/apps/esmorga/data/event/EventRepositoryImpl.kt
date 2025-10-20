@@ -3,12 +3,14 @@ package cmm.apps.esmorga.data.event
 import cmm.apps.esmorga.data.CacheHelper
 import cmm.apps.esmorga.data.event.datasource.EventDatasource
 import cmm.apps.esmorga.data.event.mapper.toEvent
+import cmm.apps.esmorga.data.event.mapper.toEventAttendeeList
 import cmm.apps.esmorga.data.event.mapper.toEventDataModel
 import cmm.apps.esmorga.data.event.mapper.toEventList
 import cmm.apps.esmorga.data.event.model.EventDataModel
 import cmm.apps.esmorga.data.user.datasource.UserDatasource
 import cmm.apps.esmorga.data.user.model.UserDataModel
 import cmm.apps.esmorga.domain.event.model.Event
+import cmm.apps.esmorga.domain.event.model.EventAttendee
 import cmm.apps.esmorga.domain.event.repository.EventRepository
 
 class EventRepositoryImpl(private val localUserDs: UserDatasource, private val localEventDs: EventDatasource, private val remoteEventDs: EventDatasource) : EventRepository {
@@ -25,6 +27,16 @@ class EventRepositoryImpl(private val localUserDs: UserDatasource, private val l
 
     override suspend fun getEventDetails(eventId: String): Event {
         return localEventDs.getEventById(eventId).toEvent()
+    }
+
+    override suspend fun getEventAttendees(eventId: String): List<EventAttendee> {
+        val localList = localEventDs.getEventAttendees(eventId)
+
+        if (localList.isNotEmpty() && CacheHelper.shouldReturnCache(localList[0].dataCreationTime)) {
+            return localList.toEventAttendeeList()
+        }
+
+        return remoteEventDs.getEventAttendees(eventId).toEventAttendeeList()
     }
 
     override suspend fun joinEvent(event: Event) {
