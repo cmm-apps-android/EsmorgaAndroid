@@ -32,6 +32,7 @@ object EventDetailsUiMapper {
         isJoinButtonEnabled = EventDetailsUiStateHelper.getButtonEnableStatus(
             eventFull = eventFull,
             userJoined = userJoined
-        )
+        ),
+        showViewAttendeesButton = this.currentAttendeeCount > 0 && isAuthenticated
     )
 }

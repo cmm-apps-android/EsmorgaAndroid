@@ -131,7 +131,7 @@ fun EventListLoading() {
             .fillMaxSize()
             .padding(horizontal = 16.dp)
     ) {
-        EsmorgaText(text = stringResource(R.string.screen_event_list_loading), style = EsmorgaTextStyle.HEADING_1, modifier = Modifier.padding(vertical = 16.dp))
+        EsmorgaText(text = stringResource(id = R.string.body_loader), style = EsmorgaTextStyle.HEADING_1, modifier = Modifier.padding(vertical = 16.dp))
         EsmorgaLinearLoader(modifier = Modifier.fillMaxWidth())
     }
 }

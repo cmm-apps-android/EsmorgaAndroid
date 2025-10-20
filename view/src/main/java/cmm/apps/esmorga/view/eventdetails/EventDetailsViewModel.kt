@@ -69,6 +69,10 @@ class EventDetailsViewModel(
         }
     }
 
+    fun onViewAttendeesClicked() {
+        _effect.tryEmit(EventDetailsEffect.NavigateToAttendeesScreen(event))
+    }
+
     private fun getEventDetails() {
         viewModelScope.launch {
             val user = getSavedUserUseCase()

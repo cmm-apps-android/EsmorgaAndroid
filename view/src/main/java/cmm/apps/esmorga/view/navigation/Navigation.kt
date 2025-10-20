@@ -20,6 +20,7 @@ import cmm.apps.esmorga.view.createeventtype.CreateEventFormTypeScreen
 import cmm.apps.esmorga.view.deeplink.DeeplinkManager.navigateFromDeeplink
 import cmm.apps.esmorga.view.errors.EsmorgaErrorScreen
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
+import cmm.apps.esmorga.view.eventattendees.EventAttendeesScreen
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreen
 import cmm.apps.esmorga.view.eventlist.EventListScreen
 import cmm.apps.esmorga.view.eventlist.MyEventListScreen
@@ -46,6 +47,9 @@ sealed class Navigation {
     data class EventDetailScreen(val event: Event) : Navigation()
 
     @Serializable
+    data class EventAttendeesScreen(val event: Event) : Navigation()
+
+    @Serializable
     data class LoginScreen(val snackbarArguments: String? = null) : Navigation()
 
     @Serializable
@@ -55,7 +59,7 @@ sealed class Navigation {
     data class RegistrationConfirmationScreen(val email: String) : Navigation()
 
     @Serializable
-    data class FullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments, val redirectToWelcome: Boolean = false) : Navigation()
+    data class FullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments, val redirectToWelcome: Boolean = false) : Navigation() //TODO revisar si redirectToWelcome es necesario
 
     @Serializable
     data object MyEventsScreen : Navigation()
@@ -209,8 +213,18 @@ private fun NavGraphBuilder.homeFlow(navigationController: NavHostController) {
             event = backStackEntry.toRoute<Navigation.EventDetailScreen>().event,
             onBackPressed = { navigationController.popBackStack() },
             onLoginClicked = { navigationController.navigate(Navigation.LoginScreen()) },
+            onViewAttendeesClicked = { event -> navigationController.navigate(Navigation.EventAttendeesScreen(event)) },
             onJoinEventError = { navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = it)) },
             onNoNetworkError = { navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = it)) }
+        )
+    }
+    composable<Navigation.EventAttendeesScreen>(
+        typeMap = mapOf(typeOf<Event>() to serializableType<Event>())
+    ) { backStackEntry ->
+        EventAttendeesScreen(
+            event = backStackEntry.toRoute<Navigation.EventDetailScreen>().event,
+            onBackPressed = { navigationController.popBackStack() },
+            onError = { navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = it)) }
         )
     }
     composable<Navigation.MyEventsScreen>(

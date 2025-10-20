@@ -1,4 +1,5 @@
 <resources>
+   <string name="body_loader">Cargando…</string>
    <string name="button_create_account">Regístrate</string>
    <string name="button_guest">Entrar como invitado</string>
    <string name="button_login">Iniciar sesión</string>
@@ -6,6 +7,7 @@
    <string name="button_navigate">Navegar</string>
    <string name="button_register">Registrarme</string>
    <string name="button_retry">Reintentar</string>
+   <string name="button_view_attendees">Ver asistentes</string>
    <string name="content_description_back_icon">Icon atrás</string>
    <string name="content_description_forward_icon">Icono adelante</string>
    <string name="content_description_event_image">Imagen del evento %s</string>
@@ -33,12 +35,14 @@
    <string name="screen_event_details_description">Detalles del evento</string>
    <string name="screen_event_details_location">Localización</string>
    <string name="screen_event_list_empty_text">No hay eventos disponibles. Por favor vuelve más tarde.</string>
-   <string name="screen_event_list_loading">Cargando eventos…</string>
    <string name="screen_event_list_title">Listado de eventos</string>
    <string name="screen_homescreen_title">¡Hola!</string>
    <string name="screen_login_title">Hola de nuevo!</string>
    <string name="screen_registration_title">Regístrate</string>
    <string name="snackbar_no_internet">No hay conexión a internet.</string>
+   <string name="title_event_attendees">Listado de asistentes</string>
+   <string name="title_name">Nombre</string>
+
    <string name="bottom_bar_explore">Explorar</string>
    <string name="bottom_bar_myevents">Mis Eventos</string>
    <string name="bottom_bar_myprofile">Perfil</string>

@@ -1,5 +1,6 @@
 package cmm.apps.esmorga.view.eventdetails
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -58,6 +59,7 @@ fun EventDetailsScreen(
     edvm: EventDetailsViewModel = koinViewModel(parameters = { parametersOf(event) }),
     onBackPressed: () -> Unit,
     onLoginClicked: () -> Unit,
+    onViewAttendeesClicked: (event: Event) -> Unit,
     onJoinEventError: (EsmorgaErrorScreenArguments) -> Unit,
     onNoNetworkError: (EsmorgaErrorScreenArguments) -> Unit
 ) {
@@ -83,7 +85,11 @@ fun EventDetailsScreen(
                     onLoginClicked()
                 }
 
-                EventDetailsEffect.ShowJoinEventSuccess -> {
+                is EventDetailsEffect.NavigateToAttendeesScreen -> {
+                    onViewAttendeesClicked(event)
+                }
+
+                is EventDetailsEffect.ShowJoinEventSuccess -> {
                     localCoroutineScope.launch {
                         snackbarHostState.showSnackbar(message = joinEventSuccessMessage)
                     }
@@ -97,7 +103,7 @@ fun EventDetailsScreen(
                     onNoNetworkError(eff.esmorgaNoNetworkArguments)
                 }
 
-                EventDetailsEffect.ShowLeaveEventSuccess -> {
+                is EventDetailsEffect.ShowLeaveEventSuccess -> {
                     localCoroutineScope.launch {
                         snackbarHostState.showSnackbar(leaveEventSuccessMessage)
                     }
@@ -112,6 +118,8 @@ fun EventDetailsScreen(
             edvm.onBackPressed()
         }, onPrimaryButtonClicked = {
             edvm.onPrimaryButtonClicked()
+        }, onViewAttendeesClicked = {
+            edvm.onViewAttendeesClicked()
         })
     }
 
@@ -120,7 +128,12 @@ fun EventDetailsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EventDetailsView(
-    uiState: EventDetailsUiState, snackbarHostState: SnackbarHostState, onNavigateClicked: () -> Unit, onBackPressed: () -> Unit, onPrimaryButtonClicked: () -> Unit
+    uiState: EventDetailsUiState,
+    snackbarHostState: SnackbarHostState,
+    onNavigateClicked: () -> Unit,
+    onBackPressed: () -> Unit,
+    onPrimaryButtonClicked: () -> Unit,
+    onViewAttendeesClicked: () -> Unit
 ) {
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
         TopAppBar(
@@ -160,7 +173,16 @@ fun EventDetailsView(
                     .padding(top = 32.dp, start = 16.dp, bottom = 16.dp, end = 16.dp)
                     .testTag(EventDetailsScreenTestTags.EVENT_DETAILS_EVENT_NAME)
             )
-            EsmorgaText(text = uiState.subtitle, style = EsmorgaTextStyle.BODY_1_ACCENT, modifier = Modifier.padding(horizontal = 16.dp))
+
+            Row(modifier = Modifier.padding(horizontal = 16.dp)) {
+                EsmorgaText(text = uiState.subtitle, style = EsmorgaTextStyle.BODY_1_ACCENT)
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                if(uiState.showViewAttendeesButton) {
+                    EsmorgaText(text = "Ver asistentes", style = EsmorgaTextStyle.CAPTION_UNDERSCORE, modifier = Modifier.clickable { onViewAttendeesClicked() })
+                }
+            }
 
             uiState.maxCapacity?.let { max ->
                 Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
