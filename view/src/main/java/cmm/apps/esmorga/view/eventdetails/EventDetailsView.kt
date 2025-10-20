@@ -163,7 +163,7 @@ fun EventDetailsView(
             EsmorgaText(text = uiState.subtitle, style = EsmorgaTextStyle.BODY_1_ACCENT, modifier = Modifier.padding(horizontal = 16.dp))
 
             uiState.maxCapacity?.let { max ->
-                Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+                Row(modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 0.dp)) {
                     Icon(painter = painterResource(DesignSystem.drawable.group), contentDescription = null)
                     Spacer(modifier = Modifier.width(5.dp))
                     EsmorgaText(
@@ -180,7 +180,7 @@ fun EventDetailsView(
             EsmorgaText(
                 text = stringResource(id = R.string.screen_event_details_description),
                 style = EsmorgaTextStyle.HEADING_1,
-                modifier = Modifier.padding(start = 16.dp, top = 32.dp, end = 16.dp)
+                modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp)
             )
             EsmorgaText(
                 text = uiState.description, style = EsmorgaTextStyle.BODY_1, modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)
@@ -206,7 +206,7 @@ fun EventDetailsView(
 
             EsmorgaButton(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = if (!uiState.navigateButton) 32.dp else 16.dp)
+                    .padding(horizontal = 16.dp, vertical = if (!uiState.navigateButton) 32.dp else 0.dp)
                     .testTag(EventDetailsScreenTestTags.EVENT_DETAIL_PRIMARY_BUTTON),
                 text = uiState.primaryButtonTitle,
                 primary = true,
