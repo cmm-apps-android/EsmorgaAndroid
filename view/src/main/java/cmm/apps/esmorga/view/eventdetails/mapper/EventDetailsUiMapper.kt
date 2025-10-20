@@ -31,7 +31,8 @@ object EventDetailsUiMapper {
         maxCapacity = this.maxCapacity,
         isJoinButtonEnabled = EventDetailsUiStateHelper.getButtonEnableStatus(
             eventFull = eventFull,
-            userJoined = userJoined
+            userJoined = userJoined,
+            isAuthenticated = isAuthenticated
         )
     )
 }

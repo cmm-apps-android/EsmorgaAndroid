@@ -43,8 +43,10 @@ object EventDetailsUiStateHelper : KoinComponent {
 
     fun getButtonEnableStatus(
         eventFull: Boolean,
-        userJoined: Boolean
+        userJoined: Boolean,
+        isAuthenticated: Boolean
     ): Boolean{
+        if (!isAuthenticated) return true
         return userJoined || !eventFull
     }
 
