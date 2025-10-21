@@ -22,7 +22,7 @@ object EventDataMock {
         dataUserJoined = userJoined,
         dataCurrentAttendeeCount = 0,
         dataMaxCapacity = 10,
-        joinDeadline = joinDeadline
+        dataJoinDeadline = joinDeadline
     )
 
 }

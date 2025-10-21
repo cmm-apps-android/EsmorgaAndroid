@@ -65,7 +65,7 @@ object EventDetailsUiStateHelper : KoinComponent {
     )
 
     fun hasJoinDeadlinePassed(joinDeadline: Long): Boolean {
-        return joinDeadline != 0L && System.currentTimeMillis() > joinDeadline
+        return System.currentTimeMillis() > joinDeadline
     }
 
     fun formatJoinDeadline(joinDeadline: Long): String {

@@ -26,7 +26,7 @@ object EventRemoteMock {
         remoteTags = listOf(),
         remoteCurrentAttendeeCount = 40,
         remoteMaxCapacity = 50,
-        joinDeadline = "2030-12-31T23:59:59.000Z"
+        remoteJoinDeadline = "2030-12-31T23:59:59.000Z"
     )
 
 }

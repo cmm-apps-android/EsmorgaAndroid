@@ -20,7 +20,7 @@ object EventDataMock {
         dataUserJoined = false,
         dataCurrentAttendeeCount = 0,
         dataMaxCapacity = 10,
-        joinDeadline = ZonedDateTime.now().plusDays(7).toInstant().toEpochMilli()
+        dataJoinDeadline = ZonedDateTime.now().plusDays(7).toInstant().toEpochMilli()
     )
 
 }

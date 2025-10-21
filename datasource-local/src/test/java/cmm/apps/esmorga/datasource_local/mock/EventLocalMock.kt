@@ -18,7 +18,7 @@ object EventLocalMock {
         localLocationName = "Location",
         localCreationTime = System.currentTimeMillis(),
         localUserJoined = localUserJoined,
-        joinDeadline = joinDeadline
+        localJoinDeadline = joinDeadline
     )
 
 }
