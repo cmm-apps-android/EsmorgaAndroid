@@ -17,8 +17,7 @@ class GetEventAttendeesUseCaseImpl(private val repo: EventRepository) : GetEvent
             return EsmorgaResult.success(result)
         } catch (e: Exception) {
             if (e is EsmorgaException && e.code == ErrorCodes.NO_CONNECTION) {
-                val localData = repo.getEventAttendees(eventId)
-                return EsmorgaResult.noConnectionError(localData)
+                return EsmorgaResult.noConnectionError(emptyList())
             } else {
                 return EsmorgaResult.failure(e)
             }

@@ -26,6 +26,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmm.apps.designsystem.EsmorgaLinearLoader
 import cmm.apps.designsystem.EsmorgaText
@@ -36,6 +37,7 @@ import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.eventattendees.model.EventAttendeesEffect
 import cmm.apps.esmorga.view.eventattendees.model.EventAttendeesUiState
+import cmm.apps.esmorga.view.extensions.observeLifecycleEvents
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -49,8 +51,9 @@ fun EventAttendeesScreen(
     onError: (EsmorgaErrorScreenArguments) -> Unit
 ) {
     val uiState: EventAttendeesUiState by eavm.uiState.collectAsStateWithLifecycle()
-    val snackbarHostState = remember { SnackbarHostState() }
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
 
+    eavm.observeLifecycleEvents(lifecycle)
     LaunchedEffect(Unit) {
         eavm.effect.collect { eff ->
             when (eff) {
@@ -63,6 +66,7 @@ fun EventAttendeesScreen(
                 }
 
                 is EventAttendeesEffect.ShowNoNetworkError -> {
+                    onBackPressed()
                     onError(eff.esmorgaNoNetworkArguments)
                 }
             }
@@ -70,7 +74,7 @@ fun EventAttendeesScreen(
     }
 
     EsmorgaTheme {
-        EventAttendeesView(uiState = uiState, snackbarHostState = snackbarHostState, onBackPressed = {
+        EventAttendeesView(uiState = uiState, onBackPressed = {
             eavm.onBackPressed()
         })
     }
@@ -81,7 +85,6 @@ fun EventAttendeesScreen(
 @Composable
 fun EventAttendeesView(
     uiState: EventAttendeesUiState,
-    snackbarHostState: SnackbarHostState,
     onBackPressed: () -> Unit
 ) {
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
@@ -97,7 +100,7 @@ fun EventAttendeesView(
                 }
             },
         )
-    }, snackbarHost = { SnackbarHost(snackbarHostState) }) { innerPadding ->
+    }) { innerPadding ->
         Column(
             modifier = Modifier.padding(top = innerPadding.calculateTopPadding())
         ) {

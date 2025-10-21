@@ -10,7 +10,9 @@ import cmm.apps.esmorga.domain.result.Source
 interface EventDatasource {
     suspend fun getEvents(): List<EventDataModel>
 
-    suspend fun getEventAttendees(eventId: String): List<EventAttendeeDataModel>
+    suspend fun getEventAttendees(eventId: String): List<EventAttendeeDataModel> {
+        throw EsmorgaException(message = "Unsupported operation", source = Source.UNSUPPORTED, code = ErrorCodes.UNSUPPORTED_OPERATION)
+    }
 
     suspend fun getMyEvents(): List<EventDataModel> {
         throw EsmorgaException(message = "Unsupported operation", source = Source.UNSUPPORTED, code = ErrorCodes.UNSUPPORTED_OPERATION)

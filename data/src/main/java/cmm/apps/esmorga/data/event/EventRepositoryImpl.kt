@@ -30,12 +30,6 @@ class EventRepositoryImpl(private val localUserDs: UserDatasource, private val l
     }
 
     override suspend fun getEventAttendees(eventId: String): List<EventAttendee> {
-        val localList = localEventDs.getEventAttendees(eventId)
-
-        if (localList.isNotEmpty() && CacheHelper.shouldReturnCache(localList[0].dataCreationTime)) {
-            return localList.toEventAttendeeList()
-        }
-
         return remoteEventDs.getEventAttendees(eventId).toEventAttendeeList()
     }
 

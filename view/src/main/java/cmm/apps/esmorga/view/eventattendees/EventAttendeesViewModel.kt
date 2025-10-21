@@ -1,5 +1,7 @@
 package cmm.apps.esmorga.view.eventattendees
 
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cmm.apps.esmorga.domain.event.GetEventAttendeesUseCase
@@ -18,7 +20,7 @@ import kotlinx.coroutines.launch
 class EventAttendeesViewModel(
     private val getEventAttendeesUseCase: GetEventAttendeesUseCase,
     private val eventId: String
-) : ViewModel() {
+) : ViewModel(), DefaultLifecycleObserver {
     private val _uiState = MutableStateFlow(EventAttendeesUiState())
     val uiState: StateFlow<EventAttendeesUiState> = _uiState.asStateFlow()
 
@@ -27,7 +29,8 @@ class EventAttendeesViewModel(
 
     private var attendees: List<EventAttendee> = emptyList()
 
-    init {
+    override fun onStart(owner: LifecycleOwner) {
+        super.onStart(owner)
         getEventAttendees()
     }
 
@@ -42,7 +45,7 @@ class EventAttendeesViewModel(
             result.onSuccess { success ->
                 attendees = success
                 _uiState.value = EventAttendeesUiState(
-                    nameList = success.mapIndexed { pos, attendee -> "$pos. ${attendee.name}" },
+                    nameList = success.mapIndexed { pos, attendee -> "${pos + 1}. ${attendee.name}" },
                 )
             }.onFailure { error ->
                 _effect.tryEmit(EventAttendeesEffect.ShowFullScreenError())

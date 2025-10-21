@@ -8,7 +8,6 @@ import cmm.apps.esmorga.data.event.datasource.EventDatasource
 import cmm.apps.esmorga.data.user.datasource.UserDatasource
 import cmm.apps.esmorga.datasource_local.database.EsmorgaDatabase
 import cmm.apps.esmorga.datasource_local.database.EsmorgaDatabaseHelper
-import cmm.apps.esmorga.datasource_local.database.dao.EventAttendeeDao
 import cmm.apps.esmorga.datasource_local.database.dao.EventDao
 import cmm.apps.esmorga.datasource_local.database.dao.UserDao
 import cmm.apps.esmorga.datasource_local.device.DeviceLocalDataSourceImpl
@@ -28,8 +27,7 @@ object LocalDIModule {
             context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
         }
         single<EventDao> { get<EsmorgaDatabase>().eventDao() }
-        single<EventAttendeeDao> { get<EsmorgaDatabase>().eventAttendeeDao() }
-        factory<EventDatasource>(named(DataDIModule.LOCAL_DATASOURCE_INSTANCE_NAME)) { EventLocalDatasourceImpl(get(), get()) }
+        factory<EventDatasource>(named(DataDIModule.LOCAL_DATASOURCE_INSTANCE_NAME)) { EventLocalDatasourceImpl(get()) }
 
         single<UserDao> { get<EsmorgaDatabase>().userDao() }
         factory<UserDatasource>(named(DataDIModule.LOCAL_DATASOURCE_INSTANCE_NAME)) { UserLocalDatasourceImpl(get()) }

@@ -174,18 +174,10 @@ fun EventDetailsView(
                     .testTag(EventDetailsScreenTestTags.EVENT_DETAILS_EVENT_NAME)
             )
 
-            Row(modifier = Modifier.padding(horizontal = 16.dp)) {
-                EsmorgaText(text = uiState.subtitle, style = EsmorgaTextStyle.BODY_1_ACCENT)
+            EsmorgaText(text = uiState.subtitle, style = EsmorgaTextStyle.BODY_1_ACCENT, modifier = Modifier.padding(horizontal = 16.dp))
 
-                Spacer(modifier = Modifier.weight(1f))
-
-                if(uiState.showViewAttendeesButton) {
-                    EsmorgaText(text = "Ver asistentes", style = EsmorgaTextStyle.CAPTION_UNDERSCORE, modifier = Modifier.clickable { onViewAttendeesClicked() })
-                }
-            }
-
-            uiState.maxCapacity?.let { max ->
-                Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+            Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+                uiState.maxCapacity?.let { max ->
                     Icon(painter = painterResource(DesignSystem.drawable.group), contentDescription = null)
                     Spacer(modifier = Modifier.width(5.dp))
                     EsmorgaText(
@@ -196,6 +188,15 @@ fun EventDetailsView(
                         ),
                         style = EsmorgaTextStyle.CAPTION,
                     )
+
+                    Spacer(modifier = Modifier.weight(1f))
+                }
+
+                if (uiState.showViewAttendeesButton) {
+                    EsmorgaText(
+                        text = stringResource(R.string.button_view_attendees),
+                        style = EsmorgaTextStyle.CAPTION_UNDERSCORE,
+                        modifier = Modifier.clickable { onViewAttendeesClicked() })
                 }
             }
 
