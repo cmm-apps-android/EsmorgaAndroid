@@ -59,7 +59,7 @@ sealed class Navigation {
     data class RegistrationConfirmationScreen(val email: String) : Navigation()
 
     @Serializable
-    data class FullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments, val redirectToWelcome: Boolean = false) : Navigation() //TODO revisar si redirectToWelcome es necesario
+    data class FullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments, val redirectToWelcome: Boolean = false) : Navigation()
 
     @Serializable
     data object MyEventsScreen : Navigation()
