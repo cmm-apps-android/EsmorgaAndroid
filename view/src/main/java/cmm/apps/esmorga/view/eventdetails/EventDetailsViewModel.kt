@@ -89,7 +89,12 @@ class EventDetailsViewModel(
                 _uiState.value = _uiState.value.copy(primaryButtonLoading = false, primaryButtonTitle = getPrimaryButtonTitle(isAuthenticated = true, userJoined = true, isEventFull), currentAttendeeCount = eventAttendeeCount)
                 _effect.tryEmit(EventDetailsEffect.ShowJoinEventSuccess)
             }.onFailure { error ->
-                showErrorScreen(error)
+                if (error.code == ErrorCodes.EVENT_FULL) {
+                    _uiState.value = _uiState.value.copy(primaryButtonLoading = false)
+                    _effect.tryEmit(EventDetailsEffect.ShowFullEventError)
+                } else {
+                    showErrorScreen(error)
+                }
             }
         }
     }

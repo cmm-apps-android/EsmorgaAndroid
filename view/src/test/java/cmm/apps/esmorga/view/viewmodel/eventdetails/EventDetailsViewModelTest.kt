@@ -300,6 +300,7 @@ class EventDetailsViewModelTest {
             cancelAndIgnoreRemainingEvents()
         }
     }
+
     @Test
     fun `end to end flow join and leave event`() = runTest {
         val event = EventViewMock.provideEvent(
@@ -321,6 +322,34 @@ class EventDetailsViewModelTest {
             sut.onPrimaryButtonClicked()
             Assert.assertTrue(awaitItem() is EventDetailsEffect.ShowLeaveEventSuccess)
             Assert.assertEquals(2, sut.uiState.value.currentAttendeeCount)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `given user tries to join a full event when join button is clicked then a full event error message is shown`() = runTest {
+        val event = EventViewMock.provideEvent("Event Name")
+        val joinEventUseCase = mockk<JoinEventUseCase>(relaxed = true)
+
+        coEvery { joinEventUseCase(event) } returns EsmorgaResult.failure(
+            EsmorgaException(
+                message = "Event full",
+                source = Source.REMOTE,
+                code = ErrorCodes.EVENT_FULL
+            )
+        )
+
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event)
+
+        sut.effect.test {
+            sut.onPrimaryButtonClicked()
+
+            val effect = awaitItem()
+            Assert.assertTrue(effect is EventDetailsEffect.ShowFullEventError)
+
+            val uiState = sut.uiState.value
+            Assert.assertFalse(uiState.primaryButtonLoading)
 
             cancelAndIgnoreRemainingEvents()
         }
