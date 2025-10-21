@@ -331,6 +331,35 @@ class EventDetailsViewModelTest {
         }
     }
 
+
+    @Test
+    fun `given user tries to join a full event when join button is clicked then a full event error message is shown`() = runTest {
+        val event = EventViewMock.provideEvent("Event Name")
+        val joinEventUseCase = mockk<JoinEventUseCase>(relaxed = true)
+
+        coEvery { joinEventUseCase(event) } returns EsmorgaResult.failure(
+            EsmorgaException(
+                message = "Event full",
+                source = Source.REMOTE,
+                code = ErrorCodes.EVENT_FULL
+            )
+        )
+
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event)
+
+        sut.effect.test {
+            sut.onPrimaryButtonClicked()
+
+            val effect = awaitItem()
+            Assert.assertTrue(effect is EventDetailsEffect.ShowFullEventError)
+
+            val uiState = sut.uiState.value
+            Assert.assertFalse(uiState.primaryButtonLoading)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
     @Test
     fun `given an upcoming event when user opens event details then join deadline is visible and not expired`() = runTest {
         val futureDeadline = System.currentTimeMillis() + ONE_HOUR_IN_MILLIS

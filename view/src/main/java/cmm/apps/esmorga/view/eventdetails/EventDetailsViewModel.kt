@@ -91,7 +91,14 @@ class EventDetailsViewModel(
                 isEventFull = event.maxCapacity?.let { eventAttendeeCount >= it } ?: false
                 updateUiState()
                 _effect.tryEmit(EventDetailsEffect.ShowJoinEventSuccess)
-            }.onFailure { showErrorScreen(it) }
+            }.onFailure { error ->
+                if (error.code == ErrorCodes.EVENT_FULL) {
+                    _uiState.value = _uiState.value.copy(primaryButtonLoading = false)
+                    _effect.tryEmit(EventDetailsEffect.ShowFullEventError)
+                } else {
+                    showErrorScreen(error)
+                }
+            }
         }
     }
 
@@ -120,7 +127,8 @@ class EventDetailsViewModel(
             isJoinButtonEnabled = EventDetailsUiStateHelper.getButtonEnableStatus(
                 eventFull = isEventFull,
                 userJoined = userJoined,
-                isDeadlinePassed = isJoinDeadlinePassed
+                isDeadlinePassed = isJoinDeadlinePassed,
+                isAuthenticated = isAuthenticated
             ),
             currentAttendeeCount = eventAttendeeCount
         )

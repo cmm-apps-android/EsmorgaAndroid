@@ -50,8 +50,10 @@ object EventDetailsUiStateHelper : KoinComponent {
     fun getButtonEnableStatus(
         eventFull: Boolean,
         userJoined: Boolean,
-        isDeadlinePassed: Boolean
+        isDeadlinePassed: Boolean,
+        isAuthenticated: Boolean
     ): Boolean {
+        if (!isAuthenticated) return true
         return userJoined || (!eventFull && !isDeadlinePassed)
     }
 
@@ -76,6 +78,7 @@ sealed class EventDetailsEffect {
     data object NavigateToLoginScreen : EventDetailsEffect()
     data object ShowJoinEventSuccess : EventDetailsEffect()
     data object ShowLeaveEventSuccess : EventDetailsEffect()
+    data object ShowFullEventError : EventDetailsEffect()
     data class ShowNoNetworkError(val esmorgaNoNetworkArguments: EsmorgaErrorScreenArguments = getEsmorgaNoNetworkScreenArguments()) : EventDetailsEffect()
     data class NavigateToLocation(val lat: Double, val lng: Double, val locationName: String) : EventDetailsEffect()
     data class ShowFullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments = getEsmorgaDefaultErrorScreenArguments()) : EventDetailsEffect()

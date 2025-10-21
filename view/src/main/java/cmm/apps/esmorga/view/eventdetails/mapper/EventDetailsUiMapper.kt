@@ -38,7 +38,8 @@ object EventDetailsUiMapper {
             isJoinButtonEnabled = EventDetailsUiStateHelper.getButtonEnableStatus(
                 eventFull = eventFull,
                 userJoined = userJoined,
-                isDeadlinePassed = isDeadlinePassed
+                isDeadlinePassed = isDeadlinePassed,
+                isAuthenticated = isAuthenticated
             )
         )
     }
