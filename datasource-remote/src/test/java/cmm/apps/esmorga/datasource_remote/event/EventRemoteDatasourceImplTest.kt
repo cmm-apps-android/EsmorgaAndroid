@@ -2,9 +2,11 @@ package cmm.apps.esmorga.datasource_remote.event
 
 import android.content.Context
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaApi
+import cmm.apps.esmorga.datasource_remote.api.EsmorgaAuthApi
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaGuestApi
 import cmm.apps.esmorga.datasource_remote.event.mapper.toEventDataModel
 import cmm.apps.esmorga.datasource_remote.event.model.EventListWrapperRemoteModel
+import cmm.apps.esmorga.datasource_remote.mock.EventAttendeesRemoteMock
 import cmm.apps.esmorga.datasource_remote.mock.EventRemoteMock
 import cmm.apps.esmorga.datasource_remote.mock.EventRemoteMock.provideEvent
 import cmm.apps.esmorga.domain.result.ErrorCodes
@@ -103,6 +105,43 @@ class EventRemoteDatasourceImplTest {
 
         Assert.assertTrue(exception is EsmorgaException)
         Assert.assertEquals(ErrorCodes.PARSE_ERROR, (exception as EsmorgaException).code)
+    }
+
+    @Test
+    fun `given a working api when event attendees requested then attendee list is successfully returned`() = runTest {
+        val remoteEventName = "RemoteEvent"
+        val remoteAttendeeName = "RemoteAttendee"
+
+        val guestApi = mockk<EsmorgaGuestApi>(relaxed = true)
+        val api = mockk<EsmorgaApi>(relaxed = true)
+        coEvery { api.getEventAttendees(remoteEventName) } returns EventAttendeesRemoteMock.provideEventAttendeeListWrapper(listOf(remoteAttendeeName))
+
+        val sut = EventRemoteDatasourceImpl(api, guestApi)
+        val result = sut.getEventAttendees(remoteEventName)
+
+        Assert.assertEquals(remoteAttendeeName, result[0].dataName)
+    }
+
+    @Test
+    fun `given an api returning 500 when event attendees requested then EsmorgaException is thrown`() = runTest {
+        val errorCode = 500
+
+        val context = mockk<Context>(relaxed = true)
+        val api = mockk<EsmorgaApi>(relaxed = true)
+        val guestApi = mockk<EsmorgaGuestApi>(relaxed = true)
+        coEvery { api.getEventAttendees(any()) } throws HttpException(Response.error<ResponseBody>(errorCode, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
+
+        val sut = EventRemoteDatasourceImpl(api, guestApi)
+
+        val exception = try {
+            sut.getEventAttendees("RemoteEvent")
+            null
+        } catch (exception: RuntimeException) {
+            exception
+        }
+
+        Assert.assertTrue(exception is EsmorgaException)
+        Assert.assertEquals(errorCode, (exception as EsmorgaException).code)
     }
 
     @Test

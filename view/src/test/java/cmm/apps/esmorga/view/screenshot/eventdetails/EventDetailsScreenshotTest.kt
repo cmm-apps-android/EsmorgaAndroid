@@ -39,7 +39,8 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
             currentAttendeeCount = 10,
             maxCapacity = 10,
             buttonTitle = "Full",
-            isJoinButtonEnabled = false
+            isJoinButtonEnabled = false,
+            showViewAttendeesButton = true
         )
     }
 
@@ -49,7 +50,8 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
             currentAttendeeCount = 10,
             maxCapacity = 10,
             buttonTitle = "Leave Event",
-            isJoinButtonEnabled = true
+            isJoinButtonEnabled = true,
+            showViewAttendeesButton = true
         )
     }
 
@@ -59,7 +61,29 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
             currentAttendeeCount = 4,
             maxCapacity = 10,
             buttonTitle = "Join Event",
-            isJoinButtonEnabled = true
+            isJoinButtonEnabled = true,
+            showViewAttendeesButton = true
+        )
+    }
+
+    @Test
+    fun eventDetailsView_lightTheme_event_empty_user_not_joined() {
+        snapshotWithState(
+            currentAttendeeCount = 0,
+            maxCapacity = 10,
+            buttonTitle = "Join Event",
+            isJoinButtonEnabled = true,
+            showViewAttendeesButton = false
+        )
+    }
+
+    @Test
+    fun eventDetailsView_lightTheme_event_no_max_capacity_user_joined() {
+        snapshotWithState(
+            currentAttendeeCount = 10,
+            buttonTitle = "Join Event",
+            isJoinButtonEnabled = true,
+            showViewAttendeesButton = true
         )
     }
 
@@ -70,7 +94,8 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
         buttonLoading: Boolean = false,
         currentAttendeeCount: Int? = null,
         maxCapacity: Int? = null,
-        isJoinButtonEnabled: Boolean = true
+        isJoinButtonEnabled: Boolean = true,
+        showViewAttendeesButton: Boolean = false
     ) {
         paparazzi.snapshot {
             EsmorgaTheme(darkTheme = false) {
@@ -88,12 +113,14 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
                         primaryButtonLoading = buttonLoading,
                         currentAttendeeCount = currentAttendeeCount?: 0,
                         maxCapacity = maxCapacity,
-                        isJoinButtonEnabled = isJoinButtonEnabled
+                        isJoinButtonEnabled = isJoinButtonEnabled,
+                        showViewAttendeesButton = showViewAttendeesButton
                     ),
                     snackbarHostState = SnackbarHostState(),
                     onNavigateClicked = {},
                     onBackPressed = {},
-                    onPrimaryButtonClicked = {}
+                    onPrimaryButtonClicked = {},
+                    onViewAttendeesClicked = {}
                 )
             }
         }

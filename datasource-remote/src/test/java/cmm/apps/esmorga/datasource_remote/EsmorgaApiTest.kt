@@ -6,6 +6,7 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.os.Build
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import cmm.apps.esmorga.datasource_remote.api.EsmorgaApi
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaAuthApi
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaGuestApi
 import cmm.apps.esmorga.datasource_remote.api.NetworkApiHelper
@@ -86,6 +87,23 @@ class EsmorgaApiTest {
 
         Assert.assertEquals(2, eventWrapper.remoteEventList.size)
         Assert.assertTrue(eventWrapper.remoteEventList[0].remoteName.contains("MobgenFest"))
+    }
+
+    @Test
+    fun `given a successful mock server when attendees are requested then a correct eventAttendeeWrapper is returned`() = runTest {
+        coEvery { mockNetworkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) } returns true
+        val crashlyticsMock = mockk<FirebaseCrashlytics>(relaxed = true)
+
+        coEvery { FirebaseCrashlytics.getInstance() } returns crashlyticsMock
+
+        mockServer.enqueueFile(200, ServerFiles.GET_EVENT_ATTENDEES)
+
+        val sut = NetworkApiHelper().provideApi(mockServer.start(), EsmorgaApi::class.java, getEsmorgaAuthenticatorMock(), getAuthInterceptor(), getDeviceInterceptor())
+
+        val attendeesWrapper = sut.getEventAttendees("test")
+
+        Assert.assertEquals(3, attendeesWrapper.remoteEventAttendeeList.size)
+        Assert.assertTrue(attendeesWrapper.remoteEventAttendeeList[0].contains("Mobgen Test"))
     }
 
     @Test

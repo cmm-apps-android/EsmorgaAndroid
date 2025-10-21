@@ -3,6 +3,7 @@ package cmm.apps.esmorga.data.event
 import cmm.apps.esmorga.data.CacheHelper
 import cmm.apps.esmorga.data.event.datasource.EventDatasource
 import cmm.apps.esmorga.data.event.mapper.toEvent
+import cmm.apps.esmorga.data.mock.EventAttendeeDataMock
 import cmm.apps.esmorga.data.mock.EventDataMock
 import cmm.apps.esmorga.data.mock.UserDataMock
 import cmm.apps.esmorga.data.user.datasource.UserDatasource
@@ -114,6 +115,19 @@ class EventRepositoryImplTest {
         val result = sut.getEvents()
 
         Assert.assertEquals(localName, result[0].name)
+    }
+
+    @Test
+    fun `given working remote when event attendees requested then remote attendees are returned`() = runTest {
+        val eventName = "RemoteEvent"
+        val remoteAttendeeName = "RemoteAttendee"
+
+        coEvery { remoteDS.getEventAttendees(eventName) } returns EventAttendeeDataMock.provideEventDataModelList(listOf(remoteAttendeeName))
+
+        val sut = EventRepositoryImpl(userDS, localDS, remoteDS)
+        val result = sut.getEventAttendees(eventName)
+
+        Assert.assertEquals(remoteAttendeeName, result[0].name)
     }
 
     @Test

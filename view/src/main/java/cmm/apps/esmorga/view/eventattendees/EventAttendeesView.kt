@@ -13,13 +13,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -153,9 +150,7 @@ fun AttendeeList(attendees: List<String>, modifier: Modifier = Modifier, nestedS
                 EsmorgaText(
                     text = name,
                     style = EsmorgaTextStyle.BODY_1,
-                    modifier = Modifier
-                        .padding(start = 32.dp, end = 16.dp, top = 24.dp, bottom = 24.dp)
-                        .testTag(EventAttendessScreenTestTags.EVENT_ATTENDEES_PERSON_NAME)
+                    modifier = Modifier.padding(start = 32.dp, end = 16.dp, top = 24.dp, bottom = 24.dp)
                 )
 
                 HorizontalDivider(color = MaterialTheme.colorScheme.onSurfaceVariant, thickness = 1.dp)
@@ -167,5 +162,4 @@ fun AttendeeList(attendees: List<String>, modifier: Modifier = Modifier, nestedS
 object EventAttendessScreenTestTags {
     const val EVENT_ATTENDEES_TITLE = "event attendees title"
     const val EVENT_ATTENDEES_BACK_BUTTON = "event attendees back button"
-    const val EVENT_ATTENDEES_PERSON_NAME = "event attendees person name"
 }

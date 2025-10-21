@@ -196,7 +196,10 @@ fun EventDetailsView(
                     EsmorgaText(
                         text = stringResource(R.string.button_view_attendees),
                         style = EsmorgaTextStyle.CAPTION_UNDERSCORE,
-                        modifier = Modifier.clickable { onViewAttendeesClicked() })
+                        modifier = Modifier
+                            .clickable { onViewAttendeesClicked() }
+                            .testTag(EventDetailsScreenTestTags.EVENT_DETAILS_ATTENDEES_BUTTON)
+                    )
                 }
             }
 
@@ -230,7 +233,7 @@ fun EventDetailsView(
             EsmorgaButton(
                 modifier = Modifier
                     .padding(horizontal = 16.dp, vertical = if (!uiState.navigateButton) 32.dp else 16.dp)
-                    .testTag(EventDetailsScreenTestTags.EVENT_DETAIL_PRIMARY_BUTTON),
+                    .testTag(EventDetailsScreenTestTags.EVENT_DETAILS_PRIMARY_BUTTON),
                 text = uiState.primaryButtonTitle,
                 primary = true,
                 isLoading = uiState.primaryButtonLoading,
@@ -246,5 +249,6 @@ fun EventDetailsView(
 object EventDetailsScreenTestTags {
     const val EVENT_DETAILS_EVENT_NAME = "event details event name"
     const val EVENT_DETAILS_BACK_BUTTON = "event details back button"
-    const val EVENT_DETAIL_PRIMARY_BUTTON = "event_detail_primary_button"
+    const val EVENT_DETAILS_PRIMARY_BUTTON = "event details primary button"
+    const val EVENT_DETAILS_ATTENDEES_BUTTON = "event details attendee button"
 }
