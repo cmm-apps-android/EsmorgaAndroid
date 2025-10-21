@@ -65,8 +65,8 @@ fun EventDetailsScreen(
     val context = LocalContext.current
     val joinEventSuccessMessage = stringResource(R.string.snackbar_event_joined)
     val leaveEventSuccessMessage = stringResource(R.string.snackbar_event_left)
-    val snackbarHostState = remember { SnackbarHostState() }
     val eventFullErrorMessage = stringResource(R.string.snackbar_event_full)
+    val snackbarHostState = remember { SnackbarHostState() }
 
     val localCoroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
