@@ -93,7 +93,20 @@ class EventDetailsViewModel(
                 _effect.tryEmit(EventDetailsEffect.ShowJoinEventSuccess)
             }.onFailure { error ->
                 if (error.code == ErrorCodes.EVENT_FULL) {
-                    _uiState.value = _uiState.value.copy(primaryButtonLoading = false)
+                    eventAttendeeCount += 1
+                    isEventFull = true
+
+                    _uiState.value = _uiState.value.copy(
+                        primaryButtonLoading = false,
+                        currentAttendeeCount = eventAttendeeCount,
+                        isJoinButtonEnabled = false,
+                        primaryButtonTitle = getPrimaryButtonTitle(
+                            isAuthenticated = isAuthenticated,
+                            userJoined = userJoined,
+                            eventFull = true,
+                            isDeadlinePassed = isJoinDeadlinePassed
+                        )
+                    )
                     _effect.tryEmit(EventDetailsEffect.ShowFullEventError)
                 } else {
                     showErrorScreen(error)
