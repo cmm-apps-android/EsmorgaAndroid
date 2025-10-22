@@ -105,7 +105,7 @@ class EventDetailsViewModel(
                         primaryButtonTitle = getPrimaryButtonTitle(
                             isAuthenticated = isAuthenticated,
                             userJoined = userJoined,
-                            eventFull = true,
+                            eventFull = isEventFull,
                             isDeadlinePassed = isJoinDeadlinePassed
                         )
                     )
