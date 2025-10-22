@@ -93,7 +93,9 @@ class EventDetailsViewModel(
                 _effect.tryEmit(EventDetailsEffect.ShowJoinEventSuccess)
             }.onFailure { error ->
                 if (error.code == ErrorCodes.EVENT_FULL) {
-                    eventAttendeeCount += 1
+                    event.maxCapacity?.let { maxCapacity ->
+                        eventAttendeeCount = maxCapacity
+                    }
                     isEventFull = true
 
                     _uiState.value = _uiState.value.copy(
