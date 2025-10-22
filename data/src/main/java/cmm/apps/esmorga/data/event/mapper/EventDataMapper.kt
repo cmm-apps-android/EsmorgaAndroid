@@ -19,7 +19,8 @@ fun EventDataModel.toEvent(): Event = Event(
     tags = this.dataTags,
     userJoined = this.dataUserJoined,
     currentAttendeeCount = this.dataCurrentAttendeeCount,
-    maxCapacity = this.dataMaxCapacity
+    maxCapacity = this.dataMaxCapacity,
+    joinDeadline = this.dataJoinDeadline
 )
 
 fun List<EventDataModel>.toEventList(): List<Event> = map { edm -> edm.toEvent() }
@@ -36,5 +37,6 @@ fun Event.toEventDataModel(): EventDataModel =
         dataTags = this.tags,
         dataUserJoined = this.userJoined,
         dataCurrentAttendeeCount = this.currentAttendeeCount,
-        dataMaxCapacity = this.maxCapacity
+        dataMaxCapacity = this.maxCapacity,
+        dataJoinDeadline = this.joinDeadline
     )

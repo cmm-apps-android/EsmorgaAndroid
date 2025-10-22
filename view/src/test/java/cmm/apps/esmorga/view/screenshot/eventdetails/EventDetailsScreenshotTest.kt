@@ -1,13 +1,39 @@
 package cmm.apps.esmorga.view.screenshot.eventdetails
 
 import androidx.compose.material3.SnackbarHostState
+import cmm.apps.esmorga.view.dateformatting.EsmorgaDateTimeFormatter
 import cmm.apps.esmorga.view.eventdetails.EventDetailsView
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiState
 import cmm.apps.esmorga.view.screenshot.BaseScreenshotTest
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
+import io.mockk.mockk
+import org.junit.After
+import org.junit.Before
 import org.junit.Test
+import org.junit.runner.manipulation.Ordering
+import org.koin.core.context.GlobalContext.startKoin
+import org.koin.core.context.GlobalContext.stopKoin
+import org.koin.dsl.module
+
+private const val JULY_2025_TIMESTAMP = 1_700_000_000_000L
 
 class EventDetailsScreenshotTest : BaseScreenshotTest() {
+    @Before
+    fun setup() {
+        startKoin {
+            modules(
+                module {
+                    single { mockk<Ordering.Context>(relaxed = true) }
+                    single { mockk<EsmorgaDateTimeFormatter>(relaxed = true) }
+                }
+            )
+        }
+    }
+
+    @After
+    fun tearDown() {
+        stopKoin()
+    }
 
     @Test
     fun eventDetailsView_lightTheme_no_location() {
@@ -33,6 +59,7 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
     fun eventDetailsView_lightTheme_data_primary_button_loading_state() {
         snapshotWithState(buttonLoading = true)
     }
+
     @Test
     fun eventDetailsView_lightTheme_event_full_user_not_joined() {
         snapshotWithState(
@@ -63,6 +90,28 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
         )
     }
 
+    @Test
+    fun eventDetailsView_lightTheme_deadline_passed() {
+        snapshotWithState(
+            currentAttendeeCount = 4,
+            maxCapacity = 10,
+            joinDeadline = JULY_2025_TIMESTAMP,
+            buttonTitle = "Too late",
+            isJoinDeadlinePassed = true
+        )
+    }
+
+    @Test
+    fun eventDetailsView_lightTheme_deadline_not_passed() {
+        snapshotWithState(
+            currentAttendeeCount = 4,
+            maxCapacity = 10,
+            buttonTitle = "Join Event",
+            joinDeadline = JULY_2025_TIMESTAMP,
+            isJoinDeadlinePassed = false
+        )
+    }
+
     private fun snapshotWithState(
         lat: Double? = 0.0,
         lng: Double? = 2.88,
@@ -70,7 +119,9 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
         buttonLoading: Boolean = false,
         currentAttendeeCount: Int? = null,
         maxCapacity: Int? = null,
-        isJoinButtonEnabled: Boolean = true
+        isJoinButtonEnabled: Boolean = true,
+        joinDeadline: Long = JULY_2025_TIMESTAMP,
+        isJoinDeadlinePassed: Boolean = false
     ) {
         paparazzi.snapshot {
             EsmorgaTheme(darkTheme = false) {
@@ -86,9 +137,11 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
                         locationLng = lng,
                         primaryButtonTitle = buttonTitle,
                         primaryButtonLoading = buttonLoading,
-                        currentAttendeeCount = currentAttendeeCount?: 0,
+                        currentAttendeeCount = currentAttendeeCount ?: 0,
                         maxCapacity = maxCapacity,
-                        isJoinButtonEnabled = isJoinButtonEnabled
+                        isJoinButtonEnabled = isJoinButtonEnabled,
+                        joinDeadline = joinDeadline,
+                        isJoinDeadlinePassed = isJoinDeadlinePassed
                     ),
                     snackbarHostState = SnackbarHostState(),
                     onNavigateClicked = {},

@@ -42,6 +42,7 @@ import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAILS_BACK_BUTTON
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsEffect
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiState
+import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiStateHelper.formatJoinDeadline
 import cmm.apps.esmorga.view.navigation.openNavigationApp
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import coil.compose.AsyncImage
@@ -181,6 +182,14 @@ fun EventDetailsView(
                         style = EsmorgaTextStyle.CAPTION,
                     )
                 }
+                EsmorgaText(
+                    text = stringResource(
+                        id = R.string.screen_event_details_join_deadline,
+                        formatJoinDeadline(uiState.joinDeadline)
+                    ),
+                    style = EsmorgaTextStyle.CAPTION,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+                )
             }
 
             EsmorgaText(

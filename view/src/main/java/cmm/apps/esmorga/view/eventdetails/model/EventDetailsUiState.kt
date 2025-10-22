@@ -2,6 +2,7 @@ package cmm.apps.esmorga.view.eventdetails.model
 
 import android.content.Context
 import cmm.apps.esmorga.view.R
+import cmm.apps.esmorga.view.dateformatting.EsmorgaDateTimeFormatter
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArgumentsHelper.getEsmorgaDefaultErrorScreenArguments
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiStateHelper.getEsmorgaNoNetworkScreenArguments
@@ -23,19 +24,24 @@ data class EventDetailsUiState(
     val currentAttendeeCount: Int = 0,
     val maxCapacity: Int? = null,
     val isJoinButtonEnabled: Boolean = true,
-    val isEventFull: Boolean = false
+    val isEventFull: Boolean = false,
+    val joinDeadline: Long = 0,
+    val isJoinDeadlinePassed: Boolean = false
 )
 
 object EventDetailsUiStateHelper : KoinComponent {
     val context: Context by inject()
+    private val dateFormatter: EsmorgaDateTimeFormatter by inject()
     fun getPrimaryButtonTitle(
         isAuthenticated: Boolean,
         userJoined: Boolean,
-        eventFull: Boolean
+        eventFull: Boolean,
+        isDeadlinePassed: Boolean
     ): String {
         return when {
             !isAuthenticated -> context.getString(R.string.button_login_to_join)
             userJoined -> context.getString(R.string.button_leave_event)
+            isDeadlinePassed -> context.getString(R.string.button_join_event_closed)
             !userJoined && eventFull -> context.getString(R.string.button_join_event_disabled)
             else -> context.getString(R.string.button_join_event)
         }
@@ -44,10 +50,11 @@ object EventDetailsUiStateHelper : KoinComponent {
     fun getButtonEnableStatus(
         eventFull: Boolean,
         userJoined: Boolean,
+        isDeadlinePassed: Boolean,
         isAuthenticated: Boolean
-    ): Boolean{
+    ): Boolean {
         if (!isAuthenticated) return true
-        return userJoined || !eventFull
+        return userJoined || (!eventFull && !isDeadlinePassed)
     }
 
     fun getEsmorgaNoNetworkScreenArguments() = EsmorgaErrorScreenArguments(
@@ -56,6 +63,14 @@ object EventDetailsUiStateHelper : KoinComponent {
         subtitle = context.getString(R.string.screen_no_connection_body),
         buttonText = context.getString(R.string.button_ok)
     )
+
+    fun hasJoinDeadlinePassed(joinDeadline: Long): Boolean {
+        return System.currentTimeMillis() > joinDeadline
+    }
+
+    fun formatJoinDeadline(joinDeadline: Long): String {
+        return if (joinDeadline != 0L) dateFormatter.formatEventDate(joinDeadline) else ""
+    }
 }
 
 sealed class EventDetailsEffect {

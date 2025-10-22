@@ -13,26 +13,34 @@ object EventDetailsUiMapper {
         isAuthenticated: Boolean,
         userJoined: Boolean,
         eventFull: Boolean
-    ) = EventDetailsUiState(
-        id = this.id,
-        image = this.imageUrl,
-        title = this.name,
-        subtitle = formatDate(this.date),
-        description = URLDecoder.decode(this.description, StandardCharsets.UTF_8.toString()),
-        locationName = this.location.name,
-        locationLat = this.location.lat,
-        locationLng = this.location.long,
-        primaryButtonTitle = EventDetailsUiStateHelper.getPrimaryButtonTitle(
-            isAuthenticated = isAuthenticated,
-            userJoined = userJoined,
-            eventFull = eventFull
-        ),
-        currentAttendeeCount = this.currentAttendeeCount,
-        maxCapacity = this.maxCapacity,
-        isJoinButtonEnabled = EventDetailsUiStateHelper.getButtonEnableStatus(
-            eventFull = eventFull,
-            userJoined = userJoined,
-            isAuthenticated = isAuthenticated
+    ): EventDetailsUiState {
+        val isDeadlinePassed = EventDetailsUiStateHelper.hasJoinDeadlinePassed(this.joinDeadline)
+
+        return EventDetailsUiState(
+            id = this.id,
+            image = this.imageUrl,
+            title = this.name,
+            subtitle = formatDate(this.date),
+            description = URLDecoder.decode(this.description, StandardCharsets.UTF_8.toString()),
+            locationName = this.location.name,
+            locationLat = this.location.lat,
+            locationLng = this.location.long,
+            joinDeadline = this.joinDeadline,
+            isJoinDeadlinePassed = isDeadlinePassed,
+            primaryButtonTitle = EventDetailsUiStateHelper.getPrimaryButtonTitle(
+                isAuthenticated = isAuthenticated,
+                userJoined = userJoined,
+                eventFull = eventFull,
+                isDeadlinePassed = isDeadlinePassed
+            ),
+            currentAttendeeCount = this.currentAttendeeCount,
+            maxCapacity = this.maxCapacity,
+            isJoinButtonEnabled = EventDetailsUiStateHelper.getButtonEnableStatus(
+                eventFull = eventFull,
+                userJoined = userJoined,
+                isDeadlinePassed = isDeadlinePassed,
+                isAuthenticated = isAuthenticated
+            )
         )
-    )
+    }
 }

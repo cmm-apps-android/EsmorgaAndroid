@@ -11,6 +11,7 @@ import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.view.eventdetails.mapper.EventDetailsUiMapper.toEventUiDetails
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsEffect
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiState
+import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiStateHelper
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiStateHelper.getPrimaryButtonTitle
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -27,17 +28,24 @@ class EventDetailsViewModel(
     private val leaveEventUseCase: LeaveEventUseCase,
     private val event: Event
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(EventDetailsUiState())
-    val uiState: StateFlow<EventDetailsUiState> = _uiState.asStateFlow()
-
-    private val _effect: MutableSharedFlow<EventDetailsEffect> = MutableSharedFlow(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
-    val effect: SharedFlow<EventDetailsEffect> = _effect.asSharedFlow()
 
     private var isAuthenticated: Boolean = false
     private var userJoined: Boolean = false
+    private var isEventFull: Boolean = event.maxCapacity?.let { event.currentAttendeeCount >= it } ?: false
+    private var eventAttendeeCount: Int = event.currentAttendeeCount
+    private val isJoinDeadlinePassed: Boolean = EventDetailsUiStateHelper.hasJoinDeadlinePassed(event.joinDeadline)
 
-    private var isEventFull: Boolean = event.maxCapacity?.let { max -> event.currentAttendeeCount >= max } ?: false
-    private var eventAttendeeCount = event.currentAttendeeCount
+    private val _uiState = MutableStateFlow(
+        EventDetailsUiState(
+            joinDeadline = event.joinDeadline,
+            isJoinDeadlinePassed = isJoinDeadlinePassed
+        )
+    )
+    val uiState: StateFlow<EventDetailsUiState> = _uiState.asStateFlow()
+
+    private val _effect: MutableSharedFlow<EventDetailsEffect> =
+        MutableSharedFlow(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    val effect: SharedFlow<EventDetailsEffect> = _effect.asSharedFlow()
 
     init {
         getEventDetails()
@@ -59,11 +67,7 @@ class EventDetailsViewModel(
 
     fun onPrimaryButtonClicked() {
         if (isAuthenticated) {
-            if (userJoined) {
-                leaveEvent()
-            } else {
-                joinEvent()
-            }
+            if (userJoined) leaveEvent() else joinEvent()
         } else {
             _effect.tryEmit(EventDetailsEffect.NavigateToLoginScreen)
         }
@@ -81,12 +85,11 @@ class EventDetailsViewModel(
     private fun joinEvent() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(primaryButtonLoading = true)
-            val result = joinEventUseCase(event)
-            result.onSuccess {
+            joinEventUseCase(event).onSuccess {
                 userJoined = true
-                eventAttendeeCount = eventAttendeeCount + 1
+                eventAttendeeCount += 1
                 isEventFull = event.maxCapacity?.let { eventAttendeeCount >= it } ?: false
-                _uiState.value = _uiState.value.copy(primaryButtonLoading = false, primaryButtonTitle = getPrimaryButtonTitle(isAuthenticated = true, userJoined = true, isEventFull), currentAttendeeCount = eventAttendeeCount)
+                updateUiState()
                 _effect.tryEmit(EventDetailsEffect.ShowJoinEventSuccess)
             }.onFailure { error ->
                 if (error.code == ErrorCodes.EVENT_FULL) {
@@ -102,18 +105,33 @@ class EventDetailsViewModel(
     private fun leaveEvent() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(primaryButtonLoading = true)
-            val result = leaveEventUseCase(event)
-            result.onSuccess {
+            leaveEventUseCase(event).onSuccess {
                 userJoined = false
-                eventAttendeeCount = eventAttendeeCount - 1
+                eventAttendeeCount -= 1
                 isEventFull = event.maxCapacity?.let { eventAttendeeCount >= it } ?: false
-                _uiState.value =
-                    _uiState.value.copy(primaryButtonLoading = false, primaryButtonTitle = getPrimaryButtonTitle(isAuthenticated = true, userJoined = false, isEventFull), isJoinButtonEnabled = !isEventFull, currentAttendeeCount = eventAttendeeCount)
+                updateUiState()
                 _effect.tryEmit(EventDetailsEffect.ShowLeaveEventSuccess)
-            }.onFailure { error ->
-                showErrorScreen(error)
-            }
+            }.onFailure { showErrorScreen(it) }
         }
+    }
+
+    private fun updateUiState() {
+        _uiState.value = _uiState.value.copy(
+            primaryButtonLoading = false,
+            primaryButtonTitle = getPrimaryButtonTitle(
+                isAuthenticated = isAuthenticated,
+                userJoined = userJoined,
+                eventFull = isEventFull,
+                isDeadlinePassed = isJoinDeadlinePassed
+            ),
+            isJoinButtonEnabled = EventDetailsUiStateHelper.getButtonEnableStatus(
+                eventFull = isEventFull,
+                userJoined = userJoined,
+                isDeadlinePassed = isJoinDeadlinePassed,
+                isAuthenticated = isAuthenticated
+            ),
+            currentAttendeeCount = eventAttendeeCount
+        )
     }
 
     private fun showErrorScreen(error: EsmorgaException) {
@@ -124,5 +142,4 @@ class EventDetailsViewModel(
             _effect.tryEmit(EventDetailsEffect.ShowFullScreenError())
         }
     }
-
 }
