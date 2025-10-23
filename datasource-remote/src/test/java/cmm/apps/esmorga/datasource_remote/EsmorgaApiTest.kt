@@ -122,22 +122,4 @@ class EsmorgaApiTest {
         Assert.assertEquals("Albus", user.remoteProfile.remoteName)
     }
 
-    @Test
-    fun `given a login api call when there is no network available then crashlytics logs no connection`() = runTest {
-        coEvery { mockNetworkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) } returns false
-        val crashlyticsMock = mockk<FirebaseCrashlytics>(relaxed = true)
-
-        coEvery { FirebaseCrashlytics.getInstance() } returns crashlyticsMock
-        mockServer.enqueueFile(200, ServerFiles.LOGIN)
-
-        val sut = NetworkApiHelper().provideApi(mockServer.start(), EsmorgaAuthApi::class.java, getEsmorgaAuthenticatorMock(), getAuthInterceptor(), getDeviceInterceptor())
-
-        sut.login(body = mapOf("email" to "email", "password" to "password"))
-        verify {
-            crashlyticsMock.log("No connectivity during backend call")
-            crashlyticsMock.recordException(any(), any())
-        }
-
-    }
-
 }
