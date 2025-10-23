@@ -1,6 +1,7 @@
 package cmm.apps.esmorga.view.eventdetails.model
 
 import android.content.Context
+import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.dateformatting.EsmorgaDateTimeFormatter
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
@@ -25,8 +26,8 @@ data class EventDetailsUiState(
     val maxCapacity: Int? = null,
     val isJoinButtonEnabled: Boolean = true,
     val isEventFull: Boolean = false,
-    val joinDeadline: Long = 0,
-    val isJoinDeadlinePassed: Boolean = false
+    val joinDeadline: String = "",
+    val showViewAttendeesButton: Boolean = false
 )
 
 object EventDetailsUiStateHelper : KoinComponent {
@@ -69,7 +70,7 @@ object EventDetailsUiStateHelper : KoinComponent {
     }
 
     fun formatJoinDeadline(joinDeadline: Long): String {
-        return if (joinDeadline != 0L) dateFormatter.formatEventDate(joinDeadline) else ""
+        return dateFormatter.formatEventDate(joinDeadline)
     }
 }
 
@@ -79,6 +80,7 @@ sealed class EventDetailsEffect {
     data object ShowJoinEventSuccess : EventDetailsEffect()
     data object ShowLeaveEventSuccess : EventDetailsEffect()
     data object ShowFullEventError : EventDetailsEffect()
+    data class NavigateToAttendeesScreen(val event: Event) : EventDetailsEffect()
     data class ShowNoNetworkError(val esmorgaNoNetworkArguments: EsmorgaErrorScreenArguments = getEsmorgaNoNetworkScreenArguments()) : EventDetailsEffect()
     data class NavigateToLocation(val lat: Double, val lng: Double, val locationName: String) : EventDetailsEffect()
     data class ShowFullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments = getEsmorgaDefaultErrorScreenArguments()) : EventDetailsEffect()

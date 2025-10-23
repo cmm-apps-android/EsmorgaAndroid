@@ -15,8 +15,6 @@ import org.koin.core.context.GlobalContext.startKoin
 import org.koin.core.context.GlobalContext.stopKoin
 import org.koin.dsl.module
 
-private const val JULY_2025_TIMESTAMP = 1_700_000_000_000L
-
 class EventDetailsScreenshotTest : BaseScreenshotTest() {
     @Before
     fun setup() {
@@ -66,7 +64,8 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
             currentAttendeeCount = 10,
             maxCapacity = 10,
             buttonTitle = "Full",
-            isJoinButtonEnabled = false
+            isJoinButtonEnabled = false,
+            showViewAttendeesButton = true
         )
     }
 
@@ -76,7 +75,8 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
             currentAttendeeCount = 10,
             maxCapacity = 10,
             buttonTitle = "Leave Event",
-            isJoinButtonEnabled = true
+            isJoinButtonEnabled = true,
+            showViewAttendeesButton = true
         )
     }
 
@@ -86,29 +86,29 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
             currentAttendeeCount = 4,
             maxCapacity = 10,
             buttonTitle = "Join Event",
-            isJoinButtonEnabled = true
+            isJoinButtonEnabled = true,
+            showViewAttendeesButton = true
         )
     }
 
     @Test
-    fun eventDetailsView_lightTheme_deadline_passed() {
+    fun eventDetailsView_lightTheme_event_empty_user_not_joined() {
         snapshotWithState(
-            currentAttendeeCount = 4,
-            maxCapacity = 10,
-            joinDeadline = JULY_2025_TIMESTAMP,
-            buttonTitle = "Too late",
-            isJoinDeadlinePassed = true
-        )
-    }
-
-    @Test
-    fun eventDetailsView_lightTheme_deadline_not_passed() {
-        snapshotWithState(
-            currentAttendeeCount = 4,
+            currentAttendeeCount = 0,
             maxCapacity = 10,
             buttonTitle = "Join Event",
-            joinDeadline = JULY_2025_TIMESTAMP,
-            isJoinDeadlinePassed = false
+            isJoinButtonEnabled = true,
+            showViewAttendeesButton = false
+        )
+    }
+
+    @Test
+    fun eventDetailsView_lightTheme_event_no_max_capacity_user_joined() {
+        snapshotWithState(
+            currentAttendeeCount = 10,
+            buttonTitle = "Join Event",
+            isJoinButtonEnabled = true,
+            showViewAttendeesButton = true
         )
     }
 
@@ -120,8 +120,8 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
         currentAttendeeCount: Int? = null,
         maxCapacity: Int? = null,
         isJoinButtonEnabled: Boolean = true,
-        joinDeadline: Long = JULY_2025_TIMESTAMP,
-        isJoinDeadlinePassed: Boolean = false
+        joinDeadline: String = "Fri, Sep 19, 2025, 20:00",
+        showViewAttendeesButton: Boolean = false
     ) {
         paparazzi.snapshot {
             EsmorgaTheme(darkTheme = false) {
@@ -141,12 +141,13 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
                         maxCapacity = maxCapacity,
                         isJoinButtonEnabled = isJoinButtonEnabled,
                         joinDeadline = joinDeadline,
-                        isJoinDeadlinePassed = isJoinDeadlinePassed
+                        showViewAttendeesButton = showViewAttendeesButton
                     ),
                     snackbarHostState = SnackbarHostState(),
                     onNavigateClicked = {},
                     onBackPressed = {},
-                    onPrimaryButtonClicked = {}
+                    onPrimaryButtonClicked = {},
+                    onViewAttendeesClicked = {}
                 )
             }
         }

@@ -1,5 +1,6 @@
 package cmm.apps.esmorga.view.eventdetails
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -42,7 +43,6 @@ import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAILS_BACK_BUTTON
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsEffect
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiState
-import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiStateHelper.formatJoinDeadline
 import cmm.apps.esmorga.view.navigation.openNavigationApp
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import coil.compose.AsyncImage
@@ -59,6 +59,7 @@ fun EventDetailsScreen(
     edvm: EventDetailsViewModel = koinViewModel(parameters = { parametersOf(event) }),
     onBackPressed: () -> Unit,
     onLoginClicked: () -> Unit,
+    onViewAttendeesClicked: (event: Event) -> Unit,
     onJoinEventError: (EsmorgaErrorScreenArguments) -> Unit,
     onNoNetworkError: (EsmorgaErrorScreenArguments) -> Unit
 ) {
@@ -85,11 +86,16 @@ fun EventDetailsScreen(
                     onLoginClicked()
                 }
 
-                EventDetailsEffect.ShowJoinEventSuccess -> {
+                is EventDetailsEffect.NavigateToAttendeesScreen -> {
+                    onViewAttendeesClicked(event)
+                }
+
+                is EventDetailsEffect.ShowJoinEventSuccess -> {
                     localCoroutineScope.launch {
                         snackbarHostState.showSnackbar(message = joinEventSuccessMessage)
                     }
                 }
+
                 EventDetailsEffect.ShowFullEventError -> {
                     localCoroutineScope.launch {
                         snackbarHostState.showSnackbar(message = eventFullErrorMessage)
@@ -104,7 +110,7 @@ fun EventDetailsScreen(
                     onNoNetworkError(eff.esmorgaNoNetworkArguments)
                 }
 
-                EventDetailsEffect.ShowLeaveEventSuccess -> {
+                is EventDetailsEffect.ShowLeaveEventSuccess -> {
                     localCoroutineScope.launch {
                         snackbarHostState.showSnackbar(leaveEventSuccessMessage)
                     }
@@ -119,6 +125,8 @@ fun EventDetailsScreen(
             edvm.onBackPressed()
         }, onPrimaryButtonClicked = {
             edvm.onPrimaryButtonClicked()
+        }, onViewAttendeesClicked = {
+            edvm.onViewAttendeesClicked()
         })
     }
 
@@ -127,7 +135,12 @@ fun EventDetailsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EventDetailsView(
-    uiState: EventDetailsUiState, snackbarHostState: SnackbarHostState, onNavigateClicked: () -> Unit, onBackPressed: () -> Unit, onPrimaryButtonClicked: () -> Unit
+    uiState: EventDetailsUiState,
+    snackbarHostState: SnackbarHostState,
+    onNavigateClicked: () -> Unit,
+    onBackPressed: () -> Unit,
+    onPrimaryButtonClicked: () -> Unit,
+    onViewAttendeesClicked: () -> Unit
 ) {
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
         TopAppBar(
@@ -167,10 +180,11 @@ fun EventDetailsView(
                     .padding(top = 32.dp, start = 16.dp, bottom = 16.dp, end = 16.dp)
                     .testTag(EventDetailsScreenTestTags.EVENT_DETAILS_EVENT_NAME)
             )
+
             EsmorgaText(text = uiState.subtitle, style = EsmorgaTextStyle.BODY_1_ACCENT, modifier = Modifier.padding(horizontal = 16.dp))
 
-            uiState.maxCapacity?.let { max ->
-                Row(modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 0.dp)) {
+            Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+                uiState.maxCapacity?.let { max ->
                     Icon(painter = painterResource(DesignSystem.drawable.group), contentDescription = null)
                     Spacer(modifier = Modifier.width(5.dp))
                     EsmorgaText(
@@ -181,16 +195,26 @@ fun EventDetailsView(
                         ),
                         style = EsmorgaTextStyle.CAPTION,
                     )
+
+                    Spacer(modifier = Modifier.weight(1f))
                 }
-                EsmorgaText(
-                    text = stringResource(
-                        id = R.string.screen_event_details_join_deadline,
-                        formatJoinDeadline(uiState.joinDeadline)
-                    ),
-                    style = EsmorgaTextStyle.CAPTION,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
-                )
+
+                if (uiState.showViewAttendeesButton) {
+                    EsmorgaText(
+                        text = stringResource(R.string.button_view_attendees),
+                        style = EsmorgaTextStyle.CAPTION_UNDERSCORE,
+                        modifier = Modifier
+                            .clickable { onViewAttendeesClicked() }
+                            .testTag(EventDetailsScreenTestTags.EVENT_DETAILS_ATTENDEES_BUTTON)
+                    )
+                }
             }
+
+            EsmorgaText(
+                text = stringResource(id = R.string.screen_event_details_join_deadline, uiState.joinDeadline),
+                style = EsmorgaTextStyle.CAPTION,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+            )
 
             EsmorgaText(
                 text = stringResource(id = R.string.screen_event_details_description),
@@ -222,7 +246,7 @@ fun EventDetailsView(
             EsmorgaButton(
                 modifier = Modifier
                     .padding(horizontal = 16.dp, vertical = if (!uiState.navigateButton) 32.dp else 0.dp)
-                    .testTag(EventDetailsScreenTestTags.EVENT_DETAIL_PRIMARY_BUTTON),
+                    .testTag(EventDetailsScreenTestTags.EVENT_DETAILS_PRIMARY_BUTTON),
                 text = uiState.primaryButtonTitle,
                 primary = true,
                 isLoading = uiState.primaryButtonLoading,
@@ -238,5 +262,6 @@ fun EventDetailsView(
 object EventDetailsScreenTestTags {
     const val EVENT_DETAILS_EVENT_NAME = "event details event name"
     const val EVENT_DETAILS_BACK_BUTTON = "event details back button"
-    const val EVENT_DETAIL_PRIMARY_BUTTON = "event_detail_primary_button"
+    const val EVENT_DETAILS_PRIMARY_BUTTON = "event details primary button"
+    const val EVENT_DETAILS_ATTENDEES_BUTTON = "event details attendee button"
 }

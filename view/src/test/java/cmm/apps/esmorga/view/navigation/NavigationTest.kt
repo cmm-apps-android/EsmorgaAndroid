@@ -2,7 +2,6 @@ package cmm.apps.esmorga.view.navigation
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
@@ -19,6 +18,7 @@ import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_SUBTITLE
 import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_TITLE
 import cmm.apps.esmorga.domain.account.ActivateAccountUseCase
 import cmm.apps.esmorga.domain.device.ShowDeviceIdIfNeededUseCase
+import cmm.apps.esmorga.domain.event.GetEventAttendeesUseCase
 import cmm.apps.esmorga.domain.event.GetEventListUseCase
 import cmm.apps.esmorga.domain.event.GetMyEventListUseCase
 import cmm.apps.esmorga.domain.event.JoinEventUseCase
@@ -49,9 +49,12 @@ import cmm.apps.esmorga.view.createevent.CreateEventFormTitleScreenTestTags
 import cmm.apps.esmorga.view.createeventdate.CreateEventDateScreenTestTags
 import cmm.apps.esmorga.view.createeventtype.CreateEventTypeScreenTestTags
 import cmm.apps.esmorga.view.di.ViewDIModule
+import cmm.apps.esmorga.view.eventattendees.EventAttendessScreenTestTags.EVENT_ATTENDEES_BACK_BUTTON
+import cmm.apps.esmorga.view.eventattendees.EventAttendessScreenTestTags.EVENT_ATTENDEES_TITLE
+import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAILS_ATTENDEES_BUTTON
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAILS_BACK_BUTTON
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAILS_EVENT_NAME
-import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAIL_PRIMARY_BUTTON
+import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAILS_PRIMARY_BUTTON
 import cmm.apps.esmorga.view.eventlist.EventListScreenTestTags.EVENT_LIST_EVENT_NAME
 import cmm.apps.esmorga.view.eventlist.EventListScreenTestTags.EVENT_LIST_TITLE
 import cmm.apps.esmorga.view.eventlist.MyEventListScreenTestTags.MY_EVENT_LIST_TITLE
@@ -84,6 +87,7 @@ import cmm.apps.esmorga.view.registration.RegistrationScreenTestTags.REGISTRATIO
 import cmm.apps.esmorga.view.registration.RegistrationScreenTestTags.REGISTRATION_PASSWORD_INPUT
 import cmm.apps.esmorga.view.registration.RegistrationScreenTestTags.REGISTRATION_REPEAT_PASSWORD_INPUT
 import cmm.apps.esmorga.view.registration.RegistrationScreenTestTags.REGISTRATION_TITLE
+import cmm.apps.esmorga.view.viewmodel.mock.EventAttendeeViewMock
 import cmm.apps.esmorga.view.viewmodel.mock.EventViewMock
 import cmm.apps.esmorga.view.viewmodel.mock.LoginViewMock
 import cmm.apps.esmorga.view.welcome.WelcomeScreenTestTags.WELCOME_PRIMARY_BUTTON
@@ -113,6 +117,10 @@ class NavigationTest {
 
     private val getEventListUseCase = mockk<GetEventListUseCase>(relaxed = true).also { useCase ->
         coEvery { useCase() } returns EsmorgaResult.success(EventViewMock.provideEventList(listOf("event")))
+    }
+
+    private val getEventAttendeesUseCase = mockk<GetEventAttendeesUseCase>(relaxed = true).also { useCase ->
+        coEvery { useCase(any()) } returns EsmorgaResult.success(EventAttendeeViewMock.provideEventAttendeeList(listOf("attendee")))
     }
 
     private val performLoginUseCase = mockk<PerformLoginUseCase>(relaxed = true).also { useCase ->
@@ -179,6 +187,7 @@ class NavigationTest {
                 ViewDIModule.module,
                 module {
                     factory<GetEventListUseCase> { getEventListUseCase }
+                    factory<GetEventAttendeesUseCase> { getEventAttendeesUseCase }
                     factory<PerformLoginUseCase> { performLoginUseCase }
                     factory<PerformRegistrationUserCase> { performRegistrationUserCase }
                     factory<GetSavedUserUseCase> { getSavedUserUseCase }
@@ -305,7 +314,24 @@ class NavigationTest {
     }
 
     @Test
-    fun `given user logged, when event detail screen visited and login button is clicked, then login screen is visited`() {
+    fun `given user logged, when visiting event list, details and attendees is clicked, then attendee list is shown`() {
+        setNavigationFromDestination(Navigation.EventDetailScreen(EventViewMock.provideEvent(name = "EventName", currentAttendeeCount = 1)))
+
+        composeTestRule.onNodeWithTag(EVENT_DETAILS_ATTENDEES_BUTTON).performClick()
+        composeTestRule.onNodeWithTag(EVENT_ATTENDEES_TITLE).assertIsDisplayed()
+    }
+
+    @Test
+    fun `given user logged, when visiting event list, details, attendees and back is clicked, then event details is shown`() {
+        setNavigationFromDestination(Navigation.EventDetailScreen(EventViewMock.provideEvent(name = "EventName", currentAttendeeCount = 1)))
+
+        composeTestRule.onNodeWithTag(EVENT_DETAILS_ATTENDEES_BUTTON).performClick()
+        composeTestRule.onNodeWithTag(EVENT_ATTENDEES_BACK_BUTTON).performClick()
+        composeTestRule.onNodeWithTag(EVENT_DETAILS_EVENT_NAME).assertIsDisplayed()
+    }
+
+    @Test
+    fun `given user not logged, when event detail screen visited and login button is clicked, then login screen is visited`() {
         val getSavedUserUseCaseFailure = mockk<GetSavedUserUseCase>(relaxed = true).also { useCase ->
             coEvery { useCase() } returns EsmorgaResult.failure(Exception())
         }
@@ -314,7 +340,7 @@ class NavigationTest {
         setNavigationFromDestination(Navigation.EventDetailScreen(EventViewMock.provideEvent("EventName")))
 
         composeTestRule.onNodeWithTag(EVENT_DETAILS_EVENT_NAME).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(EVENT_DETAIL_PRIMARY_BUTTON, true).performClick()
+        composeTestRule.onNodeWithTag(EVENT_DETAILS_PRIMARY_BUTTON, true).performClick()
         composeTestRule.onNodeWithTag(LOGIN_TITLE).assertIsDisplayed()
     }
 
@@ -328,7 +354,7 @@ class NavigationTest {
         setNavigationFromDestination(Navigation.EventDetailScreen(EventViewMock.provideEvent("EventName")))
 
         composeTestRule.onNodeWithTag(EVENT_DETAILS_EVENT_NAME).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(EVENT_DETAIL_PRIMARY_BUTTON).performClick()
+        composeTestRule.onNodeWithTag(EVENT_DETAILS_PRIMARY_BUTTON).performClick()
 
         composeTestRule.onNodeWithTag(ERROR_TITLE).assertIsDisplayed()
         composeTestRule.onNodeWithTag(ERROR_RETRY_BUTTON).performClick()
@@ -345,7 +371,7 @@ class NavigationTest {
 
         setNavigationFromDestination(Navigation.EventDetailScreen(EventViewMock.provideEvent("Event Name")))
 
-        composeTestRule.onNodeWithTag(EVENT_DETAIL_PRIMARY_BUTTON).performClick()
+        composeTestRule.onNodeWithTag(EVENT_DETAILS_PRIMARY_BUTTON).performClick()
 
         composeTestRule.onNodeWithTag(ERROR_ANIMATION).assertIsDisplayed()
         composeTestRule.onNodeWithTag(ERROR_TITLE).assertIsDisplayed()
@@ -428,7 +454,8 @@ class NavigationTest {
     }
 
     @Test
-    fun `given activate account screen, when view is rendered, then all ui elements are displayed`() {        composeTestRule.setContent {
+    fun `given activate account screen, when view is rendered, then all ui elements are displayed`() {
+        composeTestRule.setContent {
             ActivateAccountView(
                 uiState = ActivateAccountUiState(isLoading = false)
             )

@@ -10,6 +10,7 @@ import cmm.apps.esmorga.view.createeventdate.CreateEventFormDateViewModel
 import cmm.apps.esmorga.view.createeventtype.CreateEventFormTypeViewModel
 import cmm.apps.esmorga.view.dateformatting.DateFormatterImpl
 import cmm.apps.esmorga.view.dateformatting.EsmorgaDateTimeFormatter
+import cmm.apps.esmorga.view.eventattendees.EventAttendeesViewModel
 import cmm.apps.esmorga.view.eventdetails.EventDetailsViewModel
 import cmm.apps.esmorga.view.eventlist.EventListViewModel
 import cmm.apps.esmorga.view.eventlist.MyEventListViewModel
@@ -20,8 +21,8 @@ import cmm.apps.esmorga.view.profile.ProfileViewModel
 import cmm.apps.esmorga.view.registration.RegistrationConfirmationViewModel
 import cmm.apps.esmorga.view.registration.RegistrationViewModel
 import cmm.apps.esmorga.view.welcome.WelcomeViewModel
-import org.koin.dsl.module
 import org.koin.core.module.dsl.viewModel
+import org.koin.dsl.module
 
 object ViewDIModule {
 
@@ -37,6 +38,9 @@ object ViewDIModule {
         }
         viewModel { (event: Event) ->
             EventDetailsViewModel(get(), get(), get(), event)
+        }
+        viewModel { (event: Event) ->
+            EventAttendeesViewModel(get(), event.id)
         }
         viewModel {
             WelcomeViewModel(get())

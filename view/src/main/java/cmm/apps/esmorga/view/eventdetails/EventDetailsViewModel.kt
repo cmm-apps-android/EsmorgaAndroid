@@ -35,12 +35,7 @@ class EventDetailsViewModel(
     private var eventAttendeeCount: Int = event.currentAttendeeCount
     private val isJoinDeadlinePassed: Boolean = EventDetailsUiStateHelper.hasJoinDeadlinePassed(event.joinDeadline)
 
-    private val _uiState = MutableStateFlow(
-        EventDetailsUiState(
-            joinDeadline = event.joinDeadline,
-            isJoinDeadlinePassed = isJoinDeadlinePassed
-        )
-    )
+    private val _uiState = MutableStateFlow(EventDetailsUiState())
     val uiState: StateFlow<EventDetailsUiState> = _uiState.asStateFlow()
 
     private val _effect: MutableSharedFlow<EventDetailsEffect> =
@@ -71,6 +66,10 @@ class EventDetailsViewModel(
         } else {
             _effect.tryEmit(EventDetailsEffect.NavigateToLoginScreen)
         }
+    }
+
+    fun onViewAttendeesClicked() {
+        _effect.tryEmit(EventDetailsEffect.NavigateToAttendeesScreen(event))
     }
 
     private fun getEventDetails() {

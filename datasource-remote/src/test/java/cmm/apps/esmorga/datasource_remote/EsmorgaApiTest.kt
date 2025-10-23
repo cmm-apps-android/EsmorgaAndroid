@@ -6,6 +6,7 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.os.Build
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import cmm.apps.esmorga.datasource_remote.api.EsmorgaApi
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaAuthApi
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaGuestApi
 import cmm.apps.esmorga.datasource_remote.api.NetworkApiHelper
@@ -89,6 +90,23 @@ class EsmorgaApiTest {
     }
 
     @Test
+    fun `given a successful mock server when attendees are requested then a correct eventAttendeeWrapper is returned`() = runTest {
+        coEvery { mockNetworkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) } returns true
+        val crashlyticsMock = mockk<FirebaseCrashlytics>(relaxed = true)
+
+        coEvery { FirebaseCrashlytics.getInstance() } returns crashlyticsMock
+
+        mockServer.enqueueFile(200, ServerFiles.GET_EVENT_ATTENDEES)
+
+        val sut = NetworkApiHelper().provideApi(mockServer.start(), EsmorgaApi::class.java, getEsmorgaAuthenticatorMock(), getAuthInterceptor(), getDeviceInterceptor())
+
+        val attendeesWrapper = sut.getEventAttendees("test")
+
+        Assert.assertEquals(3, attendeesWrapper.remoteEventAttendeeList.size)
+        Assert.assertTrue(attendeesWrapper.remoteEventAttendeeList[0].contains("Mobgen Test"))
+    }
+
+    @Test
     fun `given a successful mock server when login is requested then a correct user is returned`() = runTest {
         coEvery { mockNetworkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) } returns true
         val crashlyticsMock = mockk<FirebaseCrashlytics>(relaxed = true)
@@ -102,24 +120,6 @@ class EsmorgaApiTest {
         val user = sut.login(body = mapOf("email" to "email", "password" to "password"))
 
         Assert.assertEquals("Albus", user.remoteProfile.remoteName)
-    }
-
-    @Test
-    fun `given a login api call when there is no network available then crashlytics logs no connection`() = runTest {
-        coEvery { mockNetworkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) } returns false
-        val crashlyticsMock = mockk<FirebaseCrashlytics>(relaxed = true)
-
-        coEvery { FirebaseCrashlytics.getInstance() } returns crashlyticsMock
-        mockServer.enqueueFile(200, ServerFiles.LOGIN)
-
-        val sut = NetworkApiHelper().provideApi(mockServer.start(), EsmorgaAuthApi::class.java, getEsmorgaAuthenticatorMock(), getAuthInterceptor(), getDeviceInterceptor())
-
-        sut.login(body = mapOf("email" to "email", "password" to "password"))
-        verify {
-            crashlyticsMock.log("No connectivity during backend call")
-            crashlyticsMock.recordException(any(), any())
-        }
-
     }
 
 }

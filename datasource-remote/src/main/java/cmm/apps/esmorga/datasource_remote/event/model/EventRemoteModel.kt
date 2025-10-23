@@ -16,9 +16,9 @@ data class EventRemoteModel(
     @SerializedName("imageUrl") val remoteImageUrl: String? = null,
     @SerializedName("location") val remoteLocation: EventLocationRemoteModel,
     @SerializedName("tags") val remoteTags: List<String>?,
-    @SerializedName("currentAttendeeCount") val remoteCurrentAttendeeCount: Int,
     @SerializedName("maxCapacity") val remoteMaxCapacity: Int? = null,
-    @SerializedName("joinDeadline") val remoteJoinDeadline: String
+    @SerializedName("joinDeadline") val remoteJoinDeadline: String,
+    @SerializedName("currentAttendeeCount") val remoteCurrentAttendeeCount: Int
     )
 
 data class EventLocationRemoteModel(
