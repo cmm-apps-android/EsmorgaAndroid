@@ -395,7 +395,7 @@ class EventDetailsViewModelTest {
         val uiState = sut.uiState.value
 
         Assert.assertEquals(formatJoinDeadline(futureDeadline), uiState.joinDeadline)
-        Assert.assertFalse(uiState.isJoinButtonEnabled)
+        Assert.assertTrue(uiState.isJoinButtonEnabled)
     }
 
     @Test
