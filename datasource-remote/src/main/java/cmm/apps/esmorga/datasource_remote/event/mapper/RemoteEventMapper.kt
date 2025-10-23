@@ -2,6 +2,7 @@ package cmm.apps.esmorga.datasource_remote.event.mapper
 
 import cmm.apps.esmorga.data.event.model.EventDataModel
 import cmm.apps.esmorga.data.event.model.EventLocationDataModel
+import cmm.apps.esmorga.datasource_remote.dateformatting.EsmorgaRemoteDateFormatter
 import cmm.apps.esmorga.datasource_remote.event.model.EventLocationRemoteModel
 import cmm.apps.esmorga.datasource_remote.event.model.EventRemoteModel
 import cmm.apps.esmorga.domain.event.model.EventType
@@ -10,23 +11,18 @@ import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.Source
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
 
+fun EventRemoteModel.toEventDataModel(dateFormatter: EsmorgaRemoteDateFormatter): EventDataModel {
 
-fun EventRemoteModel.toEventDataModel(): EventDataModel {
-    val parsedDate = try {
-        ZonedDateTime.from(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSVV").parse(this.remoteDate))
-    } catch (e: Exception) {
-        throw DateTimeParseException("Error parsing date in EventRemoteModel", this.remoteDate, 0, e)
-    }
+    val parsedDate = dateFormatter.parseIsoDateTime(this.remoteDate)
 
     val parsedType = try {
         EventType.valueOf(this.remoteType.uppercase())
     } catch (e: Exception) {
         throw EsmorgaException(message = "Error parsing type [${this.remoteType.uppercase()}] in EventRemoteModel", source = Source.REMOTE, code = ErrorCodes.PARSE_ERROR)
     }
+
+    val parsedJoinDeadline = dateFormatter.parseIsoDateTime(this.remoteJoinDeadline)
 
     return EventDataModel(
         dataId = this.remoteId,
@@ -39,11 +35,12 @@ fun EventRemoteModel.toEventDataModel(): EventDataModel {
         dataTags = this.remoteTags ?: listOf(),
         dataUserJoined = false,
         dataCurrentAttendeeCount = this.remoteCurrentAttendeeCount,
-        dataMaxCapacity = this.remoteMaxCapacity
+        dataMaxCapacity = this.remoteMaxCapacity,
+        dataJoinDeadline = parsedJoinDeadline.toInstant().toEpochMilli()
     )
 }
 
-fun List<EventRemoteModel>.toEventDataModelList(): List<EventDataModel> = this.map { erm -> erm.toEventDataModel() }
+fun List<EventRemoteModel>.toEventDataModelList(dateFormatter: EsmorgaRemoteDateFormatter): List<EventDataModel> = this.map { erm -> erm.toEventDataModel(dateFormatter) }
 
 fun EventLocationRemoteModel.toEventLocationDataModel(): EventLocationDataModel = EventLocationDataModel(
     name = this.remoteLocationName,

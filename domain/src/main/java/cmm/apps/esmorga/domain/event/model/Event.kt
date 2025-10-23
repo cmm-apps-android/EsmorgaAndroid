@@ -18,7 +18,8 @@ data class Event(
     val tags: List<String> = listOf(),
     val userJoined: Boolean,
     val currentAttendeeCount: Int,
-    val maxCapacity: Int?
+    val maxCapacity: Int?,
+    val joinDeadline: Long
 )
 
 @Serializable

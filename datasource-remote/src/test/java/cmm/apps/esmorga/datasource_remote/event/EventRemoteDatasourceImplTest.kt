@@ -4,6 +4,7 @@ import android.content.Context
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaApi
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaAuthApi
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaGuestApi
+import cmm.apps.esmorga.datasource_remote.dateformatting.EsmorgaRemoteDateFormatter
 import cmm.apps.esmorga.datasource_remote.event.mapper.toEventDataModel
 import cmm.apps.esmorga.datasource_remote.event.model.EventListWrapperRemoteModel
 import cmm.apps.esmorga.datasource_remote.mock.EventAttendeesRemoteMock
@@ -11,8 +12,10 @@ import cmm.apps.esmorga.datasource_remote.mock.EventRemoteMock
 import cmm.apps.esmorga.datasource_remote.mock.EventRemoteMock.provideEvent
 import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
+import cmm.apps.esmorga.domain.result.Source
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -24,7 +27,7 @@ import retrofit2.HttpException
 import retrofit2.Response
 
 class EventRemoteDatasourceImplTest {
-
+    val dateFormatter = mockk<EsmorgaRemoteDateFormatter>(relaxed = true)
     @Test
     fun `given a working api when events requested then event list is successfully returned`() = runTest {
         val remoteEventName = "RemoteEvent"
@@ -33,7 +36,7 @@ class EventRemoteDatasourceImplTest {
         val guestApi = mockk<EsmorgaGuestApi>(relaxed = true)
         coEvery { guestApi.getEvents() } returns EventRemoteMock.provideEventListWrapper(listOf(remoteEventName))
 
-        val sut = EventRemoteDatasourceImpl(api, guestApi)
+        val sut = EventRemoteDatasourceImpl(api, guestApi,dateFormatter)
         val result = sut.getEvents()
 
         Assert.assertEquals(remoteEventName, result[0].dataName)
@@ -49,7 +52,7 @@ class EventRemoteDatasourceImplTest {
         coEvery { guestApi.getEvents() } throws HttpException(Response.error<ResponseBody>(errorCode, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
         coEvery { context.getSystemService(Context.CONNECTIVITY_SERVICE) }
 
-        val sut = EventRemoteDatasourceImpl(api, guestApi)
+        val sut = EventRemoteDatasourceImpl(api, guestApi, dateFormatter)
 
         val exception = try {
             sut.getEvents()
@@ -71,7 +74,7 @@ class EventRemoteDatasourceImplTest {
         val guestApi = mockk<EsmorgaGuestApi>(relaxed = true)
         coEvery { guestApi.getEvents() } returns EventListWrapperRemoteModel(1, listOf(wrongTypeEvent))
 
-        val sut = EventRemoteDatasourceImpl(api, guestApi)
+        val sut = EventRemoteDatasourceImpl(api, guestApi, dateFormatter)
 
         val exception = try {
             sut.getEvents()
@@ -92,10 +95,19 @@ class EventRemoteDatasourceImplTest {
         val context = mockk<Context>(relaxed = true)
         val api = mockk<EsmorgaApi>(relaxed = true)
         val guestApi = mockk<EsmorgaGuestApi>(relaxed = true)
+
+        val dateFormatter = mockk<EsmorgaRemoteDateFormatter>()
+        every { dateFormatter.parseIsoDateTime("ERROR") } throws EsmorgaException(
+            message = "Invalid date",
+            source = Source.REMOTE,
+            code = ErrorCodes.PARSE_ERROR
+        )
+
         coEvery { guestApi.getEvents() } returns EventListWrapperRemoteModel(1, listOf(wrongTypeEvent))
         coEvery { context.getSystemService(Context.CONNECTIVITY_SERVICE) }
 
-        val sut = EventRemoteDatasourceImpl(api, guestApi)
+        val sut = EventRemoteDatasourceImpl(api, guestApi, dateFormatter)
+
         val exception = try {
             sut.getEvents()
             null
@@ -152,7 +164,7 @@ class EventRemoteDatasourceImplTest {
         val guestApi = mockk<EsmorgaGuestApi>(relaxed = true)
         coEvery { api.getMyEvents() } returns EventRemoteMock.provideEventListWrapper(listOf(remoteEventName))
 
-        val sut = EventRemoteDatasourceImpl(api, guestApi)
+        val sut = EventRemoteDatasourceImpl(api, guestApi, dateFormatter)
         val result = sut.getMyEvents()
 
         Assert.assertEquals(remoteEventName, result[0].dataName)
@@ -168,7 +180,7 @@ class EventRemoteDatasourceImplTest {
 
         coEvery { api.getMyEvents() } throws HttpException(Response.error<ResponseBody>(errorCode, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
         coEvery { context.getSystemService(Context.CONNECTIVITY_SERVICE) }
-        val sut = EventRemoteDatasourceImpl(api, guestApi)
+        val sut = EventRemoteDatasourceImpl(api, guestApi, dateFormatter)
 
         val exception = try {
             sut.getMyEvents()
@@ -187,8 +199,8 @@ class EventRemoteDatasourceImplTest {
         val guestApi = mockk<EsmorgaGuestApi>(relaxed = true)
         coEvery { api.joinEvent(any()) } returns Unit
 
-        val sut = EventRemoteDatasourceImpl(api, guestApi)
-        val result = sut.joinEvent(provideEvent("Remote Event").toEventDataModel())
+        val sut = EventRemoteDatasourceImpl(api, guestApi, dateFormatter)
+        val result = sut.joinEvent(provideEvent("Remote Event").toEventDataModel(dateFormatter))
 
         coVerify { api.joinEvent(any()) }
         Assert.assertEquals(Unit, result)
@@ -201,9 +213,9 @@ class EventRemoteDatasourceImplTest {
         val guestApi = mockk<EsmorgaGuestApi>(relaxed = true)
         coEvery { api.joinEvent(any()) } throws HttpException(Response.error<ResponseBody>(errorCode, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
 
-        val sut = EventRemoteDatasourceImpl(api, guestApi)
+        val sut = EventRemoteDatasourceImpl(api, guestApi, dateFormatter)
         val exception = try {
-            sut.joinEvent(provideEvent("Remote Event").toEventDataModel())
+            sut.joinEvent(provideEvent("Remote Event").toEventDataModel(dateFormatter))
         } catch (exception: RuntimeException) {
             exception
         }
@@ -218,8 +230,8 @@ class EventRemoteDatasourceImplTest {
         val guestApi = mockk<EsmorgaGuestApi>(relaxed = true)
         coEvery { api.leaveEvent(any()) } returns Unit
 
-        val sut = EventRemoteDatasourceImpl(api, guestApi)
-        val result = sut.leaveEvent(provideEvent("Remote Event").toEventDataModel())
+        val sut = EventRemoteDatasourceImpl(api, guestApi, dateFormatter)
+        val result = sut.leaveEvent(provideEvent("Remote Event").toEventDataModel(dateFormatter))
 
         coVerify { api.leaveEvent(any()) }
         Assert.assertEquals(Unit, result)
@@ -232,9 +244,9 @@ class EventRemoteDatasourceImplTest {
         val guestApi = mockk<EsmorgaGuestApi>(relaxed = true)
         coEvery { api.leaveEvent(any()) } throws HttpException(Response.error<ResponseBody>(errorCode, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
 
-        val sut = EventRemoteDatasourceImpl(api, guestApi)
+        val sut = EventRemoteDatasourceImpl(api, guestApi, dateFormatter)
         val exception = try {
-            sut.leaveEvent(provideEvent("Remote Event").toEventDataModel())
+            sut.leaveEvent(provideEvent("Remote Event").toEventDataModel(dateFormatter))
         } catch (exception: RuntimeException) {
             exception
         }

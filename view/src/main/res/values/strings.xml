@@ -114,4 +114,6 @@
    <string name="button_join_event_disabled">Full</string>
    <string name="snackbar_event_full">The event has already reached its maximum capacity.</string>
    <string name="screen_event_details_capacity">%1$d/%2$d assistants</string>
+   <string name="screen_event_details_join_deadline">Join before %1$s</string>
+   <string name="button_join_event_closed">Too late</string>
 </resources>

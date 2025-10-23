@@ -19,5 +19,6 @@ data class EventLocalModel(
     val localCreationTime: Long,
     @ColumnInfo(defaultValue = "0") val localUserJoined: Boolean, //SQLite does not support Boolean, INTEGER is used
     val localCurrentAttendeeCount: Int = 0,
-    val localMaxCapacity: Int? = null
+    val localMaxCapacity: Int? = null,
+    val localJoinDeadline: Long
 )

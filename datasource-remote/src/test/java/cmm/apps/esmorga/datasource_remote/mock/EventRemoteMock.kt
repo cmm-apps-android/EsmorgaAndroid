@@ -25,7 +25,8 @@ object EventRemoteMock {
         remoteLocation = EventLocationRemoteModel("Location"),
         remoteTags = listOf(),
         remoteCurrentAttendeeCount = 40,
-        remoteMaxCapacity = 50
+        remoteMaxCapacity = 50,
+        remoteJoinDeadline = "2030-12-31T23:59:59.000Z"
     )
 
 }

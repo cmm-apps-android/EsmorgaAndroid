@@ -11,6 +11,8 @@ import cmm.apps.esmorga.datasource_remote.api.NetworkApiHelper
 import cmm.apps.esmorga.datasource_remote.api.authenticator.EsmorgaAuthInterceptor
 import cmm.apps.esmorga.datasource_remote.api.authenticator.EsmorgaAuthenticator
 import cmm.apps.esmorga.datasource_remote.api.device.DeviceInterceptor
+import cmm.apps.esmorga.datasource_remote.dateformatting.EsmorgaRemoteDateFormatter
+import cmm.apps.esmorga.datasource_remote.dateformatting.RemoteDateFormatterImpl
 import cmm.apps.esmorga.datasource_remote.event.EventRemoteDatasourceImpl
 import cmm.apps.esmorga.datasource_remote.user.AuthRemoteDatasourceImpl
 import cmm.apps.esmorga.datasource_remote.user.UserRemoteDatasourceImpl
@@ -48,7 +50,9 @@ object RemoteDIModule {
                 deviceInterceptor = DeviceInterceptor(get(named(DataDIModule.LOCAL_DATASOURCE_INSTANCE_NAME)))
             )
         }
-        factory<EventDatasource>(named(DataDIModule.REMOTE_DATASOURCE_INSTANCE_NAME)) { EventRemoteDatasourceImpl(get(), get()) }
+        factory<EventDatasource>(named(DataDIModule.REMOTE_DATASOURCE_INSTANCE_NAME)) { EventRemoteDatasourceImpl(get(), get(), get()) }
         factory<UserDatasource>(named(DataDIModule.REMOTE_DATASOURCE_INSTANCE_NAME)) { UserRemoteDatasourceImpl(get(), get(), get()) }
+
+        single<EsmorgaRemoteDateFormatter> { RemoteDateFormatterImpl() }
     }
 }

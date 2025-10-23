@@ -19,6 +19,7 @@ import cmm.apps.esmorga.view.dateformatting.DateFormatterImpl
 import cmm.apps.esmorga.view.dateformatting.EsmorgaDateTimeFormatter
 import cmm.apps.esmorga.view.eventdetails.EventDetailsViewModel
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsEffect
+import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiStateHelper.formatJoinDeadline
 import cmm.apps.esmorga.view.viewmodel.mock.EventViewMock
 import cmm.apps.esmorga.view.viewmodel.util.MainDispatcherRule
 import io.mockk.coEvery
@@ -37,6 +38,10 @@ import org.koin.dsl.module
 
 @RunWith(AndroidJUnit4::class)
 class EventDetailsViewModelTest {
+
+    companion object {
+        private const val ONE_HOUR_IN_MILLIS = 1000 * 60 * 60
+    }
 
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
@@ -300,6 +305,7 @@ class EventDetailsViewModelTest {
             cancelAndIgnoreRemainingEvents()
         }
     }
+
     @Test
     fun `end to end flow join and leave event`() = runTest {
         val event = EventViewMock.provideEvent(
@@ -325,5 +331,103 @@ class EventDetailsViewModelTest {
             cancelAndIgnoreRemainingEvents()
         }
     }
-}
 
+    @Test
+    fun `given event with attendees when screen shown then view attendees button is shown`() = runTest {
+        val event = EventViewMock.provideEvent(
+            name = "EmptyEvent",
+            currentAttendeeCount = 10
+        )
+
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event)
+
+        val uiState = sut.uiState.value
+        Assert.assertTrue(uiState.showViewAttendeesButton)
+    }
+
+    @Test
+    fun `given event with no attendees when screen shown then view attendees button is hidden`() = runTest {
+        val event = EventViewMock.provideEvent(
+            name = "EmptyEvent",
+            currentAttendeeCount = 0
+        )
+
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event)
+
+        val uiState = sut.uiState.value
+        Assert.assertFalse(uiState.showViewAttendeesButton)
+    }
+
+    @Test
+    fun `given user tries to join a full event when join button is clicked then a full event error message is shown`() = runTest {
+        val event = EventViewMock.provideEvent("Event Name")
+        val joinEventUseCase = mockk<JoinEventUseCase>(relaxed = true)
+
+        coEvery { joinEventUseCase(event) } returns EsmorgaResult.failure(
+            EsmorgaException(
+                message = "Event full",
+                source = Source.REMOTE,
+                code = ErrorCodes.EVENT_FULL
+            )
+        )
+
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event)
+
+        sut.effect.test {
+            sut.onPrimaryButtonClicked()
+
+            val effect = awaitItem()
+            Assert.assertTrue(effect is EventDetailsEffect.ShowFullEventError)
+
+            val uiState = sut.uiState.value
+            Assert.assertFalse(uiState.primaryButtonLoading)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `given an upcoming event when user opens event details then join deadline is visible`() = runTest {
+        val futureDeadline = System.currentTimeMillis() + ONE_HOUR_IN_MILLIS
+        val event = EventViewMock.provideEvent("DeadlineTest", joinDeadline = futureDeadline)
+
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event)
+        val uiState = sut.uiState.value
+
+        Assert.assertEquals(formatJoinDeadline(futureDeadline), uiState.joinDeadline)
+        Assert.assertFalse(uiState.isJoinButtonEnabled)
+    }
+
+    @Test
+    fun `given an event with a future join deadline when user views the event then join button is enabled`() = runTest {
+        val futureDeadline = System.currentTimeMillis() + ONE_HOUR_IN_MILLIS
+        val event = EventViewMock.provideEvent("ButtonEnabledTest", joinDeadline = futureDeadline)
+
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event)
+
+        val uiState = sut.uiState.value
+        Assert.assertTrue(uiState.isJoinButtonEnabled)
+    }
+
+    @Test
+    fun `given an event with a past join deadline when user views the event then join button is disabled and deadline is passed`() = runTest {
+        val pastDeadline = System.currentTimeMillis() - ONE_HOUR_IN_MILLIS
+        val event = EventViewMock.provideEvent("ButtonDisabledTest", joinDeadline = pastDeadline)
+
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event)
+
+        val uiState = sut.uiState.value
+        Assert.assertFalse(uiState.isJoinButtonEnabled)
+    }
+
+    @Test
+    fun `given an event with a past join deadline when user views the event then event title is still visible`() = runTest {
+        val pastDeadline = System.currentTimeMillis() - ONE_HOUR_IN_MILLIS
+        val event = EventViewMock.provideEvent("VisibleAfterDeadlineTest", joinDeadline = pastDeadline)
+
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event)
+
+        val uiState = sut.uiState.value
+        Assert.assertEquals("VisibleAfterDeadlineTest", uiState.title)
+    }
+}

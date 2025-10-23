@@ -2,7 +2,7 @@
   "totalEvents": 2,
   "events": [
     {
-      "eventId": 1,
+      "eventId": "abcdefghijk",
       "eventName": "MobgenFest",
       "eventDate": "2030-12-31T23:59:59.000Z",
       "description": "Chipmunk",
@@ -13,13 +13,13 @@
         "long": -8.41937931298951,
         "name": "A Coruña"
       },
-      "tags": [
-        "Food",
-        "Music"
-      ]
+      "tags": ["MEAL", "MUSIC"],
+      "maxCapacity": 50,
+      "currentAttendeeCount": 11,
+      "joinDeadline": "2030-12-31T23:59:59.000Z"
     },
     {
-      "eventId": 2,
+      "eventId": "1234567890",
       "eventName": "Paintball",
       "eventDate": "2030-07-08T12:00:00.000Z",
       "description": "Party Panda",
@@ -30,9 +30,9 @@
         "long": -8.41937931298951,
         "name": "Vigo"
       },
-      "tags": [
-        "Sports"
-      ]
+      "tags": ["SPORTS"],
+      "currentAttendeeCount": 0,
+      "joinDeadline": "2029-07-08T12:00:00.000Z"
     }
   ]
 }

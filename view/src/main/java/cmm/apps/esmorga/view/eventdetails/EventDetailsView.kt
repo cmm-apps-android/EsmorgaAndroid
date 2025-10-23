@@ -67,6 +67,7 @@ fun EventDetailsScreen(
     val context = LocalContext.current
     val joinEventSuccessMessage = stringResource(R.string.snackbar_event_joined)
     val leaveEventSuccessMessage = stringResource(R.string.snackbar_event_left)
+    val eventFullErrorMessage = stringResource(R.string.snackbar_event_full)
     val snackbarHostState = remember { SnackbarHostState() }
 
     val localCoroutineScope = rememberCoroutineScope()
@@ -92,6 +93,12 @@ fun EventDetailsScreen(
                 is EventDetailsEffect.ShowJoinEventSuccess -> {
                     localCoroutineScope.launch {
                         snackbarHostState.showSnackbar(message = joinEventSuccessMessage)
+                    }
+                }
+
+                EventDetailsEffect.ShowFullEventError -> {
+                    localCoroutineScope.launch {
+                        snackbarHostState.showSnackbar(message = eventFullErrorMessage)
                     }
                 }
 
@@ -204,9 +211,15 @@ fun EventDetailsView(
             }
 
             EsmorgaText(
+                text = stringResource(id = R.string.screen_event_details_join_deadline, uiState.joinDeadline),
+                style = EsmorgaTextStyle.CAPTION,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+            )
+
+            EsmorgaText(
                 text = stringResource(id = R.string.screen_event_details_description),
                 style = EsmorgaTextStyle.HEADING_1,
-                modifier = Modifier.padding(start = 16.dp, top = 32.dp, end = 16.dp)
+                modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp)
             )
             EsmorgaText(
                 text = uiState.description, style = EsmorgaTextStyle.BODY_1, modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)
@@ -232,7 +245,7 @@ fun EventDetailsView(
 
             EsmorgaButton(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = if (!uiState.navigateButton) 32.dp else 16.dp)
+                    .padding(horizontal = 16.dp, vertical = if (!uiState.navigateButton) 32.dp else 0.dp)
                     .testTag(EventDetailsScreenTestTags.EVENT_DETAILS_PRIMARY_BUTTON),
                 text = uiState.primaryButtonTitle,
                 primary = true,
