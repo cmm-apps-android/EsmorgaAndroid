@@ -5,5 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class EventAttendee(
-    val name: String
+    val eventId: String,
+    val name: String,
+    val alreadyPaid: Boolean
 )
