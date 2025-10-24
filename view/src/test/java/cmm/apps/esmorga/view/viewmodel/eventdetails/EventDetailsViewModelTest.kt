@@ -189,7 +189,7 @@ class EventDetailsViewModelTest {
 
     @Test
     fun `given a successful usecase when leave event is called then leave event success snackbar is shown`() = runTest {
-        val event = EventViewMock.provideEvent("Event Name", true)
+        val event = EventViewMock.provideEvent(name = "Event Name", userJoined = true)
 
         val leaveEventUseCase = mockk<LeaveEventUseCase>(relaxed = true)
         coEvery { leaveEventUseCase(event) } returns EsmorgaResult.success(Unit)
@@ -206,7 +206,7 @@ class EventDetailsViewModelTest {
     @Test
     fun `given a successful usecase when leave event is called then loading button state is shown`() = runTest {
         val domainEventName = "DomainEvent"
-        val event = EventViewMock.provideEvent(domainEventName, userJoined = true)
+        val event = EventViewMock.provideEvent(name = domainEventName, userJoined = true)
 
         val leaveEventUseCase = mockk<LeaveEventUseCase>(relaxed = true)
         coEvery { leaveEventUseCase(event) } returns EsmorgaResult.success(Unit)
