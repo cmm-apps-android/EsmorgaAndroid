@@ -12,12 +12,13 @@ object EventViewMock {
 
     fun provideEvent(
         name: String,
+        id: String = "EventId",
         userJoined: Boolean = false,
         currentAttendeeCount: Int = 0,
         maxCapacity: Int? = null,
         joinDeadline: Long = ZonedDateTime.now().plusDays(7).toInstant().toEpochMilli()
     ): Event = Event(
-        id = "$name-${System.currentTimeMillis()}",
+        id = id,
         name = name,
         date = System.currentTimeMillis(),
         description = "description",

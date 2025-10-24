@@ -5,8 +5,6 @@ import cmm.apps.esmorga.view.dateformatting.EsmorgaDateTimeFormatter
 import cmm.apps.esmorga.view.eventlist.model.EventListUiModel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import java.net.URLDecoder
-import java.nio.charset.StandardCharsets
 
 object EventListUiMapper : KoinComponent {
 
@@ -19,7 +17,7 @@ object EventListUiMapper : KoinComponent {
 
         return EventListUiModel(
             id = this.id,
-            imageUrl = this.imageUrl?.let { URLDecoder.decode(it, StandardCharsets.UTF_8.toString()) },
+            imageUrl = this.imageUrl,
             cardTitle = this.name,
             cardSubtitle1 = formatDate(this.date),
             cardSubtitle2 = this.location.name

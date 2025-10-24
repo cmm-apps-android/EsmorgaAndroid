@@ -9,8 +9,6 @@ import cmm.apps.esmorga.domain.event.model.EventType
 import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.Source
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 fun EventRemoteModel.toEventDataModel(dateFormatter: EsmorgaRemoteDateFormatter): EventDataModel {
 
@@ -30,7 +28,7 @@ fun EventRemoteModel.toEventDataModel(dateFormatter: EsmorgaRemoteDateFormatter)
         dataDate = parsedDate.toInstant().toEpochMilli(),
         dataDescription = this.remoteDescription,
         dataType = parsedType,
-        dataImageUrl = this.remoteImageUrl?.let { URLEncoder.encode(it, StandardCharsets.UTF_8.toString()) },
+        dataImageUrl = this.remoteImageUrl,
         dataLocation = this.remoteLocation.toEventLocationDataModel(),
         dataTags = this.remoteTags ?: listOf(),
         dataUserJoined = false,
