@@ -40,7 +40,7 @@ object ViewDIModule {
             EventDetailsViewModel(get(), get(), get(), event)
         }
         viewModel { (event: Event) ->
-            EventAttendeesViewModel(get(), event.id)
+            EventAttendeesViewModel(get(), get(), event.id)
         }
         viewModel {
             WelcomeViewModel(get())

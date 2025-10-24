@@ -25,7 +25,7 @@ class EventRemoteDatasourceImpl(private val eventApi: EsmorgaApi, private val gu
     override suspend fun getEventAttendees(eventId: String): List<EventAttendeeDataModel> {
         try {
             val eventAttendeeList = eventApi.getEventAttendees(eventId)
-            return eventAttendeeList.remoteEventAttendeeList.toEventAttendeeDataModelList()
+            return eventAttendeeList.remoteEventAttendeeList.toEventAttendeeDataModelList(eventId)
         } catch (e: Exception) {
             throw manageApiException(e)
         }

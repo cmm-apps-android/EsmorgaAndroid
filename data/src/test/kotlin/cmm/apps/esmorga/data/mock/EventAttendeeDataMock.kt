@@ -5,11 +5,13 @@ import cmm.apps.esmorga.data.event.model.EventAttendeeDataModel
 
 object EventAttendeeDataMock {
 
-    fun provideEventDataModelList(nameList: List<String>): List<EventAttendeeDataModel> = nameList.map { name -> provideEventAttendeeDataModel(name) }
+    fun provideEventAttendeeDataModelList(nameList: List<String>): List<EventAttendeeDataModel> = nameList.map { name -> provideEventAttendeeDataModel(name) }
 
-    fun provideEventAttendeeDataModel(name: String): EventAttendeeDataModel {
+    fun provideEventAttendeeDataModel(name: String, alreadyPaid: Boolean = false): EventAttendeeDataModel {
         val eventAttendeeDataModel = EventAttendeeDataModel(
-            dataName = name
+            dataEventId = "Event",
+            dataName = name,
+            dataAlreadyPaid = alreadyPaid
         )
         return eventAttendeeDataModel
     }

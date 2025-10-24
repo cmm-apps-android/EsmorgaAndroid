@@ -3,6 +3,7 @@ package cmm.apps.esmorga.data.event
 import cmm.apps.esmorga.data.CacheHelper
 import cmm.apps.esmorga.data.event.datasource.EventDatasource
 import cmm.apps.esmorga.data.event.mapper.toEvent
+import cmm.apps.esmorga.data.event.mapper.toEventAttendee
 import cmm.apps.esmorga.data.mock.EventAttendeeDataMock
 import cmm.apps.esmorga.data.mock.EventDataMock
 import cmm.apps.esmorga.data.mock.UserDataMock
@@ -122,12 +123,29 @@ class EventRepositoryImplTest {
         val eventName = "RemoteEvent"
         val remoteAttendeeName = "RemoteAttendee"
 
-        coEvery { remoteDS.getEventAttendees(eventName) } returns EventAttendeeDataMock.provideEventDataModelList(listOf(remoteAttendeeName))
+        coEvery { remoteDS.getEventAttendees(eventName) } returns EventAttendeeDataMock.provideEventAttendeeDataModelList(listOf(remoteAttendeeName))
 
         val sut = EventRepositoryImpl(userDS, localDS, remoteDS)
         val result = sut.getEventAttendees(eventName)
 
         Assert.assertEquals(remoteAttendeeName, result[0].name)
+    }
+
+    @Test
+    fun `given working remote and local when event attendees requested then attendees with paid mark are returned`() = runTest {
+        val eventName = "RemoteEvent"
+        val remoteGoodAttendeeName = "GoodAttendee"
+        val remoteBadAttendeeName = "BadAttendee"
+
+        coEvery { remoteDS.getEventAttendees(eventName) } returns EventAttendeeDataMock.provideEventAttendeeDataModelList(listOf(remoteGoodAttendeeName, remoteBadAttendeeName))
+        coEvery { localDS.getEventAttendees(eventName) } returns listOf(EventAttendeeDataMock.provideEventAttendeeDataModel(remoteGoodAttendeeName, true))
+
+        val sut = EventRepositoryImpl(userDS, localDS, remoteDS)
+        val result = sut.getEventAttendees(eventName)
+
+        Assert.assertEquals(remoteGoodAttendeeName, result[0].name)
+        Assert.assertTrue(result[0].alreadyPaid)
+        Assert.assertFalse(result[1].alreadyPaid)
     }
 
     @Test
@@ -158,6 +176,18 @@ class EventRepositoryImplTest {
 
         coVerify { remoteDS.leaveEvent(any()) }
         coVerify { localDS.leaveEvent(any()) }
+    }
+
+    @Test
+    fun `given working local when event attendee updated then local attendee is stored`() = runTest {
+        val attendeeName = "RemoteAttendee"
+
+        coEvery { localDS.updateAttendee(any()) } returns Unit
+
+        val sut = EventRepositoryImpl(userDS, localDS, remoteDS)
+        sut.updateEventAttendee(EventAttendeeDataMock.provideEventAttendeeDataModel(attendeeName).toEventAttendee())
+
+        coVerify { localDS.updateAttendee(any()) }
     }
 
 }

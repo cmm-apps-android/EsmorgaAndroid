@@ -3,6 +3,8 @@ package cmm.apps.esmorga.data.event
 import cmm.apps.esmorga.data.CacheHelper
 import cmm.apps.esmorga.data.event.datasource.EventDatasource
 import cmm.apps.esmorga.data.event.mapper.toEvent
+import cmm.apps.esmorga.data.event.mapper.toEventAttendee
+import cmm.apps.esmorga.data.event.mapper.toEventAttendeeDataModel
 import cmm.apps.esmorga.data.event.mapper.toEventAttendeeList
 import cmm.apps.esmorga.data.event.mapper.toEventDataModel
 import cmm.apps.esmorga.data.event.mapper.toEventList
@@ -30,7 +32,16 @@ class EventRepositoryImpl(private val localUserDs: UserDatasource, private val l
     }
 
     override suspend fun getEventAttendees(eventId: String): List<EventAttendee> {
-        return remoteEventDs.getEventAttendees(eventId).toEventAttendeeList()
+        val remoteAttendees = remoteEventDs.getEventAttendees(eventId)
+        val localAttendees = localEventDs.getEventAttendees(eventId)
+
+        return remoteAttendees.map { remoteAttendee ->
+            val attendee = remoteAttendee.toEventAttendee()
+            val localAttendee = localAttendees.firstOrNull { it.dataName == attendee.name && it.dataEventId == attendee.eventId }
+            val alreadyPaid = localAttendee?.dataAlreadyPaid ?: false
+
+            attendee.copy(alreadyPaid = alreadyPaid)
+        }
     }
 
     override suspend fun joinEvent(event: Event) {
@@ -41,6 +52,10 @@ class EventRepositoryImpl(private val localUserDs: UserDatasource, private val l
     override suspend fun leaveEvent(event: Event) {
         remoteEventDs.leaveEvent(event.copy(userJoined = false).toEventDataModel())
         localEventDs.leaveEvent(event.copy(userJoined = false).toEventDataModel())
+    }
+
+    override suspend fun updateEventAttendee(eventAttendee: EventAttendee) {
+        localEventDs.updateAttendee(eventAttendee.toEventAttendeeDataModel())
     }
 
     private suspend fun getEventsFromRemote(): List<EventDataModel> {

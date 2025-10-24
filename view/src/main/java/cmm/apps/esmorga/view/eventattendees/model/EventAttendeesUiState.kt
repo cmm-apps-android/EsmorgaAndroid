@@ -6,7 +6,12 @@ import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiStateHelper.getEsm
 
 data class EventAttendeesUiState(
     val loading: Boolean = false,
-    val nameList: List<String> = listOf()
+    val attendeeList: List<AttendeeUiModel> = listOf()
+)
+
+data class AttendeeUiModel(
+    val name: String,
+    val checked: Boolean
 )
 
 sealed class EventAttendeesEffect {

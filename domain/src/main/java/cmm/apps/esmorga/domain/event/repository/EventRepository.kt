@@ -10,4 +10,5 @@ interface EventRepository {
     suspend fun getEventAttendees(eventId: String): List<EventAttendee>
     suspend fun joinEvent(event: Event)
     suspend fun leaveEvent(event: Event)
+    suspend fun updateEventAttendee(eventAttendee: EventAttendee)
 }
