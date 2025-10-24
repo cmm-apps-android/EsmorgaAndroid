@@ -4,11 +4,11 @@ import cmm.apps.esmorga.domain.event.model.EventAttendee
 import cmm.apps.esmorga.domain.event.repository.EventRepository
 import cmm.apps.esmorga.domain.result.EsmorgaResult
 
-interface UpdateEventAttendeesUseCase {
+interface UpdateEventAttendeeUseCase {
     suspend operator fun invoke(attendee: EventAttendee): EsmorgaResult<Unit>
 }
 
-class UpdateEventAttendeesUseCaseImpl(private val repo: EventRepository) : UpdateEventAttendeesUseCase {
+class UpdateEventAttendeeUseCaseImpl(private val repo: EventRepository) : UpdateEventAttendeeUseCase {
     override suspend fun invoke(attendee: EventAttendee): EsmorgaResult<Unit> {
         try {
             repo.updateEventAttendee(attendee)

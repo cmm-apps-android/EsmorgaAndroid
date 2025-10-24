@@ -5,7 +5,9 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cmm.apps.esmorga.domain.event.GetEventAttendeesUseCase
+import cmm.apps.esmorga.domain.event.UpdateEventAttendeeUseCase
 import cmm.apps.esmorga.domain.event.model.EventAttendee
+import cmm.apps.esmorga.view.eventattendees.mapper.EventAttendeeUiMapper.toAttendeeUi
 import cmm.apps.esmorga.view.eventattendees.model.EventAttendeesEffect
 import cmm.apps.esmorga.view.eventattendees.model.EventAttendeesUiState
 import kotlinx.coroutines.channels.BufferOverflow
@@ -19,6 +21,7 @@ import kotlinx.coroutines.launch
 
 class EventAttendeesViewModel(
     private val getEventAttendeesUseCase: GetEventAttendeesUseCase,
+    private val updateEventAttendeeUseCase: UpdateEventAttendeeUseCase,
     private val eventId: String
 ) : ViewModel(), DefaultLifecycleObserver {
     private val _uiState = MutableStateFlow(EventAttendeesUiState())
@@ -34,6 +37,13 @@ class EventAttendeesViewModel(
         getEventAttendees()
     }
 
+    fun onAttendeeChecked(position: Int, checked: Boolean) {
+        val attendee = attendees[position]
+        viewModelScope.launch {
+            updateEventAttendeeUseCase(attendee.copy(alreadyPaid = checked))
+        }
+    }
+
     fun onBackPressed() {
         _effect.tryEmit(EventAttendeesEffect.NavigateBack)
     }
@@ -45,7 +55,7 @@ class EventAttendeesViewModel(
             result.onSuccess { success ->
                 attendees = success
                 _uiState.value = EventAttendeesUiState(
-                    nameList = success.mapIndexed { pos, attendee -> "${pos + 1}. ${attendee.name}" },
+                    attendeeList = success.mapIndexed { pos, attendee -> attendee.toAttendeeUi(pos) },
                 )
             }.onFailure { error ->
                 _effect.tryEmit(EventAttendeesEffect.ShowFullScreenError())

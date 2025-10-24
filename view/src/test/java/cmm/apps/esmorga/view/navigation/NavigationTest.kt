@@ -23,6 +23,7 @@ import cmm.apps.esmorga.domain.event.GetEventListUseCase
 import cmm.apps.esmorga.domain.event.GetMyEventListUseCase
 import cmm.apps.esmorga.domain.event.JoinEventUseCase
 import cmm.apps.esmorga.domain.event.LeaveEventUseCase
+import cmm.apps.esmorga.domain.event.UpdateEventAttendeeUseCase
 import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.EsmorgaResult
@@ -123,6 +124,10 @@ class NavigationTest {
         coEvery { useCase(any()) } returns EsmorgaResult.success(EventAttendeeViewMock.provideEventAttendeeList(listOf("attendee")))
     }
 
+    private val updateEventAttendeeUseCase = mockk<UpdateEventAttendeeUseCase>(relaxed = true).also { useCase ->
+        coEvery { useCase(any()) } returns EsmorgaResult.success(Unit)
+    }
+
     private val performLoginUseCase = mockk<PerformLoginUseCase>(relaxed = true).also { useCase ->
         coEvery { useCase(any(), any()) } returns EsmorgaResult.success(LoginViewMock.provideUser())
     }
@@ -188,6 +193,7 @@ class NavigationTest {
                 module {
                     factory<GetEventListUseCase> { getEventListUseCase }
                     factory<GetEventAttendeesUseCase> { getEventAttendeesUseCase }
+                    factory<UpdateEventAttendeeUseCase> { updateEventAttendeeUseCase }
                     factory<PerformLoginUseCase> { performLoginUseCase }
                     factory<PerformRegistrationUserCase> { performRegistrationUserCase }
                     factory<GetSavedUserUseCase> { getSavedUserUseCase }

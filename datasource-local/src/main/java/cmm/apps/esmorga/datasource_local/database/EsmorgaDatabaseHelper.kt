@@ -9,7 +9,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 object EsmorgaDatabaseHelper {
 
     private const val DATABASE_NAME = "esmorga_database"
-    const val DATABASE_VERSION = 6
+    const val DATABASE_VERSION = 5
 
     fun getDatabase(context: Context) =
         Room.databaseBuilder(context, EsmorgaDatabase::class.java, DATABASE_NAME)
