@@ -25,6 +25,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -183,7 +184,7 @@ fun EventDetailsView(
 
             EsmorgaText(text = uiState.subtitle, style = EsmorgaTextStyle.BODY_1_ACCENT, modifier = Modifier.padding(horizontal = 16.dp))
 
-            Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
                 uiState.maxCapacity?.let { max ->
                     Icon(painter = painterResource(DesignSystem.drawable.group), contentDescription = null)
                     Spacer(modifier = Modifier.width(5.dp))
@@ -194,6 +195,7 @@ fun EventDetailsView(
                             max
                         ),
                         style = EsmorgaTextStyle.CAPTION,
+                        modifier = Modifier.padding(top = 8.dp)
                     )
 
                     Spacer(modifier = Modifier.weight(1f))
@@ -204,6 +206,7 @@ fun EventDetailsView(
                         text = stringResource(R.string.button_view_attendees),
                         style = EsmorgaTextStyle.CAPTION_UNDERSCORE,
                         modifier = Modifier
+                            .padding(top = 8.dp)
                             .clickable { onViewAttendeesClicked() }
                             .testTag(EventDetailsScreenTestTags.EVENT_DETAILS_ATTENDEES_BUTTON)
                     )
