@@ -1,8 +1,7 @@
-package cmm.apps.esmorga.datasource_remote.auth
+package cmm.apps.esmorga.datasource_remote.user
 
 import android.content.SharedPreferences
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaAuthApi
-import cmm.apps.esmorga.datasource_remote.user.AuthRemoteDatasourceImpl
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.slot

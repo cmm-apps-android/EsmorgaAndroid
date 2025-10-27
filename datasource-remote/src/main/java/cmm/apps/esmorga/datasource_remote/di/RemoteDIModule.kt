@@ -4,6 +4,7 @@ import cmm.apps.esmorga.data.di.DataDIModule
 import cmm.apps.esmorga.data.event.datasource.EventDatasource
 import cmm.apps.esmorga.data.user.datasource.AuthDatasource
 import cmm.apps.esmorga.data.user.datasource.UserDatasource
+import cmm.apps.esmorga.datasource_remote.api.ConnectionInterceptor
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaApi
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaAuthApi
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaGuestApi
@@ -28,7 +29,8 @@ object RemoteDIModule {
                 clazz = EsmorgaAuthApi::class.java,
                 authenticator = null,
                 authInterceptor = null,
-                deviceInterceptor = DeviceInterceptor(get(named(DataDIModule.LOCAL_DATASOURCE_INSTANCE_NAME)))
+                deviceInterceptor = DeviceInterceptor(get(named(DataDIModule.LOCAL_DATASOURCE_INSTANCE_NAME))),
+                connectionInterceptor = ConnectionInterceptor
             )
         }
         factory<AuthDatasource> { AuthRemoteDatasourceImpl(get(), get()) }
@@ -38,7 +40,8 @@ object RemoteDIModule {
                 clazz = EsmorgaApi::class.java,
                 authenticator = EsmorgaAuthenticator(get()),
                 authInterceptor = EsmorgaAuthInterceptor(get()),
-                deviceInterceptor = DeviceInterceptor(get(named(DataDIModule.LOCAL_DATASOURCE_INSTANCE_NAME)))
+                deviceInterceptor = DeviceInterceptor(get(named(DataDIModule.LOCAL_DATASOURCE_INSTANCE_NAME))),
+                connectionInterceptor = ConnectionInterceptor
             )
         }
         single {
@@ -47,7 +50,8 @@ object RemoteDIModule {
                 clazz = EsmorgaGuestApi::class.java,
                 authenticator = null,
                 authInterceptor = null,
-                deviceInterceptor = DeviceInterceptor(get(named(DataDIModule.LOCAL_DATASOURCE_INSTANCE_NAME)))
+                deviceInterceptor = DeviceInterceptor(get(named(DataDIModule.LOCAL_DATASOURCE_INSTANCE_NAME))),
+                connectionInterceptor = ConnectionInterceptor
             )
         }
         factory<EventDatasource>(named(DataDIModule.REMOTE_DATASOURCE_INSTANCE_NAME)) { EventRemoteDatasourceImpl(get(), get(), get()) }
