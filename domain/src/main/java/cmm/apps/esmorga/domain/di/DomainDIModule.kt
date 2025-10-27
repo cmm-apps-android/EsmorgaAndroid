@@ -16,6 +16,8 @@ import cmm.apps.esmorga.domain.event.JoinEventUseCase
 import cmm.apps.esmorga.domain.event.JoinEventUseCaseImpl
 import cmm.apps.esmorga.domain.event.LeaveEventUseCase
 import cmm.apps.esmorga.domain.event.LeaveEventUseCaseImpl
+import cmm.apps.esmorga.domain.event.UpdateEventAttendeeUseCase
+import cmm.apps.esmorga.domain.event.UpdateEventAttendeeUseCaseImpl
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCaseImpl
 import cmm.apps.esmorga.domain.user.LogOutUseCase
@@ -41,6 +43,7 @@ object DomainDIModule {
         factory<GetEventListUseCase> { GetEventListUseCaseImpl(get()) }
         factory<GetEventDetailsUseCase> { GetEventDetailsUseCaseImpl(get()) }
         factory<GetEventAttendeesUseCase> { GetEventAttendeesUseCaseImpl(get()) }
+        factory<UpdateEventAttendeeUseCase> { UpdateEventAttendeeUseCaseImpl(get()) }
         factory<PerformLoginUseCase> { PerformLoginUseCaseImpl(get()) }
         factory<PerformRegistrationUserCase> { PerformRegistrationUserCaseImpl(get()) }
         factory<PerformRegistrationConfirmationUseCase> { PerformRegistrationConfirmationUseCaseImpl(get()) }

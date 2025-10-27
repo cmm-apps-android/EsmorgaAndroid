@@ -70,6 +70,7 @@ class EventListViewModelTest {
         val uiState = sut.uiState.value
         Assert.assertEquals(domainEventName, uiState.eventList[0].cardTitle)
     }
+
     @Test
     fun `given events are loaded when onEventClick is called with existing event then description is URL encoded in the emitted effect`() = runTest {
         val eventId = "testId123"

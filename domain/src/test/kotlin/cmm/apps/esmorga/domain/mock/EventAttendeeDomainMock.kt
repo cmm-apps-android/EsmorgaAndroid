@@ -8,7 +8,9 @@ object EventAttendeeDomainMock {
     fun provideEventAttendeeList(nameList: List<String>): List<EventAttendee> = nameList.map { name -> provideAttendee(name) }
 
     fun provideAttendee(name: String): EventAttendee = EventAttendee(
-        name = name
+        eventId = "eventId",
+        name = name,
+        alreadyPaid = true
     )
 
 }

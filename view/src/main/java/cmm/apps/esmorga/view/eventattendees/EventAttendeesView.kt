@@ -1,6 +1,8 @@
 package cmm.apps.esmorga.view.eventattendees
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,6 +19,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -25,6 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import cmm.apps.designsystem.EsmorgaCheckbox
 import cmm.apps.designsystem.EsmorgaLinearLoader
 import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextStyle
@@ -32,6 +39,7 @@ import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
+import cmm.apps.esmorga.view.eventattendees.model.AttendeeUiModel
 import cmm.apps.esmorga.view.eventattendees.model.EventAttendeesEffect
 import cmm.apps.esmorga.view.eventattendees.model.EventAttendeesUiState
 import cmm.apps.esmorga.view.extensions.observeLifecycleEvents
@@ -71,9 +79,13 @@ fun EventAttendeesScreen(
     }
 
     EsmorgaTheme {
-        EventAttendeesView(uiState = uiState, onBackPressed = {
-            eavm.onBackPressed()
-        })
+        EventAttendeesView(
+            uiState = uiState,
+            onAttendeeChecked = { pos, checked -> eavm.onAttendeeChecked(pos, checked) },
+            onBackPressed = {
+                eavm.onBackPressed()
+            }
+        )
     }
 
 }
@@ -82,6 +94,7 @@ fun EventAttendeesScreen(
 @Composable
 fun EventAttendeesView(
     uiState: EventAttendeesUiState,
+    onAttendeeChecked: (Int, Boolean) -> Unit,
     onBackPressed: () -> Unit
 ) {
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
@@ -111,7 +124,7 @@ fun EventAttendeesView(
             if (uiState.loading) {
                 AttendeeListLoading()
             } else {
-                AttendeeList(uiState.nameList)
+                AttendeeList(attendees = uiState.attendeeList, shouldShowChecked = uiState.shouldShowChecked, onAttendeeChecked = onAttendeeChecked)
             }
 
         }
@@ -125,13 +138,19 @@ fun AttendeeListLoading() {
             .fillMaxSize()
             .padding(horizontal = 24.dp)
     ) {
-        EsmorgaText(text = stringResource(id = R.string.body_loader), style = EsmorgaTextStyle.HEADING_1)
+        EsmorgaText(text = stringResource(id = R.string.body_loader), style = EsmorgaTextStyle.HEADING_1, modifier = Modifier.padding(bottom = 16.dp))
         EsmorgaLinearLoader(modifier = Modifier.fillMaxWidth())
     }
 }
 
 @Composable
-fun AttendeeList(attendees: List<String>, modifier: Modifier = Modifier, nestedScrollConnection: NestedScrollConnection? = null) {
+fun AttendeeList(
+    attendees: List<AttendeeUiModel>,
+    shouldShowChecked: Boolean,
+    onAttendeeChecked: (Int, Boolean) -> Unit,
+    modifier: Modifier = Modifier, nestedScrollConnection: NestedScrollConnection? = null
+) {
+
     Column(
         modifier = modifier.fillMaxSize()
     ) {
@@ -141,19 +160,36 @@ fun AttendeeList(attendees: List<String>, modifier: Modifier = Modifier, nestedS
             modifier = Modifier.padding(start = 24.dp, end = 16.dp, bottom = 32.dp)
         )
 
-        HorizontalDivider(color = MaterialTheme.colorScheme.onSurfaceVariant, thickness = 1.dp)
+        HorizontalDivider(color = MaterialTheme.colorScheme.secondary, thickness = 1.dp)
 
         LazyColumn(modifier = nestedScrollConnection?.let { Modifier.nestedScroll(it) } ?: run { Modifier }) {
             items(attendees.size) { pos ->
-                val name = attendees[pos]
+                val attendee = attendees[pos]
+                var checked by remember { mutableStateOf(attendee.checked) }
 
-                EsmorgaText(
-                    text = name,
-                    style = EsmorgaTextStyle.BODY_1,
-                    modifier = Modifier.padding(start = 32.dp, end = 16.dp, top = 24.dp, bottom = 24.dp)
-                )
+                Row(
+                    modifier = Modifier.padding(start = 32.dp, end = 16.dp, top = 16.dp, bottom = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    EsmorgaText(
+                        text = attendee.name,
+                        style = EsmorgaTextStyle.BODY_1,
+                        modifier = Modifier.padding(vertical = 16.dp),
+                    )
 
-                HorizontalDivider(color = MaterialTheme.colorScheme.onSurfaceVariant, thickness = 1.dp)
+                    if (shouldShowChecked) {
+                        Spacer(modifier = Modifier.weight(1f))
+                        EsmorgaCheckbox(
+                            checked = checked,
+                            onCheckedChanged = { it ->
+                                checked = it
+                                onAttendeeChecked(pos, checked)
+                            }
+                        )
+                    }
+                }
+
+                HorizontalDivider(color = MaterialTheme.colorScheme.secondary, thickness = 1.dp)
             }
         }
     }
