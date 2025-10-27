@@ -124,7 +124,7 @@ fun EventAttendeesView(
             if (uiState.loading) {
                 AttendeeListLoading()
             } else {
-                AttendeeList(attendees = uiState.attendeeList, onAttendeeChecked = onAttendeeChecked)
+                AttendeeList(attendees = uiState.attendeeList, shouldShowChecked = uiState.shouldShowChecked, onAttendeeChecked = onAttendeeChecked)
             }
 
         }
@@ -138,7 +138,7 @@ fun AttendeeListLoading() {
             .fillMaxSize()
             .padding(horizontal = 24.dp)
     ) {
-        EsmorgaText(text = stringResource(id = R.string.body_loader), style = EsmorgaTextStyle.HEADING_1)
+        EsmorgaText(text = stringResource(id = R.string.body_loader), style = EsmorgaTextStyle.HEADING_1, modifier = Modifier.padding(bottom = 16.dp))
         EsmorgaLinearLoader(modifier = Modifier.fillMaxWidth())
     }
 }
@@ -146,6 +146,7 @@ fun AttendeeListLoading() {
 @Composable
 fun AttendeeList(
     attendees: List<AttendeeUiModel>,
+    shouldShowChecked: Boolean,
     onAttendeeChecked: (Int, Boolean) -> Unit,
     modifier: Modifier = Modifier, nestedScrollConnection: NestedScrollConnection? = null
 ) {
@@ -172,16 +173,20 @@ fun AttendeeList(
                 ) {
                     EsmorgaText(
                         text = attendee.name,
-                        style = EsmorgaTextStyle.BODY_1
+                        style = EsmorgaTextStyle.BODY_1,
+                        modifier = Modifier.padding(vertical = 16.dp),
                     )
-                    Spacer(modifier = Modifier.weight(1f))
-                    EsmorgaCheckbox(
-                        checked = checked,
-                        onCheckedChanged = { it ->
-                            checked = it
-                            onAttendeeChecked(pos, checked)
-                        }
-                    )
+
+                    if (shouldShowChecked) {
+                        Spacer(modifier = Modifier.weight(1f))
+                        EsmorgaCheckbox(
+                            checked = checked,
+                            onCheckedChanged = { it ->
+                                checked = it
+                                onAttendeeChecked(pos, checked)
+                            }
+                        )
+                    }
                 }
 
                 HorizontalDivider(color = MaterialTheme.colorScheme.secondary, thickness = 1.dp)

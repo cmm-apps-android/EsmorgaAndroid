@@ -15,24 +15,38 @@ class EventAttendeesViewScreenshotTest : BaseScreenshotTest() {
     }
 
     @Test
-    fun attendeeListView_lightTheme_data() {
+    fun attendeeListView_lightTheme_normal_user_data() {
         val goodAttendee = AttendeeUiModel(
             name = "1. Pacitos",
             checked = true
         )
         val badAttendee = AttendeeUiModel(
-            name = "2. Villambrosa",
+            name = "2. Juantxo",
             checked = false
         )
 
-        snapshotWithState(loading = false, attendeeList = listOf(goodAttendee, badAttendee))
+        snapshotWithState(shouldShowChecked = false, attendeeList = listOf(goodAttendee, badAttendee))
     }
 
-    private fun snapshotWithState(loading: Boolean, attendeeList: List<AttendeeUiModel>) {
+    @Test
+    fun attendeeListView_lightTheme_admin_user_data() {
+        val goodAttendee = AttendeeUiModel(
+            name = "1. Neo",
+            checked = true
+        )
+        val badAttendee = AttendeeUiModel(
+            name = "2. Trinity",
+            checked = false
+        )
+
+        snapshotWithState(shouldShowChecked = true, attendeeList = listOf(goodAttendee, badAttendee))
+    }
+
+    private fun snapshotWithState(loading: Boolean = false, shouldShowChecked: Boolean = false, attendeeList: List<AttendeeUiModel>) {
         paparazzi.snapshot {
             EsmorgaTheme(darkTheme = false) {
                 EventAttendeesView(
-                    uiState = EventAttendeesUiState(loading = loading, attendeeList = attendeeList),
+                    uiState = EventAttendeesUiState(loading = loading, shouldShowChecked = shouldShowChecked, attendeeList = attendeeList),
                     onAttendeeChecked = { pos, checked -> },
                     onBackPressed = { }
                 )
