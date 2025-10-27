@@ -2,5 +2,7 @@ package cmm.apps.esmorga.domain.event.model
 
 
 data class EventAttendee(
-    val name: String
+    val eventId: String,
+    val name: String,
+    val alreadyPaid: Boolean
 )

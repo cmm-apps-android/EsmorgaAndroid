@@ -66,7 +66,7 @@ class EventListViewModelTest {
     }
 
     @Test
-    fun `given events are loaded when event is clicked then navigation effect is emmited`() = runTest {
+    fun `given events are loaded when event is clicked then navigation effect is emitted`() = runTest {
         val eventId = "EventId"
         val eventName = "EventName"
 
