@@ -195,7 +195,7 @@ fun EventDetailsView(
                             max
                         ),
                         style = EsmorgaTextStyle.CAPTION,
-                        modifier = Modifier.padding(vertical = 8.dp)
+                        modifier = Modifier.padding(top = 8.dp)
                     )
 
                     Spacer(modifier = Modifier.weight(1f))
@@ -206,7 +206,7 @@ fun EventDetailsView(
                         text = stringResource(R.string.button_view_attendees),
                         style = EsmorgaTextStyle.CAPTION_UNDERSCORE,
                         modifier = Modifier
-                            .padding(vertical = 8.dp)
+                            .padding(top = 8.dp)
                             .clickable { onViewAttendeesClicked() }
                             .testTag(EventDetailsScreenTestTags.EVENT_DETAILS_ATTENDEES_BUTTON)
                     )
