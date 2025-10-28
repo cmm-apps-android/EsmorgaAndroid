@@ -24,9 +24,10 @@ class NetworkApiHelper {
         clazz: Class<T>,
         authenticator: EsmorgaAuthenticator?,
         authInterceptor: Interceptor?,
-        deviceInterceptor: DeviceInterceptor
+        deviceInterceptor: DeviceInterceptor?,
+        connectionInterceptor: ConnectionInterceptor?
     ): T {
-        val okHttpClient = provideOkHttpClient(authenticator, authInterceptor, deviceInterceptor)
+        val okHttpClient = provideOkHttpClient(authenticator, authInterceptor, deviceInterceptor, connectionInterceptor)
         return Retrofit.Builder()
             .baseUrl(baseUrl)
             .client(okHttpClient)
@@ -36,7 +37,12 @@ class NetworkApiHelper {
             .create(clazz)
     }
 
-    private fun provideOkHttpClient(authenticator: EsmorgaAuthenticator?, authInterceptor: Interceptor?, deviceInterceptor: DeviceInterceptor): OkHttpClient =
+    private fun provideOkHttpClient(
+        authenticator: EsmorgaAuthenticator?,
+        authInterceptor: Interceptor?,
+        deviceInterceptor: DeviceInterceptor?,
+        connectionInterceptor: ConnectionInterceptor?
+    ): OkHttpClient =
         try {
             OkHttpClient.Builder().apply {
                 authenticator?.let {
@@ -45,10 +51,14 @@ class NetworkApiHelper {
                 authInterceptor?.let {
                     addInterceptor(it)
                 }
+                connectionInterceptor?.let {
+                    addInterceptor(it)
+                }
+                deviceInterceptor?.let {
+                    addInterceptor(it)
+                }
                 addInterceptor(CurlLogInterceptor)
                 addInterceptor(LogInterceptor)
-                addInterceptor(ConnectionInterceptor)
-                addInterceptor(deviceInterceptor)
 
                 connectTimeout(30, TimeUnit.SECONDS)
                 readTimeout(30, TimeUnit.SECONDS)
