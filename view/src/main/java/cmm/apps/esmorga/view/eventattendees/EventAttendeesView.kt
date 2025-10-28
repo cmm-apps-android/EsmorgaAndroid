@@ -154,11 +154,25 @@ fun AttendeeList(
     Column(
         modifier = modifier.fillMaxSize()
     ) {
-        EsmorgaText(
-            text = stringResource(id = R.string.title_name),
-            style = EsmorgaTextStyle.HEADING_1,
-            modifier = Modifier.padding(start = 24.dp, end = 16.dp, bottom = 32.dp)
-        )
+        Row(
+            modifier = Modifier.padding(bottom = 32.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            EsmorgaText(
+                text = stringResource(id = R.string.title_name),
+                style = EsmorgaTextStyle.HEADING_1,
+                modifier = Modifier.padding(start = 24.dp)
+            )
+
+            if (shouldShowChecked) {
+                Spacer(modifier = Modifier.weight(1f))
+                EsmorgaText(
+                    text = stringResource(id = R.string.title_payment_status),
+                    style = EsmorgaTextStyle.HEADING_1,
+                    modifier = Modifier.padding(end = 24.dp)
+                )
+            }
+        }
 
         HorizontalDivider(color = MaterialTheme.colorScheme.secondary, thickness = 1.dp)
 
