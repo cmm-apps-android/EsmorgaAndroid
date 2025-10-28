@@ -3,7 +3,7 @@ package cmm.apps.esmorga.datasource_local.database
 import androidx.room.TypeConverter
 
 
-class ZonedDateTimeConverter {
+class EsmorgaTypeConverter {
 
     companion object {
         const val CSV_SEPARATOR = ";//;"

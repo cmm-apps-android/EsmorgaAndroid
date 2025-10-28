@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
@@ -38,8 +39,12 @@ fun EsmorgaGuestError(errorMessage: String, buttonText: String, onButtonClicked:
         )
         EsmorgaText(errorMessage, style = EsmorgaTextStyle.HEADING_2)
         Spacer(modifier = Modifier.weight(1f))
-        EsmorgaButton(buttonText) {
+        EsmorgaButton(text = buttonText, modifier = Modifier.testTag(GuestErrorTestTags.GUEST_ERROR_PRIMARY_BUTTON)) {
             onButtonClicked.invoke()
         }
     }
+}
+
+object GuestErrorTestTags {
+    const val GUEST_ERROR_PRIMARY_BUTTON = "guest error primary button"
 }

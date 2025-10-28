@@ -30,15 +30,11 @@ import cmm.apps.esmorga.view.password.ResetPasswordScreen
 import cmm.apps.esmorga.view.profile.ProfileScreen
 import cmm.apps.esmorga.view.registration.RegistrationConfirmationScreen
 import cmm.apps.esmorga.view.registration.RegistrationScreen
-import cmm.apps.esmorga.view.welcome.WelcomeScreen
 import kotlinx.serialization.Serializable
 import org.jetbrains.annotations.VisibleForTesting
 import kotlin.reflect.typeOf
 
 sealed class Navigation {
-
-    @Serializable
-    data object WelcomeScreen : Navigation()
 
     @Serializable
     data object EventListScreen : Navigation()
@@ -59,7 +55,7 @@ sealed class Navigation {
     data class RegistrationConfirmationScreen(val email: String) : Navigation()
 
     @Serializable
-    data class FullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments, val redirectToWelcome: Boolean = false) : Navigation()
+    data class FullScreenError(val esmorgaErrorScreenArguments: EsmorgaErrorScreenArguments) : Navigation()
 
     @Serializable
     data object MyEventsScreen : Navigation()
@@ -92,11 +88,11 @@ sealed class Navigation {
 const val GOOGLE_MAPS_PACKAGE = "com.google.android.apps.maps"
 
 @Composable
-fun EsmorgaNavigationGraph(navigationController: NavHostController, loggedIn: Boolean, deeplinkPath: Uri?) {
+fun EsmorgaNavigationGraph(navigationController: NavHostController, deeplinkPath: Uri?) {
     val startDestination = if (deeplinkPath != null) {
         navigateFromDeeplink(deeplinkPath)
     } else {
-        if (loggedIn) Navigation.EventListScreen else Navigation.WelcomeScreen
+        Navigation.EventListScreen
     }
     EsmorgaNavHost(navigationController, startDestination)
 }
@@ -108,93 +104,12 @@ fun EsmorgaNavigationGraph(navigationController: NavHostController, loggedIn: Bo
 @Composable
 internal fun EsmorgaNavHost(navigationController: NavHostController, startDestination: Navigation) {
     NavHost(navigationController, startDestination = startDestination) {
-        loginFlow(navigationController)
         homeFlow(navigationController)
-        errorFlow(navigationController)
+        loginFlow(navigationController)
         accountActivationFlow(navigationController)
-        resetPasswordFlow(navigationController)
         createEventFlow(navigationController)
-    }
-}
-
-private fun NavGraphBuilder.resetPasswordFlow(navigationController: NavHostController) {
-    composable<Navigation.ResetPasswordScreen> { backStackEntry ->
-        ResetPasswordScreen(
-            forgotPasswordCode = backStackEntry.toRoute<Navigation.ResetPasswordScreen>().forgotPasswordCode,
-            onResetPasswordError = { esmorgaFullScreenArguments ->
-                navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = esmorgaFullScreenArguments))
-            },
-            onResetPasswordSuccess = { message ->
-                navigationController.navigate(Navigation.LoginScreen(message)) {
-                    popUpTo(0) {
-                        inclusive = true
-                    }
-                    launchSingleTop = true
-                }
-            }
-        )
-
-    }
-}
-
-private fun NavGraphBuilder.createEventFlow(navController: NavHostController) {
-    composable<Navigation.CreateEventFormTitleScreen> {
-        CreateEventFormScreen(
-            onBack = { navController.popBackStack() },
-            onNext = { form ->
-                navController.navigate(Navigation.CreateEventFormTypeScreen(form))
-            }
-        )
-    }
-
-    composable<Navigation.CreateEventFormTypeScreen>(
-        typeMap = mapOf(typeOf<CreateEventForm>() to serializableType<CreateEventForm>())
-    ) { backStackEntry ->
-        val form = backStackEntry.toRoute<Navigation.CreateEventFormTypeScreen>().form
-        CreateEventFormTypeScreen(
-            eventForm = form,
-            onBackClick = { navController.popBackStack() },
-            onNextClick = { updatedForm ->
-                navController.navigate(Navigation.CreateEventFormDateScreen(updatedForm))
-            }
-        )
-    }
-
-    composable<Navigation.CreateEventFormDateScreen>(
-        typeMap = mapOf(typeOf<CreateEventForm>() to serializableType<CreateEventForm>())
-    ) { backStackEntry ->
-        val eventForm = backStackEntry.toRoute<Navigation.CreateEventFormTypeScreen>().form
-        CreateEventFormDateScreen(
-            eventForm = eventForm,
-            onBackPressed = { navController.popBackStack() },
-            onNextClick = { updatedForm -> }
-        )
-    }
-}
-
-private fun NavGraphBuilder.accountActivationFlow(navigationController: NavHostController) {
-    composable<Navigation.ActivateAccountScreen> { backStackEntry ->
-        ActivateAccountScreen(
-            backStackEntry.toRoute<Navigation.ActivateAccountScreen>().verificationCode,
-            onContinueClick = {
-                navigationController.navigate(Navigation.EventListScreen) {
-                    popUpTo(0) {
-                        inclusive = true
-                    }
-                    launchSingleTop = true
-                }
-            },
-            onError = {
-                navigationController.navigate(Navigation.FullScreenError(it))
-            },
-            onLastTryError = { arguments, redirectToWelcome ->
-                navigationController.navigate(Navigation.FullScreenError(arguments, redirectToWelcome)) {
-                    popUpTo<Navigation.ActivateAccountScreen> {
-                        inclusive = true
-                    }
-                }
-            }
-        )
+        resetPasswordFlow(navigationController)
+        errorFlow(navigationController)
     }
 }
 
@@ -267,19 +182,6 @@ private fun NavGraphBuilder.homeFlow(navigationController: NavHostController) {
 }
 
 private fun NavGraphBuilder.loginFlow(navigationController: NavHostController) {
-    composable<Navigation.WelcomeScreen> {
-        WelcomeScreen(
-            onEnterAsGuestClicked = {
-                navigationController.navigate(Navigation.EventListScreen) {
-                    popUpTo(Navigation.WelcomeScreen) {
-                        inclusive = true
-                    }
-                }
-            },
-            onLoginRegisterClicked = {
-                navigationController.navigate(Navigation.LoginScreen())
-            })
-    }
     composable<Navigation.LoginScreen> { backStackEntry ->
         LoginScreen(
             onRegisterClicked = {
@@ -289,11 +191,7 @@ private fun NavGraphBuilder.loginFlow(navigationController: NavHostController) {
                 navigationController.navigate(Navigation.RecoverPasswordScreen)
             },
             onLoginSuccess = {
-                navigationController.navigate(Navigation.EventListScreen) {
-                    popUpTo(Navigation.WelcomeScreen) {
-                        inclusive = true
-                    }
-                }
+                navigationController.popBackStack()
             },
             onLoginError = { esmorgaFullScreenArguments ->
                 navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = esmorgaFullScreenArguments))
@@ -334,24 +232,96 @@ private fun NavGraphBuilder.loginFlow(navigationController: NavHostController) {
     }
 }
 
+private fun NavGraphBuilder.accountActivationFlow(navigationController: NavHostController) {
+    composable<Navigation.ActivateAccountScreen> { backStackEntry ->
+        ActivateAccountScreen(
+            backStackEntry.toRoute<Navigation.ActivateAccountScreen>().verificationCode,
+            onContinueClick = {
+                navigationController.navigate(Navigation.EventListScreen) {
+                    popUpTo(0) {
+                        inclusive = true
+                    }
+                    launchSingleTop = true
+                }
+            },
+            onError = {
+                navigationController.navigate(Navigation.FullScreenError(it))
+            },
+            onLastTryError = { arguments ->
+                navigationController.navigate(Navigation.FullScreenError(arguments)) {
+                    popUpTo<Navigation.ActivateAccountScreen> {
+                        inclusive = true
+                    }
+                }
+            }
+        )
+    }
+}
+
+private fun NavGraphBuilder.createEventFlow(navController: NavHostController) {
+    composable<Navigation.CreateEventFormTitleScreen> {
+        CreateEventFormScreen(
+            onBack = { navController.popBackStack() },
+            onNext = { form ->
+                navController.navigate(Navigation.CreateEventFormTypeScreen(form))
+            }
+        )
+    }
+
+    composable<Navigation.CreateEventFormTypeScreen>(
+        typeMap = mapOf(typeOf<CreateEventForm>() to serializableType<CreateEventForm>())
+    ) { backStackEntry ->
+        val form = backStackEntry.toRoute<Navigation.CreateEventFormTypeScreen>().form
+        CreateEventFormTypeScreen(
+            eventForm = form,
+            onBackClick = { navController.popBackStack() },
+            onNextClick = { updatedForm ->
+                navController.navigate(Navigation.CreateEventFormDateScreen(updatedForm))
+            }
+        )
+    }
+
+    composable<Navigation.CreateEventFormDateScreen>(
+        typeMap = mapOf(typeOf<CreateEventForm>() to serializableType<CreateEventForm>())
+    ) { backStackEntry ->
+        val eventForm = backStackEntry.toRoute<Navigation.CreateEventFormTypeScreen>().form
+        CreateEventFormDateScreen(
+            eventForm = eventForm,
+            onBackPressed = { navController.popBackStack() },
+            onNextClick = { updatedForm -> }
+        )
+    }
+}
+
+private fun NavGraphBuilder.resetPasswordFlow(navigationController: NavHostController) {
+    composable<Navigation.ResetPasswordScreen> { backStackEntry ->
+        ResetPasswordScreen(
+            forgotPasswordCode = backStackEntry.toRoute<Navigation.ResetPasswordScreen>().forgotPasswordCode,
+            onResetPasswordError = { esmorgaFullScreenArguments ->
+                navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = esmorgaFullScreenArguments))
+            },
+            onResetPasswordSuccess = { message ->
+                navigationController.navigate(Navigation.LoginScreen(message)) {
+                    popUpTo(0) {
+                        inclusive = true
+                    }
+                    launchSingleTop = true
+                }
+            }
+        )
+
+    }
+}
+
 private fun NavGraphBuilder.errorFlow(navigationController: NavHostController) {
     composable<Navigation.FullScreenError>(
         typeMap = mapOf(typeOf<EsmorgaErrorScreenArguments>() to serializableType<EsmorgaErrorScreenArguments>())
     ) { backStackEntry ->
         val esmorgaErrorScreenArguments = backStackEntry.toRoute<Navigation.FullScreenError>().esmorgaErrorScreenArguments
-        val redirectToWelcome = backStackEntry.toRoute<Navigation.FullScreenError>().redirectToWelcome
         EsmorgaErrorScreen(
             esmorgaErrorScreenArguments = esmorgaErrorScreenArguments,
             onButtonPressed = {
-                if (redirectToWelcome) {
-                    navigationController.navigate(Navigation.WelcomeScreen) {
-                        popUpTo<Navigation.FullScreenError> {
-                            inclusive = true
-                        }
-                    }
-                } else {
-                    navigationController.popBackStack()
-                }
+                navigationController.popBackStack()
             })
     }
 }

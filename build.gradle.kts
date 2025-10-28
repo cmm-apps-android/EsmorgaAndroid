@@ -29,9 +29,10 @@ kover {
                 classes(
                     "*Module", //Dependency Injection Koin modules
                     "*.EsmorgaApp", //Application
+                    "*.EsmorgaBuildConfigImpl", //Build config
                     "*.data.*.datasource.*", //Datasource interfaces defined in data
-                    "*.domain.*.repository.*" //Repository interfaces defined in domain
-                    //Navigation?
+                    "*.domain.*.repository.*", //Repository interfaces defined in domain
+                    "*.datasource_local.database.*" //Database description files
                 )
                 annotatedBy("cmm.apps.esmorga.view.Screen") //Screens that receive a ViewModel and cannot be tested with Paparazzi
             }

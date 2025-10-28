@@ -31,9 +31,7 @@ class ActivateAccountViewScreenshotTest : BaseScreenshotTest() {
     private fun snapshotWithState(uiState: ActivateAccountUiState) {
         paparazzi.snapshot {
             EsmorgaTheme(darkTheme = false) {
-                ActivateAccountView(
-                    uiState = uiState,
-                )
+                ActivateAccountView()
             }
         }
     }

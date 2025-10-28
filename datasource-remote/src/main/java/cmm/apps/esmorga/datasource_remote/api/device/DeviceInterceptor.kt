@@ -10,7 +10,7 @@ class DeviceInterceptor(
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val requestBuilder = chain.request().newBuilder()
-        var deviceId = deviceDataSource.getDeviceId()
+        val deviceId = deviceDataSource.getDeviceId()
 
         requestBuilder.addHeader(DEVICE_ID_HEADER_KEY, deviceId)
 
