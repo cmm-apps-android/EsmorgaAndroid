@@ -14,19 +14,20 @@ object EsmorgaDatabaseHelper {
     fun getDatabase(context: Context) =
         Room.databaseBuilder(context, EsmorgaDatabase::class.java, DATABASE_NAME)
             .addMigrations(MIGRATION_3_4, MIGRATION_4_5)
-            .fallbackToDestructiveMigration()
+            .fallbackToDestructiveMigration(true)
             .build()
 
     private val MIGRATION_3_4 = object : Migration(3, 4) {
-        override fun migrate(database: SupportSQLiteDatabase) {
-            database.execSQL("ALTER TABLE UserLocalModel ADD COLUMN localRole TEXT NOT NULL DEFAULT 'USER'")
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("ALTER TABLE UserLocalModel ADD COLUMN localRole TEXT NOT NULL DEFAULT 'USER'")
         }
     }
 
     private val MIGRATION_4_5 = object : Migration(4, 5) {
-        override fun migrate(database: SupportSQLiteDatabase) {
-            database.execSQL("DROP TABLE IF EXISTS EventLocalModel")
-            database.execSQL(
+        override fun migrate(db: SupportSQLiteDatabase) {
+            //AttendeeCount, MaxCapacity, and JoinDeadline columns added EventLocalModel DB table in version 5
+            db.execSQL("DROP TABLE IF EXISTS EventLocalModel")
+            db.execSQL(
                 """
             CREATE TABLE IF NOT EXISTS EventLocalModel (
                 localId TEXT NOT NULL PRIMARY KEY,
@@ -44,6 +45,19 @@ object EsmorgaDatabaseHelper {
                 localCurrentAttendeeCount INTEGER NOT NULL DEFAULT 0,
                 localMaxCapacity INTEGER,
                 localJoinDeadline INTEGER NOT NULL DEFAULT 0
+            )
+            """.trimIndent()
+            )
+
+            //EventAttendeeLocalModel DB table created in version 5
+            db.execSQL("DROP TABLE IF EXISTS EventAttendeeLocalModel")
+            db.execSQL(
+                """
+            CREATE TABLE IF NOT EXISTS EventAttendeeLocalModel (
+                `localEventId` TEXT NOT NULL, 
+                `localName` TEXT NOT NULL, 
+                `localAlreadyPaid` INTEGER NOT NULL DEFAULT 0, 
+                PRIMARY KEY(`localEventId`, `localName`)
             )
             """.trimIndent()
             )
