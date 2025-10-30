@@ -23,7 +23,7 @@ import cmm.apps.esmorga.datasource_local.user.model.UserLocalModel
     ]
 )
 
-@TypeConverters(ZonedDateTimeConverter::class)
+@TypeConverters(EsmorgaTypeConverter::class)
 abstract class EsmorgaDatabase : RoomDatabase() {
     abstract fun eventDao(): EventDao
     abstract fun userDao(): UserDao

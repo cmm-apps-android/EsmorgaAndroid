@@ -14,7 +14,7 @@ interface GetMyEventListUseCase {
 class GetMyEventListUseCaseImpl(private val eventRepository: EventRepository, private val userRepository: UserRepository) : GetMyEventListUseCase {
     override suspend fun invoke(forceRefresh: Boolean): EsmorgaResult<List<Event>> {
         try {
-            userRepository.getUser()
+            userRepository.getUser() //checks if user is logged in. If not, an exception will be thrown
             val result = eventRepository.getEvents(forceRefresh)
             return EsmorgaResult(data = result.filter { it.userJoined })
         } catch (e: Exception) {

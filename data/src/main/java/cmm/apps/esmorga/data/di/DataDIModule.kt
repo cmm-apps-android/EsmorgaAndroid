@@ -1,9 +1,7 @@
 package cmm.apps.esmorga.data.di
 
-import cmm.apps.esmorga.data.device.DeviceRepositoryImpl
 import cmm.apps.esmorga.data.event.EventRepositoryImpl
 import cmm.apps.esmorga.data.user.UserRepositoryImpl
-import cmm.apps.esmorga.domain.device.repository.DeviceRepository
 import cmm.apps.esmorga.domain.event.repository.EventRepository
 import cmm.apps.esmorga.domain.user.repository.UserRepository
 import org.koin.core.qualifier.named
@@ -27,11 +25,6 @@ object DataDIModule {
             UserRepositoryImpl(
                 get(named(LOCAL_DATASOURCE_INSTANCE_NAME)),
                 get(named(REMOTE_DATASOURCE_INSTANCE_NAME)),
-                get(named(LOCAL_DATASOURCE_INSTANCE_NAME))
-            )
-        }
-        factory<DeviceRepository> {
-            DeviceRepositoryImpl(
                 get(named(LOCAL_DATASOURCE_INSTANCE_NAME))
             )
         }

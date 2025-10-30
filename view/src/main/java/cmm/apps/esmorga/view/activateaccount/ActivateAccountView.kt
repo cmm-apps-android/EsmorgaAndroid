@@ -41,7 +41,7 @@ fun ActivateAccountScreen(
     viewModel: ActivateAccountViewModel = koinViewModel(parameters = { parametersOf(verificationCode) }),
     onContinueClick: () -> Unit = {},
     onError: (EsmorgaErrorScreenArguments) -> Unit,
-    onLastTryError: (EsmorgaErrorScreenArguments, Boolean) -> Unit
+    onLastTryError: (EsmorgaErrorScreenArguments) -> Unit
 ) {
     val uiState: ActivateAccountUiState by viewModel.uiState.collectAsStateWithLifecycle()
     val lifecycle = LocalLifecycleOwner.current.lifecycle
@@ -55,7 +55,7 @@ fun ActivateAccountScreen(
                 }
 
                 is ActivateAccountEffect.ShowLastTryFullScreenError -> {
-                    onLastTryError(effect.esmorgaErrorScreenArguments, effect.redirectToWelcome)
+                    onLastTryError(effect.esmorgaErrorScreenArguments)
                 }
 
                 is ActivateAccountEffect.NavigateToWelcomeScreen -> {
@@ -65,15 +65,13 @@ fun ActivateAccountScreen(
         }
     }
     EsmorgaTheme {
-        ActivateAccountView(uiState = uiState)
+        ActivateAccountView()
     }
 
 }
 
 @Composable
-fun ActivateAccountView(
-    uiState: ActivateAccountUiState,
-) {
+fun ActivateAccountView() {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
     ) { innerPadding ->

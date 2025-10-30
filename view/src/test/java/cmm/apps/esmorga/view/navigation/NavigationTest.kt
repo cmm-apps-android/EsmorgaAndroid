@@ -16,8 +16,8 @@ import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_ANIMATION
 import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_RETRY_BUTTON
 import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_SUBTITLE
 import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_TITLE
+import cmm.apps.designsystem.GuestErrorTestTags.GUEST_ERROR_PRIMARY_BUTTON
 import cmm.apps.esmorga.domain.account.ActivateAccountUseCase
-import cmm.apps.esmorga.domain.device.ShowDeviceIdIfNeededUseCase
 import cmm.apps.esmorga.domain.event.GetEventAttendeesUseCase
 import cmm.apps.esmorga.domain.event.GetEventListUseCase
 import cmm.apps.esmorga.domain.event.GetMyEventListUseCase
@@ -36,11 +36,6 @@ import cmm.apps.esmorga.domain.user.PerformRecoverPasswordUseCase
 import cmm.apps.esmorga.domain.user.PerformRegistrationConfirmationUseCase
 import cmm.apps.esmorga.domain.user.PerformRegistrationUserCase
 import cmm.apps.esmorga.domain.user.repository.PerformResetPasswordUseCase
-import cmm.apps.esmorga.view.activateaccount.ActivateAccountView
-import cmm.apps.esmorga.view.activateaccount.RegistrationConfirmationScreenTestTags.ACTIVATE_ACCOUNT_IMAGE
-import cmm.apps.esmorga.view.activateaccount.RegistrationConfirmationScreenTestTags.ACTIVATE_ACCOUNT_SUBTITLE
-import cmm.apps.esmorga.view.activateaccount.RegistrationConfirmationScreenTestTags.ACTIVATE_ACCOUNT_TITLE
-import cmm.apps.esmorga.view.activateaccount.model.ActivateAccountUiState
 import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD_BUTTON
 import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD_CURRENT_PASS_INPUT
 import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD_NEW_PASS_INPUT
@@ -91,8 +86,6 @@ import cmm.apps.esmorga.view.registration.RegistrationScreenTestTags.REGISTRATIO
 import cmm.apps.esmorga.view.viewmodel.mock.EventAttendeeViewMock
 import cmm.apps.esmorga.view.viewmodel.mock.EventViewMock
 import cmm.apps.esmorga.view.viewmodel.mock.LoginViewMock
-import cmm.apps.esmorga.view.welcome.WelcomeScreenTestTags.WELCOME_PRIMARY_BUTTON
-import cmm.apps.esmorga.view.welcome.WelcomeScreenTestTags.WELCOME_SECONDARY_BUTTON
 import io.mockk.coEvery
 import io.mockk.mockk
 import org.junit.After
@@ -172,10 +165,6 @@ class NavigationTest {
         coEvery { useCase(any(), any()) } returns EsmorgaResult.success(Unit)
     }
 
-    private val showDeviceIdIfNeededUseCase = mockk<ShowDeviceIdIfNeededUseCase>(relaxed = true).also { useCase ->
-        coEvery { useCase() } returns EsmorgaResult.success("id-device")
-    }
-
     private val performChangePasswordUseCase = mockk<PerformChangePasswordUseCase>(relaxed = true).also { useCase ->
         coEvery { useCase(any(), any()) } returns EsmorgaResult.success(Unit)
     }
@@ -205,7 +194,6 @@ class NavigationTest {
                     factory<PerformRecoverPasswordUseCase> { performRecoverPasswordUseCase }
                     factory<ActivateAccountUseCase> { activateAccountUseCase }
                     factory<PerformResetPasswordUseCase> { performResetPasswordUseCase }
-                    factory<ShowDeviceIdIfNeededUseCase> { showDeviceIdIfNeededUseCase }
                     factory<PerformChangePasswordUseCase> { performChangePasswordUseCase }
                 }
             )
@@ -218,49 +206,28 @@ class NavigationTest {
     }
 
     @Test
-    fun `given user not logged, when app is open, then welcome screen is shown`() {
-        setNavigationFromAppLaunch(loggedIn = false)
-
-        composeTestRule.onNodeWithTag(WELCOME_PRIMARY_BUTTON).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(WELCOME_SECONDARY_BUTTON).assertIsDisplayed()
-    }
-
-    @Test
-    fun `given user logged, when app is open, then event list screen is shown`() {
-        setNavigationFromAppLaunch(loggedIn = true)
+    fun `given user, when app is open, then event list screen is shown`() {
+        setNavigationFromAppLaunch()
 
         composeTestRule.onNodeWithTag(EVENT_LIST_TITLE).assertIsDisplayed()
-    }
-
-    @Test
-    fun `given user not logged, when app is open and continue as guest is clicked, then events screen is shown`() {
-        setNavigationFromAppLaunch(loggedIn = false)
-
-        composeTestRule.onNodeWithTag(WELCOME_SECONDARY_BUTTON).performClick()
-
-        composeTestRule.onNodeWithTag(EVENT_LIST_TITLE).assertIsDisplayed()
-    }
-
-    @Test
-    fun `given user not logged, when app is open and login is clicked, then login screen is shown`() {
-        setNavigationFromAppLaunch(loggedIn = false)
-
-        composeTestRule.onNodeWithTag(WELCOME_PRIMARY_BUTTON).performClick()
-
-        composeTestRule.onNodeWithTag(LOGIN_TITLE).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(LOGIN_LOGIN_BUTTON).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(LOGIN_REGISTER_BUTTON).assertIsDisplayed()
     }
 
     @Test
     fun `given user not logged, when login visited and login is performed, then event list screen is shown`() {
-        setNavigationFromDestination(Navigation.LoginScreen())
+        val getMyEventListUseCase = mockk<GetMyEventListUseCase>(relaxed = true).also { useCase ->
+            coEvery { useCase() } returns EsmorgaResult.failure(EsmorgaException(message = "", source = Source.LOCAL, code = ErrorCodes.NOT_LOGGED_IN))
+        }
+        loadKoinModules(module { factory<GetMyEventListUseCase> { getMyEventListUseCase } })
+
+        setNavigationFromDestination(Navigation.MyEventsScreen)
+
+        composeTestRule.onNodeWithTag(GUEST_ERROR_PRIMARY_BUTTON).performClick()
 
         composeTestRule.onNodeWithTag(LOGIN_EMAIL_INPUT).performTextInput("simple@man.com")
         composeTestRule.onNodeWithTag(LOGIN_PASSWORD_INPUT).performTextInput("Test@123")
         composeTestRule.onNodeWithTag(LOGIN_LOGIN_BUTTON).performClick()
 
-        composeTestRule.onNodeWithTag(EVENT_LIST_TITLE).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(MY_EVENT_LIST_TITLE).assertIsDisplayed()
     }
 
     @Test
@@ -460,19 +427,6 @@ class NavigationTest {
     }
 
     @Test
-    fun `given activate account screen, when view is rendered, then all ui elements are displayed`() {
-        composeTestRule.setContent {
-            ActivateAccountView(
-                uiState = ActivateAccountUiState(isLoading = false)
-            )
-        }
-
-        composeTestRule.onNodeWithTag(ACTIVATE_ACCOUNT_IMAGE).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(ACTIVATE_ACCOUNT_TITLE).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(ACTIVATE_ACCOUNT_SUBTITLE).assertIsDisplayed()
-    }
-
-    @Test
     fun `given invalid activation code, when activation attempted, then navigate to FullScreenError`() {
         coEvery { activateAccountUseCase(any()) } returns EsmorgaResult.failure(EsmorgaException("Error", Source.REMOTE, 400))
         setNavigationFromDestination(Navigation.ActivateAccountScreen("VerificationCode"))
@@ -546,19 +500,14 @@ class NavigationTest {
         setNavigationFromDestination(Navigation.CreateEventFormTitleScreen)
         composeTestRule.waitForIdle()
 
-        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_TITLE)
-            .assertIsDisplayed()
+        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_TITLE).assertIsDisplayed()
 
-        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_NAME)
-            .performTextInput("Description for name type test")
-        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_DESCRIPTION)
-            .performTextInput("Description for event type test")
-        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_NEXT_BUTTON)
-            .performClick()
+        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_NAME).performTextInput("Description for name type test")
+        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_DESCRIPTION).performTextInput("Description for event type test")
+        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_NEXT_BUTTON).performClick()
         composeTestRule.waitForIdle()
 
-        composeTestRule.onNodeWithTag(CreateEventTypeScreenTestTags.CREATE_EVENT_TYPE_TITLE)
-            .assertIsDisplayed()
+        composeTestRule.onNodeWithTag(CreateEventTypeScreenTestTags.CREATE_EVENT_TYPE_TITLE).assertIsDisplayed()
     }
 
     @Test
@@ -566,22 +515,16 @@ class NavigationTest {
         setNavigationFromDestination(Navigation.CreateEventFormTitleScreen)
         composeTestRule.waitForIdle()
 
-        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_NAME)
-            .performTextInput("Test Name")
-        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_DESCRIPTION)
-            .performTextInput("Test Description")
-        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_NEXT_BUTTON)
-            .performClick()
+        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_NAME).performTextInput("Test Name")
+        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_DESCRIPTION).performTextInput("Test Description")
+        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_NEXT_BUTTON).performClick()
 
-        composeTestRule.onNodeWithTag(CreateEventTypeScreenTestTags.CREATE_EVENT_TYPE_TITLE)
-            .assertIsDisplayed()
+        composeTestRule.onNodeWithTag(CreateEventTypeScreenTestTags.CREATE_EVENT_TYPE_TITLE).assertIsDisplayed()
 
-        composeTestRule.onNodeWithTag(CreateEventTypeScreenTestTags.CREATE_EVENT_TYPE_BACK_BUTTON)
-            .performClick()
+        composeTestRule.onNodeWithTag(CreateEventTypeScreenTestTags.CREATE_EVENT_TYPE_BACK_BUTTON).performClick()
         composeTestRule.waitForIdle()
 
-        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_TITLE)
-            .assertIsDisplayed()
+        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_TITLE).assertIsDisplayed()
     }
 
     @Test
@@ -589,33 +532,25 @@ class NavigationTest {
         setNavigationFromDestination(Navigation.CreateEventFormTitleScreen)
         composeTestRule.waitForIdle()
 
-        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_NAME)
-            .performTextInput("Test Name")
-        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_DESCRIPTION)
-            .performTextInput("Test Description")
-        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_NEXT_BUTTON)
-            .performClick()
+        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_NAME).performTextInput("Test Name")
+        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_DESCRIPTION).performTextInput("Test Description")
+        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_NEXT_BUTTON).performClick()
 
-        composeTestRule.onNodeWithTag(CreateEventTypeScreenTestTags.CREATE_EVENT_TYPE_TITLE)
-            .assertIsDisplayed()
-        composeTestRule.onNodeWithTag(CreateEventTypeScreenTestTags.CREATE_EVENT_TYPE_NEXT_BUTTON)
-            .performClick()
+        composeTestRule.onNodeWithTag(CreateEventTypeScreenTestTags.CREATE_EVENT_TYPE_TITLE).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(CreateEventTypeScreenTestTags.CREATE_EVENT_TYPE_NEXT_BUTTON).performClick()
 
-        composeTestRule.onNodeWithTag(CreateEventDateScreenTestTags.CREATE_EVENT_DATE_TITLE)
-            .assertIsDisplayed()
-        composeTestRule.onNodeWithTag(CreateEventDateScreenTestTags.CREATE_EVENT_DATE_BACK_BUTTON)
-            .performClick()
+        composeTestRule.onNodeWithTag(CreateEventDateScreenTestTags.CREATE_EVENT_DATE_TITLE).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(CreateEventDateScreenTestTags.CREATE_EVENT_DATE_BACK_BUTTON).performClick()
         composeTestRule.waitForIdle()
 
-        composeTestRule.onNodeWithTag(CreateEventTypeScreenTestTags.CREATE_EVENT_TYPE_TITLE)
-            .assertIsDisplayed()
+        composeTestRule.onNodeWithTag(CreateEventTypeScreenTestTags.CREATE_EVENT_TYPE_TITLE).assertIsDisplayed()
     }
 
-    private fun setNavigationFromAppLaunch(loggedIn: Boolean) {
+    private fun setNavigationFromAppLaunch() {
         composeTestRule.setContent {
             KoinContext {
                 navController = rememberNavController()
-                EsmorgaNavigationGraph(navigationController = navController, loggedIn = loggedIn, null)
+                EsmorgaNavigationGraph(navigationController = navController, null)
             }
         }
     }
