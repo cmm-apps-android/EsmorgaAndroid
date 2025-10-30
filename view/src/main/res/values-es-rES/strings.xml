@@ -42,6 +42,7 @@
    <string name="snackbar_no_internet">No hay conexión a internet.</string>
    <string name="title_event_attendees">Listado de asistentes</string>
    <string name="title_name">Nombre</string>
+   <string name="title_payment_status">Pago</string>
 
    <string name="bottom_bar_explore">Explorar</string>
    <string name="bottom_bar_myevents">Mis Eventos</string>
