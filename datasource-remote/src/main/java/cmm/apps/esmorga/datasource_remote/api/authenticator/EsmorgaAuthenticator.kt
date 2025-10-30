@@ -14,16 +14,14 @@ class EsmorgaAuthenticator(
     private val authDatasource: AuthDatasource
 ) : Authenticator, KoinComponent {
 
-    override fun authenticate(route: Route?, response: Response): Request? {
-        val refreshToken = authDatasource.getRefreshToken() ?: return null
+    override fun authenticate(route: Route?, response: Response): Request? = runBlocking {
+        val refreshToken = authDatasource.getRefreshToken()
 
-        var newAccessToken: String?
-        runBlocking {
-            newAccessToken = authDatasource.refreshTokens(refreshToken)
+        refreshToken?.let {
+            val newAccessToken = authDatasource.refreshTokens(it)
+            response.request.newBuilder()
+                .header(AUTHORIZATION_HEADER_KEY, AUTHORIZATION_HEADER_VALUE.format(newAccessToken))
+                .build()
         }
-        return response.request.newBuilder()
-            .header(AUTHORIZATION_HEADER_KEY, AUTHORIZATION_HEADER_VALUE.format(newAccessToken))
-            .build()
-
     }
 }
