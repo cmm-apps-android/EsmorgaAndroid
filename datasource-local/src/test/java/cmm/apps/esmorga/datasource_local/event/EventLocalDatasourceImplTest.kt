@@ -135,29 +135,29 @@ class EventLocalDatasourceImplTest {
     @Test
     fun `given a storage with events when join event is called then old event are updated with new value`() = runTest {
         val localEventName = "LocalEvent"
-        val localEvents = EventLocalMock.provideEventList(listOf(localEventName))
-        val localEvent = localEvents.first().toEventDataModel()
+        val localEvent = EventLocalMock.provideEvent(localEventName)
+        val localEvents = listOf(localEvent)
         val dao = mockk<EventDao>(relaxed = true)
         coEvery { dao.getEvents() } returns localEvents
 
         val sut = EventLocalDatasourceImpl(dao, provideFakeAttendeeDao())
-        sut.joinEvent(localEvent)
+        sut.joinEvent(localEvent.toEventDataModel())
 
-        coVerify { dao.updateEvent(localEvent.toEventLocalModel()) }
+        coVerify { dao.updateEvent(localEvent.copy(localUserJoined = true, localCurrentAttendeeCount = 1)) }
     }
 
     @Test
     fun `given a storage with events when events leave event is called then old events are updated with new value`() = runTest {
         val localEventName = "LocalEvent"
-        val localEvents = listOf(EventLocalMock.provideEvent(localEventName, true))
+        val localEvent = EventLocalMock.provideEvent(localEventName, true)
+        val localEvents = listOf(localEvent)
         val dao = mockk<EventDao>(relaxed = true)
         coEvery { dao.getEvents() } returns localEvents
-        val localEvent = localEvents.first().toEventDataModel()
 
         val sut = EventLocalDatasourceImpl(dao, provideFakeAttendeeDao())
-        sut.leaveEvent(localEvent)
+        sut.leaveEvent(localEvent.toEventDataModel())
 
-        coVerify { dao.updateEvent(localEvent.toEventLocalModel()) }
+        coVerify { dao.updateEvent(localEvent.copy(localUserJoined = false, localCurrentAttendeeCount = 0)) }
     }
 
     @Test

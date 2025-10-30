@@ -34,11 +34,11 @@ class EventLocalDatasourceImpl(private val eventDao: EventDao, private val event
     }
 
     override suspend fun joinEvent(event: EventDataModel) {
-        eventDao.updateEvent(event.toEventLocalModel())
+        eventDao.updateEvent(event.copy(dataUserJoined = true, dataCurrentAttendeeCount = event.dataCurrentAttendeeCount + 1).toEventLocalModel())
     }
 
     override suspend fun leaveEvent(event: EventDataModel) {
-        eventDao.updateEvent(event.toEventLocalModel())
+        eventDao.updateEvent(event.copy(dataUserJoined = false, dataCurrentAttendeeCount = event.dataCurrentAttendeeCount - 1).toEventLocalModel())
     }
 
     override suspend fun getEventAttendees(eventId: String): List<EventAttendeeDataModel> {
