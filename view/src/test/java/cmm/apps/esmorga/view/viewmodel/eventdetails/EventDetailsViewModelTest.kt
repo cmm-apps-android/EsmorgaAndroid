@@ -1,6 +1,7 @@
 package cmm.apps.esmorga.view.viewmodel.eventdetails
 
 import android.content.Context
+import androidx.lifecycle.LifecycleOwner
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import app.cash.turbine.test
@@ -81,7 +82,9 @@ class EventDetailsViewModelTest {
         val userUseCase = mockk<GetSavedUserUseCase>(relaxed = true)
         coEvery { userUseCase() } returns EsmorgaResult.failure(Exception())
 
-        sut = EventDetailsViewModel(userUseCase, joinEventUseCase, leaveEventUseCase, EventViewMock.provideEvent(eventName))
+        sut = EventDetailsViewModel(userUseCase, joinEventUseCase, leaveEventUseCase, EventViewMock.provideEvent(eventName)).also {
+            it.onStart(mockk<LifecycleOwner>(relaxed = true))
+        }
 
         val uiState = sut.uiState.value
         Assert.assertEquals(eventName, uiState.title)
@@ -91,7 +94,9 @@ class EventDetailsViewModelTest {
     @Test
     fun `given a successful usecase when get event by id is called usecase executed and UI state containing event has correct content`() = runTest {
         val eventName = "Event Name"
-        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, EventViewMock.provideEvent(eventName, userJoined = true))
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, EventViewMock.provideEvent(eventName, userJoined = true)).also {
+            it.onStart(mockk<LifecycleOwner>(relaxed = true))
+        }
 
         val uiState = sut.uiState.value
         Assert.assertEquals(eventName, uiState.title)
@@ -101,7 +106,10 @@ class EventDetailsViewModelTest {
     @Test
     fun `given a successful usecase when get event by id is called usecase executed and UI state containing event not joined has correct content`() = runTest {
         val eventName = "EventName"
-        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, EventViewMock.provideEvent(eventName))
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, EventViewMock.provideEvent(eventName)).also {
+            it.onStart(mockk<LifecycleOwner>(relaxed = true))
+        }
+
         val uiState = sut.uiState.value
         Assert.assertEquals(eventName, uiState.title)
         Assert.assertEquals(mockContext.getString(R.string.button_join_event), uiState.primaryButtonTitle)
@@ -113,7 +121,10 @@ class EventDetailsViewModelTest {
         val joinEventUseCase = mockk<JoinEventUseCase>(relaxed = true)
         coEvery { joinEventUseCase(event) } returns EsmorgaResult.success(Unit)
 
-        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event)
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event).also {
+            it.onStart(mockk<LifecycleOwner>(relaxed = true))
+        }
+
         sut.effect.test {
             sut.onPrimaryButtonClicked()
 
@@ -129,7 +140,10 @@ class EventDetailsViewModelTest {
         val joinEventUseCase = mockk<JoinEventUseCase>(relaxed = true)
         coEvery { joinEventUseCase(event) } returns EsmorgaResult.failure(Exception())
 
-        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event)
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event).also {
+            it.onStart(mockk<LifecycleOwner>(relaxed = true))
+        }
+
         sut.effect.test {
             sut.onPrimaryButtonClicked()
 
@@ -144,7 +158,10 @@ class EventDetailsViewModelTest {
         val joinEventUseCase = mockk<JoinEventUseCase>(relaxed = true)
         coEvery { joinEventUseCase(event) } returns EsmorgaResult.failure(EsmorgaException("No Connection", Source.REMOTE, ErrorCodes.NO_CONNECTION))
 
-        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event)
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event).also {
+            it.onStart(mockk<LifecycleOwner>(relaxed = true))
+        }
+
         sut.effect.test {
             sut.onPrimaryButtonClicked()
 
@@ -164,7 +181,9 @@ class EventDetailsViewModelTest {
         val joinEventUseCase = mockk<JoinEventUseCase>(relaxed = true)
         coEvery { joinEventUseCase(event) } returns EsmorgaResult.success(Unit)
 
-        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, EventViewMock.provideEvent("Event Name"))
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, EventViewMock.provideEvent("Event Name")).also {
+            it.onStart(mockk<LifecycleOwner>(relaxed = true))
+        }
         sut.onPrimaryButtonClicked()
 
         val uiState = sut.uiState.value
@@ -178,7 +197,9 @@ class EventDetailsViewModelTest {
         val leaveEventUseCase = mockk<LeaveEventUseCase>(relaxed = true)
         coEvery { leaveEventUseCase(event) } returns EsmorgaResult.failure(Exception())
 
-        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event)
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event).also {
+            it.onStart(mockk<LifecycleOwner>(relaxed = true))
+        }
         sut.effect.test {
             sut.onPrimaryButtonClicked()
 
@@ -194,7 +215,9 @@ class EventDetailsViewModelTest {
         val leaveEventUseCase = mockk<LeaveEventUseCase>(relaxed = true)
         coEvery { leaveEventUseCase(event) } returns EsmorgaResult.success(Unit)
 
-        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event)
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event).also {
+            it.onStart(mockk<LifecycleOwner>(relaxed = true))
+        }
         sut.effect.test {
             sut.onPrimaryButtonClicked()
 
@@ -211,7 +234,9 @@ class EventDetailsViewModelTest {
         val leaveEventUseCase = mockk<LeaveEventUseCase>(relaxed = true)
         coEvery { leaveEventUseCase(event) } returns EsmorgaResult.success(Unit)
 
-        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, EventViewMock.provideEvent("Event Name"))
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, EventViewMock.provideEvent("Event Name")).also {
+            it.onStart(mockk<LifecycleOwner>(relaxed = true))
+        }
         sut.onPrimaryButtonClicked()
 
         val uiState = sut.uiState.value
@@ -223,7 +248,9 @@ class EventDetailsViewModelTest {
         val event = EventViewMock.provideEvent("Event Name").copy(location = EventLocation("Location", lat = 43.0930493, long = -7.348734))
         coEvery { joinEventUseCase(event) } returns EsmorgaResult.failure(EsmorgaException("No Connection", Source.REMOTE, ErrorCodes.NO_CONNECTION))
 
-        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event)
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event).also {
+            it.onStart(mockk<LifecycleOwner>(relaxed = true))
+        }
         sut.effect.test {
             sut.onNavigateClick()
 
@@ -244,7 +271,9 @@ class EventDetailsViewModelTest {
             maxCapacity = 10,
         )
 
-        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event)
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event).also {
+            it.onStart(mockk<LifecycleOwner>(relaxed = true))
+        }
         val uiState = sut.uiState.value
 
         Assert.assertEquals(5, uiState.currentAttendeeCount)
@@ -263,7 +292,9 @@ class EventDetailsViewModelTest {
         val joinEventUseCase = mockk<JoinEventUseCase>(relaxed = true)
         coEvery { joinEventUseCase(event) } returns EsmorgaResult.success(Unit)
 
-        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event)
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event).also {
+            it.onStart(mockk<LifecycleOwner>(relaxed = true))
+        }
 
         sut.effect.test {
             sut.onPrimaryButtonClicked()
@@ -290,7 +321,9 @@ class EventDetailsViewModelTest {
         val leaveEventUseCase = mockk<LeaveEventUseCase>(relaxed = true)
         coEvery { leaveEventUseCase(event) } returns EsmorgaResult.success(Unit)
 
-        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event)
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event).also {
+            it.onStart(mockk<LifecycleOwner>(relaxed = true))
+        }
 
         sut.effect.test {
             sut.onPrimaryButtonClicked()
@@ -317,7 +350,9 @@ class EventDetailsViewModelTest {
         coEvery { joinEventUseCase(event) } returns EsmorgaResult.success(Unit)
         coEvery { leaveEventUseCase(event) } returns EsmorgaResult.success(Unit)
 
-        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event)
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event).also {
+            it.onStart(mockk<LifecycleOwner>(relaxed = true))
+        }
 
         sut.effect.test {
             sut.onPrimaryButtonClicked()
@@ -339,7 +374,9 @@ class EventDetailsViewModelTest {
             currentAttendeeCount = 10
         )
 
-        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event)
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event).also {
+            it.onStart(mockk<LifecycleOwner>(relaxed = true))
+        }
 
         val uiState = sut.uiState.value
         Assert.assertTrue(uiState.showViewAttendeesButton)
@@ -352,7 +389,9 @@ class EventDetailsViewModelTest {
             currentAttendeeCount = 0
         )
 
-        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event)
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event).also {
+            it.onStart(mockk<LifecycleOwner>(relaxed = true))
+        }
 
         val uiState = sut.uiState.value
         Assert.assertFalse(uiState.showViewAttendeesButton)
@@ -371,7 +410,9 @@ class EventDetailsViewModelTest {
             )
         )
 
-        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event)
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event).also {
+            it.onStart(mockk<LifecycleOwner>(relaxed = true))
+        }
 
         sut.effect.test {
             sut.onPrimaryButtonClicked()
@@ -391,7 +432,9 @@ class EventDetailsViewModelTest {
         val futureDeadline = System.currentTimeMillis() + ONE_HOUR_IN_MILLIS
         val event = EventViewMock.provideEvent("DeadlineTest", joinDeadline = futureDeadline)
 
-        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event)
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event).also {
+            it.onStart(mockk<LifecycleOwner>(relaxed = true))
+        }
         val uiState = sut.uiState.value
 
         Assert.assertEquals(formatJoinDeadline(futureDeadline), uiState.joinDeadline)
@@ -403,7 +446,9 @@ class EventDetailsViewModelTest {
         val futureDeadline = System.currentTimeMillis() + ONE_HOUR_IN_MILLIS
         val event = EventViewMock.provideEvent("ButtonEnabledTest", joinDeadline = futureDeadline)
 
-        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event)
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event).also {
+            it.onStart(mockk<LifecycleOwner>(relaxed = true))
+        }
 
         val uiState = sut.uiState.value
         Assert.assertTrue(uiState.isJoinButtonEnabled)
@@ -414,7 +459,9 @@ class EventDetailsViewModelTest {
         val pastDeadline = System.currentTimeMillis() - ONE_HOUR_IN_MILLIS
         val event = EventViewMock.provideEvent("ButtonDisabledTest", joinDeadline = pastDeadline)
 
-        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event)
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event).also {
+            it.onStart(mockk<LifecycleOwner>(relaxed = true))
+        }
 
         val uiState = sut.uiState.value
         Assert.assertFalse(uiState.isJoinButtonEnabled)
@@ -425,7 +472,9 @@ class EventDetailsViewModelTest {
         val pastDeadline = System.currentTimeMillis() - ONE_HOUR_IN_MILLIS
         val event = EventViewMock.provideEvent("VisibleAfterDeadlineTest", joinDeadline = pastDeadline)
 
-        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event)
+        sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event).also {
+            it.onStart(mockk<LifecycleOwner>(relaxed = true))
+        }
 
         val uiState = sut.uiState.value
         Assert.assertEquals("VisibleAfterDeadlineTest", uiState.title)

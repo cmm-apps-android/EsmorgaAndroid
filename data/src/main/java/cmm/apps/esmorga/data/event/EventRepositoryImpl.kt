@@ -45,13 +45,13 @@ class EventRepositoryImpl(private val localUserDs: UserDatasource, private val l
     }
 
     override suspend fun joinEvent(event: Event) {
-        remoteEventDs.joinEvent(event.copy(userJoined = true).toEventDataModel())
-        localEventDs.joinEvent(event.copy(userJoined = true).toEventDataModel())
+        remoteEventDs.joinEvent(event.toEventDataModel())
+        localEventDs.joinEvent(event.toEventDataModel())
     }
 
     override suspend fun leaveEvent(event: Event) {
-        remoteEventDs.leaveEvent(event.copy(userJoined = false).toEventDataModel())
-        localEventDs.leaveEvent(event.copy(userJoined = false).toEventDataModel())
+        remoteEventDs.leaveEvent(event.toEventDataModel())
+        localEventDs.leaveEvent(event.toEventDataModel())
     }
 
     override suspend fun updateEventAttendee(eventAttendee: EventAttendee) {

@@ -33,6 +33,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmm.apps.designsystem.EsmorgaButton
 import cmm.apps.designsystem.EsmorgaText
@@ -44,6 +45,7 @@ import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAILS_BACK_BUTTON
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsEffect
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiState
+import cmm.apps.esmorga.view.extensions.observeLifecycleEvents
 import cmm.apps.esmorga.view.navigation.openNavigationApp
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import coil.compose.AsyncImage
@@ -65,13 +67,16 @@ fun EventDetailsScreen(
     onNoNetworkError: (EsmorgaErrorScreenArguments) -> Unit
 ) {
     val uiState: EventDetailsUiState by edvm.uiState.collectAsStateWithLifecycle()
+
     val context = LocalContext.current
     val joinEventSuccessMessage = stringResource(R.string.snackbar_event_joined)
     val leaveEventSuccessMessage = stringResource(R.string.snackbar_event_left)
     val eventFullErrorMessage = stringResource(R.string.snackbar_event_full)
     val snackbarHostState = remember { SnackbarHostState() }
-
     val localCoroutineScope = rememberCoroutineScope()
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+
+    edvm.observeLifecycleEvents(lifecycle)
     LaunchedEffect(Unit) {
         edvm.effect.collect { eff ->
             when (eff) {

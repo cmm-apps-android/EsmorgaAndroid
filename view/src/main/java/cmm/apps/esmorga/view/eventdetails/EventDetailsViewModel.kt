@@ -1,5 +1,7 @@
 package cmm.apps.esmorga.view.eventdetails
 
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cmm.apps.esmorga.domain.event.JoinEventUseCase
@@ -27,7 +29,7 @@ class EventDetailsViewModel(
     private val joinEventUseCase: JoinEventUseCase,
     private val leaveEventUseCase: LeaveEventUseCase,
     private val event: Event
-) : ViewModel() {
+) : ViewModel(), DefaultLifecycleObserver {
 
     private var isAuthenticated: Boolean = false
     private var userJoined: Boolean = false
@@ -38,11 +40,11 @@ class EventDetailsViewModel(
     private val _uiState = MutableStateFlow(EventDetailsUiState())
     val uiState: StateFlow<EventDetailsUiState> = _uiState.asStateFlow()
 
-    private val _effect: MutableSharedFlow<EventDetailsEffect> =
-        MutableSharedFlow(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    private val _effect: MutableSharedFlow<EventDetailsEffect> = MutableSharedFlow(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val effect: SharedFlow<EventDetailsEffect> = _effect.asSharedFlow()
 
-    init {
+    override fun onStart(owner: LifecycleOwner) {
+        super.onStart(owner)
         getEventDetails()
     }
 
