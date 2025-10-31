@@ -16,7 +16,7 @@ android {
         applicationId = "cmm.apps.esmorga"
         minSdk = 28
         targetSdk = 34
-        versionCode = 11000
+        versionCode = 10100
         versionName = "1.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

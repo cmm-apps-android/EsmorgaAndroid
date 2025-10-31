@@ -6,11 +6,20 @@ User‑facing changes only. This file lists what publishers / end users can noti
 
 ### New / Updated Features
 - Create event flow
-- The user will be able to see the number and capacity of attendees at an event.
-- A deadline has been added to sign up for an event.
 
 ### Fixes
 - _(Add here crashes resolved, incorrect behaviors fixed, visual glitches corrected, wording corrections, etc.)_
+
+## 1.1.0 - 2025-10-31
+### New / Updated Features
+- A deadline has been added to sign up for an event.
+- The user will be able to see the number and capacity of attendees at an event.
+- Only Admins, mark attendess as paid .
+- Removed welcome screen.
+
+### Fixes
+- Crash when navigating between event screens.
+- Various fixes in event details screen.  
 
 ## 1.0.0 - 2025-10-10
 ### New / Updated Features
