@@ -5,7 +5,6 @@ import cmm.apps.esmorga.data.event.datasource.EventDatasource
 import cmm.apps.esmorga.data.event.mapper.toEvent
 import cmm.apps.esmorga.data.event.mapper.toEventAttendee
 import cmm.apps.esmorga.data.event.mapper.toEventAttendeeDataModel
-import cmm.apps.esmorga.data.event.mapper.toEventAttendeeList
 import cmm.apps.esmorga.data.event.mapper.toEventDataModel
 import cmm.apps.esmorga.data.event.mapper.toEventList
 import cmm.apps.esmorga.data.event.model.EventDataModel
@@ -14,8 +13,16 @@ import cmm.apps.esmorga.data.user.model.UserDataModel
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.domain.event.model.EventAttendee
 import cmm.apps.esmorga.domain.event.repository.EventRepository
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-class EventRepositoryImpl(private val localUserDs: UserDatasource, private val localEventDs: EventDatasource, private val remoteEventDs: EventDatasource) : EventRepository {
+class EventRepositoryImpl(
+    private val localUserDs: UserDatasource,
+    private val localEventDs: EventDatasource,
+    private val remoteEventDs: EventDatasource,
+    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.Default
+) : EventRepository {
 
     override suspend fun getEvents(forceRefresh: Boolean, forceLocal: Boolean): List<Event> {
         val localList = localEventDs.getEvents()
@@ -31,11 +38,11 @@ class EventRepositoryImpl(private val localUserDs: UserDatasource, private val l
         return localEventDs.getEventById(eventId).toEvent()
     }
 
-    override suspend fun getEventAttendees(eventId: String): List<EventAttendee> {
+    override suspend fun getEventAttendees(eventId: String): List<EventAttendee> = withContext(coroutineDispatcher) {
         val remoteAttendees = remoteEventDs.getEventAttendees(eventId)
         val localAttendees = localEventDs.getEventAttendees(eventId)
 
-        return remoteAttendees.map { remoteAttendee ->
+        remoteAttendees.map { remoteAttendee ->
             val attendee = remoteAttendee.toEventAttendee()
             val localAttendee = localAttendees.firstOrNull { it.dataName == attendee.name && it.dataEventId == attendee.eventId }
             val alreadyPaid = localAttendee?.dataAlreadyPaid ?: false
@@ -43,6 +50,7 @@ class EventRepositoryImpl(private val localUserDs: UserDatasource, private val l
             attendee.copy(alreadyPaid = alreadyPaid)
         }
     }
+
 
     override suspend fun joinEvent(event: Event) {
         remoteEventDs.joinEvent(event.copy(userJoined = true).toEventDataModel())
