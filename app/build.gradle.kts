@@ -16,8 +16,8 @@ android {
         applicationId = "cmm.apps.esmorga"
         minSdk = 28
         targetSdk = 34
-        versionCode = 11000
-        versionName = "1.1.0"
+        versionCode = 10200
+        versionName = "1.2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
