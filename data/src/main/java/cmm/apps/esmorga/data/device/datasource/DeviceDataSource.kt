@@ -7,11 +7,11 @@ import cmm.apps.esmorga.domain.result.Source
 
 interface DeviceDataSource {
 
-    fun getDeviceId(): String {
+    suspend fun getDeviceId(): String {
         throw EsmorgaException(message = "Unsupported operation", source = Source.UNSUPPORTED, code = ErrorCodes.UNSUPPORTED_OPERATION)
     }
 
-    fun getEnvironment(): EsmorgaBuildConfig.Environment {
+    suspend fun getEnvironment(): EsmorgaBuildConfig.Environment {
         throw EsmorgaException(message = "Unsupported operation", source = Source.UNSUPPORTED, code = ErrorCodes.UNSUPPORTED_OPERATION)
     }
 

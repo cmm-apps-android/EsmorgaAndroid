@@ -9,23 +9,23 @@ interface AuthDatasource {
         throw EsmorgaException(message = "Unsupported operation", source = Source.UNSUPPORTED, code = ErrorCodes.UNSUPPORTED_OPERATION)
     }
 
-    fun getAccessToken(): String? {
+    suspend fun getAccessToken(): String? {
         throw EsmorgaException(message = "Unsupported operation", source = Source.UNSUPPORTED, code = ErrorCodes.UNSUPPORTED_OPERATION)
     }
 
-    fun getRefreshToken(): String? {
+    suspend fun getRefreshToken(): String? {
         throw EsmorgaException(message = "Unsupported operation", source = Source.UNSUPPORTED, code = ErrorCodes.UNSUPPORTED_OPERATION)
     }
 
-    fun getTokenExpirationDate(): Long {
+    suspend fun getTokenExpirationDate(): Long {
         throw EsmorgaException(message = "Unsupported operation", source = Source.UNSUPPORTED, code = ErrorCodes.UNSUPPORTED_OPERATION)
     }
 
-    fun saveTokens(accessToken: String, refreshToken: String, ttl: Int) {
+    suspend fun saveTokens(accessToken: String, refreshToken: String, ttl: Int) {
         throw EsmorgaException(message = "Unsupported operation", source = Source.UNSUPPORTED, code = ErrorCodes.UNSUPPORTED_OPERATION)
     }
 
-    fun deleteTokens() {
+    suspend fun deleteTokens() {
         throw EsmorgaException(message = "Unsupported operation", source = Source.UNSUPPORTED, code = ErrorCodes.UNSUPPORTED_OPERATION)
     }
 

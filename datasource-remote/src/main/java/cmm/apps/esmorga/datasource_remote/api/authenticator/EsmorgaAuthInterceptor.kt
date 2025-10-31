@@ -11,7 +11,7 @@ import org.koin.core.component.KoinComponent
 class EsmorgaAuthInterceptor(
     private val authDatasource: AuthDatasource
 ) : Interceptor, KoinComponent {
-    override fun intercept(chain: Interceptor.Chain): Response {
+    override fun intercept(chain: Interceptor.Chain): Response = runBlocking {
         val requestBuilder = chain.request().newBuilder()
         var accessToken = authDatasource.getAccessToken()
         val ttl = authDatasource.getTokenExpirationDate()
@@ -26,6 +26,6 @@ class EsmorgaAuthInterceptor(
         accessToken?.let {
             requestBuilder.addHeader(AUTHORIZATION_HEADER_KEY, AUTHORIZATION_HEADER_VALUE.format(it))
         }
-        return chain.proceed(requestBuilder.build())
+        chain.proceed(requestBuilder.build())
     }
 }
