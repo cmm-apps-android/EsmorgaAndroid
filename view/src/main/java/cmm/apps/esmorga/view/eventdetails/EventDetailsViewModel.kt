@@ -13,8 +13,6 @@ import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.view.eventdetails.mapper.EventDetailsUiMapper.toEventUiDetails
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsEffect
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiState
-import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiStateHelper
-import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiStateHelper.getPrimaryButtonTitle
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,14 +26,13 @@ class EventDetailsViewModel(
     private val getSavedUserUseCase: GetSavedUserUseCase,
     private val joinEventUseCase: JoinEventUseCase,
     private val leaveEventUseCase: LeaveEventUseCase,
-    private val event: Event
+    event: Event
 ) : ViewModel(), DefaultLifecycleObserver {
 
+    //Copy of the event passed as parameter so it can be internally modified by user actions such as join or leave. Event in local and remote will be modified in other layers.
+    private var internalEvent = event
+
     private var isAuthenticated: Boolean = false
-    private var userJoined: Boolean = false
-    private var isEventFull: Boolean = event.maxCapacity?.let { event.currentAttendeeCount >= it } ?: false
-    private var eventAttendeeCount: Int = event.currentAttendeeCount
-    private val isJoinDeadlinePassed: Boolean = EventDetailsUiStateHelper.hasJoinDeadlinePassed(event.joinDeadline)
 
     private val _uiState = MutableStateFlow(EventDetailsUiState())
     val uiState: StateFlow<EventDetailsUiState> = _uiState.asStateFlow()
@@ -45,15 +42,15 @@ class EventDetailsViewModel(
 
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
-        getEventDetails()
+        getLoginStatus()
     }
 
     fun onNavigateClick() {
         _effect.tryEmit(
             EventDetailsEffect.NavigateToLocation(
-                uiState.value.locationLat ?: 0.0,
-                uiState.value.locationLng ?: 0.0,
-                uiState.value.locationName
+                internalEvent.location.lat ?: 0.0,
+                internalEvent.location.long ?: 0.0,
+                internalEvent.location.name
             )
         )
     }
@@ -64,52 +61,38 @@ class EventDetailsViewModel(
 
     fun onPrimaryButtonClicked() {
         if (isAuthenticated) {
-            if (userJoined) leaveEvent() else joinEvent()
+            if (internalEvent.userJoined) leaveEvent() else joinEvent()
         } else {
             _effect.tryEmit(EventDetailsEffect.NavigateToLoginScreen)
         }
     }
 
     fun onViewAttendeesClicked() {
-        _effect.tryEmit(EventDetailsEffect.NavigateToAttendeesScreen(event))
+        _effect.tryEmit(EventDetailsEffect.NavigateToAttendeesScreen(internalEvent))
     }
 
-    private fun getEventDetails() {
+    private fun getLoginStatus() {
         viewModelScope.launch {
             val user = getSavedUserUseCase()
             isAuthenticated = user.data != null
-            userJoined = event.userJoined
-            _uiState.value = event.toEventUiDetails(isAuthenticated, userJoined, isEventFull)
+            _uiState.value = internalEvent.toEventUiDetails(isAuthenticated)
         }
     }
 
     private fun joinEvent() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(primaryButtonLoading = true)
-            joinEventUseCase(event).onSuccess {
-                userJoined = true
-                eventAttendeeCount += 1
-                isEventFull = event.maxCapacity?.let { eventAttendeeCount >= it } ?: false
+            _uiState.value = _uiState.value.copy(isPrimaryButtonLoading = true)
+            joinEventUseCase(internalEvent).onSuccess {
+                internalEvent = internalEvent.copy(userJoined = true, currentAttendeeCount = internalEvent.currentAttendeeCount + 1)
                 updateUiState()
                 _effect.tryEmit(EventDetailsEffect.ShowJoinEventSuccess)
             }.onFailure { error ->
                 if (error.code == ErrorCodes.EVENT_FULL) {
-                    event.maxCapacity?.let { maxCapacity ->
-                        eventAttendeeCount = maxCapacity
+                    internalEvent.maxCapacity?.let { maxCapacity ->
+                        internalEvent = internalEvent.copy(currentAttendeeCount = maxCapacity)
                     }
-                    isEventFull = true
+                    updateUiState()
 
-                    _uiState.value = _uiState.value.copy(
-                        primaryButtonLoading = false,
-                        currentAttendeeCount = eventAttendeeCount,
-                        isJoinButtonEnabled = false,
-                        primaryButtonTitle = getPrimaryButtonTitle(
-                            isAuthenticated = isAuthenticated,
-                            userJoined = userJoined,
-                            eventFull = isEventFull,
-                            isDeadlinePassed = isJoinDeadlinePassed
-                        )
-                    )
                     _effect.tryEmit(EventDetailsEffect.ShowFullEventError)
                 } else {
                     showErrorScreen(error)
@@ -120,38 +103,23 @@ class EventDetailsViewModel(
 
     private fun leaveEvent() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(primaryButtonLoading = true)
-            leaveEventUseCase(event).onSuccess {
-                userJoined = false
-                eventAttendeeCount -= 1
-                isEventFull = event.maxCapacity?.let { eventAttendeeCount >= it } ?: false
+            _uiState.value = _uiState.value.copy(isPrimaryButtonLoading = true)
+            leaveEventUseCase(internalEvent).onSuccess {
+                internalEvent = internalEvent.copy(userJoined = false, currentAttendeeCount = internalEvent.currentAttendeeCount - 1)
                 updateUiState()
                 _effect.tryEmit(EventDetailsEffect.ShowLeaveEventSuccess)
-            }.onFailure { showErrorScreen(it) }
+            }.onFailure {
+                showErrorScreen(it)
+            }
         }
     }
 
     private fun updateUiState() {
-        _uiState.value = _uiState.value.copy(
-            primaryButtonLoading = false,
-            primaryButtonTitle = getPrimaryButtonTitle(
-                isAuthenticated = isAuthenticated,
-                userJoined = userJoined,
-                eventFull = isEventFull,
-                isDeadlinePassed = isJoinDeadlinePassed
-            ),
-            isJoinButtonEnabled = EventDetailsUiStateHelper.getButtonEnableStatus(
-                eventFull = isEventFull,
-                userJoined = userJoined,
-                isDeadlinePassed = isJoinDeadlinePassed,
-                isAuthenticated = isAuthenticated
-            ),
-            currentAttendeeCount = eventAttendeeCount
-        )
+        _uiState.value = internalEvent.toEventUiDetails(isAuthenticated)
     }
 
     private fun showErrorScreen(error: EsmorgaException) {
-        _uiState.value = _uiState.value.copy(primaryButtonLoading = false)
+        _uiState.value = _uiState.value.copy(isPrimaryButtonLoading = false)
         if (error.code == ErrorCodes.NO_CONNECTION) {
             _effect.tryEmit(EventDetailsEffect.ShowNoNetworkError())
         } else {
