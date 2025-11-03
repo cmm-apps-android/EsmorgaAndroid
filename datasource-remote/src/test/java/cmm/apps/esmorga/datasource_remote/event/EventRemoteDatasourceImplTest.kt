@@ -2,7 +2,6 @@ package cmm.apps.esmorga.datasource_remote.event
 
 import android.content.Context
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaApi
-import cmm.apps.esmorga.datasource_remote.api.EsmorgaAuthApi
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaGuestApi
 import cmm.apps.esmorga.datasource_remote.dateformatting.EsmorgaRemoteDateFormatter
 import cmm.apps.esmorga.datasource_remote.event.mapper.toEventDataModel
@@ -27,7 +26,9 @@ import retrofit2.HttpException
 import retrofit2.Response
 
 class EventRemoteDatasourceImplTest {
+
     val dateFormatter = mockk<EsmorgaRemoteDateFormatter>(relaxed = true)
+
     @Test
     fun `given a working api when events requested then event list is successfully returned`() = runTest {
         val remoteEventName = "RemoteEvent"
@@ -36,7 +37,7 @@ class EventRemoteDatasourceImplTest {
         val guestApi = mockk<EsmorgaGuestApi>(relaxed = true)
         coEvery { guestApi.getEvents() } returns EventRemoteMock.provideEventListWrapper(listOf(remoteEventName))
 
-        val sut = EventRemoteDatasourceImpl(api, guestApi,dateFormatter)
+        val sut = EventRemoteDatasourceImpl(api, guestApi, dateFormatter)
         val result = sut.getEvents()
 
         Assert.assertEquals(remoteEventName, result[0].dataName)
@@ -46,11 +47,9 @@ class EventRemoteDatasourceImplTest {
     fun `given an api returning 500 when events requested then EsmorgaException is thrown`() = runTest {
         val errorCode = 500
 
-        val context = mockk<Context>(relaxed = true)
         val api = mockk<EsmorgaApi>(relaxed = true)
         val guestApi = mockk<EsmorgaGuestApi>(relaxed = true)
         coEvery { guestApi.getEvents() } throws HttpException(Response.error<ResponseBody>(errorCode, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
-        coEvery { context.getSystemService(Context.CONNECTIVITY_SERVICE) }
 
         val sut = EventRemoteDatasourceImpl(api, guestApi, dateFormatter)
 
@@ -92,7 +91,6 @@ class EventRemoteDatasourceImplTest {
         val remoteEventName = "RemoteEvent"
         val wrongTypeEvent = provideEvent(remoteEventName).copy(remoteDate = "ERROR")
 
-        val context = mockk<Context>(relaxed = true)
         val api = mockk<EsmorgaApi>(relaxed = true)
         val guestApi = mockk<EsmorgaGuestApi>(relaxed = true)
 
@@ -104,7 +102,6 @@ class EventRemoteDatasourceImplTest {
         )
 
         coEvery { guestApi.getEvents() } returns EventListWrapperRemoteModel(1, listOf(wrongTypeEvent))
-        coEvery { context.getSystemService(Context.CONNECTIVITY_SERVICE) }
 
         val sut = EventRemoteDatasourceImpl(api, guestApi, dateFormatter)
 
@@ -174,12 +171,10 @@ class EventRemoteDatasourceImplTest {
     fun `given an api returning 500 when my events requested then EsmorgaException is thrown`() = runTest {
         val errorCode = 500
 
-        val context = mockk<Context>(relaxed = true)
         val api = mockk<EsmorgaApi>(relaxed = true)
         val guestApi = mockk<EsmorgaGuestApi>(relaxed = true)
 
         coEvery { api.getMyEvents() } throws HttpException(Response.error<ResponseBody>(errorCode, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
-        coEvery { context.getSystemService(Context.CONNECTIVITY_SERVICE) }
         val sut = EventRemoteDatasourceImpl(api, guestApi, dateFormatter)
 
         val exception = try {
