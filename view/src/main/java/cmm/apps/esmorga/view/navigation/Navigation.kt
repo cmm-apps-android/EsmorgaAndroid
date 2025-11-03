@@ -106,7 +106,6 @@ internal fun EsmorgaNavHost(navigationController: NavHostController, startDestin
     NavHost(navigationController, startDestination = startDestination) {
         homeFlow(navigationController)
         loginFlow(navigationController)
-        accountActivationFlow(navigationController)
         createEventFlow(navigationController)
         resetPasswordFlow(navigationController)
         errorFlow(navigationController)
@@ -191,7 +190,11 @@ private fun NavGraphBuilder.loginFlow(navigationController: NavHostController) {
                 navigationController.navigate(Navigation.RecoverPasswordScreen)
             },
             onLoginSuccess = {
-                navigationController.popBackStack()
+                navigationController.navigate(Navigation.EventListScreen) {
+                    popUpTo(0) {
+                        inclusive = true
+                    }
+                }
             },
             onLoginError = { esmorgaFullScreenArguments ->
                 navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = esmorgaFullScreenArguments))
@@ -222,17 +225,6 @@ private fun NavGraphBuilder.loginFlow(navigationController: NavHostController) {
             email = email
         )
     }
-    composable<Navigation.RecoverPasswordScreen> {
-        RecoverPasswordScreen(
-            onBackClicked = { navigationController.popBackStack() },
-            onRecoverPasswordError = { esmorgaFullScreenArguments ->
-                navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = esmorgaFullScreenArguments))
-            }
-        )
-    }
-}
-
-private fun NavGraphBuilder.accountActivationFlow(navigationController: NavHostController) {
     composable<Navigation.ActivateAccountScreen> { backStackEntry ->
         ActivateAccountScreen(
             backStackEntry.toRoute<Navigation.ActivateAccountScreen>().verificationCode,
@@ -241,7 +233,6 @@ private fun NavGraphBuilder.accountActivationFlow(navigationController: NavHostC
                     popUpTo(0) {
                         inclusive = true
                     }
-                    launchSingleTop = true
                 }
             },
             onError = {
@@ -253,6 +244,14 @@ private fun NavGraphBuilder.accountActivationFlow(navigationController: NavHostC
                         inclusive = true
                     }
                 }
+            }
+        )
+    }
+    composable<Navigation.RecoverPasswordScreen> {
+        RecoverPasswordScreen(
+            onBackClicked = { navigationController.popBackStack() },
+            onRecoverPasswordError = { esmorgaFullScreenArguments ->
+                navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = esmorgaFullScreenArguments))
             }
         )
     }
