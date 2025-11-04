@@ -6,7 +6,6 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import app.cash.turbine.test
 import cmm.apps.esmorga.component.mock.MockApplication
-import cmm.apps.esmorga.component.mock.UserDataMock
 import cmm.apps.esmorga.data.di.DataDIModule.REMOTE_DATASOURCE_INSTANCE_NAME
 import cmm.apps.esmorga.data.user.datasource.UserDatasource
 import cmm.apps.esmorga.datasource_local.database.EsmorgaDatabase

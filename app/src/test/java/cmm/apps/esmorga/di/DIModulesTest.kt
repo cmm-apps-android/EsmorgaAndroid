@@ -3,11 +3,10 @@ package cmm.apps.esmorga.di
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import cmm.apps.esmorga.component.mock.EventDataMock
 import cmm.apps.esmorga.component.mock.CreateEventFormModelMock
-import cmm.apps.esmorga.data.event.mapper.toEvent
-import cmm.apps.esmorga.domain.event.model.Event
+import cmm.apps.esmorga.component.mock.EventMock
 import cmm.apps.esmorga.domain.event.model.CreateEventForm
+import cmm.apps.esmorga.domain.event.model.Event
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -31,7 +30,7 @@ class DIModulesTest {
         koinApplication {
             MockProvider.register { clazz ->
                 when (clazz) {
-                    Event::class -> EventDataMock.provideEventDataModel("Event Name").toEvent()
+                    Event::class -> EventMock.provideEventModel("Event Name")
                     CreateEventForm::class -> CreateEventFormModelMock.provide("Test Event", "Description")
                     else -> null
                 }
