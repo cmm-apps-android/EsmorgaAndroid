@@ -63,10 +63,13 @@ class ApiMockerRule<T : Any>(
     }
 }
 
+fun Any.mockResponseSuccess(): MockResponse {
+    return MockResponse().setResponseCode(200)
+}
+
 fun Any.mockResponseSuccess(filePath: String): MockResponse {
     return MockResponse()
         .setBody(javaClass.getResourceAsStream(filePath)?.bufferedReader()
             .use { it?.readText() } ?: "")
         .setResponseCode(200)
 }
-
