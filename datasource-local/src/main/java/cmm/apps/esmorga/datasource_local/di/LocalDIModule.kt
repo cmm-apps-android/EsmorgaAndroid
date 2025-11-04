@@ -34,7 +34,7 @@ object LocalDIModule {
         single<UserDao> { get<EsmorgaDatabase>().userDao() }
         factory<UserDatasource>(named(DataDIModule.LOCAL_DATASOURCE_INSTANCE_NAME)) { UserLocalDatasourceImpl(get()) }
 
-        factory<DeviceDataSource>(named(DataDIModule.LOCAL_DATASOURCE_INSTANCE_NAME)) { DeviceLocalDataSourceImpl(get(), get()) }
+        factory<DeviceDataSource>(named(DataDIModule.LOCAL_DATASOURCE_INSTANCE_NAME)) { DeviceLocalDataSourceImpl(get()) }
     }
 
 }
