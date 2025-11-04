@@ -34,13 +34,13 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
     }
 
     @Test
-    fun eventDetailsView_lightTheme_no_location() {
-        snapshotWithState(lat = null, lng = null)
+    fun eventDetailsView_lightTheme_data() {
+        snapshotWithState()
     }
 
     @Test
-    fun eventDetailsView_lightTheme_data() {
-        snapshotWithState()
+    fun eventDetailsView_lightTheme_no_location() {
+        snapshotWithState(showNavigateButton = false)
     }
 
     @Test
@@ -113,10 +113,9 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
     }
 
     private fun snapshotWithState(
-        lat: Double? = 0.0,
-        lng: Double? = 2.88,
         buttonTitle: String = "Sign in to sign up",
         buttonLoading: Boolean = false,
+        showNavigateButton: Boolean = true,
         currentAttendeeCount: Int? = null,
         maxCapacity: Int? = null,
         isJoinButtonEnabled: Boolean = true,
@@ -129,17 +128,15 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
                     uiState = EventDetailsUiState(
                         id = "1",
                         title = "Mobgen fest",
-                        subtitle = "Fri, Sep 26, 2025, 16:44",
+                        date = "Fri, Sep 26, 2025, 16:44",
                         description = "El mejor evento del año",
                         image = "test.png",
                         locationName = "Mi casa",
-                        locationLat = lat,
-                        locationLng = lng,
+                        showNavigateButton = showNavigateButton,
                         primaryButtonTitle = buttonTitle,
-                        primaryButtonLoading = buttonLoading,
-                        currentAttendeeCount = currentAttendeeCount ?: 0,
-                        maxCapacity = maxCapacity,
-                        isJoinButtonEnabled = isJoinButtonEnabled,
+                        isPrimaryButtonLoading = buttonLoading,
+                        currentAttendeeCountText = maxCapacity?.let{ "$currentAttendeeCount/$maxCapacity attendees" },
+                        isPrimaryButtonEnabled = isJoinButtonEnabled,
                         joinDeadline = joinDeadline,
                         showViewAttendeesButton = showViewAttendeesButton
                     ),

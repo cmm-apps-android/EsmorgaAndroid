@@ -8,7 +8,7 @@ import org.koin.core.component.inject
 
 object EventListUiMapper : KoinComponent {
 
-    fun formatDate(date: Long): String {
+    private fun formatDate(date: Long): String {
         val formatter: EsmorgaDateTimeFormatter by inject()
         return formatter.formatEventDate(date)
     }

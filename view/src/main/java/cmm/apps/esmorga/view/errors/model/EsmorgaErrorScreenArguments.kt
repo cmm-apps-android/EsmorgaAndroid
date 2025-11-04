@@ -22,4 +22,11 @@ object EsmorgaErrorScreenArgumentsHelper : KoinComponent {
         buttonText = context.getString(R.string.button_retry)
     )
 
+    fun getEsmorgaNoNetworkScreenArguments() = EsmorgaErrorScreenArguments(
+        animation = R.raw.no_connection_anim,
+        title = context.getString(R.string.screen_no_connection_title),
+        subtitle = context.getString(R.string.screen_no_connection_body),
+        buttonText = context.getString(R.string.button_ok)
+    )
+
 }

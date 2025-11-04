@@ -187,18 +187,14 @@ fun EventDetailsView(
                     .testTag(EventDetailsScreenTestTags.EVENT_DETAILS_EVENT_NAME)
             )
 
-            EsmorgaText(text = uiState.subtitle, style = EsmorgaTextStyle.BODY_1_ACCENT, modifier = Modifier.padding(horizontal = 16.dp))
+            EsmorgaText(text = uiState.date, style = EsmorgaTextStyle.BODY_1_ACCENT, modifier = Modifier.padding(horizontal = 16.dp))
 
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-                uiState.maxCapacity?.let { max ->
+                uiState.currentAttendeeCountText?.let { max ->
                     Icon(painter = painterResource(DesignSystem.drawable.group), contentDescription = null)
                     Spacer(modifier = Modifier.width(5.dp))
                     EsmorgaText(
-                        text = stringResource(
-                            id = R.string.screen_event_details_capacity,
-                            uiState.currentAttendeeCount,
-                            max
-                        ),
+                        text = uiState.currentAttendeeCountText,
                         style = EsmorgaTextStyle.CAPTION,
                         modifier = Modifier.padding(top = 8.dp)
                     )
@@ -240,12 +236,12 @@ fun EventDetailsView(
             EsmorgaText(
                 text = uiState.locationName, style = EsmorgaTextStyle.BODY_1, modifier = Modifier.padding(horizontal = 16.dp)
             )
-            if (uiState.navigateButton) {
+            if (uiState.showNavigateButton) {
                 EsmorgaButton(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 32.dp),
                     text = stringResource(id = R.string.button_navigate),
                     primary = false,
-                    isEnabled = !uiState.primaryButtonLoading
+                    isEnabled = !uiState.isPrimaryButtonLoading
                 ) {
                     onNavigateClicked()
                 }
@@ -253,12 +249,12 @@ fun EventDetailsView(
 
             EsmorgaButton(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = if (!uiState.navigateButton) 32.dp else 0.dp)
+                    .padding(horizontal = 16.dp, vertical = if (!uiState.showNavigateButton) 32.dp else 0.dp)
                     .testTag(EventDetailsScreenTestTags.EVENT_DETAILS_PRIMARY_BUTTON),
                 text = uiState.primaryButtonTitle,
                 primary = true,
-                isLoading = uiState.primaryButtonLoading,
-                isEnabled = uiState.isJoinButtonEnabled
+                isLoading = uiState.isPrimaryButtonLoading,
+                isEnabled = uiState.isPrimaryButtonEnabled
             ) {
                 onPrimaryButtonClicked()
             }
