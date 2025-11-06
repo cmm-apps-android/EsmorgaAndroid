@@ -102,7 +102,7 @@ fun EventDetailsScreen(
                     }
                 }
 
-                EventDetailsEffect.ShowFullEventError -> {
+                EventDetailsEffect.ShowEventFullError -> {
                     localCoroutineScope.launch {
                         snackbarHostState.showSnackbar(message = eventFullErrorMessage)
                     }
@@ -125,15 +125,13 @@ fun EventDetailsScreen(
         }
     }
     EsmorgaTheme {
-        EventDetailsView(uiState = uiState, snackbarHostState = snackbarHostState, onNavigateClicked = {
-            edvm.onNavigateClick()
-        }, onBackPressed = {
-            edvm.onBackPressed()
-        }, onPrimaryButtonClicked = {
-            edvm.onPrimaryButtonClicked()
-        }, onViewAttendeesClicked = {
-            edvm.onViewAttendeesClicked()
-        })
+        EventDetailsView(
+            uiState = uiState,
+            snackbarHostState = snackbarHostState,
+            onNavigateClicked = { edvm.onNavigateClick() },
+            onPrimaryButtonClicked = { edvm.onPrimaryButtonClicked() },
+            onViewAttendeesClicked = { edvm.onViewAttendeesClicked() },
+            onBackPressed = { edvm.onBackPressed() })
     }
 
 }
@@ -144,9 +142,9 @@ fun EventDetailsView(
     uiState: EventDetailsUiState,
     snackbarHostState: SnackbarHostState,
     onNavigateClicked: () -> Unit,
-    onBackPressed: () -> Unit,
     onPrimaryButtonClicked: () -> Unit,
-    onViewAttendeesClicked: () -> Unit
+    onViewAttendeesClicked: () -> Unit,
+    onBackPressed: () -> Unit
 ) {
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
         TopAppBar(
@@ -169,97 +167,152 @@ fun EventDetailsView(
                 )
                 .verticalScroll(state = rememberScrollState())
         ) {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current).data(uiState.image)
-                    //.crossfade(true) //Open bug in Coil https://github.com/coil-kt/coil/issues/1688 leads to image not being properly scaled if crossfade is used
-                    .build(),
-                placeholder = painterResource(DesignSystem.drawable.img_event_list_empty),
-                error = painterResource(DesignSystem.drawable.img_event_list_empty),
-                contentDescription = stringResource(id = R.string.content_description_event_image).format(uiState.title),
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(16 / 9f)
-            )
-            EsmorgaText(
-                text = uiState.title, style = EsmorgaTextStyle.TITLE, modifier = Modifier
-                    .padding(top = 32.dp, start = 16.dp, bottom = 16.dp, end = 16.dp)
-                    .testTag(EventDetailsScreenTestTags.EVENT_DETAILS_EVENT_NAME)
+            EventDetailsHeaderSection(image = uiState.image, title = uiState.title, date = uiState.date)
+
+            EventDetailsAttendeesSection(
+                attendeeCountText = uiState.currentAttendeeCountText,
+                showViewAttendeesButton = uiState.showViewAttendeesButton,
+                joinDeadline = uiState.joinDeadline,
+                onViewAttendeesClicked = onViewAttendeesClicked
             )
 
-            EsmorgaText(text = uiState.date, style = EsmorgaTextStyle.BODY_1_ACCENT, modifier = Modifier.padding(horizontal = 16.dp))
+            EventDetailsDescriptionSection(description = uiState.description, locationName = uiState.locationName)
 
-            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-                uiState.currentAttendeeCountText?.let { max ->
-                    Icon(painter = painterResource(DesignSystem.drawable.group), contentDescription = null)
-                    Spacer(modifier = Modifier.width(5.dp))
-                    EsmorgaText(
-                        text = uiState.currentAttendeeCountText,
-                        style = EsmorgaTextStyle.CAPTION,
-                        modifier = Modifier.padding(top = 8.dp)
-                    )
-
-                    Spacer(modifier = Modifier.weight(1f))
-                }
-
-                if (uiState.showViewAttendeesButton) {
-                    EsmorgaText(
-                        text = stringResource(R.string.button_view_attendees),
-                        style = EsmorgaTextStyle.CAPTION_UNDERSCORE,
-                        modifier = Modifier
-                            .padding(top = 8.dp)
-                            .clickable { onViewAttendeesClicked() }
-                            .testTag(EventDetailsScreenTestTags.EVENT_DETAILS_ATTENDEES_BUTTON)
-                    )
-                }
-            }
-
-            EsmorgaText(
-                text = stringResource(id = R.string.screen_event_details_join_deadline, uiState.joinDeadline),
-                style = EsmorgaTextStyle.CAPTION,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+            EventDetailsButtonSection(
+                showNavigateButton = uiState.showNavigateButton,
+                isPrimaryButtonEnabled = uiState.isPrimaryButtonEnabled,
+                isPrimaryButtonLoading = uiState.isPrimaryButtonLoading,
+                primaryButtonTitle = uiState.primaryButtonTitle,
+                onNavigateClicked = onNavigateClicked,
+                onPrimaryButtonClicked = onPrimaryButtonClicked
             )
-
-            EsmorgaText(
-                text = stringResource(id = R.string.screen_event_details_description),
-                style = EsmorgaTextStyle.HEADING_1,
-                modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp)
-            )
-            EsmorgaText(
-                text = uiState.description, style = EsmorgaTextStyle.BODY_1, modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)
-            )
-            EsmorgaText(
-                text = stringResource(id = R.string.screen_event_details_location),
-                style = EsmorgaTextStyle.HEADING_1,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)
-            )
-            EsmorgaText(
-                text = uiState.locationName, style = EsmorgaTextStyle.BODY_1, modifier = Modifier.padding(horizontal = 16.dp)
-            )
-            if (uiState.showNavigateButton) {
-                EsmorgaButton(
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 32.dp),
-                    text = stringResource(id = R.string.button_navigate),
-                    primary = false,
-                    isEnabled = !uiState.isPrimaryButtonLoading
-                ) {
-                    onNavigateClicked()
-                }
-            }
-
-            EsmorgaButton(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = if (!uiState.showNavigateButton) 32.dp else 0.dp)
-                    .testTag(EventDetailsScreenTestTags.EVENT_DETAILS_PRIMARY_BUTTON),
-                text = uiState.primaryButtonTitle,
-                primary = true,
-                isLoading = uiState.isPrimaryButtonLoading,
-                isEnabled = uiState.isPrimaryButtonEnabled
-            ) {
-                onPrimaryButtonClicked()
-            }
-
         }
+    }
+}
+
+@Composable
+fun EventDetailsHeaderSection(image: String?, title: String, date: String) {
+    AsyncImage(
+        model = ImageRequest.Builder(LocalContext.current).data(image)
+            //.crossfade(true) //Open bug in Coil https://github.com/coil-kt/coil/issues/1688 leads to image not being properly scaled if crossfade is used
+            .build(),
+        placeholder = painterResource(DesignSystem.drawable.img_event_list_empty),
+        error = painterResource(DesignSystem.drawable.img_event_list_empty),
+        contentDescription = stringResource(id = R.string.content_description_event_image).format(title),
+        contentScale = ContentScale.Crop,
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(16 / 9f)
+    )
+    EsmorgaText(
+        text = title, style = EsmorgaTextStyle.TITLE, modifier = Modifier
+            .padding(top = 32.dp, start = 16.dp, bottom = 16.dp, end = 16.dp)
+            .testTag(EventDetailsScreenTestTags.EVENT_DETAILS_EVENT_NAME)
+    )
+
+    EsmorgaText(
+        text = date,
+        style = EsmorgaTextStyle.BODY_1_ACCENT,
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
+    )
+}
+
+@Composable
+fun EventDetailsAttendeesSection(
+    attendeeCountText: String?,
+    showViewAttendeesButton: Boolean,
+    joinDeadline: String,
+    onViewAttendeesClicked: () -> Unit
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 12.dp)
+    ) {
+        attendeeCountText?.let { max ->
+            Icon(painter = painterResource(DesignSystem.drawable.group), contentDescription = null)
+            Spacer(modifier = Modifier.width(5.dp))
+            EsmorgaText(
+                text = attendeeCountText,
+                style = EsmorgaTextStyle.CAPTION,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+        }
+
+        if (showViewAttendeesButton) {
+            EsmorgaText(
+                text = stringResource(R.string.button_view_attendees),
+                style = EsmorgaTextStyle.CAPTION_UNDERSCORE,
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .clickable { onViewAttendeesClicked() }
+                    .testTag(EventDetailsScreenTestTags.EVENT_DETAILS_ATTENDEES_BUTTON)
+            )
+        }
+    }
+
+    EsmorgaText(
+        text = stringResource(id = R.string.screen_event_details_join_deadline, joinDeadline),
+        style = EsmorgaTextStyle.CAPTION,
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
+    )
+}
+
+@Composable
+fun EventDetailsDescriptionSection(description: String, locationName: String) {
+    EsmorgaText(
+        text = stringResource(id = R.string.screen_event_details_description),
+        style = EsmorgaTextStyle.HEADING_1,
+        modifier = Modifier.padding(16.dp)
+    )
+    EsmorgaText(
+        text = description,
+        style = EsmorgaTextStyle.BODY_1,
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 32.dp)
+    )
+    EsmorgaText(
+        text = stringResource(id = R.string.screen_event_details_location),
+        style = EsmorgaTextStyle.HEADING_1,
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+    )
+    EsmorgaText(
+        text = locationName,
+        style = EsmorgaTextStyle.BODY_1,
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 32.dp)
+    )
+}
+
+@Composable
+fun EventDetailsButtonSection(
+    showNavigateButton: Boolean,
+    isPrimaryButtonEnabled: Boolean,
+    isPrimaryButtonLoading: Boolean,
+    primaryButtonTitle: String,
+    onNavigateClicked: () -> Unit,
+    onPrimaryButtonClicked: () -> Unit
+) {
+    if (showNavigateButton) {
+        EsmorgaButton(
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 32.dp),
+            text = stringResource(id = R.string.button_navigate),
+            primary = false,
+            isEnabled = !isPrimaryButtonLoading
+        ) {
+            onNavigateClicked()
+        }
+    }
+
+    EsmorgaButton(
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .testTag(EventDetailsScreenTestTags.EVENT_DETAILS_PRIMARY_BUTTON),
+        text = primaryButtonTitle,
+        primary = true,
+        isLoading = isPrimaryButtonLoading,
+        isEnabled = isPrimaryButtonEnabled
+    ) {
+        onPrimaryButtonClicked()
     }
 }
 

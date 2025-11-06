@@ -22,7 +22,6 @@ import cmm.apps.esmorga.view.eventdetails.EventDetailsViewModel
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsEffect
 import cmm.apps.esmorga.view.viewmodel.mock.EventViewMock
 import cmm.apps.esmorga.view.viewmodel.util.MainDispatcherRule
-import io.mockk.FunctionAnswer
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.delay
@@ -436,7 +435,7 @@ class EventDetailsViewModelTest {
             sut.onPrimaryButtonClicked()
 
             val effect = awaitItem()
-            Assert.assertTrue(effect is EventDetailsEffect.ShowFullEventError)
+            Assert.assertTrue(effect is EventDetailsEffect.ShowEventFullError)
 
             val uiState = sut.uiState.value
             Assert.assertFalse(uiState.isPrimaryButtonLoading)

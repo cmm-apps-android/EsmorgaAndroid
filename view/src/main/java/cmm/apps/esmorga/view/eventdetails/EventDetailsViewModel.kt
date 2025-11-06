@@ -93,7 +93,7 @@ class EventDetailsViewModel(
                     }
                     updateUiState()
 
-                    _effect.tryEmit(EventDetailsEffect.ShowFullEventError)
+                    _effect.tryEmit(EventDetailsEffect.ShowEventFullError)
                 } else {
                     showErrorScreen(error)
                 }
