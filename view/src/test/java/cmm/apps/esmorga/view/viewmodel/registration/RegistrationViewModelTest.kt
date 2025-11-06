@@ -67,6 +67,22 @@ class RegistrationViewModelTest : KoinTest {
     }
 
     @Test
+    fun `given an name with Spanish special characters inputted when register method is called then effect for successful register is emitted`() = runTest {
+        val user = LoginViewMock.provideUser(name = "Nàmé", lastname = "Lást üçí")
+        val useCase = mockk<PerformRegistrationUserCase>(relaxed = true)
+        coEvery { useCase(any(), any(), any(), any()) } returns EsmorgaResult.success(Unit)
+
+        val sut = RegistrationViewModel(useCase)
+
+        sut.effect.test {
+            sut.onRegisterClicked(user.name, user.lastName, user.email, "Test@123", "Test@123")
+
+            val effect = awaitItem()
+            Assert.assertTrue(effect is RegistrationEffect.NavigateToEmailConfirmation)
+        }
+    }
+
+    @Test
     fun `given a failure usecase when register method is called then usecase executed and UI effect for error is emitted`() = runTest {
         val user = LoginViewMock.provideUser()
         val useCase = mockk<PerformRegistrationUserCase>(relaxed = true)
