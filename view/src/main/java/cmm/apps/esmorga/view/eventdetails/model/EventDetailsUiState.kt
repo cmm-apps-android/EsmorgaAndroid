@@ -26,7 +26,7 @@ sealed class EventDetailsEffect {
     data object NavigateToLoginScreen : EventDetailsEffect()
     data object ShowJoinEventSuccess : EventDetailsEffect()
     data object ShowLeaveEventSuccess : EventDetailsEffect()
-    data object ShowFullEventError : EventDetailsEffect()
+    data object ShowEventFullError : EventDetailsEffect()
     data class NavigateToAttendeesScreen(val event: Event) : EventDetailsEffect()
     data class ShowNoNetworkError(val esmorgaNoNetworkArguments: EsmorgaErrorScreenArguments = getEsmorgaNoNetworkScreenArguments()) : EventDetailsEffect()
     data class NavigateToLocation(val lat: Double, val lng: Double, val locationName: String) : EventDetailsEffect()
