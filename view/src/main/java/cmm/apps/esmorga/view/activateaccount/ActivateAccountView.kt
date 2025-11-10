@@ -43,7 +43,6 @@ fun ActivateAccountScreen(
     onError: (EsmorgaErrorScreenArguments) -> Unit,
     onLastTryError: (EsmorgaErrorScreenArguments) -> Unit
 ) {
-    val uiState: ActivateAccountUiState by viewModel.uiState.collectAsStateWithLifecycle()
     val lifecycle = LocalLifecycleOwner.current.lifecycle
 
     viewModel.observeLifecycleEvents(lifecycle)

@@ -15,8 +15,9 @@ import java.util.TimeZone
 
 @OptIn(ExperimentalMaterial3Api::class)
 class CreateEventFormDateScreenScreenshotTest : BaseScreenshotTest() {
+
     private val fixedZone: ZoneId = ZoneId.of("UTC")
-    private val fixedDate: LocalDate = LocalDate.of(2025, 8, 20)
+    private val fixedDate: LocalDate = LocalDate.of(2033, 8, 20)
     private val fixedMillis: Long = fixedDate
         .atStartOfDay(fixedZone)
         .toInstant()
@@ -31,7 +32,7 @@ class CreateEventFormDateScreenScreenshotTest : BaseScreenshotTest() {
     private val fixedDatePickerState = DatePickerState(
         initialSelectedDateMillis = fixedMillis,
         selectableDates = fixedSelectableDates,
-        locale = Locale("es", "ES")
+        locale = Locale.US
     )
 
     @Before
@@ -39,15 +40,27 @@ class CreateEventFormDateScreenScreenshotTest : BaseScreenshotTest() {
         TimeZone.setDefault(TimeZone.getTimeZone(fixedZone))
     }
 
+    //When recording, uncomment this to produce an screenshot with weekday names with 3 letters.
+    //That screenshot should not be commited and this test should be kept commented-out.
+    //For some reason, the combination of Paparazzi, DatePicker, and Locale is not producing a consistent result.
+    //I have tested many different options, but I did not managed to get a solution.
+    //The first recorded test always produces a DatePicker where weekday names are shown with 3 letters. Then the following tests produce a picker with 1 letter names instead.
+//    @Test
+//    fun a_sacrificial_warmup_test_that_produces_an_invalid_output() {
+//        snapshotWithState(
+//            isButtonEnabled = false
+//        )
+//    }
+
     @Test
-    fun createEventDateScreenDefault() {
+    fun createEventDate_lightTheme_button_disabled() {
         snapshotWithState(
             isButtonEnabled = false
         )
     }
 
     @Test
-    fun createEventDateScreenWithButtonEnabled() {
+    fun createEventDate_lightTheme_button_enabled() {
         snapshotWithState(
             isButtonEnabled = true
         )
@@ -64,7 +77,7 @@ class CreateEventFormDateScreenScreenshotTest : BaseScreenshotTest() {
                     onBackPressed = {},
                     onNextClick = { _, _ -> },
                     onTimeSelected = { _ -> },
-                    formattedTime = { _, _ -> "12:00:00.000Z" }
+                    formattedTime = { _, _ -> "12:00:00" }
                 )
             }
         }

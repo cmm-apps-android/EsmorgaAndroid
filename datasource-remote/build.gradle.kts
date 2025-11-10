@@ -67,3 +67,13 @@ dependencies {
     testImplementation(libs.robolectric)
     testImplementation(libs.androidx.junit.ktx)
 }
+
+kover {
+    currentProject {
+        instrumentation {
+            disabledForTestTasks.add("testQaReleaseUnitTest")
+            disabledForTestTasks.add("testProdDebugUnitTest")
+            disabledForTestTasks.add("testProdReleaseUnitTest")
+        }
+    }
+}

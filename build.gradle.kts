@@ -22,14 +22,13 @@ dependencies {
 kover {
     // Execute all tests with ./gradlew koverHtmlReport
     reports {
-        // filters for all report types of all build variants
         filters {
             excludes {
                 androidGeneratedClasses()
                 classes(
                     "*Module", //Dependency Injection Koin modules
                     "*.EsmorgaApp", //Application
-                    "*.EsmorgaBuildConfigImpl", //Build config
+                    "*.EsmorgaBuildConfig*", //Build config
                     "*.data.*.datasource.*", //Datasource interfaces defined in data
                     "*.domain.*.repository.*", //Repository interfaces defined in domain
                     "*.datasource_local.database.*" //Database description files
