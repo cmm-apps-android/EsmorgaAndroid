@@ -44,7 +44,7 @@ jobs:
       - name: Test with Gradle
         id: tests
         shell: bash
-        run: ./gradlew view:verifyPaparazzi koverHtmlReport
+        run: ./gradlew view:verifyPaparazzi koverXmlReport
         continue-on-error: true
 
       - name: Add coverage report to PR
