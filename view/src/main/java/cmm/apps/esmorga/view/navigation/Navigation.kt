@@ -191,7 +191,11 @@ private fun NavGraphBuilder.loginFlow(navigationController: NavHostController) {
                 navigationController.navigate(Navigation.RecoverPasswordScreen)
             },
             onLoginSuccess = {
-                navigationController.popBackStack()
+                navigationController.navigate(Navigation.EventListScreen) {
+                    popUpTo(0) {
+                        inclusive = true
+                    }
+                }
             },
             onLoginError = { esmorgaFullScreenArguments ->
                 navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = esmorgaFullScreenArguments))
