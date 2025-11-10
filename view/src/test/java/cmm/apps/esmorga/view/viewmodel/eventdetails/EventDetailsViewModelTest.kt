@@ -302,6 +302,22 @@ class EventDetailsViewModelTest {
         Assert.assertTrue(uiState.currentAttendeeCountText?.contains("$currentAttendeeCount/$maxCapacity") ?: false)
     }
 
+    @Test
+    fun `given full event when details is shown then UI state containing event full has correct content`() = runTest {
+        val event = EventViewMock.provideEvent(
+            name = "CapacityTest",
+            currentAttendeeCount = 10,
+            maxCapacity = 10,
+        )
+
+        val sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event).also {
+            it.onStart(mockk<LifecycleOwner>(relaxed = true))
+        }
+        val uiState = sut.uiState.value
+
+        Assert.assertFalse(uiState.isPrimaryButtonEnabled)
+        Assert.assertEquals(mockContext.getString(R.string.button_join_event_disabled), uiState.primaryButtonTitle)
+    }
 
     @Test
     fun `given user not joined when joins event then attendee count increases and success effect emitted`() = runTest {
@@ -325,7 +341,7 @@ class EventDetailsViewModelTest {
             Assert.assertTrue(effect is EventDetailsEffect.ShowJoinEventSuccess)
 
             val uiState = sut.uiState.value
-            Assert.assertTrue(uiState.primaryButtonTitle.contains("Leave", ignoreCase = true))
+            Assert.assertEquals(mockContext.getString(R.string.button_leave_event), uiState.primaryButtonTitle)
             Assert.assertTrue(uiState.currentAttendeeCountText?.contains("${currentAttendeeCount + 1}/$maxCapacity") ?: false)
             cancelAndIgnoreRemainingEvents()
         }
@@ -353,7 +369,7 @@ class EventDetailsViewModelTest {
             Assert.assertTrue(effect is EventDetailsEffect.ShowLeaveEventSuccess)
 
             val uiState = sut.uiState.value
-            Assert.assertTrue(uiState.primaryButtonTitle.contains("Join", ignoreCase = true))
+            Assert.assertEquals(mockContext.getString(R.string.button_join_event), uiState.primaryButtonTitle)
             Assert.assertTrue(uiState.currentAttendeeCountText?.contains("${currentAttendeeCount - 1}/$maxCapacity") ?: false)
 
             cancelAndIgnoreRemainingEvents()
