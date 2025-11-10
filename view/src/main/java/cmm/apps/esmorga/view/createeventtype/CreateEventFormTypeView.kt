@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -15,9 +15,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -28,10 +25,10 @@ import cmm.apps.designsystem.EsmorgaButton
 import cmm.apps.designsystem.EsmorgaRadioButton
 import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextStyle
+import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.domain.event.model.EventType
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
-import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeHelper
 import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeScreenEffect
 import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeScreenUiState
@@ -84,7 +81,7 @@ fun CreateEventFormTypeView(
                         onClick = { onBackClick() },
                         modifier = Modifier.testTag(CreateEventTypeScreenTestTags.CREATE_EVENT_TYPE_BACK_BUTTON)
                     ) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = null)
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.content_description_back_icon))
                     }
                 }
             )

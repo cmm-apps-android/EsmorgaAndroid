@@ -113,10 +113,7 @@ fun RecoverPasswordView(
                         onClick = onBackClicked,
                         modifier = Modifier.testTag(RECOVER_PASSWORD_BACK_BUTTON)
                     ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.content_description_back_icon)
-                        )
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.content_description_back_icon))
                     }
                 }
             )

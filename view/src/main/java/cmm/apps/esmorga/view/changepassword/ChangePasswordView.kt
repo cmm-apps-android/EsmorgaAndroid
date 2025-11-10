@@ -115,10 +115,7 @@ fun ChangePasswordView(
                         },
                         modifier = Modifier.testTag(EVENT_DETAILS_BACK_BUTTON)
                     ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.content_description_back_icon)
-                        )
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.content_description_back_icon))
                     }
                 },
             )
@@ -189,7 +186,13 @@ fun ChangePasswordView(
                     value = repeatNewPassword,
                     onValueChange = {
                         repeatNewPassword = it
-                        validateField(ChangePasswordViewModel.ChangePasswordField.REPEAT_NEW_PASS, currentPassword, newPassword, repeatNewPassword, repeatNewasswordFieldAlreadyFocussed)
+                        validateField(
+                            ChangePasswordViewModel.ChangePasswordField.REPEAT_NEW_PASS,
+                            currentPassword,
+                            newPassword,
+                            repeatNewPassword,
+                            repeatNewasswordFieldAlreadyFocussed
+                        )
                     },
                     title = R.string.reset_password_repeat_password_field,
                     placeholder = R.string.placeholder_confirm_password,
@@ -199,7 +202,13 @@ fun ChangePasswordView(
                             if (focusState.isFocused) repeatNewasswordFieldAlreadyFocussed = true
 
                             if (!focusState.isFocused) {
-                                validateField(ChangePasswordViewModel.ChangePasswordField.REPEAT_NEW_PASS, currentPassword, newPassword, repeatNewPassword, repeatNewasswordFieldAlreadyFocussed)
+                                validateField(
+                                    ChangePasswordViewModel.ChangePasswordField.REPEAT_NEW_PASS,
+                                    currentPassword,
+                                    newPassword,
+                                    repeatNewPassword,
+                                    repeatNewasswordFieldAlreadyFocussed
+                                )
                             }
                         }
                         .testTag(CHANGE_PASSWORD_REPEAT_PASS_INPUT),

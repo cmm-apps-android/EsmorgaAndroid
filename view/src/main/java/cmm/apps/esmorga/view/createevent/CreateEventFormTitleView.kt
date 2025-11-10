@@ -28,10 +28,10 @@ import cmm.apps.designsystem.EsmorgaButton
 import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextField
 import cmm.apps.designsystem.EsmorgaTextStyle
+import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.createevent.model.CreateEventFormEffect
-import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import org.koin.androidx.compose.koinViewModel
 
 @Screen
@@ -87,7 +87,7 @@ fun CreateEventFormTitleScreenContent(
                 title = {},
                 navigationIcon = {
                     IconButton(onClick = onBackClick, modifier = Modifier.testTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_BACK_BUTTON)) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.content_description_back_icon))
                     }
                 }
             )

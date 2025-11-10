@@ -23,7 +23,7 @@ import org.koin.core.context.stopKoin
 import org.koin.dsl.module
 import org.robolectric.annotation.Config
 
-@Config(sdk = [Build.VERSION_CODES.M])
+@Config(sdk = [Build.VERSION_CODES.P])
 @RunWith(AndroidJUnit4::class)
 class ConnectionInterceptorTest {
 

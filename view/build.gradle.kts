@@ -80,3 +80,11 @@ dependencies {
     testImplementation(libs.compose.ui.junit)
     testImplementation(libs.compose.ui.test.manifest)
 }
+
+kover {
+    currentProject {
+        instrumentation {
+            disabledForTestTasks.add("testReleaseUnitTest")
+        }
+    }
+}

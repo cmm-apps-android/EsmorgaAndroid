@@ -19,17 +19,70 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Build & Upload to OTA
-        uses: ./.github/actions/buildAndUpload
+      - uses: actions/setup-java@v4
         with:
-          Build-GOOGLE-SERVICES: ${{ secrets.GOOGLE_SERVICES_JSON }}
-          Build-ENVL: ${{ matrix.Build-ENVL }}
-          Build-USER: ${{ secrets.BUIUSER }}
-          Build-PASSWORD: ${{ secrets.BUIPASSWORD }}
-          Build-OTA-APIKEY: ${{ secrets.OTASHARE_APIKEY }}
-          Build-OTA-APIKEY-BUILD: ${{ secrets.OTASHARE_APIKEY_BUILD }}
-          Build-KEY-STORE: ${{ secrets.BUILD_KEYSTORE }}
-          Build-KEY-ALIAS: ${{ secrets.BUILD_KEY_ALIAS }}
-          Build-KEY-PASSWORD: ${{ secrets.BUILD_KEY_PASSWORD }}
-          Build-STORE-PASSWORD: ${{ secrets.BUILD_STORE_PASSWORD }}
-          E2E-Github-Token: ${{ secrets.E2E_Github_Token }}
+          distribution: 'temurin' # See 'Supported distributions' for available options
+          java-version: '17'
+          cache: gradle
+
+      - name: Grant execute permission for gradlew
+        shell: bash
+        run: chmod +x gradlew
+
+      - name: Create google-services.json
+        shell: bash
+        run: |
+          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" > /home/runner/work/EsmorgaAndroid/EsmorgaAndroid/app/google-services.json
+
+      - name: Decode Keystore
+        env:
+          BUILD_KEYSTORE: ${{ secrets.BUILD_KEYSTORE }}
+        shell: bash
+        run: |
+          echo $BUILD_KEYSTORE | base64 --decode > esmorgabuild.keystore.jks
+
+      - name: Build with Gradle
+        shell: bash
+        env:
+          BUILD_KEY_ALIAS: ${{ secrets.BUILD_KEY_ALIAS }}
+          BUILD_KEY_PASSWORD: ${{ secrets.BUILD_KEY_PASSWORD }}
+          BUILD_STORE_PASSWORD: ${{ secrets.BUILD_STORE_PASSWORD }}
+        run: ./gradlew :app:assemble${{ matrix.Build-ENVL }}Release
+
+      - shell: bash
+        id: otashare_file_url
+        env:
+          BUILD_NUMBER: ${{ github.run_number }}
+        run: |
+          rootDir="./"
+          GRADLE_FILE=$rootDir"app/build.gradle.kts"
+          file=$rootDir"app/build/outputs/apk/${{ matrix.Build-ENVL }}/release/app-${{ matrix.Build-ENVL }}-release.apk"
+          name=Esmorga
+          versionName=$(grep "versionName" $GRADLE_FILE | awk '{print $3}')
+          versionCode=$(grep "versionCode" $GRADLE_FILE | awk '{print $3}')
+
+          buildHash=$(md5sum $file | awk '{print $4}')
+
+          project_id=2793
+          api_key=${{ secrets.OTASHARE_APIKEY }}
+          api_key_build=${{ secrets.OTASHARE_APIKEY_BUILD }}
+          visibleClient=true
+          BuildENVL="$(echo ${{ matrix.Build-ENVL }} | tr a-z A-Z )"
+          buildType="$BuildENVL"
+          name="Esmorga [$BuildENVL]"
+          function main
+          {
+            curl -vs -F "buiFile=@${file}" \
+                -F "buiName=${name}" \
+                -F "buiVersion=${versionName}" \
+                -F "buiBuildNum=${BUILD_NUMBER}" \
+                -F "buiBuildType=${buildType}" \
+                -F "buiTemplate=0" \
+                -F "buiHash=${buildHash}" \
+                -F "buiVisibleClient=${visibleClient}" \
+                -F "buiChangeLog=none" \
+                -F "buiUser=${{ secrets.BUIUSER }}" -F "buiPassword=${{ secrets.BUIPASSWORD }}" \
+                "https://otashare-api.mobgen.com/v1/builds/registernewbuild/${project_id}/${api_key}/${api_key_build}"
+          }
+          OUT=$(main)
+          echo "url=$(echo "$OUT" | grep https)" >> $GITHUB_OUTPUT

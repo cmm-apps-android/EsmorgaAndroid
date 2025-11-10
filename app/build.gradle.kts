@@ -103,3 +103,13 @@ dependencies {
     testImplementation(libs.retrofit)
     testImplementation(libs.retrofit.converter.gson)
 }
+
+kover {
+    currentProject {
+        instrumentation {
+            disabledForTestTasks.add("testQaReleaseUnitTest")
+            disabledForTestTasks.add("testProdDebugUnitTest")
+            disabledForTestTasks.add("testProdReleaseUnitTest")
+        }
+    }
+}
