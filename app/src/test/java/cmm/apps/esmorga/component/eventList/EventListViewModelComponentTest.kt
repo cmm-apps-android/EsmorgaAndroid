@@ -8,7 +8,7 @@ import cmm.apps.esmorga.component.mock.ApiMockerRule
 import cmm.apps.esmorga.component.mock.MockApplication
 import cmm.apps.esmorga.component.mock.mockResponseSuccess
 import cmm.apps.esmorga.datasource_local.database.EsmorgaDatabase
-import cmm.apps.esmorga.datasource_remote.api.EsmorgaGuestApi
+import cmm.apps.esmorga.datasource_remote.api.EsmorgaPublicEventApi
 import cmm.apps.esmorga.di.AppDIModules
 import cmm.apps.esmorga.domain.event.GetEventListUseCase
 import cmm.apps.esmorga.view.eventlist.EventListViewModel
@@ -38,7 +38,7 @@ class EventListViewModelComponentTest : KoinTest {
     private val testDispatcher = UnconfinedTestDispatcher()
 
     @get:Rule
-    val apiMocker = ApiMockerRule(EsmorgaGuestApi::class.java, testDispatcher)
+    val apiMocker = ApiMockerRule(EsmorgaPublicEventApi::class.java, testDispatcher)
 
     private lateinit var mockContext: Context
     private lateinit var mockDatabase: EsmorgaDatabase
@@ -67,7 +67,7 @@ class EventListViewModelComponentTest : KoinTest {
                 AppDIModules.modules,
                 module {
                     single<EsmorgaDatabase> { mockDatabase }
-                    single<EsmorgaGuestApi> { apiMocker.api }
+                    single<EsmorgaPublicEventApi> { apiMocker.api }
                 }
             )
         }

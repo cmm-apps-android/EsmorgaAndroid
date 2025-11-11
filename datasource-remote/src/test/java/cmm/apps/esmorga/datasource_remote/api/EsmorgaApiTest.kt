@@ -1,11 +1,9 @@
 package cmm.apps.esmorga.datasource_remote.api
 
-import android.content.Context
 import android.os.Build
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import cmm.apps.esmorga.datasource_remote.mock.MockServer
 import cmm.apps.esmorga.datasource_remote.mock.json.ServerFiles
-import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert
@@ -35,7 +33,7 @@ class EsmorgaApiTest {
         mockServer.enqueueFile(200, ServerFiles.GET_EVENTS)
 
         val sut = NetworkApiHelper().provideApi(
-            mockServer.start(), EsmorgaGuestApi::class.java, null, null, null, null
+            mockServer.start(), EsmorgaPublicEventApi::class.java, null, null, null, null
         )
 
         val eventWrapper = sut.getEvents()
@@ -49,7 +47,7 @@ class EsmorgaApiTest {
         mockServer.enqueueFile(200, ServerFiles.GET_EVENT_ATTENDEES)
 
         val sut = NetworkApiHelper().provideApi(
-            mockServer.start(), EsmorgaApi::class.java, null, null, null, null
+            mockServer.start(), EsmorgaEventApi::class.java, null, null, null, null
         )
 
         val attendeesWrapper = sut.getEventAttendees("test")
@@ -59,11 +57,25 @@ class EsmorgaApiTest {
     }
 
     @Test
+    fun `given a successful mock server when polls are requested then a correct pollWrapper is returned`() = runTest {
+        mockServer.enqueueFile(200, ServerFiles.GET_POLLS)
+
+        val sut = NetworkApiHelper().provideApi(
+            mockServer.start(), EsmorgaEventApi::class.java, null, null, null, null
+        )
+
+        val pollsWrapper = sut.getPolls()
+
+        Assert.assertEquals(2, pollsWrapper.remotePollList.size)
+        Assert.assertTrue(pollsWrapper.remotePollList[0].remoteName.contains("MobgenFest"))
+    }
+
+    @Test
     fun `given a successful mock server when login is requested then a correct user is returned`() = runTest {
         mockServer.enqueueFile(200, ServerFiles.LOGIN)
 
         val sut = NetworkApiHelper().provideApi(
-            mockServer.start(), EsmorgaAuthApi::class.java, null, null, null, null
+            mockServer.start(), EsmorgaAccountApi::class.java, null, null, null, null
         )
 
         val user = sut.login(body = mapOf("email" to "email", "password" to "password"))
