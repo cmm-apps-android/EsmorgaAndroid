@@ -2,6 +2,8 @@ package cmm.apps.esmorga.domain.poll
 
 import cmm.apps.esmorga.domain.poll.model.Poll
 import cmm.apps.esmorga.domain.poll.repository.PollRepository
+import cmm.apps.esmorga.domain.result.ErrorCodes
+import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.EsmorgaResult
 
 interface GetPollListUseCase {
@@ -14,14 +16,12 @@ class GetPollListUseCaseImpl(private val repo: PollRepository) : GetPollListUseC
             val result = repo.getPolls(forceRefresh)
             return EsmorgaResult.success(result)
         } catch (e: Exception) {
-            //TODO
-//            if (e is EsmorgaException && e.code == ErrorCodes.NO_CONNECTION) {
-//                val localData = repo.getEvents(forceLocal = true)
-//                return EsmorgaResult.noConnectionError(localData)
-//            } else {
-//                return EsmorgaResult.failure(e)
-//            }
+            if (e is EsmorgaException && e.code == ErrorCodes.NO_CONNECTION) {
+                val localData = repo.getPolls(forceLocal = true)
+                return EsmorgaResult.noConnectionError(localData)
+            } else {
+                return EsmorgaResult.failure(e)
+            }
         }
-        return EsmorgaResult.failure(RuntimeException())
     }
 }

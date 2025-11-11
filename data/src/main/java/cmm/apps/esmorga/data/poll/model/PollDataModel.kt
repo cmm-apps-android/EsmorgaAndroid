@@ -8,7 +8,8 @@ data class PollDataModel(
     val dataImageUrl: String?,
     val dataVoteDeadline: Long,
     val dataIsMultipleChoice: Boolean,
-    val dataOptions: List<PollOptionDataModel>
+    val dataOptions: List<PollOptionDataModel>,
+    val dataCreationTime: Long = System.currentTimeMillis()
 )
 
 data class PollOptionDataModel(

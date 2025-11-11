@@ -1,5 +1,6 @@
 package cmm.apps.esmorga.data.poll
 
+import cmm.apps.esmorga.data.CacheHelper
 import cmm.apps.esmorga.data.poll.datasource.PollDatasource
 import cmm.apps.esmorga.data.poll.mapper.toPollList
 import cmm.apps.esmorga.data.poll.model.PollDataModel
@@ -9,17 +10,16 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
 class PollRepositoryImpl(
-    private val remotePollDs: PollDatasource,
-    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.Default
+    private val localPollDs: PollDatasource,
+    private val remotePollDs: PollDatasource
 ) : PollRepository {
 
     override suspend fun getPolls(forceRefresh: Boolean, forceLocal: Boolean): List<Poll> {
-        //TODO
-//        val localList = localEventDs.getEvents()
-//
-//        if (forceLocal || forceRefresh.not() && localList.isNotEmpty() && CacheHelper.shouldReturnCache(localList[0].dataCreationTime)) {
-//            return localList.toEventList()
-//        }
+        val localList = localPollDs.getPolls()
+
+        if (forceLocal || forceRefresh.not() && localList.isNotEmpty() && CacheHelper.shouldReturnCache(localList[0].dataCreationTime)) {
+            return localList.toPollList()
+        }
 
         return getPollsFromRemote().toPollList()
     }
@@ -27,8 +27,7 @@ class PollRepositoryImpl(
     private suspend fun getPollsFromRemote(): List<PollDataModel> {
         val remotePollList = remotePollDs.getPolls()
 
-        //TODO cache polls in local
-        // localEventDs.cacheEvents(combinedList)
+        localPollDs.cachePolls(remotePollList)
         return remotePollList
     }
 

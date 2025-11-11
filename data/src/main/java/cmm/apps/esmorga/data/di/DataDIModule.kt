@@ -32,6 +32,7 @@ object DataDIModule {
         }
         factory<PollRepository> {
             PollRepositoryImpl(
+                get(named(LOCAL_DATASOURCE_INSTANCE_NAME)),
                 get(named(REMOTE_DATASOURCE_INSTANCE_NAME))
             )
         }
