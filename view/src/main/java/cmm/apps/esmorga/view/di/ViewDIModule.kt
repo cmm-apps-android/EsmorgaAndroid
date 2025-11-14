@@ -11,8 +11,8 @@ import cmm.apps.esmorga.view.dateformatting.DateFormatterImpl
 import cmm.apps.esmorga.view.dateformatting.EsmorgaDateTimeFormatter
 import cmm.apps.esmorga.view.eventattendees.EventAttendeesViewModel
 import cmm.apps.esmorga.view.eventdetails.EventDetailsViewModel
-import cmm.apps.esmorga.view.eventlist.EventListViewModel
-import cmm.apps.esmorga.view.eventlist.MyEventListViewModel
+import cmm.apps.esmorga.view.explore.ExploreViewModel
+import cmm.apps.esmorga.view.myeventlist.MyEventListViewModel
 import cmm.apps.esmorga.view.login.LoginViewModel
 import cmm.apps.esmorga.view.password.RecoverPasswordViewModel
 import cmm.apps.esmorga.view.password.ResetPasswordViewModel
@@ -26,7 +26,7 @@ object ViewDIModule {
 
     val module = module {
         viewModel {
-            EventListViewModel(get())
+            ExploreViewModel(get())
         }
         viewModel {
             MyEventListViewModel(get(), get())

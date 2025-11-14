@@ -19,7 +19,7 @@ import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_TITLE
 import cmm.apps.designsystem.GuestErrorTestTags.GUEST_ERROR_PRIMARY_BUTTON
 import cmm.apps.esmorga.domain.account.ActivateAccountUseCase
 import cmm.apps.esmorga.domain.event.GetEventAttendeesUseCase
-import cmm.apps.esmorga.domain.event.GetEventListUseCase
+import cmm.apps.esmorga.domain.event.GetEventsAndPollsUseCase
 import cmm.apps.esmorga.domain.event.GetMyEventListUseCase
 import cmm.apps.esmorga.domain.event.JoinEventUseCase
 import cmm.apps.esmorga.domain.event.LeaveEventUseCase
@@ -51,15 +51,15 @@ import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAI
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAILS_BACK_BUTTON
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAILS_EVENT_NAME
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAILS_PRIMARY_BUTTON
-import cmm.apps.esmorga.view.eventlist.EventListScreenTestTags.EVENT_LIST_EVENT_NAME
-import cmm.apps.esmorga.view.eventlist.EventListScreenTestTags.EVENT_LIST_TITLE
-import cmm.apps.esmorga.view.eventlist.MyEventListScreenTestTags.MY_EVENT_LIST_TITLE
+import cmm.apps.esmorga.view.explore.ExploreScreenTestTags.EXPLORE_LIST_CARD_NAME
+import cmm.apps.esmorga.view.explore.ExploreScreenTestTags.EXPLORE_TITLE
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_EMAIL_INPUT
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_FORGOT_PASSWORD_BUTTON
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_LOGIN_BUTTON
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_PASSWORD_INPUT
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_REGISTER_BUTTON
 import cmm.apps.esmorga.view.login.LoginScreenTestTags.LOGIN_TITLE
+import cmm.apps.esmorga.view.myeventlist.MyEventListScreenTestTags.MY_EVENT_LIST_TITLE
 import cmm.apps.esmorga.view.password.RecoverPasswordScreenTestTags.RECOVER_PASSWORD_BACK_BUTTON
 import cmm.apps.esmorga.view.password.RecoverPasswordScreenTestTags.RECOVER_PASSWORD_EMAIL_INPUT
 import cmm.apps.esmorga.view.password.RecoverPasswordScreenTestTags.RECOVER_PASSWORD_SEND_EMAIL_BUTTON
@@ -86,6 +86,7 @@ import cmm.apps.esmorga.view.registration.RegistrationScreenTestTags.REGISTRATIO
 import cmm.apps.esmorga.view.viewmodel.mock.EventAttendeeViewMock
 import cmm.apps.esmorga.view.viewmodel.mock.EventViewMock
 import cmm.apps.esmorga.view.viewmodel.mock.LoginViewMock
+import cmm.apps.esmorga.view.viewmodel.mock.PollViewMock
 import io.mockk.coEvery
 import io.mockk.mockk
 import org.junit.After
@@ -109,8 +110,11 @@ class NavigationTest {
 
     private lateinit var navController: NavHostController
 
-    private val getEventListUseCase = mockk<GetEventListUseCase>(relaxed = true).also { useCase ->
-        coEvery { useCase() } returns EsmorgaResult.success(EventViewMock.provideEventList(listOf("event")))
+    private val eventName = "event"
+    private val pollName = "poll"
+
+    private val getEventListUseCase = mockk<GetEventsAndPollsUseCase>(relaxed = true).also { useCase ->
+        coEvery { useCase() } returns EsmorgaResult.success(Pair(EventViewMock.provideEventList(listOf(eventName)), PollViewMock.providePollList(listOf(pollName))))
     }
 
     private val getEventAttendeesUseCase = mockk<GetEventAttendeesUseCase>(relaxed = true).also { useCase ->
@@ -180,7 +184,7 @@ class NavigationTest {
             modules(
                 ViewDIModule.module,
                 module {
-                    factory<GetEventListUseCase> { getEventListUseCase }
+                    factory<GetEventsAndPollsUseCase> { getEventListUseCase }
                     factory<GetEventAttendeesUseCase> { getEventAttendeesUseCase }
                     factory<UpdateEventAttendeeUseCase> { updateEventAttendeeUseCase }
                     factory<PerformLoginUseCase> { performLoginUseCase }
@@ -206,14 +210,14 @@ class NavigationTest {
     }
 
     @Test
-    fun `given user, when app is open, then event list screen is shown`() {
+    fun `given user, when app is open, then explore screen is shown`() {
         setNavigationFromAppLaunch()
 
-        composeTestRule.onNodeWithTag(EVENT_LIST_TITLE).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(EXPLORE_TITLE).assertIsDisplayed()
     }
 
     @Test
-    fun `given user not logged, when login visited and login is performed, then event list screen is shown`() {
+    fun `given user not logged, when login visited and login is performed, then explore screen is shown`() {
         val getMyEventListUseCase = mockk<GetMyEventListUseCase>(relaxed = true).also { useCase ->
             coEvery { useCase() } returns EsmorgaResult.failure(EsmorgaException(message = "", source = Source.LOCAL, code = ErrorCodes.NOT_LOGGED_IN))
         }
@@ -227,7 +231,7 @@ class NavigationTest {
         composeTestRule.onNodeWithTag(LOGIN_PASSWORD_INPUT).performTextInput("Test@123")
         composeTestRule.onNodeWithTag(LOGIN_LOGIN_BUTTON).performClick()
 
-        composeTestRule.onNodeWithTag(MY_EVENT_LIST_TITLE).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(EXPLORE_TITLE).assertIsDisplayed()
     }
 
     @Test
@@ -270,24 +274,24 @@ class NavigationTest {
     }
 
     @Test
-    fun `given user logged, when event list screen visited and event is clicked, then event detail is shown`() {
-        setNavigationFromDestination(Navigation.EventListScreen)
+    fun `given user logged, when explore screen visited and event is clicked, then event detail is shown`() {
+        setNavigationFromDestination(Navigation.ExploreScreen)
 
-        composeTestRule.onNodeWithTag(EVENT_LIST_EVENT_NAME, true).performClick()
+        composeTestRule.onNodeWithTag("$EXPLORE_LIST_CARD_NAME - $eventName", true).performClick()
         composeTestRule.onNodeWithTag(EVENT_DETAILS_EVENT_NAME).assertIsDisplayed()
     }
 
     @Test
-    fun `given user logged, when visiting event list, details and back clicked, then event list is shown`() {
-        setNavigationFromDestination(Navigation.EventListScreen)
+    fun `given user logged, when visiting explore, details and back clicked, then explore is shown`() {
+        setNavigationFromDestination(Navigation.ExploreScreen)
 
-        composeTestRule.onNodeWithTag(EVENT_LIST_EVENT_NAME, true).performClick()
+        composeTestRule.onNodeWithTag("$EXPLORE_LIST_CARD_NAME - $eventName", true).performClick()
         composeTestRule.onNodeWithTag(EVENT_DETAILS_BACK_BUTTON).performClick()
-        composeTestRule.onNodeWithTag(EVENT_LIST_TITLE).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(EXPLORE_TITLE).assertIsDisplayed()
     }
 
     @Test
-    fun `given user logged, when visiting event list, details and attendees is clicked, then attendee list is shown`() {
+    fun `given user logged, when visiting explore, details and attendees is clicked, then attendee list is shown`() {
         setNavigationFromDestination(Navigation.EventDetailScreen(EventViewMock.provideEvent(name = "EventName", currentAttendeeCount = 1)))
 
         composeTestRule.onNodeWithTag(EVENT_DETAILS_ATTENDEES_BUTTON).performClick()
@@ -295,7 +299,7 @@ class NavigationTest {
     }
 
     @Test
-    fun `given user logged, when visiting event list, details, attendees and back is clicked, then event details is shown`() {
+    fun `given user logged, when visiting explore, details, attendees and back is clicked, then event details is shown`() {
         setNavigationFromDestination(Navigation.EventDetailScreen(EventViewMock.provideEvent(name = "EventName", currentAttendeeCount = 1)))
 
         composeTestRule.onNodeWithTag(EVENT_DETAILS_ATTENDEES_BUTTON).performClick()

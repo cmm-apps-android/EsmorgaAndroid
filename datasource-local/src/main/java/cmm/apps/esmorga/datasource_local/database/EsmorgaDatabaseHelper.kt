@@ -9,11 +9,11 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 object EsmorgaDatabaseHelper {
 
     private const val DATABASE_NAME = "esmorga_database"
-    const val DATABASE_VERSION = 5
+    const val DATABASE_VERSION = 6
 
     fun getDatabase(context: Context) =
         Room.databaseBuilder(context, EsmorgaDatabase::class.java, DATABASE_NAME)
-            .addMigrations(MIGRATION_3_4, MIGRATION_4_5)
+            .addMigrations(MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
             .fallbackToDestructiveMigration(true)
             .build()
 
@@ -58,6 +58,42 @@ object EsmorgaDatabaseHelper {
                 `localName` TEXT NOT NULL, 
                 `localAlreadyPaid` INTEGER NOT NULL DEFAULT 0, 
                 PRIMARY KEY(`localEventId`, `localName`)
+            )
+            """.trimIndent()
+            )
+        }
+    }
+
+    private val MIGRATION_5_6 = object : Migration(5, 6) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            //AttendeeCount, MaxCapacity, and JoinDeadline columns added EventLocalModel DB table in version 5
+            db.execSQL("DROP TABLE IF EXISTS PollLocalModel")
+            db.execSQL(
+                """
+            CREATE TABLE IF NOT EXISTS PollLocalModel (
+                `localId` TEXT NOT NULL, 
+                `localName` TEXT NOT NULL, 
+                `localDescription` TEXT NOT NULL, 
+                `localImageUrl` TEXT, 
+                `localVoteDeadline` INTEGER NOT NULL, 
+                `localIsMultipleChoice` INTEGER NOT NULL DEFAULT 0, 
+                `localCreationTime` INTEGER NOT NULL, 
+                PRIMARY KEY(`localId`)
+            )
+            """.trimIndent()
+            )
+
+            //EventAttendeeLocalModel DB table created in version 5
+            db.execSQL("DROP TABLE IF EXISTS PollOptionLocalModel")
+            db.execSQL(
+                """
+            CREATE TABLE IF NOT EXISTS PollOptionLocalModel (
+                `localPollId` TEXT NOT NULL, 
+                `localOptionId` TEXT NOT NULL, 
+                `localText` TEXT NOT NULL, 
+                `localVoteCount` INTEGER NOT NULL, 
+                `localUserSelected` INTEGER NOT NULL DEFAULT 0, 
+                PRIMARY KEY(`localPollId`, `localOptionId`)
             )
             """.trimIndent()
             )

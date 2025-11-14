@@ -16,7 +16,7 @@ class HomeViewScreenShotTest : BaseScreenshotTest() {
 
     @Test
     fun bottombar_eventLst_selected() {
-        snapshotWithState(BottomNavItemRoute.EVENT_LIST)
+        snapshotWithState(BottomNavItemRoute.EXPLORE)
     }
 
     @Test

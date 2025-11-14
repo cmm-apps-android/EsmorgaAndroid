@@ -25,7 +25,7 @@ object DeeplinkManager {
         return when (screenName) {
             DEEPLINK_ACTIVATE_ACCOUNT_SCREEN_NAME -> Navigation.ActivateAccountScreen(deeplinkPath.getQueryParameter(deeplinkParameterName).orEmpty())
             DEEPLINK_RESET_PASSWORD_SCREEN_NAME -> Navigation.ResetPasswordScreen(deeplinkPath.getQueryParameter(deeplinkParameterName).orEmpty())
-            else -> Navigation.EventListScreen
+            else -> Navigation.ExploreScreen
         }
     }
 }

@@ -3,16 +3,16 @@ package cmm.apps.esmorga.datasource_remote.user
 import cmm.apps.esmorga.data.user.datasource.AuthDatasource
 import cmm.apps.esmorga.data.user.datasource.UserDatasource
 import cmm.apps.esmorga.data.user.model.UserDataModel
-import cmm.apps.esmorga.datasource_remote.api.EsmorgaApi
-import cmm.apps.esmorga.datasource_remote.api.EsmorgaAuthApi
+import cmm.apps.esmorga.datasource_remote.api.EsmorgaEventApi
+import cmm.apps.esmorga.datasource_remote.api.EsmorgaAccountApi
 import cmm.apps.esmorga.datasource_remote.api.ExceptionHandler.manageApiException
 import cmm.apps.esmorga.datasource_remote.user.mapper.toUserDataModel
 
-class UserRemoteDatasourceImpl(private val api: EsmorgaAuthApi, private val esmorgaApi: EsmorgaApi, private val authDatasource: AuthDatasource) : UserDatasource {
+class UserRemoteDatasourceImpl(private val accountApi: EsmorgaAccountApi, private val eventsApi: EsmorgaEventApi, private val authDatasource: AuthDatasource) : UserDatasource {
     override suspend fun login(email: String, password: String): UserDataModel {
         try {
             val loginBody = mapOf("email" to email, "password" to password)
-            val user = api.login(loginBody)
+            val user = accountApi.login(loginBody)
             authDatasource.saveTokens(user.remoteAccessToken, user.remoteRefreshToken, user.ttl)
             return user.toUserDataModel()
         } catch (e: Exception) {
@@ -28,7 +28,7 @@ class UserRemoteDatasourceImpl(private val api: EsmorgaAuthApi, private val esmo
                 "email" to email,
                 "password" to password
             )
-            api.register(registerBody)
+            accountApi.register(registerBody)
         } catch (e: Exception) {
             throw manageApiException(e)
         }
@@ -39,7 +39,7 @@ class UserRemoteDatasourceImpl(private val api: EsmorgaAuthApi, private val esmo
             val emailBody = mapOf(
                 "email" to email
             )
-            api.emailVerification(emailBody)
+            accountApi.emailVerification(emailBody)
         } catch (e: Exception) {
             throw manageApiException(e)
         }
@@ -48,7 +48,7 @@ class UserRemoteDatasourceImpl(private val api: EsmorgaAuthApi, private val esmo
     override suspend fun activateAccount(verificationCode: String): UserDataModel {
         try {
             val body = mapOf("verificationCode" to verificationCode)
-            val user = api.accountActivation(body)
+            val user = accountApi.accountActivation(body)
             authDatasource.saveTokens(user.remoteAccessToken, user.remoteRefreshToken, user.ttl)
             return user.toUserDataModel()
         } catch (e: Exception) {
@@ -61,7 +61,7 @@ class UserRemoteDatasourceImpl(private val api: EsmorgaAuthApi, private val esmo
             val emailBody = mapOf(
                 "email" to email
             )
-            api.recoverPassword(emailBody)
+            accountApi.recoverPassword(emailBody)
         } catch (e: Exception) {
             throw manageApiException(e)
         }
@@ -73,7 +73,7 @@ class UserRemoteDatasourceImpl(private val api: EsmorgaAuthApi, private val esmo
                 "password" to password,
                 "forgotPasswordCode" to code
             )
-            api.resetPassword(body)
+            accountApi.resetPassword(body)
         } catch (e: Exception) {
             throw manageApiException(e)
         }
@@ -89,7 +89,7 @@ class UserRemoteDatasourceImpl(private val api: EsmorgaAuthApi, private val esmo
                 "currentPassword" to currentPassword,
                 "newPassword" to newPassword
             )
-            esmorgaApi.changePassword(body)
+            accountApi.changePassword(body)
         } catch (e: Exception) {
             throw manageApiException(e)
         }

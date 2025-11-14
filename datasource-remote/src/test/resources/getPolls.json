@@ -1,0 +1,55 @@
+{
+  "totalPolls": 2,
+  "polls": [
+    {
+      "pollId": "1",
+      "pollName": "MobgenFest",
+      "description": "Hello World",
+      "imageUrl": "https://i.ytimg.com/vi/lTDBT-w4hnE/sddefault.jpg",
+      "options": [
+        {
+          "optionId": "opt1",
+          "option": "13 de febrero",
+          "voteCount": 9
+        },
+        {
+          "optionId": "opt2",
+          "option": "20 de febrero",
+          "voteCount": 13
+        },
+        {
+          "optionId": "opt3",
+          "option": "27 de febrero",
+          "voteCount": 3
+        }
+      ],
+      "userSelectedOptions": [
+        "opt1",
+        "opt2"
+      ],
+      "voteDeadline": "2029-12-31T23:00:00.000Z",
+      "isMultipleChoice": true
+    },
+    {
+      "pollId": "2",
+      "pollName": "Xmas party",
+      "description": "Hello World",
+      "imageUrl": "https://i.ytimg.com/vi/lTDBT-w4hnE/sddefault.jpg",
+      "options": [
+        {
+          "optionId": "optA",
+          "option": "SI",
+          "voteCount": 0
+        },
+        {
+          "optionId": "optB",
+          "option": "NO",
+          "voteCount": 1
+        }
+      ],
+      "userSelectedOptions": [],
+      "voteDeadline": "2033-12-19T16:00:00.000Z",
+      "isMultipleChoice": false
+    }
+  ]
+}

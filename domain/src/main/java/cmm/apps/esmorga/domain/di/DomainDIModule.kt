@@ -6,8 +6,8 @@ import cmm.apps.esmorga.domain.event.GetEventAttendeesUseCase
 import cmm.apps.esmorga.domain.event.GetEventAttendeesUseCaseImpl
 import cmm.apps.esmorga.domain.event.GetEventDetailsUseCase
 import cmm.apps.esmorga.domain.event.GetEventDetailsUseCaseImpl
-import cmm.apps.esmorga.domain.event.GetEventListUseCase
 import cmm.apps.esmorga.domain.event.GetEventListUseCaseImpl
+import cmm.apps.esmorga.domain.event.GetEventsAndPollsUseCase
 import cmm.apps.esmorga.domain.event.GetMyEventListUseCase
 import cmm.apps.esmorga.domain.event.GetMyEventListUseCaseImpl
 import cmm.apps.esmorga.domain.event.JoinEventUseCase
@@ -38,7 +38,7 @@ import org.koin.dsl.module
 object DomainDIModule {
 
     val module = module {
-        factory<GetEventListUseCase> { GetEventListUseCaseImpl(get()) }
+        factory<GetEventsAndPollsUseCase> { GetEventListUseCaseImpl(get(), get(), get()) }
         factory<GetEventDetailsUseCase> { GetEventDetailsUseCaseImpl(get()) }
         factory<GetEventAttendeesUseCase> { GetEventAttendeesUseCaseImpl(get()) }
         factory<UpdateEventAttendeeUseCase> { UpdateEventAttendeeUseCaseImpl(get()) }

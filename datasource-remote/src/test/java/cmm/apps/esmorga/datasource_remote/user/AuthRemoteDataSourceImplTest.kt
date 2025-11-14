@@ -1,7 +1,7 @@
 package cmm.apps.esmorga.datasource_remote.user
 
 import android.content.SharedPreferences
-import cmm.apps.esmorga.datasource_remote.api.EsmorgaAuthApi
+import cmm.apps.esmorga.datasource_remote.api.EsmorgaAccountApi
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.slot
@@ -64,7 +64,7 @@ class AuthRemoteDataSourceImplTest {
         val localAccessToken = "localAccessToken"
         fakeToken = ""
 
-        val api = mockk<EsmorgaAuthApi>(relaxed = true)
+        val api = mockk<EsmorgaAccountApi>(relaxed = true)
         val sut = AuthRemoteDatasourceImpl(api, provideFakeSharedPreferences(), UnconfinedTestDispatcher())
         sut.saveTokens(localAccessToken, "", 0)
         val result = sut.getAccessToken()
@@ -78,7 +78,7 @@ class AuthRemoteDataSourceImplTest {
         val localRefreshToken = "localRefreshToken"
         fakeRefreshToken = ""
 
-        val api = mockk<EsmorgaAuthApi>(relaxed = true)
+        val api = mockk<EsmorgaAccountApi>(relaxed = true)
         val sut = AuthRemoteDatasourceImpl(api, provideFakeSharedPreferences(), UnconfinedTestDispatcher())
         sut.saveTokens("", localRefreshToken, 0)
         val result = sut.getRefreshToken()
@@ -92,7 +92,7 @@ class AuthRemoteDataSourceImplTest {
         val localFakeToken = "localFakeToken"
         fakeToken = localFakeToken
 
-        val api = mockk<EsmorgaAuthApi>(relaxed = true)
+        val api = mockk<EsmorgaAccountApi>(relaxed = true)
         val sut = AuthRemoteDatasourceImpl(api, provideFakeSharedPreferences(), UnconfinedTestDispatcher())
 
         sut.deleteTokens()
@@ -107,7 +107,7 @@ class AuthRemoteDataSourceImplTest {
         val localFakeRefreshToken = "localFakeRefreshToken"
         fakeRefreshToken = localFakeRefreshToken
 
-        val api = mockk<EsmorgaAuthApi>(relaxed = true)
+        val api = mockk<EsmorgaAccountApi>(relaxed = true)
         val sut = AuthRemoteDatasourceImpl(api, provideFakeSharedPreferences(), UnconfinedTestDispatcher())
 
         sut.deleteTokens()
@@ -122,7 +122,7 @@ class AuthRemoteDataSourceImplTest {
         val localExpirationDate = 3476347L
         fakeExpirationDate = localExpirationDate
 
-        val api = mockk<EsmorgaAuthApi>(relaxed = true)
+        val api = mockk<EsmorgaAccountApi>(relaxed = true)
         val sut = AuthRemoteDatasourceImpl(api, provideFakeSharedPreferences(), UnconfinedTestDispatcher())
 
         sut.deleteTokens()
