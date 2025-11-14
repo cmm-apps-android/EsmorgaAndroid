@@ -20,15 +20,15 @@ class GetEventsAndPollsUseCaseImplTest {
     val repoEventName = "RepoEvent"
     val repoPollName = "RepoPoll"
 
-    val eventRepo = mockk<EventRepository>(relaxed = true).also{
+    val eventRepo = mockk<EventRepository>(relaxed = true).also {
         coEvery { it.getEvents() } returns EventDomainMock.provideEventList(listOf(repoEventName))
     }
 
-    val pollRepo = mockk<PollRepository>(relaxed = true).also{
+    val pollRepo = mockk<PollRepository>(relaxed = true).also {
         coEvery { it.getPolls() } returns PollDomainMock.providePollList(listOf(repoPollName))
     }
 
-    val userRepo = mockk<UserRepository>(relaxed = true).also{
+    val userRepo = mockk<UserRepository>(relaxed = true).also {
         coEvery { it.getUser() } returns UserDomainMock.provideUser()
     }
 
@@ -39,6 +39,19 @@ class GetEventsAndPollsUseCaseImplTest {
 
         Assert.assertEquals(repoEventName, result.data!!.first[0].name)
         Assert.assertEquals(repoPollName, result.data.second[0].name)
+    }
+
+    @Test
+    fun `given user not logged and successful repositories when events and polls requested then only events returned`() = runTest {
+        val userRepo = mockk<UserRepository>(relaxed = true).also {
+            coEvery { it.getUser() } throws EsmorgaException(message = "User not found", source = Source.LOCAL, code = ErrorCodes.NOT_LOGGED_IN)
+        }
+
+        val sut = GetEventListUseCaseImpl(eventRepo, pollRepo, userRepo)
+        val result = sut.invoke()
+
+        Assert.assertEquals(repoEventName, result.data!!.first[0].name)
+        Assert.assertTrue("Poll list should be empty when user is not logged in", result.data.second.isEmpty())
     }
 
     @Test
@@ -67,7 +80,7 @@ class GetEventsAndPollsUseCaseImplTest {
         val sut = GetEventListUseCaseImpl(eventRepo, pollRepo, userRepo)
         val result = sut.invoke()
 
-        Assert.assertNotNull("Exception should be returned",result.error)
+        Assert.assertNotNull("Exception should be returned", result.error)
     }
 
     @Test
@@ -78,6 +91,6 @@ class GetEventsAndPollsUseCaseImplTest {
         val sut = GetEventListUseCaseImpl(eventRepo, pollRepo, userRepo)
         val result = sut.invoke()
 
-        Assert.assertNotNull("Exception should be returned",result.error)
+        Assert.assertNotNull("Exception should be returned", result.error)
     }
 }
