@@ -6,8 +6,8 @@ import cmm.apps.esmorga.domain.event.GetEventAttendeesUseCase
 import cmm.apps.esmorga.domain.event.GetEventAttendeesUseCaseImpl
 import cmm.apps.esmorga.domain.event.GetEventDetailsUseCase
 import cmm.apps.esmorga.domain.event.GetEventDetailsUseCaseImpl
-import cmm.apps.esmorga.domain.event.GetEventListUseCase
 import cmm.apps.esmorga.domain.event.GetEventListUseCaseImpl
+import cmm.apps.esmorga.domain.event.GetEventsAndPollsUseCase
 import cmm.apps.esmorga.domain.event.GetMyEventListUseCase
 import cmm.apps.esmorga.domain.event.GetMyEventListUseCaseImpl
 import cmm.apps.esmorga.domain.event.JoinEventUseCase
@@ -16,8 +16,6 @@ import cmm.apps.esmorga.domain.event.LeaveEventUseCase
 import cmm.apps.esmorga.domain.event.LeaveEventUseCaseImpl
 import cmm.apps.esmorga.domain.event.UpdateEventAttendeeUseCase
 import cmm.apps.esmorga.domain.event.UpdateEventAttendeeUseCaseImpl
-import cmm.apps.esmorga.domain.poll.GetPollListUseCase
-import cmm.apps.esmorga.domain.poll.GetPollListUseCaseImpl
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCaseImpl
 import cmm.apps.esmorga.domain.user.LogOutUseCase
@@ -40,7 +38,7 @@ import org.koin.dsl.module
 object DomainDIModule {
 
     val module = module {
-        factory<GetEventListUseCase> { GetEventListUseCaseImpl(get()) }
+        factory<GetEventsAndPollsUseCase> { GetEventListUseCaseImpl(get(), get(), get()) }
         factory<GetEventDetailsUseCase> { GetEventDetailsUseCaseImpl(get()) }
         factory<GetEventAttendeesUseCase> { GetEventAttendeesUseCaseImpl(get()) }
         factory<UpdateEventAttendeeUseCase> { UpdateEventAttendeeUseCaseImpl(get()) }
@@ -56,6 +54,5 @@ object DomainDIModule {
         factory<ActivateAccountUseCase> { ActivateAccountUseCaseImpl(get()) }
         factory<PerformResetPasswordUseCase> { PerformResetPasswordUseCaseImpl(get()) }
         factory<PerformChangePasswordUseCase> { PerformChangePasswordUseCaseImpl(get()) }
-        factory<GetPollListUseCase> { GetPollListUseCaseImpl(get()) }
     }
 }

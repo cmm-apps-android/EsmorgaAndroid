@@ -10,8 +10,8 @@ import cmm.apps.esmorga.component.mock.mockResponseSuccess
 import cmm.apps.esmorga.datasource_local.database.EsmorgaDatabase
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaPublicEventApi
 import cmm.apps.esmorga.di.AppDIModules
-import cmm.apps.esmorga.domain.event.GetEventListUseCase
-import cmm.apps.esmorga.view.eventlist.EventListViewModel
+import cmm.apps.esmorga.domain.event.GetEventsAndPollsUseCase
+import cmm.apps.esmorga.view.explore.ExploreViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.asExecutor
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -79,11 +79,10 @@ class EventListViewModelComponentTest : KoinTest {
         apiMocker.enqueue { mockResponseSuccess("/events.json") }
         startDI()
 
-        val useCase: GetEventListUseCase by inject()
+        val useCase: GetEventsAndPollsUseCase by inject()
+        val sut = ExploreViewModel(useCase)
 
-        val sut = EventListViewModel(useCase)
-
-        sut.loadEvents()
+        sut.loadEventsAndPolls()
 
         advanceUntilIdle()
 

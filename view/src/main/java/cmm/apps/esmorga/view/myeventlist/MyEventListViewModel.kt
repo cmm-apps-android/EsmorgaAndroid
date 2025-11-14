@@ -1,4 +1,4 @@
-package cmm.apps.esmorga.view.eventlist
+package cmm.apps.esmorga.view.myeventlist
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -9,11 +9,11 @@ import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.domain.user.model.RoleType
-import cmm.apps.esmorga.view.eventlist.mapper.EventListUiMapper.toEventUiList
-import cmm.apps.esmorga.view.eventlist.model.EventListUiModel
-import cmm.apps.esmorga.view.eventlist.model.MyEventListEffect
-import cmm.apps.esmorga.view.eventlist.model.MyEventListError
-import cmm.apps.esmorga.view.eventlist.model.MyEventListUiState
+import cmm.apps.esmorga.view.explore.mapper.ExploreUiMapper.eventListToCardUiList
+import cmm.apps.esmorga.view.explore.model.ListCardUiModel
+import cmm.apps.esmorga.view.myeventlist.model.MyEventListEffect
+import cmm.apps.esmorga.view.myeventlist.model.MyEventListError
+import cmm.apps.esmorga.view.myeventlist.model.MyEventListUiState
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -58,7 +58,7 @@ class MyEventListViewModel(
                 } else {
                     _uiState.value.copy(
                         loading = false,
-                        eventList = myEventList.toEventUiList(),
+                        eventList = myEventList.eventListToCardUiList(),
                         error = null
                     )
                 }
@@ -85,7 +85,7 @@ class MyEventListViewModel(
     }
 
 
-    fun onEventClick(event: EventListUiModel) {
+    fun onEventClick(event: ListCardUiModel) {
         val eventFound = events.find { it.id == event.id }
         eventFound?.let {
             _effect.tryEmit(MyEventListEffect.NavigateToEventDetail(it))

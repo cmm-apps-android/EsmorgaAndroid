@@ -1,4 +1,4 @@
-package cmm.apps.esmorga.view.eventlist
+package cmm.apps.esmorga.view.myeventlist
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
@@ -43,11 +43,13 @@ import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
-import cmm.apps.esmorga.view.eventlist.MyEventListScreenTestTags.MY_EVENT_LIST_TITLE
-import cmm.apps.esmorga.view.eventlist.model.EventListUiModel
-import cmm.apps.esmorga.view.eventlist.model.MyEventListEffect
-import cmm.apps.esmorga.view.eventlist.model.MyEventListError
-import cmm.apps.esmorga.view.eventlist.model.MyEventListUiState
+import cmm.apps.esmorga.view.explore.EventList
+import cmm.apps.esmorga.view.explore.EventListLoading
+import cmm.apps.esmorga.view.myeventlist.MyEventListScreenTestTags.MY_EVENT_LIST_TITLE
+import cmm.apps.esmorga.view.explore.model.ListCardUiModel
+import cmm.apps.esmorga.view.myeventlist.model.MyEventListEffect
+import cmm.apps.esmorga.view.myeventlist.model.MyEventListError
+import cmm.apps.esmorga.view.myeventlist.model.MyEventListUiState
 import cmm.apps.esmorga.view.extensions.observeLifecycleEvents
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import com.airbnb.lottie.compose.LottieAnimation
@@ -102,7 +104,7 @@ fun MyEventListView(
     uiState: MyEventListUiState,
     snackbarHostState: SnackbarHostState,
     onSignInClick: () -> Unit,
-    onEventClick: (event: EventListUiModel) -> Unit,
+    onEventClick: (event: ListCardUiModel) -> Unit,
     onRetryClick: () -> Unit,
     onAddEventClick: () -> Unit = {}
 ) {
@@ -154,10 +156,12 @@ fun MyEventListView(
                     MyEventListError.NOT_LOGGED_IN -> EsmorgaGuestError(stringResource(R.string.unauthenticated_error_message), stringResource(R.string.button_login), { onSignInClick() }, R.raw.oops)
                     MyEventListError.UNKNOWN -> EsmorgaGuestError(stringResource(R.string.default_error_title), stringResource(R.string.button_retry), { onRetryClick() }, R.raw.oops)
                     null -> EventList(
+                        showHeaders = false,
                         events = uiState.eventList,
+                        polls = emptyList(),
                         onEventClick = onEventClick,
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp),
+                        onPollClick = {},
+                        modifier = Modifier.padding(horizontal = 16.dp),
                         nestedScrollConnection = nestedScrollConnection
                     )
                 }
@@ -218,5 +222,5 @@ fun MyEventsEmptyView() {
 }
 
 object MyEventListScreenTestTags {
-    const val MY_EVENT_LIST_TITLE = "event list screen title"
+    const val MY_EVENT_LIST_TITLE = "my events screen title"
 }

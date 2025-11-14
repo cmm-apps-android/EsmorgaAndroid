@@ -1,4 +1,4 @@
-package cmm.apps.esmorga.view.viewmodel.eventList
+package cmm.apps.esmorga.view.viewmodel.myeventlist
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
@@ -12,9 +12,9 @@ import cmm.apps.esmorga.domain.result.Source
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.view.dateformatting.DateFormatterImpl
 import cmm.apps.esmorga.view.dateformatting.EsmorgaDateTimeFormatter
-import cmm.apps.esmorga.view.eventlist.MyEventListViewModel
-import cmm.apps.esmorga.view.eventlist.model.MyEventListEffect
-import cmm.apps.esmorga.view.eventlist.model.MyEventListError
+import cmm.apps.esmorga.view.myeventlist.MyEventListViewModel
+import cmm.apps.esmorga.view.myeventlist.model.MyEventListEffect
+import cmm.apps.esmorga.view.myeventlist.model.MyEventListError
 import cmm.apps.esmorga.view.viewmodel.mock.EventViewMock
 import cmm.apps.esmorga.view.viewmodel.util.MainDispatcherRule
 import io.mockk.coEvery
@@ -57,7 +57,7 @@ class MyEventListViewModelTest {
         val domainEventName = "DomainEvent"
 
         val useCase = mockk<GetMyEventListUseCase>(relaxed = true)
-        coEvery { useCase() } returns EsmorgaResult.success(EventViewMock.provideEventList(listOf(domainEventName)))
+        coEvery { useCase() } returns EsmorgaResult.Companion.success(EventViewMock.provideEventList(listOf(domainEventName)))
 
         val getSavedUserUseCase = mockk<GetSavedUserUseCase>(relaxed = true)
 
@@ -71,7 +71,7 @@ class MyEventListViewModelTest {
     @Test
     fun `given a empty usecase when load method is called then UI state containing empty error is emitted`() = runTest {
         val useCase = mockk<GetMyEventListUseCase>(relaxed = true)
-        coEvery { useCase() } returns EsmorgaResult.success(EventViewMock.provideEventList(listOf()))
+        coEvery { useCase() } returns EsmorgaResult.Companion.success(EventViewMock.provideEventList(listOf()))
 
         val getSavedUserUseCase = mockk<GetSavedUserUseCase>(relaxed = true)
 
@@ -85,7 +85,7 @@ class MyEventListViewModelTest {
     @Test
     fun `given a not logged in error usecase when load method is called then UI state containing error is emitted`() = runTest {
         val useCase = mockk<GetMyEventListUseCase>(relaxed = true)
-        coEvery { useCase() } returns EsmorgaResult.failure(
+        coEvery { useCase() } returns EsmorgaResult.Companion.failure(
             EsmorgaException(message = "Mock error", source = Source.LOCAL, code = ErrorCodes.NOT_LOGGED_IN)
         )
 
@@ -101,7 +101,7 @@ class MyEventListViewModelTest {
     @Test
     fun `given an usecase with unknown error when load method is called then UI state containing error is emitted`() = runTest {
         val useCase = mockk<GetMyEventListUseCase>(relaxed = true)
-        coEvery { useCase() } returns EsmorgaResult.failure(
+        coEvery { useCase() } returns EsmorgaResult.Companion.failure(
             EsmorgaException(message = "Mock error", source = Source.REMOTE, code = ErrorCodes.UNKNOWN_ERROR)
         )
 
@@ -119,7 +119,7 @@ class MyEventListViewModelTest {
         val domainEventName = "DomainEvent"
 
         val useCase = mockk<GetMyEventListUseCase>(relaxed = true)
-        coEvery { useCase() } returns EsmorgaResult.noConnectionError(EventViewMock.provideEventList(listOf(domainEventName)))
+        coEvery { useCase() } returns EsmorgaResult.Companion.noConnectionError(EventViewMock.provideEventList(listOf(domainEventName)))
 
         val getSavedUserUseCase = mockk<GetSavedUserUseCase>(relaxed = true)
 
@@ -140,7 +140,7 @@ class MyEventListViewModelTest {
         val domainEventName = "DomainEvent"
 
         val useCase = mockk<GetMyEventListUseCase>(relaxed = true)
-        coEvery { useCase() } returns EsmorgaResult.noConnectionError(EventViewMock.provideEventList(listOf(domainEventName)))
+        coEvery { useCase() } returns EsmorgaResult.Companion.noConnectionError(EventViewMock.provideEventList(listOf(domainEventName)))
 
         val getSavedUserUseCase = mockk<GetSavedUserUseCase>(relaxed = true)
 

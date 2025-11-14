@@ -1,10 +1,10 @@
-package cmm.apps.esmorga.view.screenshot.eventList
+package cmm.apps.esmorga.view.screenshot.myeventlist
 
 import androidx.compose.material3.SnackbarHostState
-import cmm.apps.esmorga.view.eventlist.MyEventListView
-import cmm.apps.esmorga.view.eventlist.model.EventListUiModel
-import cmm.apps.esmorga.view.eventlist.model.MyEventListError
-import cmm.apps.esmorga.view.eventlist.model.MyEventListUiState
+import cmm.apps.esmorga.view.explore.model.ListCardUiModel
+import cmm.apps.esmorga.view.myeventlist.MyEventListView
+import cmm.apps.esmorga.view.myeventlist.model.MyEventListError
+import cmm.apps.esmorga.view.myeventlist.model.MyEventListUiState
 import cmm.apps.esmorga.view.screenshot.BaseScreenshotTest
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import org.junit.Test
@@ -28,7 +28,7 @@ class MyEventListViewScreenshotTest : BaseScreenshotTest() {
 
     @Test
     fun eventListView_lightTheme_data() {
-        val event = EventListUiModel(
+        val event = ListCardUiModel(
             id = "1",
             imageUrl = "test.png",
             cardTitle = "Card Title",
@@ -36,12 +36,12 @@ class MyEventListViewScreenshotTest : BaseScreenshotTest() {
             cardSubtitle2 = "Card subtitle 2",
         )
 
-        snapshotWithState(loading = false, eventList = listOf(event, event))
+        snapshotWithState(loading = false, eventList = listOf(event, event.copy(id = "2")))
     }
 
     @Test
     fun myEventListView_lightTheme_user_is_admin() {
-        val event = EventListUiModel(
+        val event = ListCardUiModel(
             id = "1",
             imageUrl = "test.png",
             cardTitle = "Card Title",
@@ -49,27 +49,14 @@ class MyEventListViewScreenshotTest : BaseScreenshotTest() {
             cardSubtitle2 = "Card subtitle 2",
         )
 
+        snapshotWithState(loading = false, eventList = listOf(event))
+    }
+
+    private fun snapshotWithState(loading: Boolean, eventList: List<ListCardUiModel>, error: MyEventListError? = null) {
         paparazzi.snapshot {
             EsmorgaTheme(darkTheme = false) {
                 MyEventListView(
-                    uiState = MyEventListUiState(
-                        loading = false,
-                        eventList = listOf(event),
-                        isAdmin = true
-                    ),
-                    snackbarHostState = SnackbarHostState(),
-                    onEventClick = {},
-                    onSignInClick = {},
-                    onRetryClick = {}
-                )
-            }
-        }
-    }
-
-    private fun snapshotWithState(loading: Boolean, eventList: List<EventListUiModel>, error: MyEventListError? = null) {
-        paparazzi.snapshot {
-            EsmorgaTheme(darkTheme = false) {
-                MyEventListView(uiState = MyEventListUiState(loading = loading, eventList = eventList, error = error),
+                    uiState = MyEventListUiState(loading = loading, eventList = eventList, error = error),
                     snackbarHostState = SnackbarHostState(),
                     onEventClick = { },
                     onSignInClick = { },
