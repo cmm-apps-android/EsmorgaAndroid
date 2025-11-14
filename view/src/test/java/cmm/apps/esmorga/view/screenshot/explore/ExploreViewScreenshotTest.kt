@@ -3,7 +3,7 @@ package cmm.apps.esmorga.view.screenshot.explore
 import androidx.compose.material3.SnackbarHostState
 import cmm.apps.esmorga.view.explore.EventListView
 import cmm.apps.esmorga.view.explore.model.ListCardUiModel
-import cmm.apps.esmorga.view.explore.model.EventListUiState
+import cmm.apps.esmorga.view.explore.model.ExploreUiState
 import cmm.apps.esmorga.view.screenshot.BaseScreenshotTest
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import org.junit.Test
@@ -74,7 +74,7 @@ class ExploreViewScreenshotTest : BaseScreenshotTest() {
         paparazzi.snapshot {
             EsmorgaTheme(darkTheme = false) {
                 EventListView(
-                    uiState = EventListUiState(loading = loading, eventList = eventList, pollList = pollList, error = error),
+                    uiState = ExploreUiState(loading = loading, eventList = eventList, pollList = pollList, error = error),
                     snackbarHostState = SnackbarHostState(),
                     onRetryClick = { },
                     onEventClick = { },

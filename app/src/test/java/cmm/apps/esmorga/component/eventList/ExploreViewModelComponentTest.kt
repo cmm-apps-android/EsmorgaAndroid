@@ -34,7 +34,7 @@ import org.robolectric.annotation.Config
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
 @Config(application = MockApplication::class)
-class EventListViewModelComponentTest : KoinTest {
+class ExploreViewModelComponentTest : KoinTest {
     private val testDispatcher = UnconfinedTestDispatcher()
 
     @get:Rule

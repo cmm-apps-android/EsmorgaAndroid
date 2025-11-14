@@ -47,7 +47,7 @@ import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.explore.ExploreScreenTestTags.EXPLORE_LIST_CARD_NAME
 import cmm.apps.esmorga.view.explore.ExploreScreenTestTags.EXPLORE_TITLE
-import cmm.apps.esmorga.view.explore.model.EventListUiState
+import cmm.apps.esmorga.view.explore.model.ExploreUiState
 import cmm.apps.esmorga.view.explore.model.ExploreEffect
 import cmm.apps.esmorga.view.explore.model.ListCardUiModel
 import cmm.apps.esmorga.view.extensions.observeLifecycleEvents
@@ -61,7 +61,7 @@ import cmm.apps.designsystem.R as DesignSystem
 @Screen
 @Composable
 fun ExploreScreen(vm: ExploreViewModel = koinViewModel(), onEventClick: (event: Event) -> Unit) {
-    val uiState: EventListUiState by vm.uiState.collectAsStateWithLifecycle()
+    val uiState: ExploreUiState by vm.uiState.collectAsStateWithLifecycle()
 
     val noInternetMessage = stringResource(R.string.snackbar_no_internet)
     val snackbarHostState = remember { SnackbarHostState() }
@@ -102,7 +102,7 @@ fun ExploreScreen(vm: ExploreViewModel = koinViewModel(), onEventClick: (event: 
 
 @Composable
 fun EventListView(
-    uiState: EventListUiState,
+    uiState: ExploreUiState,
     snackbarHostState: SnackbarHostState,
     onRetryClick: () -> Unit,
     onEventClick: (event: ListCardUiModel) -> Unit,

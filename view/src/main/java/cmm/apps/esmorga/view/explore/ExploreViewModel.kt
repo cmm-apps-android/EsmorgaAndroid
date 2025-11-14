@@ -10,7 +10,7 @@ import cmm.apps.esmorga.domain.poll.model.Poll
 import cmm.apps.esmorga.view.explore.mapper.ExploreUiMapper.eventListToCardUiList
 import cmm.apps.esmorga.view.explore.mapper.ExploreUiMapper.pollListToCardUiList
 import cmm.apps.esmorga.view.explore.model.ExploreEffect
-import cmm.apps.esmorga.view.explore.model.EventListUiState
+import cmm.apps.esmorga.view.explore.model.ExploreUiState
 import cmm.apps.esmorga.view.explore.model.ListCardUiModel
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -25,8 +25,8 @@ class ExploreViewModel(
     private val getEventListUseCase: GetEventsAndPollsUseCase
 ) : ViewModel(), DefaultLifecycleObserver {
 
-    private val _uiState = MutableStateFlow(EventListUiState())
-    val uiState: StateFlow<EventListUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(ExploreUiState())
+    val uiState: StateFlow<ExploreUiState> = _uiState.asStateFlow()
 
     private val _effect: MutableSharedFlow<ExploreEffect> = MutableSharedFlow(extraBufferCapacity = 2, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val effect: SharedFlow<ExploreEffect> = _effect.asSharedFlow()
@@ -40,18 +40,18 @@ class ExploreViewModel(
     }
 
     fun loadEventsAndPolls() {
-        _uiState.value = EventListUiState(loading = true)
+        _uiState.value = ExploreUiState(loading = true)
         viewModelScope.launch {
             val result = getEventListUseCase()
             result.onSuccess { success ->
                 events = success.first
                 polls = success.second
-                _uiState.value = EventListUiState(
+                _uiState.value = ExploreUiState(
                     eventList = events.eventListToCardUiList(),
                     pollList = polls.pollListToCardUiList()
                 )
             }.onFailure { error ->
-                _uiState.value = EventListUiState(error = "${error.source} error: ${error.message}")
+                _uiState.value = ExploreUiState(error = "${error.source} error: ${error.message}")
             }.onNoConnectionError {
                 _effect.tryEmit(ExploreEffect.ShowNoNetworkPrompt)
             }
