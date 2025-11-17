@@ -5,8 +5,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import cmm.apps.esmorga.domain.event.GetEventAttendeesUseCase
-import cmm.apps.esmorga.domain.event.JoinEventUseCase
-import cmm.apps.esmorga.domain.event.LeaveEventUseCase
 import cmm.apps.esmorga.domain.event.UpdateEventAttendeeUseCase
 import cmm.apps.esmorga.domain.result.EsmorgaResult
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
@@ -67,8 +65,8 @@ class EventAttendeesViewModelTest {
         sut.onStart(mockk<LifecycleOwner>(relaxed = true))
 
         val uiState = sut.uiState.value
-        Assert.assertEquals("1. $domainAttendeeName", uiState.attendeeList[0].name)
-        Assert.assertFalse("ShouldShowChecked should be false for normal users", uiState.shouldShowChecked)
+        Assert.assertEquals(domainAttendeeName, uiState.attendeeList[0].name)
+        Assert.assertFalse("ShouldShowChecked should be false for normal users", uiState.showChecked)
     }
 
     @Test
@@ -85,8 +83,8 @@ class EventAttendeesViewModelTest {
         sut.onStart(mockk<LifecycleOwner>(relaxed = true))
 
         val uiState = sut.uiState.value
-        Assert.assertEquals("1. $domainAttendeeName", uiState.attendeeList[0].name)
-        Assert.assertTrue("ShouldShowChecked should be true for ADMIN users", uiState.shouldShowChecked)
+        Assert.assertEquals(domainAttendeeName, uiState.attendeeList[0].name)
+        Assert.assertTrue("ShouldShowChecked should be true for ADMIN users", uiState.showChecked)
     }
 
     @Test

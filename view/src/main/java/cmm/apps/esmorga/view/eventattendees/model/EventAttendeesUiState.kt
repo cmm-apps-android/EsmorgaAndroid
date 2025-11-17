@@ -6,7 +6,7 @@ import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArgumentsHelper.getE
 
 data class EventAttendeesUiState(
     val loading: Boolean = false,
-    val shouldShowChecked: Boolean = false,
+    val showChecked: Boolean = false,
     val attendeeList: List<AttendeeUiModel> = listOf()
 )
 

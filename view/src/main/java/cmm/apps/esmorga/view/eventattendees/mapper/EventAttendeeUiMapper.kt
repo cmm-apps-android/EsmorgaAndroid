@@ -6,11 +6,13 @@ import org.koin.core.component.KoinComponent
 
 object EventAttendeeUiMapper : KoinComponent {
 
-    fun EventAttendee.toAttendeeUi(position: Int): AttendeeUiModel {
+    private fun EventAttendee.toAttendeeUi(): AttendeeUiModel {
         return AttendeeUiModel(
-            name = "${position + 1}. ${this.name}",
+            name = this.name,
             checked = this.alreadyPaid
         )
     }
+
+    fun List<EventAttendee>.toAttendeeUiList() = this.map { it.toAttendeeUi() }
 
 }
