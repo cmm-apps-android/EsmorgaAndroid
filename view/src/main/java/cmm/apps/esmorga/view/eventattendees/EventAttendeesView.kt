@@ -124,7 +124,7 @@ fun EventAttendeesView(
             if (uiState.loading) {
                 AttendeeListLoading()
             } else {
-                AttendeeList(attendees = uiState.attendeeList, shouldShowChecked = uiState.shouldShowChecked, onAttendeeChecked = onAttendeeChecked)
+                AttendeeList(attendees = uiState.attendeeList, shouldShowChecked = uiState.showChecked, onAttendeeChecked = onAttendeeChecked)
             }
 
         }
@@ -186,7 +186,7 @@ fun AttendeeList(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     EsmorgaText(
-                        text = attendee.name,
+                        text = "${pos + 1}. ${attendee.name}",
                         style = EsmorgaTextStyle.BODY_1,
                         modifier = Modifier.padding(vertical = 16.dp),
                     )
@@ -195,7 +195,7 @@ fun AttendeeList(
                         Spacer(modifier = Modifier.weight(1f))
                         EsmorgaCheckbox(
                             checked = checked,
-                            onCheckedChanged = { it ->
+                            onCheckedChanged = {
                                 checked = it
                                 onAttendeeChecked(pos, checked)
                             }

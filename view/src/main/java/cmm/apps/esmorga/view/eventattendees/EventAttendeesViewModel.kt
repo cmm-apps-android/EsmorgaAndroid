@@ -9,7 +9,7 @@ import cmm.apps.esmorga.domain.event.UpdateEventAttendeeUseCase
 import cmm.apps.esmorga.domain.event.model.EventAttendee
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.domain.user.model.RoleType
-import cmm.apps.esmorga.view.eventattendees.mapper.EventAttendeeUiMapper.toAttendeeUi
+import cmm.apps.esmorga.view.eventattendees.mapper.EventAttendeeUiMapper.toAttendeeUiList
 import cmm.apps.esmorga.view.eventattendees.model.EventAttendeesEffect
 import cmm.apps.esmorga.view.eventattendees.model.EventAttendeesUiState
 import kotlinx.coroutines.channels.BufferOverflow
@@ -33,7 +33,8 @@ class EventAttendeesViewModel(
     private val _effect: MutableSharedFlow<EventAttendeesEffect> = MutableSharedFlow(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val effect: SharedFlow<EventAttendeesEffect> = _effect.asSharedFlow()
 
-    private var attendees: List<EventAttendee> = emptyList()
+    private val attendees: MutableList<EventAttendee> = mutableListOf()
+    private var showChecked: Boolean = false
 
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
@@ -43,7 +44,10 @@ class EventAttendeesViewModel(
     fun onAttendeeChecked(position: Int, checked: Boolean) {
         val attendee = attendees[position]
         viewModelScope.launch {
-            updateEventAttendeeUseCase(attendee.copy(alreadyPaid = checked))
+            val updatedAttendee = attendee.copy(alreadyPaid = checked)
+            updateEventAttendeeUseCase(updatedAttendee)
+            attendees[position] = updatedAttendee
+            updateUi()
         }
     }
 
@@ -55,19 +59,27 @@ class EventAttendeesViewModel(
         _uiState.value = EventAttendeesUiState(loading = true)
         viewModelScope.launch {
             val userResult = getSavedUserUseCase()
+            showChecked = RoleType.ADMIN == userResult.data?.role
             val eventAttendeesResult = getEventAttendeesUseCase(eventId)
-            eventAttendeesResult.onSuccess { success ->
-                attendees = success
-                _uiState.value = EventAttendeesUiState(
-                    shouldShowChecked = RoleType.ADMIN == userResult.data?.role,
-                    attendeeList = success.mapIndexed { pos, attendee -> attendee.toAttendeeUi(pos) },
-                )
+            eventAttendeesResult.onSuccess { successData ->
+                attendees.run {
+                    clear()
+                    addAll(successData)
+                }
+                updateUi()
             }.onFailure { error ->
                 _effect.tryEmit(EventAttendeesEffect.ShowFullScreenError())
             }.onNoConnectionError {
                 _effect.tryEmit(EventAttendeesEffect.ShowNoNetworkError())
             }
         }
+    }
+
+    private fun updateUi(){
+        _uiState.value = EventAttendeesUiState(
+            showChecked = showChecked,
+            attendeeList = attendees.toAttendeeUiList(),
+        )
     }
 
 }

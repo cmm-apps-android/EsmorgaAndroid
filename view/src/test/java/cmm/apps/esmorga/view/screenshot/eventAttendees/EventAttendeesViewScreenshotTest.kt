@@ -25,7 +25,7 @@ class EventAttendeesViewScreenshotTest : BaseScreenshotTest() {
             checked = false
         )
 
-        snapshotWithState(shouldShowChecked = false, attendeeList = listOf(goodAttendee, badAttendee))
+        snapshotWithState(showChecked = false, attendeeList = listOf(goodAttendee, badAttendee))
     }
 
     @Test
@@ -39,14 +39,14 @@ class EventAttendeesViewScreenshotTest : BaseScreenshotTest() {
             checked = false
         )
 
-        snapshotWithState(shouldShowChecked = true, attendeeList = listOf(goodAttendee, badAttendee))
+        snapshotWithState(showChecked = true, attendeeList = listOf(goodAttendee, badAttendee))
     }
 
-    private fun snapshotWithState(loading: Boolean = false, shouldShowChecked: Boolean = false, attendeeList: List<AttendeeUiModel>) {
+    private fun snapshotWithState(loading: Boolean = false, showChecked: Boolean = false, attendeeList: List<AttendeeUiModel>) {
         paparazzi.snapshot {
             EsmorgaTheme(darkTheme = false) {
                 EventAttendeesView(
-                    uiState = EventAttendeesUiState(loading = loading, shouldShowChecked = shouldShowChecked, attendeeList = attendeeList),
+                    uiState = EventAttendeesUiState(loading = loading, showChecked = showChecked, attendeeList = attendeeList),
                     onAttendeeChecked = { pos, checked -> },
                     onBackPressed = { }
                 )
