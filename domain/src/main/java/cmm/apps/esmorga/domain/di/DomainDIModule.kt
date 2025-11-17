@@ -16,6 +16,8 @@ import cmm.apps.esmorga.domain.event.LeaveEventUseCase
 import cmm.apps.esmorga.domain.event.LeaveEventUseCaseImpl
 import cmm.apps.esmorga.domain.event.UpdateEventAttendeeUseCase
 import cmm.apps.esmorga.domain.event.UpdateEventAttendeeUseCaseImpl
+import cmm.apps.esmorga.domain.poll.VotePollUseCase
+import cmm.apps.esmorga.domain.poll.VotePollUseCaseImpl
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCaseImpl
 import cmm.apps.esmorga.domain.user.LogOutUseCase
@@ -54,5 +56,6 @@ object DomainDIModule {
         factory<ActivateAccountUseCase> { ActivateAccountUseCaseImpl(get()) }
         factory<PerformResetPasswordUseCase> { PerformResetPasswordUseCaseImpl(get()) }
         factory<PerformChangePasswordUseCase> { PerformChangePasswordUseCaseImpl(get()) }
+        factory<VotePollUseCase> { VotePollUseCaseImpl() }
     }
 }

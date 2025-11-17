@@ -1,6 +1,8 @@
 package cmm.apps.esmorga.domain.poll.model
 
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Poll(
     val id: String,
     val name: String,
@@ -11,6 +13,7 @@ data class Poll(
     val options: List<PollOption>
 )
 
+@Serializable
 data class PollOption(
     val optionId: String,
     val text: String,

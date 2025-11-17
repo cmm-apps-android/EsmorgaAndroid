@@ -14,6 +14,8 @@
     <string name="button_login_to_join">Identifícate para apuntarte</string>
     <string name="button_navigate">Navegar</string>
     <string name="button_ok">OK</string>
+    <string name="button_poll_vote">Votar</string>
+    <string name="button_poll_change_vote">Cambiar mi voto</string>
     <string name="button_register">Registrarme</string>
     <string name="button_retry">Reintentar</string>
     <string name="button_view_attendees">Ver asistentes</string>
@@ -50,6 +52,7 @@
     <string name="snackbar_event_joined">Bravo! Te has unido al evento!</string>
     <string name="snackbar_event_left">Buuuuu! Rajao!</string>
     <string name="snackbar_no_internet">No hay conexión a internet.</string>
+    <string name="snackbar_vote_successful">Se ha registrado tu voto correctamente</string>
     <string name="text_empty_state">Ahora mismo no hay nada… pero no te preocupes, algo estamos preparando.</string>
     <string name="text_poll_vote_deadline">Vota antes del %1$s</string>
     <string name="title_event_attendees">Listado de asistentes</string>

@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.domain.event.model.Event
+import cmm.apps.esmorga.domain.poll.model.Poll
 import cmm.apps.esmorga.view.activateaccount.ActivateAccountScreen
 import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen
 import cmm.apps.esmorga.view.createevent.CreateEventFormScreen
@@ -23,10 +24,11 @@ import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.eventattendees.EventAttendeesScreen
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreen
 import cmm.apps.esmorga.view.explore.ExploreScreen
-import cmm.apps.esmorga.view.myeventlist.MyEventListScreen
 import cmm.apps.esmorga.view.login.LoginScreen
+import cmm.apps.esmorga.view.myeventlist.MyEventListScreen
 import cmm.apps.esmorga.view.password.RecoverPasswordScreen
 import cmm.apps.esmorga.view.password.ResetPasswordScreen
+import cmm.apps.esmorga.view.polldetails.PollDetailsScreen
 import cmm.apps.esmorga.view.profile.ProfileScreen
 import cmm.apps.esmorga.view.registration.RegistrationConfirmationScreen
 import cmm.apps.esmorga.view.registration.RegistrationScreen
@@ -41,6 +43,9 @@ sealed class Navigation {
 
     @Serializable
     data class EventDetailScreen(val event: Event) : Navigation()
+
+    @Serializable
+    data class PollDetailScreen(val poll: Poll) : Navigation()
 
     @Serializable
     data class EventAttendeesScreen(val event: Event) : Navigation()
@@ -113,11 +118,11 @@ internal fun EsmorgaNavHost(navigationController: NavHostController, startDestin
 }
 
 private fun NavGraphBuilder.homeFlow(navigationController: NavHostController) {
-    composable<Navigation.ExploreScreen>(
-        typeMap = mapOf(typeOf<Event>() to serializableType<Event>())
-    ) {
+    composable<Navigation.ExploreScreen> {
         ExploreScreen(onEventClick = { event ->
             navigationController.navigate(Navigation.EventDetailScreen(event))
+        }, onPollClick = { poll ->
+            navigationController.navigate(Navigation.PollDetailScreen(poll))
         })
     }
     composable<Navigation.EventDetailScreen>(
@@ -132,18 +137,26 @@ private fun NavGraphBuilder.homeFlow(navigationController: NavHostController) {
             onNoNetworkError = { navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = it)) }
         )
     }
+    composable<Navigation.PollDetailScreen>(
+        typeMap = mapOf(typeOf<Poll>() to serializableType<Poll>())
+    ) { backStackEntry ->
+        PollDetailsScreen(
+            poll = backStackEntry.toRoute<Navigation.PollDetailScreen>().poll,
+            onBackPressed = { navigationController.popBackStack() },
+            onVoteError = { navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = it)) },
+            onNoNetworkError = { navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = it)) }
+        )
+    }
     composable<Navigation.EventAttendeesScreen>(
         typeMap = mapOf(typeOf<Event>() to serializableType<Event>())
     ) { backStackEntry ->
         EventAttendeesScreen(
-            event = backStackEntry.toRoute<Navigation.EventDetailScreen>().event,
+            event = backStackEntry.toRoute<Navigation.EventAttendeesScreen>().event,
             onBackPressed = { navigationController.popBackStack() },
             onError = { navigationController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = it)) }
         )
     }
-    composable<Navigation.MyEventsScreen>(
-        typeMap = mapOf(typeOf<Event>() to serializableType<Event>())
-    ) {
+    composable<Navigation.MyEventsScreen> {
         MyEventListScreen(onEventClick = { event ->
             navigationController.navigate(Navigation.EventDetailScreen(event))
         }, onSignInClick = {

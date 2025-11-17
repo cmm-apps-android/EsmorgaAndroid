@@ -4,9 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -27,7 +25,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
@@ -41,15 +38,16 @@ import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
+import cmm.apps.esmorga.view.details.DetailsDescriptionSection
+import cmm.apps.esmorga.view.details.DetailsHeaderSection
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAILS_BACK_BUTTON
+import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags.EVENT_DETAILS_EVENT_NAME
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsEffect
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiState
 import cmm.apps.esmorga.view.extensions.observeLifecycleEvents
 import cmm.apps.esmorga.view.navigation.openNavigationApp
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -167,7 +165,7 @@ fun EventDetailsView(
                 )
                 .verticalScroll(state = rememberScrollState())
         ) {
-            EventDetailsHeaderSection(image = uiState.image, title = uiState.title, date = uiState.date)
+            DetailsHeaderSection(image = uiState.image, title = uiState.title, date = uiState.date, titleTestTag = EVENT_DETAILS_EVENT_NAME)
 
             EventDetailsAttendeesSection(
                 attendeeCountText = uiState.currentAttendeeCountText,
@@ -176,7 +174,7 @@ fun EventDetailsView(
                 onViewAttendeesClicked = onViewAttendeesClicked
             )
 
-            EventDetailsDescriptionSection(description = uiState.description, locationName = uiState.locationName)
+            DetailsDescriptionSection(description = uiState.description, locationName = uiState.locationName)
 
             EventDetailsButtonSection(
                 showNavigateButton = uiState.showNavigateButton,
@@ -190,32 +188,6 @@ fun EventDetailsView(
     }
 }
 
-@Composable
-fun EventDetailsHeaderSection(image: String?, title: String, date: String) {
-    AsyncImage(
-        model = ImageRequest.Builder(LocalContext.current).data(image)
-            //.crossfade(true) //Open bug in Coil https://github.com/coil-kt/coil/issues/1688 leads to image not being properly scaled if crossfade is used
-            .build(),
-        placeholder = painterResource(DesignSystem.drawable.img_event_list_empty),
-        error = painterResource(DesignSystem.drawable.img_event_list_empty),
-        contentDescription = stringResource(id = R.string.content_description_event_image).format(title),
-        contentScale = ContentScale.Crop,
-        modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(16 / 9f)
-    )
-    EsmorgaText(
-        text = title, style = EsmorgaTextStyle.TITLE, modifier = Modifier
-            .padding(top = 32.dp, start = 16.dp, bottom = 16.dp, end = 16.dp)
-            .testTag(EventDetailsScreenTestTags.EVENT_DETAILS_EVENT_NAME)
-    )
-
-    EsmorgaText(
-        text = date,
-        style = EsmorgaTextStyle.BODY_1_ACCENT,
-        modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
-    )
-}
 
 @Composable
 fun EventDetailsAttendeesSection(
@@ -256,30 +228,6 @@ fun EventDetailsAttendeesSection(
         text = stringResource(id = R.string.screen_event_details_join_deadline, joinDeadline),
         style = EsmorgaTextStyle.CAPTION,
         modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
-    )
-}
-
-@Composable
-fun EventDetailsDescriptionSection(description: String, locationName: String) {
-    EsmorgaText(
-        text = stringResource(id = R.string.screen_event_details_description),
-        style = EsmorgaTextStyle.HEADING_1,
-        modifier = Modifier.padding(16.dp)
-    )
-    EsmorgaText(
-        text = description,
-        style = EsmorgaTextStyle.BODY_1,
-        modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 32.dp)
-    )
-    EsmorgaText(
-        text = stringResource(id = R.string.screen_event_details_location),
-        style = EsmorgaTextStyle.HEADING_1,
-        modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-    )
-    EsmorgaText(
-        text = locationName,
-        style = EsmorgaTextStyle.BODY_1,
-        modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 32.dp)
     )
 }
 

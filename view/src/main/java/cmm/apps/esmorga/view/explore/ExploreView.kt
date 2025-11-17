@@ -43,12 +43,13 @@ import cmm.apps.designsystem.EsmorgaLinearLoader
 import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.domain.event.model.Event
+import cmm.apps.esmorga.domain.poll.model.Poll
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.explore.ExploreScreenTestTags.EXPLORE_LIST_CARD_NAME
 import cmm.apps.esmorga.view.explore.ExploreScreenTestTags.EXPLORE_TITLE
-import cmm.apps.esmorga.view.explore.model.ExploreUiState
 import cmm.apps.esmorga.view.explore.model.ExploreEffect
+import cmm.apps.esmorga.view.explore.model.ExploreUiState
 import cmm.apps.esmorga.view.explore.model.ListCardUiModel
 import cmm.apps.esmorga.view.extensions.observeLifecycleEvents
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
@@ -60,7 +61,7 @@ import cmm.apps.designsystem.R as DesignSystem
 
 @Screen
 @Composable
-fun ExploreScreen(vm: ExploreViewModel = koinViewModel(), onEventClick: (event: Event) -> Unit) {
+fun ExploreScreen(vm: ExploreViewModel = koinViewModel(), onEventClick: (event: Event) -> Unit, onPollClick: (poll: Poll) -> Unit) {
     val uiState: ExploreUiState by vm.uiState.collectAsStateWithLifecycle()
 
     val noInternetMessage = stringResource(R.string.snackbar_no_internet)
@@ -80,11 +81,7 @@ fun ExploreScreen(vm: ExploreViewModel = koinViewModel(), onEventClick: (event: 
 
                 is ExploreEffect.NavigateToEventDetail -> onEventClick(eff.event)
 
-                is ExploreEffect.NavigateToPollDetail -> {
-                    localCoroutineScope.launch {
-                        snackbarHostState.showSnackbar(message = "Navigate to Poll")
-                    }
-                }
+                is ExploreEffect.NavigateToPollDetail -> onPollClick(eff.poll)
             }
         }
     }

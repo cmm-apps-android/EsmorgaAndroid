@@ -11,7 +11,7 @@ import java.util.Date
 import java.util.Locale
 
 interface EsmorgaDateTimeFormatter {
-    fun formatEventDate(epochMillis: Long): String
+    fun formatDateforView(epochMillis: Long): String
     fun formatTimeWithMillisUtcSuffix(hour: Int, minute: Int): String
     fun formatIsoDateTime(date: Date, time: String): String
 }
@@ -35,7 +35,7 @@ class DateFormatterImpl : EsmorgaDateTimeFormatter {
         return "${datePart}T${time}"
     }
 
-    override fun formatEventDate(epochMillis: Long): String {
+    override fun formatDateforView(epochMillis: Long): String {
         try {
             val locale: Locale = Locale.getDefault()
             val zoneId: ZoneId = ZoneId.systemDefault()

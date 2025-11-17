@@ -14,7 +14,7 @@ object ExploreUiMapper : KoinComponent {
 
     private fun formatDate(date: Long): String {
         val formatter: EsmorgaDateTimeFormatter by inject()
-        return formatter.formatEventDate(date)
+        return formatter.formatDateforView(date)
     }
 
     private fun Event.toCardUi(): ListCardUiModel {
