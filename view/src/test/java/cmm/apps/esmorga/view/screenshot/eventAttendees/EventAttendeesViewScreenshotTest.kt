@@ -17,11 +17,11 @@ class EventAttendeesViewScreenshotTest : BaseScreenshotTest() {
     @Test
     fun attendeeListView_lightTheme_normal_user_data() {
         val goodAttendee = AttendeeUiModel(
-            name = "1. Pacitos",
+            name = "Pacitos",
             checked = true
         )
         val badAttendee = AttendeeUiModel(
-            name = "2. Juantxo",
+            name = "Juantxo",
             checked = false
         )
 
@@ -31,11 +31,11 @@ class EventAttendeesViewScreenshotTest : BaseScreenshotTest() {
     @Test
     fun attendeeListView_lightTheme_admin_user_data() {
         val goodAttendee = AttendeeUiModel(
-            name = "1. Neo",
+            name = "Neo",
             checked = true
         )
         val badAttendee = AttendeeUiModel(
-            name = "2. Trinity",
+            name = "Trinity",
             checked = false
         )
 
