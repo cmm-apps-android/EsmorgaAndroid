@@ -26,6 +26,4 @@ interface EsmorgaEventApi {
     @HTTP(method = "DELETE", path = "account/events", hasBody = true)
     suspend fun leaveEvent(@Body body: Map<String, String>)
 
-    @GET("polls")
-    suspend fun getPolls(): PollListWrapperRemoteModel
 }

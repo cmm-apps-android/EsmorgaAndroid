@@ -56,6 +56,6 @@ object DomainDIModule {
         factory<ActivateAccountUseCase> { ActivateAccountUseCaseImpl(get()) }
         factory<PerformResetPasswordUseCase> { PerformResetPasswordUseCaseImpl(get()) }
         factory<PerformChangePasswordUseCase> { PerformChangePasswordUseCaseImpl(get()) }
-        factory<VotePollUseCase> { VotePollUseCaseImpl() }
+        factory<VotePollUseCase> { VotePollUseCaseImpl(get()) }
     }
 }

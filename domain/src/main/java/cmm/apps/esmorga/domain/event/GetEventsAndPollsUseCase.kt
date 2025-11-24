@@ -17,7 +17,7 @@ interface GetEventsAndPollsUseCase {
     suspend operator fun invoke(forceRefresh: Boolean = false): EsmorgaResult<Pair<List<Event>, List<Poll>>>
 }
 
-class GetEventListUseCaseImpl(private val eventRepo: EventRepository, private val pollRepo: PollRepository, private val userRepository: UserRepository) : GetEventsAndPollsUseCase {
+class GetEventListUseCaseImpl(private val eventRepo: EventRepository, private val pollRepo: PollRepository, private val userRepo: UserRepository) : GetEventsAndPollsUseCase {
     override suspend fun invoke(forceRefresh: Boolean): EsmorgaResult<Pair<List<Event>, List<Poll>>> = try {
         coroutineScope {
             val isNoConnection = AtomicBoolean(false)
@@ -39,7 +39,7 @@ class GetEventListUseCaseImpl(private val eventRepo: EventRepository, private va
             val pollsDeferred = async {
                 var user: User? = null
                 try {
-                    user = userRepository.getUser()
+                    user = userRepo.getUser()
                 } catch (_: Exception) {
                     //Do nothing, user not logged in
                 }

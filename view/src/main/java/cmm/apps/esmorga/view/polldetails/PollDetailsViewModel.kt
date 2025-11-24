@@ -63,7 +63,8 @@ class PollDetailsViewModel(
     private fun votePoll() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isPrimaryButtonLoading = true)
-            votePollUseCase().onSuccess { success ->
+            val userSelectedOptionIds = internalOptionList.filter { it.userSelected }.map { it.optionId }
+            votePollUseCase(internalPoll.id, userSelectedOptionIds).onSuccess { success ->
                 updateInternalPoll(success)
                 updateUiState()
                 _effect.tryEmit(PollDetailsEffect.ShowVoteSuccess)
