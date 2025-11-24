@@ -8,8 +8,8 @@ object PollDataMock {
 
     fun providePollDataModelList(nameList: List<String>): List<PollDataModel> = nameList.map { name -> providePollDataModel(name) }
 
-    fun providePollDataModel(name: String): PollDataModel = PollDataModel(
-        dataId = "$name-${System.currentTimeMillis()}",
+    fun providePollDataModel(name: String, id: String = "id-${System.currentTimeMillis()}"): PollDataModel = PollDataModel(
+        dataId = id,
         dataName = name,
         dataDescription = "description",
         dataImageUrl = null,

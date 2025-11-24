@@ -7,5 +7,6 @@ object ServerFiles {
     const val LOGIN = "login.json"
     const val GET_EVENT_ATTENDEES = "getEventAttendees.json"
     const val GET_POLLS = "getPolls.json"
+    const val VOTE_POLL = "votePoll.json"
 
 }

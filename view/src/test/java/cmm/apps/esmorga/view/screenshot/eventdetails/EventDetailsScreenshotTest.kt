@@ -10,7 +10,6 @@ import io.mockk.mockk
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.manipulation.Ordering
 import org.koin.core.context.GlobalContext.startKoin
 import org.koin.core.context.GlobalContext.stopKoin
 import org.koin.dsl.module
@@ -21,7 +20,6 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
         startKoin {
             modules(
                 module {
-                    single { mockk<Ordering.Context>(relaxed = true) }
                     single { mockk<EsmorgaDateTimeFormatter>(relaxed = true) }
                 }
             )
@@ -135,7 +133,7 @@ class EventDetailsScreenshotTest : BaseScreenshotTest() {
                         showNavigateButton = showNavigateButton,
                         primaryButtonTitle = buttonTitle,
                         isPrimaryButtonLoading = buttonLoading,
-                        currentAttendeeCountText = maxCapacity?.let{ "$currentAttendeeCount/$maxCapacity attendees" },
+                        currentAttendeeCountText = maxCapacity?.let { "$currentAttendeeCount/$maxCapacity attendees" },
                         isPrimaryButtonEnabled = isJoinButtonEnabled,
                         joinDeadline = joinDeadline,
                         showViewAttendeesButton = showViewAttendeesButton

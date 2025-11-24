@@ -1,5 +1,6 @@
 package cmm.apps.designsystem
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -35,12 +37,19 @@ fun EsmorgaCheckboxRow(
     shouldShowChecked: Boolean,
     checked: Boolean,
     onCheckedChanged: (Boolean) -> Unit,
-    modifier: Modifier
+    modifier: Modifier = Modifier
 ) {
     var rememberedCheck by remember { mutableStateOf(checked) }
-    Column {
+    Column(
+        modifier = Modifier.clickable(
+        role = Role.Checkbox,
+        onClick = {
+            rememberedCheck = !rememberedCheck
+            onCheckedChanged(rememberedCheck)
+        }
+    )) {
         Row(
-            modifier = modifier,
+            modifier = modifier.padding(start = 32.dp, end = 16.dp, top = 16.dp, bottom = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             EsmorgaText(

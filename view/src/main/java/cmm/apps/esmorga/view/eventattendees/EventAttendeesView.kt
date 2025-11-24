@@ -187,8 +187,7 @@ fun AttendeeList(
                     checked = attendee.checked,
                     onCheckedChanged = { checked ->
                         onAttendeeChecked(pos, checked)
-                    },
-                    modifier = Modifier.padding(start = 32.dp, end = 16.dp, top = 16.dp, bottom = 16.dp)
+                    }
                 )
             }
         }

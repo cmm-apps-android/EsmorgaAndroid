@@ -61,7 +61,7 @@ class EsmorgaApiTest {
         mockServer.enqueueFile(200, ServerFiles.GET_POLLS)
 
         val sut = NetworkApiHelper().provideApi(
-            mockServer.start(), EsmorgaEventApi::class.java, null, null, null, null
+            mockServer.start(), EsmorgaPollApi::class.java, null, null, null, null
         )
 
         val pollsWrapper = sut.getPolls()
@@ -81,6 +81,19 @@ class EsmorgaApiTest {
         val user = sut.login(body = mapOf("email" to "email", "password" to "password"))
 
         Assert.assertEquals("Albus", user.remoteProfile.remoteName)
+    }
+
+    @Test
+    fun `given a successful mock server when poll is voted then a correct poll is returned`() = runTest {
+        mockServer.enqueueFile(200, ServerFiles.VOTE_POLL)
+
+        val sut = NetworkApiHelper().provideApi(
+            mockServer.start(), EsmorgaPollApi::class.java, null, null, null, null
+        )
+
+        val poll = sut.votePoll("Id", mapOf("selectedOptions" to listOf("option")))
+
+        Assert.assertEquals("MobgenFest", poll.remoteName)
     }
 
 }

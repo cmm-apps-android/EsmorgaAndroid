@@ -5,8 +5,10 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import cmm.apps.esmorga.component.mock.CreateEventFormModelMock
 import cmm.apps.esmorga.component.mock.EventMock
+import cmm.apps.esmorga.component.mock.PollMock
 import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.domain.event.model.Event
+import cmm.apps.esmorga.domain.poll.model.Poll
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -31,6 +33,7 @@ class DIModulesTest {
             MockProvider.register { clazz ->
                 when (clazz) {
                     Event::class -> EventMock.provideEventModel("Event Name")
+                    Poll::class -> PollMock.providePollModel()
                     CreateEventForm::class -> CreateEventFormModelMock.provide("Test Event", "Description")
                     else -> null
                 }

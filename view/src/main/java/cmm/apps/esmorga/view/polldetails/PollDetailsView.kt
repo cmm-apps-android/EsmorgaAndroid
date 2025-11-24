@@ -166,8 +166,7 @@ fun PollDetailsOptionsSection(
                     checked = option.isSelected,
                     onCheckedChanged = { checked ->
                         onOptionSelected(option.id, checked)
-                    },
-                    modifier = Modifier.padding(start = 32.dp, end = 16.dp, top = 16.dp, bottom = 16.dp)
+                    }
                 )
             }
         } else {

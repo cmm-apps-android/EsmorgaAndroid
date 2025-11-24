@@ -1,0 +1,29 @@
+{
+  "pollId": "1",
+  "pollName": "MobgenFest",
+  "description": "Hello World",
+  "imageUrl": "https://i.ytimg.com/vi/lTDBT-w4hnE/sddefault.jpg",
+  "options": [
+    {
+      "optionId": "opt1",
+      "option": "13 de febrero",
+      "voteCount": 9
+    },
+    {
+      "optionId": "opt2",
+      "option": "20 de febrero",
+      "voteCount": 13
+    },
+    {
+      "optionId": "opt3",
+      "option": "27 de febrero",
+      "voteCount": 3
+    }
+  ],
+  "userSelectedOptions": [
+    "opt1",
+    "opt2"
+  ],
+  "voteDeadline": "2029-12-31T23:00:00.000Z",
+  "isMultipleChoice": true
+}
