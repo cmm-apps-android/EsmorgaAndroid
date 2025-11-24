@@ -42,12 +42,12 @@ fun EsmorgaCheckboxRow(
     var rememberedCheck by remember { mutableStateOf(checked) }
     Column(
         modifier = Modifier.clickable(
-        role = Role.Checkbox,
-        onClick = {
-            rememberedCheck = !rememberedCheck
-            onCheckedChanged(rememberedCheck)
-        }
-    )) {
+            role = Role.Checkbox,
+            onClick = {
+                rememberedCheck = !rememberedCheck
+                onCheckedChanged(rememberedCheck)
+            }
+        )) {
         Row(
             modifier = modifier.padding(start = 32.dp, end = 16.dp, top = 16.dp, bottom = 16.dp),
             verticalAlignment = Alignment.CenterVertically

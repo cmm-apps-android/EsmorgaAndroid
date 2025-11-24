@@ -13,6 +13,7 @@ interface EsmorgaPollApi {
     @GET("polls")
     suspend fun getPolls(): PollListWrapperRemoteModel
 
+    //@JvmSuppressWildcards is a workaround take from this issue: https://github.com/square/retrofit/issues/2457
     @POST("polls/{pollId}/vote")
     suspend fun votePoll(@Path("pollId") pollId: String, @Body body: Map<String, @JvmSuppressWildcards List<String>>): PollRemoteModel
 

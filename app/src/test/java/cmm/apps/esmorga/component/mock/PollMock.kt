@@ -1,11 +1,7 @@
 package cmm.apps.esmorga.component.mock
 
-import cmm.apps.esmorga.domain.event.model.Event
-import cmm.apps.esmorga.domain.event.model.EventLocation
-import cmm.apps.esmorga.domain.event.model.EventType
 import cmm.apps.esmorga.domain.poll.model.Poll
 import cmm.apps.esmorga.domain.poll.model.PollOption
-import java.time.ZonedDateTime
 
 
 object PollMock {
