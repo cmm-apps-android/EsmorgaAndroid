@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmm.apps.designsystem.EsmorgaCheckbox
+import cmm.apps.designsystem.EsmorgaCheckboxRow
 import cmm.apps.designsystem.EsmorgaLinearLoader
 import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextStyle
@@ -179,31 +180,16 @@ fun AttendeeList(
         LazyColumn(modifier = nestedScrollConnection?.let { Modifier.nestedScroll(it) } ?: run { Modifier }) {
             items(attendees.size) { pos ->
                 val attendee = attendees[pos]
-                var checked by remember { mutableStateOf(attendee.checked) }
 
-                Row(
-                    modifier = Modifier.padding(start = 32.dp, end = 16.dp, top = 16.dp, bottom = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    EsmorgaText(
-                        text = "${pos + 1}. ${attendee.name}",
-                        style = EsmorgaTextStyle.BODY_1,
-                        modifier = Modifier.padding(vertical = 16.dp),
-                    )
-
-                    if (shouldShowChecked) {
-                        Spacer(modifier = Modifier.weight(1f))
-                        EsmorgaCheckbox(
-                            checked = checked,
-                            onCheckedChanged = {
-                                checked = it
-                                onAttendeeChecked(pos, checked)
-                            }
-                        )
-                    }
-                }
-
-                HorizontalDivider(color = MaterialTheme.colorScheme.secondary, thickness = 1.dp)
+                EsmorgaCheckboxRow(
+                    text = "${pos + 1}. ${attendee.name}",
+                    shouldShowChecked = shouldShowChecked,
+                    checked = attendee.checked,
+                    onCheckedChanged = { checked ->
+                        onAttendeeChecked(pos, checked)
+                    },
+                    modifier = Modifier.padding(start = 32.dp, end = 16.dp, top = 16.dp, bottom = 16.dp)
+                )
             }
         }
     }

@@ -27,6 +27,7 @@ class PollDetailsViewModel(
 
     //Copy of the poll passed as parameter so it can be internally modified by user actions such as vote. Poll in local and remote will be modified in other layers.
     private var internalPoll = poll
+    private val internalOptionList = poll.options.toMutableList()
 
     private val _uiState = MutableStateFlow(PollDetailsUiState())
     val uiState: StateFlow<PollDetailsUiState> = _uiState.asStateFlow()
@@ -47,11 +48,23 @@ class PollDetailsViewModel(
         votePoll()
     }
 
+    fun onOptionSelected(optionId: String, isSelected: Boolean) {
+        internalOptionList.replaceAll { option ->
+            if (internalPoll.isMultipleChoice) {
+                if (option.optionId == optionId) option.copy(userSelected = isSelected) else option
+            } else {
+                option.copy(userSelected = option.optionId == optionId)
+            }
+        }
+        updateUiState()
+    }
+
+
     private fun votePoll() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isPrimaryButtonLoading = true)
-            //TODO internalPoll = change poll to reflect the selected options
-            votePollUseCase().onSuccess {
+            votePollUseCase().onSuccess { success ->
+                updateInternalPoll(success)
                 updateUiState()
                 _effect.tryEmit(PollDetailsEffect.ShowVoteSuccess)
             }.onFailure { error ->
@@ -60,8 +73,14 @@ class PollDetailsViewModel(
         }
     }
 
+    private fun updateInternalPoll(poll: Poll) {
+        internalPoll = poll
+        internalOptionList.clear()
+        internalOptionList.addAll(poll.options)
+    }
+
     private fun updateUiState() {
-        _uiState.value = internalPoll.toPollUiDetails()
+        _uiState.value = internalPoll.toPollUiDetails(internalOptionList)
     }
 
     private fun showErrorScreen(error: EsmorgaException) {

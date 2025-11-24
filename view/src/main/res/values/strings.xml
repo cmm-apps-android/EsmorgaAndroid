@@ -54,6 +54,7 @@
     <string name="snackbar_no_internet">No internet connection.</string>
     <string name="snackbar_vote_successful">Your vote has been recorded</string>
     <string name="text_empty_state">Nothing to see here… but don\'t worry, we\'re always cooking.</string>
+    <string name="text_poll_vote_count">%1$s (%2$s votes)</string>
     <string name="text_poll_vote_deadline">Vote before %1$s</string>
     <string name="title_event_attendees">Attendee list</string>
     <string name="title_events">Events</string>

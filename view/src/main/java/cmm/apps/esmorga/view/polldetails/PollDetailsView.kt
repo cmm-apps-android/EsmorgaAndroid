@@ -1,15 +1,19 @@
 package cmm.apps.esmorga.view.polldetails
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -26,6 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmm.apps.designsystem.EsmorgaButton
+import cmm.apps.designsystem.EsmorgaCheckboxRow
+import cmm.apps.designsystem.EsmorgaRadioButton
 import cmm.apps.esmorga.domain.poll.model.Poll
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
@@ -37,6 +43,7 @@ import cmm.apps.esmorga.view.polldetails.EventDetailsScreenTestTags.POLL_DETAILS
 import cmm.apps.esmorga.view.polldetails.EventDetailsScreenTestTags.POLL_DETAILS_EVENT_NAME
 import cmm.apps.esmorga.view.polldetails.model.PollDetailsEffect
 import cmm.apps.esmorga.view.polldetails.model.PollDetailsUiState
+import cmm.apps.esmorga.view.polldetails.model.PollOptionUiModel
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -86,6 +93,7 @@ fun PollDetailsScreen(
         PollDetailsView(
             uiState = uiState,
             snackbarHostState = snackbarHostState,
+            onOptionSelected = { optionId, isSelected -> vm.onOptionSelected(optionId, isSelected) },
             onPrimaryButtonClicked = { vm.onPrimaryButtonClicked() },
             onBackPressed = { vm.onBackPressed() })
     }
@@ -97,6 +105,7 @@ fun PollDetailsScreen(
 fun PollDetailsView(
     uiState: PollDetailsUiState,
     snackbarHostState: SnackbarHostState,
+    onOptionSelected: (String, Boolean) -> Unit,
     onPrimaryButtonClicked: () -> Unit,
     onBackPressed: () -> Unit
 ) {
@@ -125,7 +134,11 @@ fun PollDetailsView(
 
             DetailsDescriptionSection(description = uiState.description)
 
-            //TODO options section
+            PollDetailsOptionsSection(
+                isMultipleChoice = uiState.isMultipleChoice,
+                options = uiState.options,
+                onOptionSelected = onOptionSelected
+            )
 
             PollDetailsButtonSection(
                 isPrimaryButtonEnabled = uiState.isPrimaryButtonEnabled,
@@ -138,6 +151,41 @@ fun PollDetailsView(
 }
 
 @Composable
+fun PollDetailsOptionsSection(
+    isMultipleChoice: Boolean,
+    options: List<PollOptionUiModel>,
+    onOptionSelected: (String, Boolean) -> Unit
+) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        if (isMultipleChoice) {
+            HorizontalDivider(color = MaterialTheme.colorScheme.secondary, thickness = 1.dp)
+            options.forEach { option ->
+                EsmorgaCheckboxRow(
+                    text = option.text,
+                    shouldShowChecked = true,
+                    checked = option.isSelected,
+                    onCheckedChanged = { checked ->
+                        onOptionSelected(option.id, checked)
+                    },
+                    modifier = Modifier.padding(start = 32.dp, end = 16.dp, top = 16.dp, bottom = 16.dp)
+                )
+            }
+        } else {
+            options.forEach { option ->
+                EsmorgaRadioButton(
+                    text = option.text,
+                    selected = option.isSelected,
+                    onClick = { onOptionSelected(option.id, true) },
+                    modifier = Modifier.padding(start = 32.dp, end = 16.dp)
+                )
+            }
+        }
+        Spacer(modifier = Modifier.padding(bottom = 32.dp))
+    }
+}
+
+
+@Composable
 fun PollDetailsButtonSection(
     isPrimaryButtonEnabled: Boolean,
     isPrimaryButtonLoading: Boolean,
@@ -146,7 +194,7 @@ fun PollDetailsButtonSection(
 ) {
     EsmorgaButton(
         modifier = Modifier
-            .padding(horizontal = 16.dp)
+            .padding(start = 16.dp, end = 16.dp, bottom = 32.dp)
             .testTag(EventDetailsScreenTestTags.POLL_DETAILS_PRIMARY_BUTTON),
         text = primaryButtonTitle,
         primary = true,

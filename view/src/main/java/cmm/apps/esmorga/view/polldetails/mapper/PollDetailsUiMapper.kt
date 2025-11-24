@@ -2,9 +2,11 @@ package cmm.apps.esmorga.view.polldetails.mapper
 
 import android.content.Context
 import cmm.apps.esmorga.domain.poll.model.Poll
+import cmm.apps.esmorga.domain.poll.model.PollOption
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.dateformatting.EsmorgaDateTimeFormatter
 import cmm.apps.esmorga.view.polldetails.model.PollDetailsUiState
+import cmm.apps.esmorga.view.polldetails.model.PollOptionUiModel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -13,11 +15,12 @@ object PollDetailsUiMapper : KoinComponent {
     private val context: Context by inject()
     private val dateFormatter: EsmorgaDateTimeFormatter by inject()
 
-    fun Poll.toPollUiDetails(): PollDetailsUiState {
-        val userHasSelectedOption = this.options.find { it.userSelected } != null //TODO ensure this does not change until vote has been recorded
+    fun Poll.toPollUiDetails(internalOptions: List<PollOption>): PollDetailsUiState {
+        val pollHadOptionSelected = this.options.find { it.userSelected } != null
+        val userHasSelectedOption = this.options != internalOptions && internalOptions.find { it.userSelected } != null
 
         val primaryButtonTitle = getPrimaryButtonTitle(
-            userAlreadyVoted = userHasSelectedOption
+            userAlreadyVoted = pollHadOptionSelected
         )
 
         return PollDetailsUiState(
@@ -29,7 +32,12 @@ object PollDetailsUiMapper : KoinComponent {
             isPrimaryButtonEnabled = userHasSelectedOption,
             primaryButtonTitle = primaryButtonTitle,
             isMultipleChoice = this.isMultipleChoice,
-            options = this.options.map { it.text } //TODO ensure the right option is sent to backend
+            options = internalOptions.map {
+                PollOptionUiModel(
+                    id = it.optionId,
+                    text = context.getString(R.string.text_poll_vote_count).format(it.text, it.voteCount),
+                    isSelected = it.userSelected)
+            }
         )
     }
 

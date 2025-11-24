@@ -14,7 +14,13 @@ data class PollDetailsUiState(
     val isPrimaryButtonEnabled: Boolean = true,
     val primaryButtonTitle: String = "",
     val isMultipleChoice: Boolean = false,
-    val options: List<String> = emptyList()
+    val options: List<PollOptionUiModel> = emptyList()
+)
+
+data class PollOptionUiModel(
+    val id: String,
+    val text: String,
+    val isSelected: Boolean
 )
 
 sealed class PollDetailsEffect {
