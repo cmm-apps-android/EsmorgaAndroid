@@ -50,7 +50,7 @@ fun DetailsHeaderSection(image: String?, title: String, date: String, titleTestT
 @Composable
 fun DetailsDescriptionSection(description: String, locationName: String? = null) {
     EsmorgaText(
-        text = stringResource(id = R.string.screen_event_details_description),
+        text = stringResource(id = R.string.title_info),
         style = EsmorgaTextStyle.HEADING_1,
         modifier = Modifier.padding(16.dp)
     )
@@ -62,7 +62,7 @@ fun DetailsDescriptionSection(description: String, locationName: String? = null)
 
     locationName?.let {
         EsmorgaText(
-            text = stringResource(id = R.string.screen_event_details_location),
+            text = stringResource(id = R.string.title_location),
             style = EsmorgaTextStyle.HEADING_1,
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
         )

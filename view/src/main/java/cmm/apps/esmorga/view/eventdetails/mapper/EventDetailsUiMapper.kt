@@ -58,7 +58,7 @@ object EventDetailsUiMapper : KoinComponent {
         return when {
             !isAuthenticated -> context.getString(R.string.button_login_to_join)
             userJoined -> context.getString(R.string.button_leave_event)
-            isDeadlinePassed -> context.getString(R.string.button_join_event_closed)
+            isDeadlinePassed -> context.getString(R.string.button_deadline_passed)
             !userJoined && eventFull -> context.getString(R.string.button_join_event_disabled)
             else -> context.getString(R.string.button_join_event)
         }

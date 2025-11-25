@@ -18,7 +18,7 @@ object PollViewMock {
         name = name,
         description = "description",
         imageUrl = null,
-        voteDeadline = System.currentTimeMillis(),
+        voteDeadline = System.currentTimeMillis() + 100000,
         isMultipleChoice = isMultipleChoice,
         options = options.map { (id, userVoted) -> PollOption(id, "1", 0, userVoted) }
     )
