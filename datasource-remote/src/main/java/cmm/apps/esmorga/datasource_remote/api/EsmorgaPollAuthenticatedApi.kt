@@ -8,7 +8,7 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 
-interface EsmorgaPollApi {
+interface EsmorgaPollAuthenticatedApi {
 
     @GET("polls")
     suspend fun getPolls(): PollListWrapperRemoteModel

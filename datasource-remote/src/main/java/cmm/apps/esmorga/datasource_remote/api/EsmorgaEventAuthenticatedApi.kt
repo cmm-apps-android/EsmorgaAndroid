@@ -2,7 +2,6 @@ package cmm.apps.esmorga.datasource_remote.api
 
 import cmm.apps.esmorga.datasource_remote.event.model.EventAttendeeWrapperRemoteModel
 import cmm.apps.esmorga.datasource_remote.event.model.EventListWrapperRemoteModel
-import cmm.apps.esmorga.datasource_remote.poll.model.PollListWrapperRemoteModel
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.HTTP
@@ -10,7 +9,7 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 
-interface EsmorgaEventApi {
+interface EsmorgaEventAuthenticatedApi {
 
     @GET("events/{eventId}/users")
     suspend fun getEventAttendees(@Path("eventId") eventId: String): EventAttendeeWrapperRemoteModel

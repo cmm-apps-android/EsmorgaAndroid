@@ -3,7 +3,7 @@ package cmm.apps.esmorga.datasource_remote.user
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import cmm.apps.esmorga.data.user.datasource.AuthDatasource
-import cmm.apps.esmorga.datasource_remote.api.EsmorgaAccountApi
+import cmm.apps.esmorga.datasource_remote.api.EsmorgaAccountOpenApi
 import cmm.apps.esmorga.datasource_remote.api.authenticator.AuthorizationConstants.REFRESH_TOKEN_KEY
 import cmm.apps.esmorga.datasource_remote.api.authenticator.AuthorizationConstants.SHARED_AUTH_TOKEN_KEY
 import cmm.apps.esmorga.datasource_remote.api.authenticator.AuthorizationConstants.SHARED_REFRESH_TOKEN_KEY
@@ -13,7 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class AuthRemoteDatasourceImpl(
-    private val api: EsmorgaAccountApi,
+    private val api: EsmorgaAccountOpenApi,
     private val sharedPreferences: SharedPreferences,
     private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : AuthDatasource {

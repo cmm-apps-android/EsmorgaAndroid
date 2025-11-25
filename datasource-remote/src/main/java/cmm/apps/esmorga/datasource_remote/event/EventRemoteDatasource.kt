@@ -3,15 +3,15 @@ package cmm.apps.esmorga.datasource_remote.event
 import cmm.apps.esmorga.data.event.datasource.EventDatasource
 import cmm.apps.esmorga.data.event.model.EventAttendeeDataModel
 import cmm.apps.esmorga.data.event.model.EventDataModel
-import cmm.apps.esmorga.datasource_remote.api.EsmorgaEventApi
-import cmm.apps.esmorga.datasource_remote.api.EsmorgaPublicEventApi
+import cmm.apps.esmorga.datasource_remote.api.EsmorgaEventAuthenticatedApi
+import cmm.apps.esmorga.datasource_remote.api.EsmorgaEventOpenApi
 import cmm.apps.esmorga.datasource_remote.api.ExceptionHandler.manageApiException
 import cmm.apps.esmorga.datasource_remote.dateformatting.EsmorgaRemoteDateFormatter
 import cmm.apps.esmorga.datasource_remote.event.mapper.toEventAttendeeDataModelList
 import cmm.apps.esmorga.datasource_remote.event.mapper.toEventDataModelList
 
 
-class EventRemoteDatasourceImpl(private val eventApi: EsmorgaEventApi, private val publicEventApi: EsmorgaPublicEventApi, private val dateFormatter: EsmorgaRemoteDateFormatter) : EventDatasource {
+class EventRemoteDatasourceImpl(private val eventApi: EsmorgaEventAuthenticatedApi, private val publicEventApi: EsmorgaEventOpenApi, private val dateFormatter: EsmorgaRemoteDateFormatter) : EventDatasource {
 
     override suspend fun getEvents(): List<EventDataModel> {
         try {

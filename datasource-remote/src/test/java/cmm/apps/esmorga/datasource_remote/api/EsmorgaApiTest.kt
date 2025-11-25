@@ -33,7 +33,7 @@ class EsmorgaApiTest {
         mockServer.enqueueFile(200, ServerFiles.GET_EVENTS)
 
         val sut = NetworkApiHelper().provideApi(
-            mockServer.start(), EsmorgaPublicEventApi::class.java, null, null, null, null
+            mockServer.start(), EsmorgaEventOpenApi::class.java, null, null, null, null
         )
 
         val eventWrapper = sut.getEvents()
@@ -47,7 +47,7 @@ class EsmorgaApiTest {
         mockServer.enqueueFile(200, ServerFiles.GET_EVENT_ATTENDEES)
 
         val sut = NetworkApiHelper().provideApi(
-            mockServer.start(), EsmorgaEventApi::class.java, null, null, null, null
+            mockServer.start(), EsmorgaEventAuthenticatedApi::class.java, null, null, null, null
         )
 
         val attendeesWrapper = sut.getEventAttendees("test")
@@ -61,7 +61,7 @@ class EsmorgaApiTest {
         mockServer.enqueueFile(200, ServerFiles.GET_POLLS)
 
         val sut = NetworkApiHelper().provideApi(
-            mockServer.start(), EsmorgaPollApi::class.java, null, null, null, null
+            mockServer.start(), EsmorgaPollAuthenticatedApi::class.java, null, null, null, null
         )
 
         val pollsWrapper = sut.getPolls()
@@ -75,7 +75,7 @@ class EsmorgaApiTest {
         mockServer.enqueueFile(200, ServerFiles.LOGIN)
 
         val sut = NetworkApiHelper().provideApi(
-            mockServer.start(), EsmorgaAccountApi::class.java, null, null, null, null
+            mockServer.start(), EsmorgaAccountOpenApi::class.java, null, null, null, null
         )
 
         val user = sut.login(body = mapOf("email" to "email", "password" to "password"))
@@ -88,7 +88,7 @@ class EsmorgaApiTest {
         mockServer.enqueueFile(200, ServerFiles.VOTE_POLL)
 
         val sut = NetworkApiHelper().provideApi(
-            mockServer.start(), EsmorgaPollApi::class.java, null, null, null, null
+            mockServer.start(), EsmorgaPollAuthenticatedApi::class.java, null, null, null, null
         )
 
         val poll = sut.votePoll("Id", mapOf("selectedOptions" to listOf("option")))
