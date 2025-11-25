@@ -4,9 +4,9 @@
     <string name="bottom_bar_myevents">Mis Eventos</string>
     <string name="bottom_bar_myprofile">Perfil</string>
     <string name="button_create_account">Regístrate</string>
+    <string name="button_deadline_passed">Demasiado tarde</string>
     <string name="button_guest">Entrar como invitado</string>
     <string name="button_join_event">Apuntarse</string>
-    <string name="button_join_event_closed">Demasiado tarde</string>
     <string name="button_join_event_disabled">Lleno</string>
     <string name="button_leave_event">Rajarse</string>
     <string name="button_login">Iniciar sesión</string>
@@ -59,6 +59,8 @@
     <string name="title_event_attendees">Listado de asistentes</string>
     <string name="title_events">Eventos</string>
     <string name="title_explore">Está pasando… </string>
+    <string name="title_info">Información</string>
+    <string name="title_location">Localización</string>
     <string name="title_name">Nombre</string>
     <string name="title_payment_status">Pago</string>
     <string name="title_polls">Encuestas</string>
@@ -103,9 +105,7 @@
     <string name="reset_password_screen_title">Cambio de Contraseña</string>
     <string name="screen_create_event_title">Crea tu evento</string>
     <string name="screen_event_details_capacity">%1$d/%2$d asistentes</string>
-    <string name="screen_event_details_description">Detalles del evento</string>
     <string name="screen_event_details_join_deadline">Únete antes del %1$s</string>
-    <string name="screen_event_details_location">Localización</string>
     <string name="screen_homescreen_title">¡Hola!</string>
     <string name="screen_login_title">Hola de nuevo!</string>
     <string name="screen_my_events_empty_text">Todavía no estás apuntado a ningún evento. Anímate para el siguiente!</string>

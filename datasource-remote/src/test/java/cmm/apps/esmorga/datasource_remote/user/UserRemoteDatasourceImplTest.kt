@@ -2,6 +2,7 @@ package cmm.apps.esmorga.datasource_remote.user
 
 import android.content.Context
 import cmm.apps.esmorga.data.user.datasource.AuthDatasource
+import cmm.apps.esmorga.datasource_remote.api.EsmorgaAccountAuthenticatedApi
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaAccountOpenApi
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaEventAuthenticatedApi
 import cmm.apps.esmorga.datasource_remote.mock.UserRemoteMock
@@ -26,11 +27,11 @@ class UserRemoteDatasourceImplTest {
 
         val accountApi = mockk<EsmorgaAccountOpenApi>(relaxed = true)
         val authDatasource = mockk<AuthDatasource>(relaxed = true)
-        val esmorgaApi = mockk<EsmorgaEventAuthenticatedApi>(relaxed = true)
+        val accountAuthApi = mockk<EsmorgaAccountAuthenticatedApi>(relaxed = true)
 
         coEvery { accountApi.login(any()) } returns UserRemoteMock.provideUser(remoteUserName)
 
-        val sut = UserRemoteDatasourceImpl(accountApi, esmorgaApi, authDatasource)
+        val sut = UserRemoteDatasourceImpl(accountApi, accountAuthApi, authDatasource)
         val result = sut.login("email", "password")
 
         Assert.assertEquals(remoteUserName, result.dataName)
@@ -42,11 +43,11 @@ class UserRemoteDatasourceImplTest {
     fun `given invalid credentials when login fails then exception is thrown`() = runTest {
         val accountApi = mockk<EsmorgaAccountOpenApi>(relaxed = true)
         val authDatasource = mockk<AuthDatasource>(relaxed = true)
-        val esmorgaApi = mockk<EsmorgaEventAuthenticatedApi>(relaxed = true)
+        val accountAuthApi = mockk<EsmorgaAccountAuthenticatedApi>(relaxed = true)
 
         coEvery { accountApi.login(any()) } throws HttpException(Response.error<ResponseBody>(401, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
 
-        val sut = UserRemoteDatasourceImpl(accountApi, esmorgaApi, authDatasource)
+        val sut = UserRemoteDatasourceImpl(accountApi, accountAuthApi, authDatasource)
         sut.login("email", "password")
     }
 
@@ -56,10 +57,10 @@ class UserRemoteDatasourceImplTest {
 
         val accountApi = mockk<EsmorgaAccountOpenApi>(relaxed = true)
         val authDatasource = mockk<AuthDatasource>(relaxed = true)
-        val esmorgaApi = mockk<EsmorgaEventAuthenticatedApi>(relaxed = true)
+        val accountAuthApi = mockk<EsmorgaAccountAuthenticatedApi>(relaxed = true)
         coEvery { accountApi.register(any()) } returns Unit
 
-        val sut = UserRemoteDatasourceImpl(accountApi, esmorgaApi, authDatasource)
+        val sut = UserRemoteDatasourceImpl(accountApi, accountAuthApi, authDatasource)
         val result = sut.register(remoteUserName, "lastName", "email", "password")
 
         Assert.assertEquals(Unit, result)
@@ -72,12 +73,12 @@ class UserRemoteDatasourceImplTest {
         val context = mockk<Context>(relaxed = true)
         val accountApi = mockk<EsmorgaAccountOpenApi>(relaxed = true)
         val authDatasource = mockk<AuthDatasource>(relaxed = true)
-        val esmorgaApi = mockk<EsmorgaEventAuthenticatedApi>(relaxed = true)
+        val accountAuthApi = mockk<EsmorgaAccountAuthenticatedApi>(relaxed = true)
 
         coEvery { accountApi.register(any()) } throws HttpException(Response.error<ResponseBody>(errorCode, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
         coEvery { context.getSystemService(Context.CONNECTIVITY_SERVICE) }
 
-        val sut = UserRemoteDatasourceImpl(accountApi, esmorgaApi, authDatasource)
+        val sut = UserRemoteDatasourceImpl(accountApi, accountAuthApi, authDatasource)
 
         val exception = try {
             sut.register("name", "lastName", "email", "password")
@@ -94,10 +95,10 @@ class UserRemoteDatasourceImplTest {
     fun `given valid data when email verification succeeds then Unit is returned`() = runTest {
         val accountApi = mockk<EsmorgaAccountOpenApi>(relaxed = true)
         val authDatasource = mockk<AuthDatasource>(relaxed = true)
-        val esmorgaApi = mockk<EsmorgaEventAuthenticatedApi>(relaxed = true)
+        val accountAuthApi = mockk<EsmorgaAccountAuthenticatedApi>(relaxed = true)
         coEvery { accountApi.emailVerification(any()) } returns Unit
 
-        val sut = UserRemoteDatasourceImpl(accountApi, esmorgaApi, authDatasource)
+        val sut = UserRemoteDatasourceImpl(accountApi, accountAuthApi, authDatasource)
         val result = sut.emailVerification("test@example.com")
 
         Assert.assertEquals(Unit, result)
@@ -107,10 +108,10 @@ class UserRemoteDatasourceImplTest {
     fun `given api call fails when emailVerification is invoked then Exception is thrown(`() = runTest {
         val accountApi = mockk<EsmorgaAccountOpenApi>(relaxed = true)
         val authDatasource = mockk<AuthDatasource>(relaxed = true)
-        val esmorgaApi = mockk<EsmorgaEventAuthenticatedApi>(relaxed = true)
+        val accountAuthApi = mockk<EsmorgaAccountAuthenticatedApi>(relaxed = true)
         coEvery { accountApi.emailVerification(any()) } throws HttpException(Response.error<ResponseBody>(400, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
 
-        val sut = UserRemoteDatasourceImpl(accountApi, esmorgaApi, authDatasource)
+        val sut = UserRemoteDatasourceImpl(accountApi, accountAuthApi, authDatasource)
         sut.emailVerification("test@example.com")
     }
 
@@ -118,10 +119,10 @@ class UserRemoteDatasourceImplTest {
     fun `given valid data when recover password succeeds then Unit is returned`() = runTest {
         val accountApi = mockk<EsmorgaAccountOpenApi>(relaxed = true)
         val authDatasource = mockk<AuthDatasource>(relaxed = true)
-        val esmorgaApi = mockk<EsmorgaEventAuthenticatedApi>(relaxed = true)
+        val accountAuthApi = mockk<EsmorgaAccountAuthenticatedApi>(relaxed = true)
         coEvery { accountApi.recoverPassword(any()) } returns Unit
 
-        val sut = UserRemoteDatasourceImpl(accountApi, esmorgaApi, authDatasource)
+        val sut = UserRemoteDatasourceImpl(accountApi, accountAuthApi, authDatasource)
         val result = sut.recoverPassword("test@example.com")
 
         Assert.assertEquals(Unit, result)
@@ -131,10 +132,10 @@ class UserRemoteDatasourceImplTest {
     fun `given api call fails when recoverPassword is invoked then Exception is thrown`() = runTest {
         val accountApi = mockk<EsmorgaAccountOpenApi>(relaxed = true)
         val authDatasource = mockk<AuthDatasource>(relaxed = true)
-        val esmorgaApi = mockk<EsmorgaEventAuthenticatedApi>(relaxed = true)
+        val accountAuthApi = mockk<EsmorgaAccountAuthenticatedApi>(relaxed = true)
         coEvery { accountApi.recoverPassword(any()) } throws HttpException(Response.error<ResponseBody>(400, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
 
-        val sut = UserRemoteDatasourceImpl(accountApi, esmorgaApi, authDatasource)
+        val sut = UserRemoteDatasourceImpl(accountApi, accountAuthApi, authDatasource)
         sut.recoverPassword("test@example.com")
     }
 
@@ -142,10 +143,10 @@ class UserRemoteDatasourceImplTest {
     fun `given valid data, when resetPassword is succeed then Unit is returned`() = runTest {
         val accountApi = mockk<EsmorgaAccountOpenApi>(relaxed = true)
         val authDatasource = mockk<AuthDatasource>(relaxed = true)
-        val esmorgaApi = mockk<EsmorgaEventAuthenticatedApi>(relaxed = true)
+        val accountAuthApi = mockk<EsmorgaAccountAuthenticatedApi>(relaxed = true)
         coEvery { accountApi.resetPassword(any()) } returns Unit
 
-        val sut = UserRemoteDatasourceImpl(accountApi, esmorgaApi, authDatasource)
+        val sut = UserRemoteDatasourceImpl(accountApi, accountAuthApi, authDatasource)
         val result = sut.resetPassword("347638", "password")
 
         Assert.assertEquals(Unit, result)
@@ -155,10 +156,10 @@ class UserRemoteDatasourceImplTest {
     fun `given api call fails when resetPassword is invoked then Exception is thrown `() = runTest {
         val accountApi = mockk<EsmorgaAccountOpenApi>(relaxed = true)
         val authDatasource = mockk<AuthDatasource>(relaxed = true)
-        val esmorgaApi = mockk<EsmorgaEventAuthenticatedApi>(relaxed = true)
+        val accountAuthApi = mockk<EsmorgaAccountAuthenticatedApi>(relaxed = true)
         coEvery { accountApi.resetPassword(any()) } throws HttpException(Response.error<ResponseBody>(400, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
 
-        val sut = UserRemoteDatasourceImpl(accountApi, esmorgaApi, authDatasource)
+        val sut = UserRemoteDatasourceImpl(accountApi, accountAuthApi, authDatasource)
         val result = sut.resetPassword("347638", "password")
 
         Assert.assertEquals(Unit, result)
@@ -170,11 +171,11 @@ class UserRemoteDatasourceImplTest {
 
         val accountApi = mockk<EsmorgaAccountOpenApi>(relaxed = true)
         val authDatasource = mockk<AuthDatasource>(relaxed = true)
-        val esmorgaApi = mockk<EsmorgaEventAuthenticatedApi>(relaxed = true)
+        val accountAuthApi = mockk<EsmorgaAccountAuthenticatedApi>(relaxed = true)
 
         coEvery { accountApi.accountActivation(any()) } returns UserRemoteMock.provideUser(remoteUserName)
 
-        val sut = UserRemoteDatasourceImpl(accountApi, esmorgaApi, authDatasource)
+        val sut = UserRemoteDatasourceImpl(accountApi, accountAuthApi, authDatasource)
         val result = sut.activateAccount("verification code")
 
         Assert.assertEquals(remoteUserName, result.dataName)
@@ -186,10 +187,10 @@ class UserRemoteDatasourceImplTest {
     fun `given invalid verification code when accounte activation fails then exception is thrown`() = runTest {
         val accountApi = mockk<EsmorgaAccountOpenApi>(relaxed = true)
         val authDatasource = mockk<AuthDatasource>(relaxed = true)
-        val esmorgaApi = mockk<EsmorgaEventAuthenticatedApi>(relaxed = true)
+        val accountAuthApi = mockk<EsmorgaAccountAuthenticatedApi>(relaxed = true)
         coEvery { accountApi.accountActivation(any()) } throws HttpException(Response.error<ResponseBody>(401, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
 
-        val sut = UserRemoteDatasourceImpl(accountApi, esmorgaApi, authDatasource)
+        val sut = UserRemoteDatasourceImpl(accountApi, accountAuthApi, authDatasource)
         sut.activateAccount("verification code")
     }
 
@@ -197,11 +198,11 @@ class UserRemoteDatasourceImplTest {
     fun `given valid data, when changePassword is invoked then Unit is returned`() = runTest {
         val accountApi = mockk<EsmorgaAccountOpenApi>(relaxed = true)
         val authDatasource = mockk<AuthDatasource>(relaxed = true)
-        val esmorgaApi = mockk<EsmorgaEventAuthenticatedApi>(relaxed = true)
+        val accountAuthApi = mockk<EsmorgaAccountAuthenticatedApi>(relaxed = true)
 
-        coEvery { accountApi.changePassword(any()) } returns Unit
+        coEvery { accountAuthApi.changePassword(any()) } returns Unit
 
-        val sut = UserRemoteDatasourceImpl(accountApi, esmorgaApi, authDatasource)
+        val sut = UserRemoteDatasourceImpl(accountApi, accountAuthApi, authDatasource)
         val result = sut.changePassword("password1", "password2")
 
         Assert.assertEquals(Unit, result)
@@ -211,11 +212,11 @@ class UserRemoteDatasourceImplTest {
     fun `given api call fails when changePassword is invoked then Exception is thrown `() = runTest {
         val accountApi = mockk<EsmorgaAccountOpenApi>(relaxed = true)
         val authDatasource = mockk<AuthDatasource>(relaxed = true)
-        val esmorgaApi = mockk<EsmorgaEventAuthenticatedApi>(relaxed = true)
+        val accountAuthApi = mockk<EsmorgaAccountAuthenticatedApi>(relaxed = true)
 
-        coEvery { accountApi.changePassword(any()) } throws HttpException(Response.error<ResponseBody>(400, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
+        coEvery { accountAuthApi.changePassword(any()) } throws HttpException(Response.error<ResponseBody>(400, "Error".toResponseBody("application/json".toMediaTypeOrNull())))
 
-        val sut = UserRemoteDatasourceImpl(accountApi, esmorgaApi, authDatasource)
+        val sut = UserRemoteDatasourceImpl(accountApi, accountAuthApi, authDatasource)
         val result = sut.changePassword("password1", "password2")
 
         Assert.assertEquals(Unit, result)

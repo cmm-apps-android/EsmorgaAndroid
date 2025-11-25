@@ -162,4 +162,18 @@ class PollDetailsViewModelTest {
         Assert.assertTrue("Option should be selected", uiState.options.find { it.id == option2 }?.isSelected == true)
     }
 
+    @Test
+    fun `given a poll with deadline passed when screen is opened then UI state with button disabled is emitted`() = runTest {
+        val sut = PollDetailsViewModel(
+            votePollUseCase,
+            PollViewMock.providePoll(name = "poll").copy(voteDeadline = System.currentTimeMillis() - 10000)
+        ).also {
+            it.onCreate(mockk<LifecycleOwner>(relaxed = true))
+        }
+
+        val uiState = sut.uiState.value
+        Assert.assertEquals(mockContext.getString(R.string.button_deadline_passed), uiState.primaryButtonTitle)
+        Assert.assertFalse("Option should be selected", uiState.isPrimaryButtonEnabled)
+    }
+
 }

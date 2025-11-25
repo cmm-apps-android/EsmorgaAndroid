@@ -18,9 +18,11 @@ object PollDetailsUiMapper : KoinComponent {
     fun Poll.toPollUiDetails(internalOptions: List<PollOption>): PollDetailsUiState {
         val pollHadOptionSelected = this.options.find { it.userSelected } != null
         val userHasSelectedOption = this.options != internalOptions && internalOptions.find { it.userSelected } != null
+        val deadlinePassed = System.currentTimeMillis() > this.voteDeadline
 
         val primaryButtonTitle = getPrimaryButtonTitle(
-            userAlreadyVoted = pollHadOptionSelected
+            userAlreadyVoted = pollHadOptionSelected,
+            deadlinePassed = deadlinePassed
         )
 
         return PollDetailsUiState(
@@ -29,7 +31,7 @@ object PollDetailsUiMapper : KoinComponent {
             voteDeadline = context.getString(R.string.text_poll_vote_deadline).format(dateFormatter.formatDateforView((this.voteDeadline))),
             description = this.description,
             image = this.imageUrl,
-            isPrimaryButtonEnabled = userHasSelectedOption,
+            isPrimaryButtonEnabled = userHasSelectedOption && !deadlinePassed,
             primaryButtonTitle = primaryButtonTitle,
             isMultipleChoice = this.isMultipleChoice,
             options = internalOptions.map {
@@ -42,9 +44,11 @@ object PollDetailsUiMapper : KoinComponent {
     }
 
     private fun getPrimaryButtonTitle(
-        userAlreadyVoted: Boolean
+        userAlreadyVoted: Boolean,
+        deadlinePassed: Boolean
     ): String {
         return when {
+            deadlinePassed -> context.getString(R.string.button_deadline_passed)
             userAlreadyVoted -> context.getString(R.string.button_poll_change_vote)
             else -> context.getString(R.string.button_poll_vote)
         }

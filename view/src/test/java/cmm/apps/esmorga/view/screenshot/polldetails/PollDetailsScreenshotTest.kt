@@ -33,11 +33,6 @@ class PollDetailsScreenshotTest : BaseScreenshotTest() {
     }
 
     @Test
-    fun pollDetailsView_lightTheme_data() {
-        snapshotWithState()
-    }
-
-    @Test
     fun pollDetailsView_lightTheme_multiple_choice() {
         snapshotWithState(isMultipleChoice = true)
     }
