@@ -11,7 +11,7 @@ import cmm.apps.esmorga.component.mock.MockApplication
 import cmm.apps.esmorga.component.mock.UserMock
 import cmm.apps.esmorga.component.mock.mockResponseSuccess
 import cmm.apps.esmorga.datasource_local.database.EsmorgaDatabase
-import cmm.apps.esmorga.datasource_remote.api.EsmorgaEventApi
+import cmm.apps.esmorga.datasource_remote.api.EsmorgaEventAuthenticatedApi
 import cmm.apps.esmorga.di.AppDIModules
 import cmm.apps.esmorga.domain.event.JoinEventUseCase
 import cmm.apps.esmorga.domain.event.LeaveEventUseCase
@@ -45,7 +45,7 @@ class EventDetailsViewModelComponentTest : KoinTest {
     private val testDispatcher = UnconfinedTestDispatcher()
 
     @get:Rule
-    val apiMocker = ApiMockerRule(EsmorgaEventApi::class.java, testDispatcher)
+    val apiMocker = ApiMockerRule(EsmorgaEventAuthenticatedApi::class.java, testDispatcher)
 
     private lateinit var mockContext: Context
     private lateinit var mockDatabase: EsmorgaDatabase
@@ -74,7 +74,7 @@ class EventDetailsViewModelComponentTest : KoinTest {
                 AppDIModules.modules,
                 module {
                     single<EsmorgaDatabase> { mockDatabase }
-                    single<EsmorgaEventApi> { apiMocker.api }
+                    single<EsmorgaEventAuthenticatedApi> { apiMocker.api }
                 }
             )
         }

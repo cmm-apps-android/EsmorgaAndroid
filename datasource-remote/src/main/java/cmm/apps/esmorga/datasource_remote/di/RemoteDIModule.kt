@@ -6,10 +6,11 @@ import cmm.apps.esmorga.data.poll.datasource.PollDatasource
 import cmm.apps.esmorga.data.user.datasource.AuthDatasource
 import cmm.apps.esmorga.data.user.datasource.UserDatasource
 import cmm.apps.esmorga.datasource_remote.api.ConnectionInterceptor
-import cmm.apps.esmorga.datasource_remote.api.EsmorgaEventApi
-import cmm.apps.esmorga.datasource_remote.api.EsmorgaAccountApi
-import cmm.apps.esmorga.datasource_remote.api.EsmorgaPollApi
-import cmm.apps.esmorga.datasource_remote.api.EsmorgaPublicEventApi
+import cmm.apps.esmorga.datasource_remote.api.EsmorgaAccountAuthenticatedApi
+import cmm.apps.esmorga.datasource_remote.api.EsmorgaEventAuthenticatedApi
+import cmm.apps.esmorga.datasource_remote.api.EsmorgaAccountOpenApi
+import cmm.apps.esmorga.datasource_remote.api.EsmorgaPollAuthenticatedApi
+import cmm.apps.esmorga.datasource_remote.api.EsmorgaEventOpenApi
 import cmm.apps.esmorga.datasource_remote.api.NetworkApiHelper
 import cmm.apps.esmorga.datasource_remote.api.authenticator.EsmorgaAuthInterceptor
 import cmm.apps.esmorga.datasource_remote.api.authenticator.EsmorgaAuthenticator
@@ -27,40 +28,50 @@ object RemoteDIModule {
 
     val module = module {
         factory<AuthDatasource> { AuthRemoteDatasourceImpl(get(), get()) }
-        single<EsmorgaAccountApi> {
+        single<EsmorgaAccountOpenApi> {
             NetworkApiHelper().provideApi(
                 baseUrl = NetworkApiHelper.esmorgaApiBaseUrl(),
-                clazz = EsmorgaAccountApi::class.java,
+                clazz = EsmorgaAccountOpenApi::class.java,
                 authenticator = null,
                 authInterceptor = null,
                 deviceInterceptor = DeviceInterceptor(get(named(DataDIModule.LOCAL_DATASOURCE_INSTANCE_NAME))),
                 connectionInterceptor = ConnectionInterceptor
             )
         }
-        single<EsmorgaEventApi> {
+        single<EsmorgaAccountAuthenticatedApi> {
             NetworkApiHelper().provideApi(
                 baseUrl = NetworkApiHelper.esmorgaApiBaseUrl(),
-                clazz = EsmorgaEventApi::class.java,
+                clazz = EsmorgaAccountAuthenticatedApi::class.java,
                 authenticator = EsmorgaAuthenticator(get()),
                 authInterceptor = EsmorgaAuthInterceptor(get()),
                 deviceInterceptor = DeviceInterceptor(get(named(DataDIModule.LOCAL_DATASOURCE_INSTANCE_NAME))),
                 connectionInterceptor = ConnectionInterceptor
             )
         }
-        single<EsmorgaPublicEventApi> {
+        single<EsmorgaEventAuthenticatedApi> {
             NetworkApiHelper().provideApi(
                 baseUrl = NetworkApiHelper.esmorgaApiBaseUrl(),
-                clazz = EsmorgaPublicEventApi::class.java,
+                clazz = EsmorgaEventAuthenticatedApi::class.java,
+                authenticator = EsmorgaAuthenticator(get()),
+                authInterceptor = EsmorgaAuthInterceptor(get()),
+                deviceInterceptor = DeviceInterceptor(get(named(DataDIModule.LOCAL_DATASOURCE_INSTANCE_NAME))),
+                connectionInterceptor = ConnectionInterceptor
+            )
+        }
+        single<EsmorgaEventOpenApi> {
+            NetworkApiHelper().provideApi(
+                baseUrl = NetworkApiHelper.esmorgaApiBaseUrl(),
+                clazz = EsmorgaEventOpenApi::class.java,
                 authenticator = null,
                 authInterceptor = null,
                 deviceInterceptor = DeviceInterceptor(get(named(DataDIModule.LOCAL_DATASOURCE_INSTANCE_NAME))),
                 connectionInterceptor = ConnectionInterceptor
             )
         }
-        single<EsmorgaPollApi> {
+        single<EsmorgaPollAuthenticatedApi> {
             NetworkApiHelper().provideApi(
                 baseUrl = NetworkApiHelper.esmorgaApiBaseUrl(),
-                clazz = EsmorgaPollApi::class.java,
+                clazz = EsmorgaPollAuthenticatedApi::class.java,
                 authenticator = EsmorgaAuthenticator(get()),
                 authInterceptor = EsmorgaAuthInterceptor(get()),
                 deviceInterceptor = DeviceInterceptor(get(named(DataDIModule.LOCAL_DATASOURCE_INSTANCE_NAME))),
