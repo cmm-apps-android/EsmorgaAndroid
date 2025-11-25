@@ -39,7 +39,7 @@ class EventDateTimeFormatterTest {
     // MOB-343
     @Test
     fun `given epoch millis when formatted in UK locale then structure and components are correct`() {
-        val result = sut.formatEventDate(epoch)
+        val result = sut.formatDateforView(epoch)
         assertTrue("Expected two commas in output, was: $result", result.count { it == ',' } == 2)
         val parts = result.split(", ")
         assertEquals("Expected three parts split by comma and space", 3, parts.size)
@@ -52,7 +52,7 @@ class EventDateTimeFormatterTest {
     @Test
     fun `given epoch millis when formatted in French locale then medium date and short time are localized`() {
         Locale.setDefault(Locale.FRANCE)
-        val result = sut.formatEventDate(epoch)
+        val result = sut.formatDateforView(epoch)
         val remainder = result.substringAfter(", ")
         val expectedDate = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault()).format(Date(epoch))
         val expectedTime = DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault()).format(Date(epoch))
@@ -64,7 +64,7 @@ class EventDateTimeFormatterTest {
     @Test
     fun `given epoch millis when formatted in German locale then medium date and short time are localized`() {
         Locale.setDefault(Locale.GERMANY)
-        val result = sut.formatEventDate(epoch)
+        val result = sut.formatDateforView(epoch)
         val remainder = result.substringAfter(", ")
         val expectedDate = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault()).format(Date(epoch))
         val expectedTime = DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault()).format(Date(epoch))
@@ -76,7 +76,7 @@ class EventDateTimeFormatterTest {
     @Test
     fun `given epoch millis when formatted in Spanish locale then medium date and short time are localized`() {
         Locale.setDefault(Locale.forLanguageTag("es-ES"))
-        val result = sut.formatEventDate(epoch)
+        val result = sut.formatDateforView(epoch)
         val remainder = result.substringAfter(", ")
         val expectedDate = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault()).format(Date(epoch))
         val expectedTime = DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault()).format(Date(epoch))
@@ -88,7 +88,7 @@ class EventDateTimeFormatterTest {
     @Test
     fun `given epoch millis when formatted in Italian locale then format clarity rules are met`() {
         Locale.setDefault(Locale.ITALY)
-        val result = sut.formatEventDate(epoch)
+        val result = sut.formatDateforView(epoch)
         assertTrue(result.count { it == ',' } == 2)
         val parts = result.split(", ")
         assertEquals(3, parts.size)
@@ -101,7 +101,7 @@ class EventDateTimeFormatterTest {
     @Test
     fun `given epoch millis when formatted in Spanish locale then day and separators present`() {
         Locale.setDefault(Locale.forLanguageTag("es-ES"))
-        val result = sut.formatEventDate(epoch)
+        val result = sut.formatDateforView(epoch)
         assertTrue(result.count { it == ',' } == 2)
         val parts = result.split(", ")
         assertEquals(3, parts.size)

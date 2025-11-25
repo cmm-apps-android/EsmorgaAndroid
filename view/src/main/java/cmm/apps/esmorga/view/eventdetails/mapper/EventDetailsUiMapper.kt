@@ -36,7 +36,7 @@ object EventDetailsUiMapper : KoinComponent {
         return EventDetailsUiState(
             id = this.id,
             title = this.name,
-            date = dateFormatter.formatEventDate(this.date),
+            date = dateFormatter.formatDateforView(this.date),
             description = this.description,
             image = this.imageUrl,
             locationName = this.location.name,
@@ -44,7 +44,7 @@ object EventDetailsUiMapper : KoinComponent {
             primaryButtonTitle = primaryButtonTitle,
             isPrimaryButtonEnabled = isPrimaryButtonEnabled,
             currentAttendeeCountText = getCurrentAttendeeCountString(this.maxCapacity, this.currentAttendeeCount),
-            joinDeadline = dateFormatter.formatEventDate(this.joinDeadline),
+            joinDeadline = dateFormatter.formatDateforView(this.joinDeadline),
             showViewAttendeesButton = this.currentAttendeeCount > 0 && isAuthenticated
         )
     }

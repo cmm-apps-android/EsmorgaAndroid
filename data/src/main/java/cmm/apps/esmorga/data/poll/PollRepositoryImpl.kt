@@ -2,6 +2,7 @@ package cmm.apps.esmorga.data.poll
 
 import cmm.apps.esmorga.data.CacheHelper
 import cmm.apps.esmorga.data.poll.datasource.PollDatasource
+import cmm.apps.esmorga.data.poll.mapper.toPoll
 import cmm.apps.esmorga.data.poll.mapper.toPollList
 import cmm.apps.esmorga.data.poll.model.PollDataModel
 import cmm.apps.esmorga.domain.poll.model.Poll
@@ -22,6 +23,19 @@ class PollRepositoryImpl(
         }
 
         return getPollsFromRemote().toPollList()
+    }
+
+    override suspend fun votePoll(pollId: String, selectedOptions: List<String>): Poll {
+        val remotePoll = remotePollDs.votePoll(pollId, selectedOptions)
+
+        val localList = localPollDs.getPolls().toMutableList()
+        localList.replaceAll {
+            if (it.dataId == pollId) remotePoll else it
+        }
+        localPollDs.deleteCachePolls()
+        localPollDs.cachePolls(localList)
+
+        return remotePoll.toPoll()
     }
 
     private suspend fun getPollsFromRemote(): List<PollDataModel> {

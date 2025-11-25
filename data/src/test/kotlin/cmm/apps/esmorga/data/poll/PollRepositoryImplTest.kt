@@ -3,6 +3,7 @@ package cmm.apps.esmorga.data.poll
 import cmm.apps.esmorga.data.CacheHelper
 import cmm.apps.esmorga.data.mock.PollDataMock
 import cmm.apps.esmorga.data.poll.datasource.PollDatasource
+import cmm.apps.esmorga.data.poll.model.PollOptionDataModel
 import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.Source
@@ -73,10 +74,30 @@ class PollRepositoryImplTest {
         coEvery { localDS.getPolls() } returns listOf(PollDataMock.providePollDataModel(localName).copy(dataCreationTime = oldDate))
         coEvery { remoteDS.getPolls() } throws EsmorgaException(message = "No connection", code = ErrorCodes.NO_CONNECTION, source = Source.REMOTE)
 
-        val sut = PollRepositoryImpl( localDS, remoteDS)
+        val sut = PollRepositoryImpl(localDS, remoteDS)
         val result = sut.getPolls()
 
         Assert.assertEquals(localName, result[0].name)
+    }
+
+    @Test
+    fun `given a working remote when voting poll then remote poll is cached and returned`() = runTest {
+        val newRemotePollName = "NewRemotePoll"
+        val newRemoteOptionId = "NewRemoteOptionId"
+        val remoteId = "RemotePollId"
+        val poll1 = PollDataMock.providePollDataModel(name = "RemotePoll1", id = remoteId)
+        val poll2 = PollDataMock.providePollDataModel("RemotePoll2")
+        val newPoll = PollDataMock.providePollDataModel(newRemotePollName).copy(dataOptions = listOf(PollOptionDataModel(newRemoteOptionId, "name", 0, true)))
+
+        coEvery { localDS.getPolls() } returns listOf(poll1, poll2)
+        coEvery { remoteDS.votePoll(remoteId, any()) } returns newPoll
+
+        val sut = PollRepositoryImpl(localDS, remoteDS)
+        val result = sut.votePoll(remoteId, listOf("optionId"))
+
+        Assert.assertEquals(newRemotePollName, result.name)
+        coVerify { localDS.deleteCachePolls() }
+        coVerify { localDS.cachePolls(listOf(newPoll, poll2)) }
     }
 
 }

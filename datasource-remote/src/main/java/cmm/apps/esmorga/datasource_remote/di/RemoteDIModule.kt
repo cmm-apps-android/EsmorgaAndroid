@@ -8,6 +8,7 @@ import cmm.apps.esmorga.data.user.datasource.UserDatasource
 import cmm.apps.esmorga.datasource_remote.api.ConnectionInterceptor
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaEventApi
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaAccountApi
+import cmm.apps.esmorga.datasource_remote.api.EsmorgaPollApi
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaPublicEventApi
 import cmm.apps.esmorga.datasource_remote.api.NetworkApiHelper
 import cmm.apps.esmorga.datasource_remote.api.authenticator.EsmorgaAuthInterceptor
@@ -25,7 +26,8 @@ import org.koin.dsl.module
 object RemoteDIModule {
 
     val module = module {
-        single {
+        factory<AuthDatasource> { AuthRemoteDatasourceImpl(get(), get()) }
+        single<EsmorgaAccountApi> {
             NetworkApiHelper().provideApi(
                 baseUrl = NetworkApiHelper.esmorgaApiBaseUrl(),
                 clazz = EsmorgaAccountApi::class.java,
@@ -35,8 +37,7 @@ object RemoteDIModule {
                 connectionInterceptor = ConnectionInterceptor
             )
         }
-        factory<AuthDatasource> { AuthRemoteDatasourceImpl(get(), get()) }
-        single {
+        single<EsmorgaEventApi> {
             NetworkApiHelper().provideApi(
                 baseUrl = NetworkApiHelper.esmorgaApiBaseUrl(),
                 clazz = EsmorgaEventApi::class.java,
@@ -46,12 +47,22 @@ object RemoteDIModule {
                 connectionInterceptor = ConnectionInterceptor
             )
         }
-        single {
+        single<EsmorgaPublicEventApi> {
             NetworkApiHelper().provideApi(
                 baseUrl = NetworkApiHelper.esmorgaApiBaseUrl(),
                 clazz = EsmorgaPublicEventApi::class.java,
                 authenticator = null,
                 authInterceptor = null,
+                deviceInterceptor = DeviceInterceptor(get(named(DataDIModule.LOCAL_DATASOURCE_INSTANCE_NAME))),
+                connectionInterceptor = ConnectionInterceptor
+            )
+        }
+        single<EsmorgaPollApi> {
+            NetworkApiHelper().provideApi(
+                baseUrl = NetworkApiHelper.esmorgaApiBaseUrl(),
+                clazz = EsmorgaPollApi::class.java,
+                authenticator = EsmorgaAuthenticator(get()),
+                authInterceptor = EsmorgaAuthInterceptor(get()),
                 deviceInterceptor = DeviceInterceptor(get(named(DataDIModule.LOCAL_DATASOURCE_INSTANCE_NAME))),
                 connectionInterceptor = ConnectionInterceptor
             )

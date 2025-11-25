@@ -77,7 +77,7 @@ class EventDetailsViewModelTest {
     }
 
     @Test
-    fun `given a successful usecase when get event by id is called usecase executed and UI state containing event is emitted`() = runTest {
+    fun `given user is not logged when showing the screen then UI state containing event and login button is emitted`() = runTest {
         val eventName = "Event Name"
 
         val userUseCase = mockk<GetSavedUserUseCase>(relaxed = true)
@@ -93,7 +93,7 @@ class EventDetailsViewModelTest {
     }
 
     @Test
-    fun `given a successful usecase when get event by id is called usecase executed and UI state containing event has correct content`() = runTest {
+    fun `given user is logged-in and joined the event when showing the screen then UI state containing event and leave button is emitted`() = runTest {
         val eventName = "Event Name"
         val sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, EventViewMock.provideEvent(eventName, userJoined = true)).also {
             it.onStart(mockk<LifecycleOwner>(relaxed = true))
@@ -105,7 +105,7 @@ class EventDetailsViewModelTest {
     }
 
     @Test
-    fun `given a successful usecase when get event by id is called usecase executed and UI state containing event not joined has correct content`() = runTest {
+    fun `given user is logged-in and not joined the event when showing the screen then UI state containing event and join button is emitted`() = runTest {
         val eventName = "EventName"
         val sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, EventViewMock.provideEvent(eventName)).also {
             it.onStart(mockk<LifecycleOwner>(relaxed = true))
@@ -117,7 +117,7 @@ class EventDetailsViewModelTest {
     }
 
     @Test
-    fun `given a successful usecase when joint event is called then join event success snackbar is shown`() = runTest {
+    fun `given a successful usecase when join event is called then join event success snackbar is shown`() = runTest {
         val event = EventViewMock.provideEvent("Event Name")
 
         val sut = EventDetailsViewModel(getSavedUserUseCase, joinEventUseCase, leaveEventUseCase, event).also {
@@ -133,7 +133,7 @@ class EventDetailsViewModelTest {
     }
 
     @Test
-    fun `given a failure usecase when joint event is called then full screen error is shown`() = runTest {
+    fun `given a failure usecase when join event is called then full screen error is shown`() = runTest {
         val event = EventViewMock.provideEvent("Event Name")
 
         val joinEventUseCase = mockk<JoinEventUseCase>(relaxed = true)
@@ -152,7 +152,7 @@ class EventDetailsViewModelTest {
     }
 
     @Test
-    fun `given no internet connection when joint event is called then no internet error screen is shown`() = runTest {
+    fun `given no internet connection when join event is called then no internet error screen is shown`() = runTest {
         val event = EventViewMock.provideEvent("Event Name")
         val joinEventUseCase = mockk<JoinEventUseCase>(relaxed = true)
         coEvery { joinEventUseCase(event) } returns EsmorgaResult.failure(EsmorgaException("No Connection", Source.REMOTE, ErrorCodes.NO_CONNECTION))
@@ -284,7 +284,7 @@ class EventDetailsViewModelTest {
     }
 
     @Test
-    fun `given event with capacity when getLoginStatus is called then capacity info is shown in UI state`() = runTest {
+    fun `given event with capacity when screen is opened then capacity info is shown in UI state`() = runTest {
         val currentAttendeeCount = 5
         val maxCapacity = 10
         val event = EventViewMock.provideEvent(
@@ -405,7 +405,7 @@ class EventDetailsViewModelTest {
     }
 
     @Test
-    fun `given event with attendees when screen shown then view attendees button is shown`() = runTest {
+    fun `given event with attendees when screen is opened then view attendees button is shown`() = runTest {
         val event = EventViewMock.provideEvent(
             name = "EmptyEvent",
             currentAttendeeCount = 10
@@ -420,7 +420,7 @@ class EventDetailsViewModelTest {
     }
 
     @Test
-    fun `given event with no attendees when screen shown then view attendees button is hidden`() = runTest {
+    fun `given event with no attendees when screen is opened then view attendees button is hidden`() = runTest {
         val event = EventViewMock.provideEvent(
             name = "EmptyEvent",
             currentAttendeeCount = 0

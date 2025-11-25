@@ -1,10 +1,7 @@
 package cmm.apps.esmorga.view.viewmodel.mock
 
-import cmm.apps.esmorga.domain.event.model.EventLocation
-import cmm.apps.esmorga.domain.event.model.EventType
 import cmm.apps.esmorga.domain.poll.model.Poll
 import cmm.apps.esmorga.domain.poll.model.PollOption
-import java.time.ZonedDateTime
 
 
 object PollViewMock {
@@ -13,15 +10,17 @@ object PollViewMock {
 
     fun providePoll(
         name: String,
-        id: String = "PollId"
+        id: String = "PollId",
+        isMultipleChoice: Boolean = true,
+        options: Map<String, Boolean> = mapOf("1" to false, "2" to false)
     ): Poll = Poll(
         id = id,
         name = name,
         description = "description",
         imageUrl = null,
         voteDeadline = System.currentTimeMillis(),
-        isMultipleChoice = true,
-        options = listOf(PollOption("1", "1", 0, false), PollOption("2", "2", 0, false))
+        isMultipleChoice = isMultipleChoice,
+        options = options.map { (id, userVoted) -> PollOption(id, "1", 0, userVoted) }
     )
 
 }
