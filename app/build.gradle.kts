@@ -65,6 +65,7 @@ android {
             buildConfigField("String", "FLAVOR", "\"prod\"")
         }
         create("qa") {
+            isDefault = true
             dimension = "environment"
             buildConfigField("String", "FLAVOR", "\"qa\"")
         }
