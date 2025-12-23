@@ -35,6 +35,7 @@ android {
             buildConfigField("String", "ESMORGA_API_BASE_URL", "\"https://api.esmorgaevents.com/v1/\"")
         }
         create("qa") {
+            isDefault = true
             dimension = "environment"
             buildConfigField("String", "ESMORGA_API_BASE_URL", "\"https://qa.api.esmorgaevents.com/v1/\"")
         }
