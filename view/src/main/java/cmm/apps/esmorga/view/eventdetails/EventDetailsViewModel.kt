@@ -4,6 +4,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cmm.apps.designsystem.Loading
 import cmm.apps.esmorga.domain.event.JoinEventUseCase
 import cmm.apps.esmorga.domain.event.LeaveEventUseCase
 import cmm.apps.esmorga.domain.event.model.Event
@@ -81,7 +82,7 @@ class EventDetailsViewModel(
 
     private fun joinEvent() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isPrimaryButtonLoading = true)
+            _uiState.value = _uiState.value.copy(primaryButtonState = Loading)
             joinEventUseCase(internalEvent).onSuccess {
                 internalEvent = internalEvent.copy(userJoined = true, currentAttendeeCount = internalEvent.currentAttendeeCount + 1)
                 updateUiState()
@@ -103,7 +104,7 @@ class EventDetailsViewModel(
 
     private fun leaveEvent() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isPrimaryButtonLoading = true)
+            _uiState.value = _uiState.value.copy(primaryButtonState = Loading)
             leaveEventUseCase(internalEvent).onSuccess {
                 internalEvent = internalEvent.copy(userJoined = false, currentAttendeeCount = internalEvent.currentAttendeeCount - 1)
                 updateUiState()
@@ -119,7 +120,7 @@ class EventDetailsViewModel(
     }
 
     private fun showErrorScreen(error: EsmorgaException) {
-        _uiState.value = _uiState.value.copy(isPrimaryButtonLoading = false)
+        updateUiState()
         if (error.code == ErrorCodes.NO_CONNECTION) {
             _effect.tryEmit(EventDetailsEffect.ShowNoNetworkError())
         } else {

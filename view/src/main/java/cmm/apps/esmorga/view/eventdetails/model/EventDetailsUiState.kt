@@ -1,5 +1,7 @@
 package cmm.apps.esmorga.view.eventdetails.model
 
+import cmm.apps.designsystem.ButtonUiState
+import cmm.apps.designsystem.Disabled
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArgumentsHelper.getEsmorgaDefaultErrorScreenArguments
@@ -13,9 +15,7 @@ data class EventDetailsUiState(
     val image: String? = null,
     val locationName: String = "",
     val showNavigateButton: Boolean = false,
-    val primaryButtonTitle: String = "",
-    val isPrimaryButtonLoading: Boolean = false,
-    val isPrimaryButtonEnabled: Boolean = true,
+    val primaryButtonState: ButtonUiState = Disabled(""),
     val currentAttendeeCountText: String? = null,
     val joinDeadline: String = "",
     val showViewAttendeesButton: Boolean = false

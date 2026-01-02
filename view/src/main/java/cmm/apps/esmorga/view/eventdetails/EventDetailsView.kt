@@ -32,9 +32,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import cmm.apps.designsystem.ButtonUiState
+import cmm.apps.designsystem.Disabled
+import cmm.apps.designsystem.Enabled
 import cmm.apps.designsystem.EsmorgaButton
 import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextStyle
+import cmm.apps.designsystem.Loading
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
@@ -178,9 +182,7 @@ fun EventDetailsView(
 
             EventDetailsButtonSection(
                 showNavigateButton = uiState.showNavigateButton,
-                isPrimaryButtonEnabled = uiState.isPrimaryButtonEnabled,
-                isPrimaryButtonLoading = uiState.isPrimaryButtonLoading,
-                primaryButtonTitle = uiState.primaryButtonTitle,
+                primaryButtonState = uiState.primaryButtonState,
                 onNavigateClicked = onNavigateClicked,
                 onPrimaryButtonClicked = onPrimaryButtonClicked
             )
@@ -234,18 +236,16 @@ fun EventDetailsAttendeesSection(
 @Composable
 fun EventDetailsButtonSection(
     showNavigateButton: Boolean,
-    isPrimaryButtonEnabled: Boolean,
-    isPrimaryButtonLoading: Boolean,
-    primaryButtonTitle: String,
+    primaryButtonState: ButtonUiState,
     onNavigateClicked: () -> Unit,
     onPrimaryButtonClicked: () -> Unit
 ) {
     if (showNavigateButton) {
+        val navigateText = stringResource(id = R.string.button_navigate)
         EsmorgaButton(
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 32.dp),
-            text = stringResource(id = R.string.button_navigate),
-            primary = false,
-            isEnabled = !isPrimaryButtonLoading
+            state = if (primaryButtonState is Loading) Disabled(navigateText) else Enabled(navigateText),
+            primary = false
         ) {
             onNavigateClicked()
         }
@@ -255,10 +255,8 @@ fun EventDetailsButtonSection(
         modifier = Modifier
             .padding(horizontal = 16.dp)
             .testTag(EventDetailsScreenTestTags.EVENT_DETAILS_PRIMARY_BUTTON),
-        text = primaryButtonTitle,
-        primary = true,
-        isLoading = isPrimaryButtonLoading,
-        isEnabled = isPrimaryButtonEnabled
+        state = primaryButtonState,
+        primary = true
     ) {
         onPrimaryButtonClicked()
     }

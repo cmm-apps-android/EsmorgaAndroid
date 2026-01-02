@@ -1,6 +1,8 @@
 package cmm.apps.esmorga.view.eventdetails.mapper
 
 import android.content.Context
+import cmm.apps.designsystem.Disabled
+import cmm.apps.designsystem.Enabled
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.dateformatting.EsmorgaDateTimeFormatter
@@ -41,8 +43,7 @@ object EventDetailsUiMapper : KoinComponent {
             image = this.imageUrl,
             locationName = this.location.name,
             showNavigateButton = this.location.lat != null && this.location.long != null,
-            primaryButtonTitle = primaryButtonTitle,
-            isPrimaryButtonEnabled = isPrimaryButtonEnabled,
+            primaryButtonState = if (isPrimaryButtonEnabled) Enabled(primaryButtonTitle) else Disabled(primaryButtonTitle),
             currentAttendeeCountText = getCurrentAttendeeCountString(this.maxCapacity, this.currentAttendeeCount),
             joinDeadline = dateFormatter.formatDateforView(this.joinDeadline),
             showViewAttendeesButton = this.currentAttendeeCount > 0 && isAuthenticated
