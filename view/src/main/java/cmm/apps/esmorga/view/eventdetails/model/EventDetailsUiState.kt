@@ -1,11 +1,14 @@
 package cmm.apps.esmorga.view.eventdetails.model
 
-import cmm.apps.designsystem.ButtonUiState
-import cmm.apps.designsystem.Disabled
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArgumentsHelper.getEsmorgaDefaultErrorScreenArguments
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArgumentsHelper.getEsmorgaNoNetworkScreenArguments
+
+sealed class ButtonUiState()
+data class Enabled(val text: String) : ButtonUiState()
+data class Disabled(val text: String) : ButtonUiState()
+data object Loading : ButtonUiState()
 
 data class EventDetailsUiState(
     val id: String = "",

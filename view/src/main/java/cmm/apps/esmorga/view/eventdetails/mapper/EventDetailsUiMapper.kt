@@ -1,11 +1,11 @@
 package cmm.apps.esmorga.view.eventdetails.mapper
 
 import android.content.Context
-import cmm.apps.designsystem.Disabled
-import cmm.apps.designsystem.Enabled
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.dateformatting.EsmorgaDateTimeFormatter
+import cmm.apps.esmorga.view.eventdetails.model.Disabled
+import cmm.apps.esmorga.view.eventdetails.model.Enabled
 import cmm.apps.esmorga.view.eventdetails.model.EventDetailsUiState
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject

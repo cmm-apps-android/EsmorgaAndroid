@@ -10,23 +10,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
-sealed class ButtonUiState()
-data class Enabled(val text: String) : ButtonUiState()
-data class Disabled(val text: String) : ButtonUiState()
-data object Loading : ButtonUiState()
-
 @Composable
 fun EsmorgaButton(
-    state: ButtonUiState,
+    text: String,
     modifier: Modifier = Modifier,
+    isLoading: Boolean = false,
+    isEnabled: Boolean = true,
     primary: Boolean = true,
     oneLine: Boolean = false,
     onClick: () -> Unit
 ) {
-    val isEnabled = state is Enabled
-    val isLoading = state is Loading
-    val text = (state as? Enabled)?.text ?: (state as? Disabled)?.text ?: ""
-
     Button(
         shape = RoundedCornerShape(5.dp),
         modifier = modifier.fillMaxWidth(),
@@ -35,7 +28,7 @@ fun EsmorgaButton(
             containerColor = if (primary) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary,
             disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant
         ),
-        enabled = isEnabled || isLoading,
+        enabled = isEnabled && !isLoading,
         onClick = {
             if (!isLoading) {
                 onClick()
