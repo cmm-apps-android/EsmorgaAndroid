@@ -115,6 +115,7 @@ fun CreateEventFormLocationView(
                 onValueChange = onLocationChange,
                 title = R.string.field_title_event_location,
                 placeholder = R.string.placeholder_event_location,
+                errorText = uiState.locationError?.let { stringResource(it) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .testTag(CreateEventLocationScreenTestTags.LOCATION_FIELD)

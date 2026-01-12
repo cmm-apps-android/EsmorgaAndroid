@@ -6,8 +6,9 @@ data class CreateEventFormLocationUiState(
     val localizationName: String = "",
     val localizationCoordinates: String = "",
     val eventMaxCapacity: String = "",
-    val isButtonEnabled: Boolean = false
-
+    val isButtonEnabled: Boolean = false,
+    val locationError: Int? = null,
+    val isFormValid: Boolean = false
 )
 
 sealed class CreateEventFormLocationEffect{
