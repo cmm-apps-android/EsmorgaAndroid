@@ -124,4 +124,11 @@
     <string name="step_continue_button">Continue</string>
     <string name="unauthenticated_error_login_button">Login</string>
     <string name="unauthenticated_error_message">Ups… You are not logged in!</string>
+    <string name="field_title_event_location">Event Location</string>
+    <string name="field_title_event_coordinates">Event Coordinates (Optional)</string>
+    <string name="field_title_event_max_capacity">Maximum Capacity (Optional)</string>
+    <string name="placeholder_event_location">Enter the Location</string>
+    <string name="placeholder_event_coordinates">Enter the Coordinates (Latitude, Longitude)</string>
+    <string name="placeholder_event_max_capacity">Enter the Maximum Capacity Allowed</string>
+    <string name="inline_error_location_required">You must enter a location</string>
 </resources>

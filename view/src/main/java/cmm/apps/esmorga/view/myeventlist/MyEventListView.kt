@@ -130,10 +130,9 @@ fun MyEventListView(
         modifier = Modifier.fillMaxSize(),
         snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButton = {
-            //Uncomment this when event creation flow is finished
-//            if (uiState.isAdmin) {
-//                AnimatedFloatingActionButton(isVisible, onAddEventClick)
-//            }
+            if (uiState.isAdmin) {
+                AnimatedFloatingActionButton(isVisible, onAddEventClick)
+            }
         }
     ) { innerPadding ->
         Column(

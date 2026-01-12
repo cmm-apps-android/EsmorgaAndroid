@@ -124,4 +124,11 @@
     <string name="step_continue_button">Siguiente</string>
     <string name="unauthenticated_error_login_button">Login</string>
     <string name="unauthenticated_error_message">Ups… ¡No estás logueado!</string>
+    <string name="field_title_event_location">Localización del evento</string>
+    <string name="field_title_event_coordinates">Coordenadas del evento (opcional)</string>
+    <string name="field_title_event_max_capacity">Aforo máximo (opcional)</string>
+    <string name="placeholder_event_location">Introduce la localización</string>
+    <string name="placeholder_event_coordinates">Introduce las coordenadas (lat,lng)</string>
+    <string name="placeholder_event_max_capacity">Introduce el aforo máximo permitido</string>
+    <string name="inline_error_location_required">Debes introducir una localización</string>
 </resources>
