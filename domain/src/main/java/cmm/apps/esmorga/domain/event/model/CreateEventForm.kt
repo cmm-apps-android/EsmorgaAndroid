@@ -10,5 +10,6 @@ data class CreateEventForm(
     val date: String? = null,
     val imageUrl: String? = null,
     val location: EventLocation? = null,
-    val tags: List<String> = emptyList()
+    val tags: List<String> = emptyList(),
+    val maxCapacity: Int? = null,
 )
