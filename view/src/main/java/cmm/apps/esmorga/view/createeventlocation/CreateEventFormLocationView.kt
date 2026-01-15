@@ -1,9 +1,7 @@
 package cmm.apps.esmorga.view.createeventlocation
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -85,7 +83,7 @@ fun CreateEventFormLocationView(
                 navigationIcon = {
                     IconButton(
                         onClick = onBackPressed,
-                        modifier = Modifier.testTag(CreateEventLocationScreenTestTags.BACK_BUTTON)
+                        modifier = Modifier.testTag(CreateEventLocationScreenTestTags.CREATE_EVENT_LOCATION_BACK_BUTTON)
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -107,7 +105,7 @@ fun CreateEventFormLocationView(
                 style = EsmorgaTextStyle.HEADING_1,
                 modifier = Modifier
                     .padding(bottom = 12.dp)
-                    .testTag(CreateEventLocationScreenTestTags.TITLE)
+                    .testTag(CreateEventLocationScreenTestTags.CREATE_EVENT_LOCATION_TITLE)
             )
 
             EsmorgaTextField(
@@ -118,10 +116,8 @@ fun CreateEventFormLocationView(
                 errorText = uiState.locationError?.let { stringResource(it) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .testTag(CreateEventLocationScreenTestTags.LOCATION_FIELD)
+                    .testTag(CreateEventLocationScreenTestTags.CREATE_EVENT_LOCATION_LOCATION_FIELD)
             )
-
-            Spacer(modifier = Modifier.height(16.dp))
 
             EsmorgaTextField(
                 value = uiState.localizationCoordinates,
@@ -130,10 +126,10 @@ fun CreateEventFormLocationView(
                 placeholder = R.string.placeholder_event_coordinates,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .testTag(CreateEventLocationScreenTestTags.COORDINATES_FIELD)
+                    .padding(top = 16.dp)
+                    .testTag(CreateEventLocationScreenTestTags.CREATE_EVENT_LOCATION_COORDINATES_FIELD)
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
 
             EsmorgaTextField(
                 value = uiState.eventMaxCapacity,
@@ -142,7 +138,8 @@ fun CreateEventFormLocationView(
                 placeholder = R.string.placeholder_event_max_capacity,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .testTag(CreateEventLocationScreenTestTags.MAX_CAPACITY_FIELD),
+                    .padding(top = 16.dp)
+                    .testTag(CreateEventLocationScreenTestTags.CREATE_EVENT_LOCATION_MAX_CAPACITY_FIELD),
                 keyboardType = androidx.compose.ui.text.input.KeyboardType.Number
             )
 
@@ -153,17 +150,17 @@ fun CreateEventFormLocationView(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 16.dp)
-                    .testTag(CreateEventLocationScreenTestTags.NEXT_BUTTON)
+                    .testTag(CreateEventLocationScreenTestTags.CREATE_EVENT_LOCATION_NEXT_BUTTON)
             )
         }
     }
 }
 
 object CreateEventLocationScreenTestTags {
-    const val TITLE = "create_event_location_title"
-    const val BACK_BUTTON = "create_event_location_back_button"
-    const val NEXT_BUTTON = "create_event_location_next_button"
-    const val LOCATION_FIELD = "create_event_location_field"
-    const val COORDINATES_FIELD = "create_event_coordinates_field"
-    const val MAX_CAPACITY_FIELD = "create_event_max_capacity_field"
+    const val CREATE_EVENT_LOCATION_TITLE = "create_event_location_title"
+    const val CREATE_EVENT_LOCATION_BACK_BUTTON = "create_event_location_back_button"
+    const val CREATE_EVENT_LOCATION_NEXT_BUTTON = "create_event_location_next_button"
+    const val CREATE_EVENT_LOCATION_LOCATION_FIELD = "create_event_location_field"
+    const val CREATE_EVENT_LOCATION_COORDINATES_FIELD = "create_event_coordinates_field"
+    const val CREATE_EVENT_LOCATION_MAX_CAPACITY_FIELD = "create_event_max_capacity_field"
 }

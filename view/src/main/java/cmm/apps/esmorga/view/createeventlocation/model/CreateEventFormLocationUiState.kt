@@ -8,7 +8,6 @@ data class CreateEventFormLocationUiState(
     val eventMaxCapacity: String = "",
     val isButtonEnabled: Boolean = false,
     val locationError: Int? = null,
-    val isFormValid: Boolean = false
 )
 
 sealed class CreateEventFormLocationEffect{

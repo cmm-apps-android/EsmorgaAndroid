@@ -24,8 +24,11 @@
     <string name="content_description_event_image">Imagen del evento %s</string>
     <string name="content_description_forward_icon">Icono adelante</string>
     <string name="field_title_email">Email</string>
+    <string name="field_title_event_coordinates">Coordenadas del evento (opcional)</string>
     <string name="field_title_event_description">Descripcion</string>
+    <string name="field_title_event_location">Localización del evento</string>
     <string name="field_title_event_name">Nombre de evento</string>
+    <string name="field_title_event_max_capacity">Aforo máximo (opcional)</string>
     <string name="field_title_last_name">Apellido</string>
     <string name="field_title_name">Nombre</string>
     <string name="field_title_password">Contraseña</string>
@@ -40,9 +43,13 @@
     <string name="inline_error_password">Contraseña inválida</string>
     <string name="inline_error_password_invalid">Mínimo 8 caracteres, debe incluir al menos 1 dígito, 1 letra y 1 símbolo</string>
     <string name="inline_error_password_mismatch">¡Las contraseñas no coinciden, inténtalo de nuevo!</string>
+    <string name="inline_error_location_required">Debes introducir una localización</string>
     <string name="placeholder_confirm_password">Confirma tu contraseña</string>
     <string name="placeholder_email">Ingresa tu email</string>
+    <string name="placeholder_event_coordinates">Introduce las coordenadas (lat,lng)</string>
     <string name="placeholder_event_description">Introduce una descripción del evento</string>
+    <string name="placeholder_event_location">Introduce la localización</string>
+    <string name="placeholder_event_max_capacity">Introduce el aforo máximo permitido</string>
     <string name="placeholder_event_name">Introduce el nombre del evento</string>
     <string name="placeholder_last_name">Ingresa tu apellido</string>
     <string name="placeholder_name">Ingresa tu nombre</string>
@@ -124,11 +131,4 @@
     <string name="step_continue_button">Siguiente</string>
     <string name="unauthenticated_error_login_button">Login</string>
     <string name="unauthenticated_error_message">Ups… ¡No estás logueado!</string>
-    <string name="field_title_event_location">Localización del evento</string>
-    <string name="field_title_event_coordinates">Coordenadas del evento (opcional)</string>
-    <string name="field_title_event_max_capacity">Aforo máximo (opcional)</string>
-    <string name="placeholder_event_location">Introduce la localización</string>
-    <string name="placeholder_event_coordinates">Introduce las coordenadas (lat,lng)</string>
-    <string name="placeholder_event_max_capacity">Introduce el aforo máximo permitido</string>
-    <string name="inline_error_location_required">Debes introducir una localización</string>
 </resources>

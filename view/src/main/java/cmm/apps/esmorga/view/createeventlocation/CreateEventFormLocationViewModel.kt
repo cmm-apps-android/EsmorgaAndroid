@@ -40,7 +40,6 @@ class CreateEventFormLocationViewModel(
 				localizationName = text,
 				locationError = error,
 				isButtonEnabled = isValid,
-				isFormValid = isValid
 			)
 		}
 	}
@@ -65,7 +64,6 @@ class CreateEventFormLocationViewModel(
 				it.copy(
 					locationError = R.string.inline_error_location_required,
 					isButtonEnabled = false,
-					isFormValid = false
 				)
 			}
 			return
@@ -81,7 +79,10 @@ class CreateEventFormLocationViewModel(
 			long = long
 		)
 
-		val updatedForm = eventForm.copy(location = location)
+		val updatedForm = eventForm.copy(
+			location = location,
+			maxCapacity = state.eventMaxCapacity.toIntOrNull()
+		)
 
 		_effect.tryEmit(CreateEventFormLocationEffect.NavigateNext(updatedForm))
 	}

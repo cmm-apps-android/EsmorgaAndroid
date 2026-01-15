@@ -18,7 +18,6 @@ class CreateEventFormLocationScreenScreenshotTest : BaseScreenshotTest() {
                 eventMaxCapacity = "",
                 isButtonEnabled = false,
                 locationError = null,
-                isFormValid = false
             )
         )
     }
@@ -32,7 +31,6 @@ class CreateEventFormLocationScreenScreenshotTest : BaseScreenshotTest() {
                 eventMaxCapacity = "",
                 isButtonEnabled = false,
                 locationError = R.string.inline_error_location_required,
-                isFormValid = false
             )
         )
     }
@@ -46,7 +44,6 @@ class CreateEventFormLocationScreenScreenshotTest : BaseScreenshotTest() {
                 eventMaxCapacity = "",
                 isButtonEnabled = true,
                 locationError = null,
-                isFormValid = true
             )
         )
     }
@@ -60,7 +57,6 @@ class CreateEventFormLocationScreenScreenshotTest : BaseScreenshotTest() {
                 eventMaxCapacity = "100",
                 isButtonEnabled = true,
                 locationError = null,
-                isFormValid = true
             )
         )
     }
