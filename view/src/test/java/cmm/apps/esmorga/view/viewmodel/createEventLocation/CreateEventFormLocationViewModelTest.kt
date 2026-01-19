@@ -77,4 +77,36 @@ class CreateEventFormLocationViewModelTest {
             assertEquals(CreateEventFormLocationEffect.NavigateBack, awaitItem())
         }
     }
+
+    @Test
+    fun `given coordinates with trailing spaces when validated then button is still enabled`() = runTest {
+        viewModel.onLocationChanged("Madrid")
+        viewModel.onCoordinatesChanged("41.40338, 2.17403 ")
+
+        assertTrue(viewModel.uiState.value.isButtonEnabled)
+    }
+
+    @Test
+    fun `given max capacity is zero when validated then button is disabled`() = runTest {
+        viewModel.onLocationChanged("Madrid")
+        viewModel.onMaxCapacityChanged("0")
+
+        assertFalse(viewModel.uiState.value.isButtonEnabled)
+    }
+
+    @Test
+    fun `given invalid coordinates format when validated then button is disabled`() = runTest {
+        viewModel.onLocationChanged("Madrid")
+        viewModel.onCoordinatesChanged("41.40338 - 2.17403") // Sin coma
+
+        assertFalse(viewModel.uiState.value.isButtonEnabled)
+    }
+
+    @Test
+    fun `given valid data with max capacity when validated then button is enabled`() = runTest {
+        viewModel.onLocationChanged("Madrid")
+        viewModel.onMaxCapacityChanged("50")
+
+        assertTrue(viewModel.uiState.value.isButtonEnabled)
+    }
 }
