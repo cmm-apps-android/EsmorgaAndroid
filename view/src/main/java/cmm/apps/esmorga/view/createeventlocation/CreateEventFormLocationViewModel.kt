@@ -36,49 +36,48 @@ class CreateEventFormLocationViewModel(
 
 	fun onLocationChanged(text: String) {
 		_uiState.update { state ->
-			val newState = state.copy(
-				localizationName = text,
-				locationError = if (text.isBlank()) R.string.inline_error_location_required else null
-			)
-			newState.copy(isButtonEnabled = isFormValid(newState))
+			val error = if (text.isBlank()) R.string.inline_error_location_required else null
+			val newState = state.copy(localizationName = text, locationError = error)
+			newState.copy(isButtonEnabled = validateForm(newState))
 		}
 	}
 
 	fun onCoordinatesChanged(text: String) {
 		_uiState.update { state ->
-			val newState = state.copy(localizationCoordinates = text)
-			newState.copy(isButtonEnabled = isFormValid(newState))
+			val isInvalid = text.isNotBlank() && !text.trim().matches(coordsRegex)
+			val error = if (isInvalid) R.string.inline_error_coordinates_invalid else null
+
+			val newState = state.copy(localizationCoordinates = text, coordinatesError = error)
+			newState.copy(isButtonEnabled = validateForm(newState))
 		}
 	}
 
 	fun onMaxCapacityChanged(text: String) {
-		_uiState.update { state ->
-			if (text.all { it.isDigit() }) {
-				val newState = state.copy(eventMaxCapacity = text)
-				newState.copy(isButtonEnabled = isFormValid(newState))
-			} else {
-				state
+		if (text.all { it.isDigit() }) {
+			_uiState.update { state ->
+				val capacityInt = text.toIntOrNull()
+				val isInvalid = text.isNotBlank() && (capacityInt == null || capacityInt <= 0)
+				val error = if (isInvalid) R.string.inline_error_max_capacity_invalid else null
+
+				val newState = state.copy(eventMaxCapacity = text, capacityError = error)
+				newState.copy(isButtonEnabled = validateForm(newState))
 			}
 		}
 	}
 
-	private fun isFormValid(state: CreateEventFormLocationUiState): Boolean {
-		val isLocationOk = state.localizationName.isNotBlank()
+	private fun validateForm(state: CreateEventFormLocationUiState): Boolean {
+		val hasNoErrors = state.locationError == null &&
+				state.coordinatesError == null &&
+				state.capacityError == null
 
-		val areCoordsOk = state.localizationCoordinates.isBlank() || state.localizationCoordinates.trim().matches(coordsRegex)
-
-		val capacityInt = state.eventMaxCapacity.trim().toIntOrNull()
-		val isCapacityOk = state.eventMaxCapacity.isBlank() || (capacityInt != null && capacityInt > 0)
-
-		return isLocationOk && areCoordsOk && isCapacityOk
+		return state.localizationName.isNotBlank() && hasNoErrors
 	}
 
 	fun onNextClick() {
 		val state = _uiState.value
-		if (!isFormValid(state)) return
+		if (!validateForm(state)) return
 
 		val coordsParts = state.localizationCoordinates.split(",").map { it.trim().toDoubleOrNull() }
-
 		val location = EventLocation(
 			name = state.localizationName,
 			lat = coordsParts.getOrNull(0),

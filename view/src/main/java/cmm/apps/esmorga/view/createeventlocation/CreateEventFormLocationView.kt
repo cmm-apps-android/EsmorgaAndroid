@@ -124,6 +124,7 @@ fun CreateEventFormLocationView(
                 onValueChange = onCoordinatesChange,
                 title = R.string.field_title_event_coordinates,
                 placeholder = R.string.placeholder_event_coordinates,
+                errorText = uiState.coordinatesError?.let { stringResource(it) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 16.dp)
@@ -136,6 +137,7 @@ fun CreateEventFormLocationView(
                 onValueChange = onMaxCapacityChange,
                 title = R.string.field_title_event_max_capacity,
                 placeholder = R.string.placeholder_event_max_capacity,
+                errorText = uiState.capacityError?.let { stringResource(it) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 16.dp)

@@ -33,11 +33,13 @@
     <string name="field_title_name">Nombre</string>
     <string name="field_title_password">Contraseña</string>
     <string name="field_title_repeat_password">Repetir contraseña</string>
+    <string name="inline_error_coordinates_invalid">Las coordenadas deben estar en formato lat,long</string>
     <string name="inline_error_email">Formato no válido, sólo letras, números y _ - están disponibles</string>
     <string name="inline_error_email_already_used">Email ya ha sido usado</string>
     <string name="inline_error_empty_field">Campo requerido</string>
     <string name="inline_error_invalid_length_description">El texto debe tener entre 4 y 5000 caracteres</string>
     <string name="inline_error_invalid_length_name">El texto debe tener entre 3 y 100 caracteres</string>
+    <string name="inline_error_max_capacity_invalid">La capacidad tiene que ser mayor que 0</string>
     <string name="inline_error_last_name">Sólo letras, espacios y \&apos; -  están disponibles</string>
     <string name="inline_error_name">Sólo letras, espacios y \&apos; -  están disponibles</string>
     <string name="inline_error_password">Contraseña inválida</string>
