@@ -6,7 +6,10 @@ import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.createeventlocation.CreateEventFormLocationViewModel
 import cmm.apps.esmorga.view.createeventlocation.model.CreateEventFormLocationEffect
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
@@ -76,5 +79,37 @@ class CreateEventFormLocationViewModelTest {
             viewModel.onBackClick()
             assertEquals(CreateEventFormLocationEffect.NavigateBack, awaitItem())
         }
+    }
+
+    @Test
+    fun `given coordinates with trailing spaces when validated then button is still enabled`() = runTest {
+        viewModel.onLocationChanged("Madrid")
+        viewModel.onCoordinatesChanged("41.40338, 2.17403 ")
+
+        assertTrue(viewModel.uiState.value.isButtonEnabled)
+    }
+
+    @Test
+    fun `given max capacity is zero when validated then button is disabled`() = runTest {
+        viewModel.onLocationChanged("Madrid")
+        viewModel.onMaxCapacityChanged("0")
+
+        assertFalse(viewModel.uiState.value.isButtonEnabled)
+    }
+
+    @Test
+    fun `given invalid coordinates format when validated then button is disabled`() = runTest {
+        viewModel.onLocationChanged("Madrid")
+        viewModel.onCoordinatesChanged("41.40338 - 2.17403")
+
+        assertFalse(viewModel.uiState.value.isButtonEnabled)
+    }
+
+    @Test
+    fun `given valid data with max capacity when validated then button is enabled`() = runTest {
+        viewModel.onLocationChanged("Madrid")
+        viewModel.onMaxCapacityChanged("50")
+
+        assertTrue(viewModel.uiState.value.isButtonEnabled)
     }
 }

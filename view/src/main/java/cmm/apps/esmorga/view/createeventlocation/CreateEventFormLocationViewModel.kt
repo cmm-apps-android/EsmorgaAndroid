@@ -16,74 +16,79 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 class CreateEventFormLocationViewModel(
-	private val eventForm: CreateEventForm
+    private val eventForm: CreateEventForm
 ) : ViewModel() {
 
-	private val _uiState = MutableStateFlow(CreateEventFormLocationUiState())
-	val uiState: StateFlow<CreateEventFormLocationUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(CreateEventFormLocationUiState())
+    val uiState: StateFlow<CreateEventFormLocationUiState> = _uiState.asStateFlow()
 
-	private val _effect = MutableSharedFlow<CreateEventFormLocationEffect>(
-		extraBufferCapacity = 1,
-		onBufferOverflow = BufferOverflow.DROP_OLDEST
-	)
-	val effect: SharedFlow<CreateEventFormLocationEffect> = _effect.asSharedFlow()
+    private val _effect = MutableSharedFlow<CreateEventFormLocationEffect>(
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+    val effect: SharedFlow<CreateEventFormLocationEffect> = _effect.asSharedFlow()
+    private val coordsRegex = Regex("^-?\\d+(\\.\\d+)?\\s*,\\s*-?\\d+(\\.\\d+)?$")
 
-	fun onBackClick() {
-		_effect.tryEmit(CreateEventFormLocationEffect.NavigateBack)
-	}
+    fun onBackClick() {
+        _effect.tryEmit(CreateEventFormLocationEffect.NavigateBack)
+    }
 
-	fun onLocationChanged(text: String) {
-		_uiState.update {
-			val error = if (text.isBlank()) R.string.inline_error_location_required else null
-			val isValid = !text.isBlank() && text.length <= 100
-			it.copy(
-				localizationName = text,
-				locationError = error,
-				isButtonEnabled = isValid,
-			)
-		}
-	}
+    fun onLocationChanged(text: String) {
+        _uiState.update { state ->
+            val newState = state.copy(
+                localizationName = text,
+                locationError = if (text.isBlank()) R.string.inline_error_location_required else null
+            )
+            newState.copy(isButtonEnabled = isFormValid(newState))
+        }
+    }
 
-	fun onCoordinatesChanged(text: String) {
-		_uiState.update {
-			it.copy(localizationCoordinates = text)
-		}
-	}
+    fun onCoordinatesChanged(text: String) {
+        _uiState.update { state ->
+            val newState = state.copy(localizationCoordinates = text)
+            newState.copy(isButtonEnabled = isFormValid(newState))
+        }
+    }
 
-	fun onMaxCapacityChanged(text: String) {
-		_uiState.update {
-			it.copy(eventMaxCapacity = text)
-		}
-	}
+    fun onMaxCapacityChanged(text: String) {
+        _uiState.update { state ->
+            if (text.all { it.isDigit() }) {
+                val newState = state.copy(eventMaxCapacity = text)
+                newState.copy(isButtonEnabled = isFormValid(newState))
+            } else {
+                state
+            }
+        }
+    }
 
-	fun onNextClick() {
-		val state = _uiState.value
+    private fun isFormValid(state: CreateEventFormLocationUiState): Boolean {
+        val isLocationOk = state.localizationName.isNotBlank()
 
-		if (state.localizationName.isBlank()) {
-			_uiState.update {
-				it.copy(
-					locationError = R.string.inline_error_location_required,
-					isButtonEnabled = false,
-				)
-			}
-			return
-		}
+        val areCoordsOk = state.localizationCoordinates.isBlank() || state.localizationCoordinates.trim().matches(coordsRegex)
 
-		val coordinates = state.localizationCoordinates.split(",").map { it.trim().toDoubleOrNull() }
-		val lat = coordinates.getOrNull(0)
-		val long = coordinates.getOrNull(1)
+        val capacityInt = state.eventMaxCapacity.trim().toIntOrNull()
+        val isCapacityOk = state.eventMaxCapacity.isBlank() || (capacityInt != null && capacityInt > 0)
 
-		val location = EventLocation(
-			name = state.localizationName,
-			lat = lat,
-			long = long
-		)
+        return isLocationOk && areCoordsOk && isCapacityOk
+    }
 
-		val updatedForm = eventForm.copy(
-			location = location,
-			maxCapacity = state.eventMaxCapacity.toIntOrNull()
-		)
+    fun onNextClick() {
+        val state = _uiState.value
+        if (!isFormValid(state)) return
 
-		_effect.tryEmit(CreateEventFormLocationEffect.NavigateNext(updatedForm))
-	}
+        val coordsParts = state.localizationCoordinates.split(",").map { it.trim().toDoubleOrNull() }
+
+        val location = EventLocation(
+            name = state.localizationName,
+            lat = coordsParts.getOrNull(0),
+            long = coordsParts.getOrNull(1)
+        )
+
+        val updatedForm = eventForm.copy(
+            location = location,
+            maxCapacity = state.eventMaxCapacity.toIntOrNull()
+        )
+
+        _effect.tryEmit(CreateEventFormLocationEffect.NavigateNext(updatedForm))
+    }
 }
