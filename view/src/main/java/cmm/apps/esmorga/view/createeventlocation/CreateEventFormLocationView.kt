@@ -149,7 +149,6 @@ fun CreateEventFormLocationView(
                 onClick = onNextClick,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 16.dp)
                     .testTag(CreateEventLocationScreenTestTags.CREATE_EVENT_LOCATION_NEXT_BUTTON)
             )
         }
