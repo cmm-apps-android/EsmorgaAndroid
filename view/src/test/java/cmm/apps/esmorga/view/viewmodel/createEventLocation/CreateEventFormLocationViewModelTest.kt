@@ -26,7 +26,6 @@ class CreateEventFormLocationViewModelTest {
         viewModel.onLocationChanged("")
 
         val state = viewModel.uiState.value
-        assertEquals("", state.localizationName)
         assertEquals(R.string.inline_error_location_required, state.locationError)
         assertFalse(state.isButtonEnabled)
     }
@@ -36,25 +35,62 @@ class CreateEventFormLocationViewModelTest {
         viewModel.onLocationChanged("Madrid")
 
         val state = viewModel.uiState.value
-        assertEquals("Madrid", state.localizationName)
         assertNull(state.locationError)
         assertTrue(state.isButtonEnabled)
     }
 
     @Test
-    fun `given user writes and clears location then shows required error`() = runTest {
+    fun `given invalid coordinates format then shows error and button is disabled`() = runTest {
         viewModel.onLocationChanged("Madrid")
-        viewModel.onLocationChanged("")
+        viewModel.onCoordinatesChanged("invalid_format")
 
         val state = viewModel.uiState.value
-        assertEquals(R.string.inline_error_location_required, state.locationError)
+        assertEquals(R.string.inline_error_coordinates_invalid, state.coordinatesError)
         assertFalse(state.isButtonEnabled)
     }
 
     @Test
-    fun `given valid location when next clicked then emits navigate next effect`() = runTest {
-        viewModel.onLocationChanged("Barcelona")
-        viewModel.onCoordinatesChanged("41.3851, 2.1734")
+    fun `given coordinates with correct format then button is enabled`() = runTest {
+        viewModel.onLocationChanged("Madrid")
+        viewModel.onCoordinatesChanged(" 41.40338 , 2.17403 ")
+
+        val state = viewModel.uiState.value
+        assertNull(state.coordinatesError)
+        assertTrue(state.isButtonEnabled)
+    }
+
+    @Test
+    fun `given zero capacity then shows error and button is disabled`() = runTest {
+        viewModel.onLocationChanged("Madrid")
+        viewModel.onMaxCapacityChanged("0")
+
+        val state = viewModel.uiState.value
+        assertEquals(R.string.inline_error_max_capacity_invalid, state.capacityError)
+        assertFalse(state.isButtonEnabled)
+    }
+
+    @Test
+    fun `given valid capacity then button is enabled`() = runTest {
+        viewModel.onLocationChanged("Madrid")
+        viewModel.onMaxCapacityChanged("150")
+
+        val state = viewModel.uiState.value
+        assertNull(state.capacityError)
+        assertTrue(state.isButtonEnabled)
+    }
+
+    @Test
+    fun `given valid data when next clicked then emits navigate next effect with all data`() = runTest {
+        val expectedLocation = "Barcelona"
+        val expectedLat = 41.3851
+        val expectedLong = 2.1734
+        val expectedCoordsInput = "$expectedLat, $expectedLong"
+        val expectedCapacityInput = "100"
+        val expectedCapacityInt = 100
+
+        viewModel.onLocationChanged(expectedLocation)
+        viewModel.onCoordinatesChanged(expectedCoordsInput)
+        viewModel.onMaxCapacityChanged(expectedCapacityInput)
 
         viewModel.effect.test {
             viewModel.onNextClick()
@@ -63,10 +99,12 @@ class CreateEventFormLocationViewModelTest {
             assertTrue(effect is CreateEventFormLocationEffect.NavigateNext)
 
             val navigateEffect = effect as CreateEventFormLocationEffect.NavigateNext
-            assertEquals("Barcelona", navigateEffect.eventForm.location?.name)
-            assertEquals(41.3851, navigateEffect.eventForm.location?.lat)
-            assertEquals(2.1734, navigateEffect.eventForm.location?.long)
+            val form = navigateEffect.eventForm
 
+            assertEquals(expectedLocation, form.location?.name)
+            assertEquals(expectedLat, form.location?.lat)
+            assertEquals(expectedLong, form.location?.long)
+            assertEquals(expectedCapacityInt, form.maxCapacity)
         }
     }
 

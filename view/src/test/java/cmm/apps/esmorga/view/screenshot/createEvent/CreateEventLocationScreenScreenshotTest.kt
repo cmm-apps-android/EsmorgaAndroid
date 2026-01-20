@@ -75,4 +75,45 @@ class CreateEventFormLocationScreenScreenshotTest : BaseScreenshotTest() {
             }
         }
     }
+
+    @Test
+    fun createEventLocationScreenWithCoordinatesError() {
+        snapshotWithState(
+            CreateEventFormLocationUiState(
+                localizationName = "Madrid",
+                localizationCoordinates = "40.123",
+                eventMaxCapacity = "",
+                isButtonEnabled = false,
+                coordinatesError = R.string.inline_error_coordinates_invalid,
+            )
+        )
+    }
+
+    @Test
+    fun createEventLocationScreenWithCapacityError() {
+        snapshotWithState(
+            CreateEventFormLocationUiState(
+                localizationName = "Madrid",
+                localizationCoordinates = "",
+                eventMaxCapacity = "0",
+                isButtonEnabled = false,
+                capacityError = R.string.inline_error_max_capacity_invalid,
+            )
+        )
+    }
+
+    @Test
+    fun createEventLocationScreenWithMultipleErrors() {
+        snapshotWithState(
+            CreateEventFormLocationUiState(
+                localizationName = "",
+                localizationCoordinates = "40.123",
+                eventMaxCapacity = "0",
+                isButtonEnabled = false,
+                locationError = R.string.inline_error_location_required,
+                coordinatesError = R.string.inline_error_coordinates_invalid,
+                capacityError = R.string.inline_error_max_capacity_invalid,
+            )
+        )
+    }
 }

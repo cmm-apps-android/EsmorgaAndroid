@@ -1,5 +1,6 @@
 package cmm.apps.esmorga.view.createeventlocation
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
@@ -98,13 +99,13 @@ fun CreateEventFormLocationView(
             modifier = Modifier
                 .padding(padding)
                 .padding(horizontal = 16.dp, vertical = 8.dp)
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             EsmorgaText(
                 text = stringResource(R.string.screen_create_event_title),
                 style = EsmorgaTextStyle.HEADING_1,
                 modifier = Modifier
-                    .padding(bottom = 12.dp)
                     .testTag(CreateEventLocationScreenTestTags.CREATE_EVENT_LOCATION_TITLE)
             )
 
@@ -124,21 +125,20 @@ fun CreateEventFormLocationView(
                 onValueChange = onCoordinatesChange,
                 title = R.string.field_title_event_coordinates,
                 placeholder = R.string.placeholder_event_coordinates,
+                errorText = uiState.coordinatesError?.let { stringResource(it) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp)
                     .testTag(CreateEventLocationScreenTestTags.CREATE_EVENT_LOCATION_COORDINATES_FIELD)
             )
-
 
             EsmorgaTextField(
                 value = uiState.eventMaxCapacity,
                 onValueChange = onMaxCapacityChange,
                 title = R.string.field_title_event_max_capacity,
                 placeholder = R.string.placeholder_event_max_capacity,
+                errorText = uiState.capacityError?.let { stringResource(it) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp)
                     .testTag(CreateEventLocationScreenTestTags.CREATE_EVENT_LOCATION_MAX_CAPACITY_FIELD),
                 keyboardType = androidx.compose.ui.text.input.KeyboardType.Number
             )
@@ -149,7 +149,6 @@ fun CreateEventFormLocationView(
                 onClick = onNextClick,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 16.dp)
                     .testTag(CreateEventLocationScreenTestTags.CREATE_EVENT_LOCATION_NEXT_BUTTON)
             )
         }
