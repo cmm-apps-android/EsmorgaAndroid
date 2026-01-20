@@ -60,7 +60,7 @@ class CreateEventFormLocationViewModelTest {
     }
 
     @Test
-    fun `given zero or negative capacity then shows error and button is disabled`() = runTest {
+    fun `given zero capacity then shows error and button is disabled`() = runTest {
         viewModel.onLocationChanged("Madrid")
         viewModel.onMaxCapacityChanged("0")
 
@@ -81,9 +81,16 @@ class CreateEventFormLocationViewModelTest {
 
     @Test
     fun `given valid data when next clicked then emits navigate next effect with all data`() = runTest {
-        viewModel.onLocationChanged("Barcelona")
-        viewModel.onCoordinatesChanged("41.3851, 2.1734")
-        viewModel.onMaxCapacityChanged("100")
+        val expectedLocation = "Barcelona"
+        val expectedLat = 41.3851
+        val expectedLong = 2.1734
+        val expectedCoordsInput = "$expectedLat, $expectedLong"
+        val expectedCapacityInput = "100"
+        val expectedCapacityInt = 100
+
+        viewModel.onLocationChanged(expectedLocation)
+        viewModel.onCoordinatesChanged(expectedCoordsInput)
+        viewModel.onMaxCapacityChanged(expectedCapacityInput)
 
         viewModel.effect.test {
             viewModel.onNextClick()
@@ -93,10 +100,11 @@ class CreateEventFormLocationViewModelTest {
 
             val navigateEffect = effect as CreateEventFormLocationEffect.NavigateNext
             val form = navigateEffect.eventForm
-            assertEquals("Barcelona", form.location?.name)
-            assertEquals(41.3851, form.location?.lat)
-            assertEquals(2.1734, form.location?.long)
-            assertEquals(100, form.maxCapacity)
+
+            assertEquals(expectedLocation, form.location?.name)
+            assertEquals(expectedLat, form.location?.lat)
+            assertEquals(expectedLong, form.location?.long)
+            assertEquals(expectedCapacityInt, form.maxCapacity)
         }
     }
 
