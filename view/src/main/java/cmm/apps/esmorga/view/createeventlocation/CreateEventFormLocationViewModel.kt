@@ -35,10 +35,12 @@ class CreateEventFormLocationViewModel(
 	}
 
 	fun onLocationChanged(text: String) {
-		_uiState.update { state ->
-			val error = if (text.isBlank()) R.string.inline_error_location_required else null
-			val newState = state.copy(localizationName = text, locationError = error)
-			newState.copy(isButtonEnabled = validateForm(newState))
+		if (text.length <= 100) {
+			_uiState.update { state ->
+				val error = if (text.isBlank()) R.string.inline_error_location_required else null
+				val newState = state.copy(localizationName = text, locationError = error)
+				newState.copy(isButtonEnabled = validateForm(newState))
+			}
 		}
 	}
 

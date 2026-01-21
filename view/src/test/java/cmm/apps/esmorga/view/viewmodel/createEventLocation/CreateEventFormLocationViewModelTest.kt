@@ -115,4 +115,14 @@ class CreateEventFormLocationViewModelTest {
             assertEquals(CreateEventFormLocationEffect.NavigateBack, awaitItem())
         }
     }
+
+    @Test
+    fun `given location with more than 100 characters when changed then state only keeps first 100`() = runTest {
+        val longText = "a".repeat(101)
+
+        viewModel.onLocationChanged(longText)
+
+        val state = viewModel.uiState.value
+        assertEquals("", state.localizationName)
+    }
 }
