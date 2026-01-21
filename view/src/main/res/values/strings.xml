@@ -41,7 +41,7 @@
     <string name="inline_error_invalid_length_name">The text must be between 3 and 100 characters</string>
     <string name="inline_error_max_capacity_invalid">The capacity must be greater than 0</string>
     <string name="inline_error_last_name">Only letters, spaces and \&apos; - are accepted</string>
-    <string name="inline_error_location_required">You must enter a location (max 100 letters)</string>
+    <string name="inline_error_location_required">You must enter a location (max %1$d letters)</string>
     <string name="inline_error_name">Only letters, spaces and \&apos; - are accepted</string>
     <string name="inline_error_password">Invalid password</string>
     <string name="inline_error_password_invalid">Min 8 chars, must include at least 1 digit, 1 letter and 1 symbol</string>

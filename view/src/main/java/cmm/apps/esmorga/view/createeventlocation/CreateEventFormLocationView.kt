@@ -16,12 +16,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmm.apps.designsystem.EsmorgaButton
 import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextField
@@ -114,7 +114,7 @@ fun CreateEventFormLocationView(
                 onValueChange = onLocationChange,
                 title = R.string.field_title_event_location,
                 placeholder = R.string.placeholder_event_location,
-                errorText = uiState.locationError?.let { stringResource(it) },
+                errorText = uiState.locationError?.let { stringResource(it, CreateEventFormLocationViewModel.LOCATION_NAME_MAX_LENGTH) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .testTag(CreateEventLocationScreenTestTags.CREATE_EVENT_LOCATION_LOCATION_FIELD)

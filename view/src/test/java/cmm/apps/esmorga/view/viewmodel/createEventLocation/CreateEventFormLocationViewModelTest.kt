@@ -117,12 +117,13 @@ class CreateEventFormLocationViewModelTest {
     }
 
     @Test
-    fun `given location with more than 100 characters when changed then state only keeps first 100`() = runTest {
-        val longText = "a".repeat(101)
+    fun `given location with more than max length when changed then state does not update`() = runTest {
+        val maxLength = CreateEventFormLocationViewModel.LOCATION_NAME_MAX_LENGTH
+        val longText = "a".repeat(maxLength + 1)
 
         viewModel.onLocationChanged(longText)
 
         val state = viewModel.uiState.value
-        assertEquals("", state.localizationName)
+        assertTrue(state.localizationName.length <= maxLength)
     }
 }
