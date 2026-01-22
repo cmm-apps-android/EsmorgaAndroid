@@ -60,7 +60,7 @@ class CreateEventFormLocationViewModel(
 	}
 
 	fun onMaxCapacityChanged(text: String) {
-		if (text.length <= 4 && text.all { it.isDigit() }) {
+		if (text.all { it.isDigit() }) {
 			_uiState.update { state ->
 				val capacityInt = text.toIntOrNull()
 
