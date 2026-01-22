@@ -115,4 +115,15 @@ class CreateEventFormLocationViewModelTest {
             assertEquals(CreateEventFormLocationEffect.NavigateBack, awaitItem())
         }
     }
+
+    @Test
+    fun `given location with more than max length when changed then state does not update`() = runTest {
+        val maxLength = CreateEventFormLocationViewModel.LOCATION_NAME_MAX_LENGTH
+        val longText = "a".repeat(maxLength + 1)
+
+        viewModel.onLocationChanged(longText)
+
+        val state = viewModel.uiState.value
+        assertTrue(state.localizationName.length <= maxLength)
+    }
 }

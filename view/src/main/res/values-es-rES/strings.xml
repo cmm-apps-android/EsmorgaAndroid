@@ -45,7 +45,7 @@
     <string name="inline_error_password">Contraseña inválida</string>
     <string name="inline_error_password_invalid">Mínimo 8 caracteres, debe incluir al menos 1 dígito, 1 letra y 1 símbolo</string>
     <string name="inline_error_password_mismatch">¡Las contraseñas no coinciden, inténtalo de nuevo!</string>
-    <string name="inline_error_location_required">Debes introducir una localización</string>
+    <string name="inline_error_location_required">Debes introducir una localización (max %1$d letras)</string>
     <string name="placeholder_confirm_password">Confirma tu contraseña</string>
     <string name="placeholder_email">Ingresa tu email</string>
     <string name="placeholder_event_coordinates">Introduce las coordenadas (lat,lng)</string>

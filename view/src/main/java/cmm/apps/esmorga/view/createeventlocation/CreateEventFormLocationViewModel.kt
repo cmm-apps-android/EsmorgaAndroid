@@ -19,6 +19,9 @@ class CreateEventFormLocationViewModel(
 	private val eventForm: CreateEventForm
 ) : ViewModel() {
 
+	companion object {
+		const val LOCATION_NAME_MAX_LENGTH = 100
+	}
 	private val _uiState = MutableStateFlow(CreateEventFormLocationUiState())
 	val uiState: StateFlow<CreateEventFormLocationUiState> = _uiState.asStateFlow()
 
@@ -35,10 +38,12 @@ class CreateEventFormLocationViewModel(
 	}
 
 	fun onLocationChanged(text: String) {
-		_uiState.update { state ->
-			val error = if (text.isBlank()) R.string.inline_error_location_required else null
-			val newState = state.copy(localizationName = text, locationError = error)
-			newState.copy(isButtonEnabled = validateForm(newState))
+		if (text.length <= LOCATION_NAME_MAX_LENGTH) {
+			_uiState.update { state ->
+				val error = if (text.isBlank()) R.string.inline_error_location_required else null
+				val newState = state.copy(localizationName = text, locationError = error)
+				newState.copy(isButtonEnabled = validateForm(newState))
+			}
 		}
 	}
 
