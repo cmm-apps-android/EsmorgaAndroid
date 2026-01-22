@@ -39,7 +39,7 @@
     <string name="inline_error_empty_field">Required field</string>
     <string name="inline_error_invalid_length_description">The text must be between 4 and 5000 characters</string>
     <string name="inline_error_invalid_length_name">The text must be between 3 and 100 characters</string>
-    <string name="inline_error_max_capacity_invalid">The capacity must be greater than 0</string>
+    <string name="inline_error_max_capacity_invalid">The capacity must be between 1 and 5000</string>
     <string name="inline_error_last_name">Only letters, spaces and \&apos; - are accepted</string>
     <string name="inline_error_location_required">You must enter a location (max %1$d letters)</string>
     <string name="inline_error_name">Only letters, spaces and \&apos; - are accepted</string>

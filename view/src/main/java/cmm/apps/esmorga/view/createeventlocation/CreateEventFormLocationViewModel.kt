@@ -21,6 +21,7 @@ class CreateEventFormLocationViewModel(
 
 	companion object {
 		const val LOCATION_NAME_MAX_LENGTH = 100
+		const val MAX_CAPACITY_LIMIT = 5000
 	}
 	private val _uiState = MutableStateFlow(CreateEventFormLocationUiState())
 	val uiState: StateFlow<CreateEventFormLocationUiState> = _uiState.asStateFlow()
@@ -49,7 +50,8 @@ class CreateEventFormLocationViewModel(
 
 	fun onCoordinatesChanged(text: String) {
 		_uiState.update { state ->
-			val isInvalid = text.isNotBlank() && !text.trim().matches(coordsRegex)
+			val trimmedText = text.trim()
+			val isInvalid = trimmedText.isNotEmpty() && !trimmedText.matches(coordsRegex)
 			val error = if (isInvalid) R.string.inline_error_coordinates_invalid else null
 
 			val newState = state.copy(localizationCoordinates = text, coordinatesError = error)
@@ -58,10 +60,11 @@ class CreateEventFormLocationViewModel(
 	}
 
 	fun onMaxCapacityChanged(text: String) {
-		if (text.all { it.isDigit() }) {
+		if (text.length <= 4 && text.all { it.isDigit() }) {
 			_uiState.update { state ->
 				val capacityInt = text.toIntOrNull()
-				val isInvalid = text.isNotBlank() && (capacityInt == null || capacityInt <= 0)
+
+				val isInvalid = text.isNotBlank() && (capacityInt == null || capacityInt < 1 || capacityInt > MAX_CAPACITY_LIMIT)
 				val error = if (isInvalid) R.string.inline_error_max_capacity_invalid else null
 
 				val newState = state.copy(eventMaxCapacity = text, capacityError = error)
