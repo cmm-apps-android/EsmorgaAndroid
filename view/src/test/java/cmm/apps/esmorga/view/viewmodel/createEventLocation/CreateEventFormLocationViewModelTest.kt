@@ -126,4 +126,45 @@ class CreateEventFormLocationViewModelTest {
         val state = viewModel.uiState.value
         assertTrue(state.localizationName.length <= maxLength)
     }
+
+    @Test
+    fun `given capacity higher than 5000 then shows error and button is disabled`() = runTest {
+        val maxCapacity = CreateEventFormLocationViewModel.MAX_CAPACITY_LIMIT
+        viewModel.onLocationChanged("Madrid")
+        viewModel.onMaxCapacityChanged((maxCapacity + 1).toString())
+
+        val state = viewModel.uiState.value
+        assertEquals(R.string.inline_error_max_capacity_invalid, state.capacityError)
+        assertFalse(state.isButtonEnabled)
+    }
+
+    @Test
+    fun `given capacity of 5000 then no error is displayed and button is enabled`() = runTest {
+        viewModel.onLocationChanged("Madrid")
+        viewModel.onMaxCapacityChanged("5000")
+
+        val state = viewModel.uiState.value
+        assertNull(state.capacityError)
+        assertTrue(state.isButtonEnabled)
+    }
+
+    @Test
+    fun `given coordinates with only spaces then should be treated as empty and no error`() = runTest {
+        viewModel.onLocationChanged("Madrid")
+        viewModel.onCoordinatesChanged("   ")
+
+        val state = viewModel.uiState.value
+        assertNull(state.coordinatesError)
+        assertTrue(state.isButtonEnabled)
+    }
+
+    @Test
+    fun `given invalid coordinates with text and numbers then shows error`() = runTest {
+        viewModel.onLocationChanged("Madrid")
+        viewModel.onCoordinatesChanged("40.123, longitude")
+
+        val state = viewModel.uiState.value
+        assertEquals(R.string.inline_error_coordinates_invalid, state.coordinatesError)
+        assertFalse(state.isButtonEnabled)
+    }
 }
