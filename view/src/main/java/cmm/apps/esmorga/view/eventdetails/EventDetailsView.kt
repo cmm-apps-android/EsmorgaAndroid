@@ -224,7 +224,7 @@ fun EventDetailsAttendeesSection(
                     .padding(top = 8.dp)
                     .clickable { onViewAttendeesClicked() }
                     .testTag(EventDetailsScreenTestTags.EVENT_DETAILS_ATTENDEES_BUTTON)
-                    .semantics { role = Role.Button  }
+                    .semantics { role = Role.Button }
             )
         }
     }
