@@ -52,6 +52,10 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import cmm.apps.designsystem.R as DesignSystem
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
+
 
 @Screen
 @Composable
@@ -220,6 +224,7 @@ fun EventDetailsAttendeesSection(
                     .padding(top = 8.dp)
                     .clickable { onViewAttendeesClicked() }
                     .testTag(EventDetailsScreenTestTags.EVENT_DETAILS_ATTENDEES_BUTTON)
+                    .semantics { role = Role.Button }
             )
         }
     }
