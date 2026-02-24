@@ -157,7 +157,8 @@ fun ChangePasswordView(
                         }
                         .testTag(CHANGE_PASSWORD_CURRENT_PASS_INPUT),
                     imeAction = ImeAction.Next,
-                    keyboardType = KeyboardType.Password
+                    keyboardType = KeyboardType.Password,
+                    visibilityToggleDescription = R.string.toggle_current_password_visibility
                 )
 
                 EsmorgaTextField(
@@ -179,7 +180,8 @@ fun ChangePasswordView(
                         }
                         .testTag(CHANGE_PASSWORD_NEW_PASS_INPUT),
                     imeAction = ImeAction.Next,
-                    keyboardType = KeyboardType.Password
+                    keyboardType = KeyboardType.Password,
+                    visibilityToggleDescription = R.string.toggle_new_password_visibility
                 )
 
                 EsmorgaTextField(
@@ -214,7 +216,8 @@ fun ChangePasswordView(
                         .testTag(CHANGE_PASSWORD_REPEAT_PASS_INPUT),
                     imeAction = ImeAction.Done,
                     onDonePressed = { onChangePasswordClicked(currentPassword, newPassword) },
-                    keyboardType = KeyboardType.Password
+                    keyboardType = KeyboardType.Password,
+                    visibilityToggleDescription = R.string.toggle_confirm_password_visibility
                 )
 
                 EsmorgaButton(

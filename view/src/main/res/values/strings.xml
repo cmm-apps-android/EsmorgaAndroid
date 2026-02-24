@@ -133,4 +133,7 @@
     <string name="step_continue_button">Continue</string>
     <string name="unauthenticated_error_login_button">Login</string>
     <string name="unauthenticated_error_message">Ups… You are not logged in!</string>
+    <string name="toggle_current_password_visibility">Toggle current password visibility</string>
+    <string name="toggle_new_password_visibility">Toggle new password visibility</string>
+    <string name="toggle_confirm_password_visibility">Toggle confirm password visibility</string>
 </resources>

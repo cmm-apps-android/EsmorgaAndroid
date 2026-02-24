@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="password_field_state_visible">Password visible</string>
+    <string name="password_field_state_hidden">Password hidden</string>
+</resources>
