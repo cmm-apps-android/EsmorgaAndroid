@@ -28,6 +28,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -48,7 +50,8 @@ fun EsmorgaTextField(
     errorText: String? = null,
     isEnabled: Boolean = true,
     maxChars: Int? = null,
-    onDonePressed: () -> Unit = {}
+    onDonePressed: () -> Unit = {},
+    visibilityToggleDescription: Int? = null
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
@@ -127,8 +130,24 @@ fun EsmorgaTextField(
             trailingIcon = {
                 if (keyboardType == KeyboardType.Password) {
                     val image = if (passwordVisible) painterResource(id = R.drawable.ic_visibility_off) else painterResource(id = R.drawable.ic_visibility)
+                    val description = if (visibilityToggleDescription != null) {
+                        stringResource(id = visibilityToggleDescription)
+                    } else {
+                        null
+                    }
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                        Icon(image, "toggle password visibility")
+                        val visibleStateText = stringResource(R.string.password_field_state_visible)
+                        val hiddenStateText = stringResource(R.string.password_field_state_hidden)
+                        Icon(
+                            image,
+                            description,
+                            modifier = Modifier
+                                .semantics { stateDescription = if (passwordVisible)
+                                    visibleStateText
+                                else
+                                    hiddenStateText
+                                }
+                        )
                     }
                 }
             },
