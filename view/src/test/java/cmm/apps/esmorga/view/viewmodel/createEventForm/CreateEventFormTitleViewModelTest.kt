@@ -2,8 +2,8 @@ package cmm.apps.esmorga.view.viewmodel.createEventForm
 
 import app.cash.turbine.test
 import cmm.apps.esmorga.view.R
-import cmm.apps.esmorga.view.create_event.createevent.CreateEventFormTitleViewModel
-import cmm.apps.esmorga.view.create_event.createevent.model.CreateEventFormEffect
+import cmm.apps.esmorga.view.createevent.createeventinfo.CreateEventFormTitleViewModel
+import cmm.apps.esmorga.view.createevent.createeventinfo.model.CreateEventFormEffect
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse

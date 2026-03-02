@@ -1,9 +1,9 @@
-package cmm.apps.esmorga.view.create_event.createeventdate
+package cmm.apps.esmorga.view.createevent.createeventdate
 
 import androidx.lifecycle.ViewModel
 import cmm.apps.esmorga.domain.event.model.CreateEventForm
-import cmm.apps.esmorga.view.create_event.createeventdate.model.CreateEventFormDateEffect
-import cmm.apps.esmorga.view.create_event.createeventdate.model.CreateEventFormDateUiState
+import cmm.apps.esmorga.view.createevent.createeventdate.model.CreateEventFormDateEffect
+import cmm.apps.esmorga.view.createevent.createeventdate.model.CreateEventFormDateUiState
 import cmm.apps.esmorga.view.dateformatting.EsmorgaDateTimeFormatter
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow

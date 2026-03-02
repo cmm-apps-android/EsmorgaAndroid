@@ -42,11 +42,11 @@ import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD
 import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD_NEW_PASS_INPUT
 import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD_REPEAT_PASS_INPUT
 import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD_SCREEN_TITLE
-import cmm.apps.esmorga.view.create_event.createevent.CreateEventFormTitleScreenTestTags
-import cmm.apps.esmorga.view.create_event.createeventdate.CreateEventDateScreenTestTags
-import cmm.apps.esmorga.view.create_event.createeventimage.CreateEventImageScreenTestTags
-import cmm.apps.esmorga.view.create_event.createeventlocation.CreateEventLocationScreenTestTags
-import cmm.apps.esmorga.view.create_event.createeventtype.CreateEventTypeScreenTestTags
+import cmm.apps.esmorga.view.createevent.createeventinfo.CreateEventFormTitleScreenTestTags
+import cmm.apps.esmorga.view.createevent.createeventdate.CreateEventDateScreenTestTags
+import cmm.apps.esmorga.view.createevent.createeventimage.CreateEventImageScreenTestTags
+import cmm.apps.esmorga.view.createevent.createeventlocation.CreateEventLocationScreenTestTags
+import cmm.apps.esmorga.view.createevent.createeventtype.CreateEventTypeScreenTestTags
 import cmm.apps.esmorga.view.di.ViewDIModule
 import cmm.apps.esmorga.view.eventattendees.EventAttendessScreenTestTags.EVENT_ATTENDEES_BACK_BUTTON
 import cmm.apps.esmorga.view.eventattendees.EventAttendessScreenTestTags.EVENT_ATTENDEES_TITLE

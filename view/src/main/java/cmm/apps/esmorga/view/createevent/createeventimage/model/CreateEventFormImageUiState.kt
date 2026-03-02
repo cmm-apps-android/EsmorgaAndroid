@@ -1,4 +1,4 @@
-package cmm.apps.esmorga.view.create_event.createeventimage.model
+package cmm.apps.esmorga.view.createevent.createeventimage.model
 
 import cmm.apps.esmorga.domain.event.model.CreateEventForm
 

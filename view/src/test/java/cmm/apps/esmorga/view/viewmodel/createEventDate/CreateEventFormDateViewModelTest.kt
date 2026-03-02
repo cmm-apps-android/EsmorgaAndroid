@@ -3,8 +3,8 @@ package cmm.apps.esmorga.view.viewmodel.createEventDate
 import app.cash.turbine.test
 import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.domain.event.model.EventType
-import cmm.apps.esmorga.view.create_event.createeventdate.CreateEventFormDateViewModel
-import cmm.apps.esmorga.view.create_event.createeventdate.model.CreateEventFormDateEffect
+import cmm.apps.esmorga.view.createevent.createeventdate.CreateEventFormDateViewModel
+import cmm.apps.esmorga.view.createevent.createeventdate.model.CreateEventFormDateEffect
 import cmm.apps.esmorga.view.dateformatting.DateFormatterImpl
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals

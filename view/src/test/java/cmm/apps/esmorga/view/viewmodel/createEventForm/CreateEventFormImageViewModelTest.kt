@@ -3,8 +3,8 @@ package cmm.apps.esmorga.view.viewmodel.createEventForm
 import app.cash.turbine.test
 import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.view.R
-import cmm.apps.esmorga.view.create_event.createeventimage.CreateEventFormImageViewModel
-import cmm.apps.esmorga.view.create_event.createeventimage.model.CreateEventFormImageEffect
+import cmm.apps.esmorga.view.createevent.createeventimage.CreateEventFormImageViewModel
+import cmm.apps.esmorga.view.createevent.createeventimage.model.CreateEventFormImageEffect
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse

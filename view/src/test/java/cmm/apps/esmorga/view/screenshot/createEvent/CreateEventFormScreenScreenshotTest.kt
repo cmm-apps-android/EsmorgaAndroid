@@ -1,7 +1,7 @@
 package cmm.apps.esmorga.view.screenshot.createEvent
 
 import cmm.apps.esmorga.view.R
-import cmm.apps.esmorga.view.create_event.createevent.CreateEventFormTitleScreenContent
+import cmm.apps.esmorga.view.createevent.createeventinfo.CreateEventFormTitleScreenContent
 import cmm.apps.esmorga.view.screenshot.BaseScreenshotTest
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import org.junit.Test

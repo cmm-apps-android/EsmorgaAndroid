@@ -1,4 +1,4 @@
-package cmm.apps.esmorga.view.create_event.createeventimage
+package cmm.apps.esmorga.view.createevent.createeventimage
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -36,8 +36,8 @@ import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
-import cmm.apps.esmorga.view.create_event.createeventimage.model.CreateEventFormImageEffect
-import cmm.apps.esmorga.view.create_event.createeventimage.model.CreateEventFormImageUiState
+import cmm.apps.esmorga.view.createevent.createeventimage.model.CreateEventFormImageEffect
+import cmm.apps.esmorga.view.createevent.createeventimage.model.CreateEventFormImageUiState
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel

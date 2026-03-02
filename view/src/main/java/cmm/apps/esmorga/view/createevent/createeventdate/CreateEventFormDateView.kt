@@ -1,4 +1,4 @@
-package cmm.apps.esmorga.view.create_event.createeventdate
+package cmm.apps.esmorga.view.createevent.createeventdate
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,11 +36,11 @@ import cmm.apps.designsystem.PossibleSelectableDates
 import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
-import cmm.apps.esmorga.view.create_event.createeventdate.CreateEventDateScreenTestTags.CREATE_EVENT_DATE_BACK_BUTTON
-import cmm.apps.esmorga.view.create_event.createeventdate.CreateEventDateScreenTestTags.CREATE_EVENT_DATE_NEXT_BUTTON
-import cmm.apps.esmorga.view.create_event.createeventdate.CreateEventDateScreenTestTags.CREATE_EVENT_DATE_TITLE
-import cmm.apps.esmorga.view.create_event.createeventdate.model.CreateEventFormDateEffect
-import cmm.apps.esmorga.view.create_event.createeventdate.model.CreateEventFormDateUiState
+import cmm.apps.esmorga.view.createevent.createeventdate.CreateEventDateScreenTestTags.CREATE_EVENT_DATE_BACK_BUTTON
+import cmm.apps.esmorga.view.createevent.createeventdate.CreateEventDateScreenTestTags.CREATE_EVENT_DATE_NEXT_BUTTON
+import cmm.apps.esmorga.view.createevent.createeventdate.CreateEventDateScreenTestTags.CREATE_EVENT_DATE_TITLE
+import cmm.apps.esmorga.view.createevent.createeventdate.model.CreateEventFormDateEffect
+import cmm.apps.esmorga.view.createevent.createeventdate.model.CreateEventFormDateUiState
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf

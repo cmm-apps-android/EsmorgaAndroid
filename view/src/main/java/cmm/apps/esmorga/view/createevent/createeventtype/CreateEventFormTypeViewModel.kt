@@ -1,10 +1,10 @@
-package cmm.apps.esmorga.view.create_event.createeventtype
+package cmm.apps.esmorga.view.createevent.createeventtype
 
 import androidx.lifecycle.ViewModel
 import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.domain.event.model.EventType
-import cmm.apps.esmorga.view.create_event.createeventtype.model.CreateEventTypeScreenEffect
-import cmm.apps.esmorga.view.create_event.createeventtype.model.CreateEventTypeScreenUiState
+import cmm.apps.esmorga.view.createevent.createeventtype.model.CreateEventTypeScreenEffect
+import cmm.apps.esmorga.view.createevent.createeventtype.model.CreateEventTypeScreenUiState
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
