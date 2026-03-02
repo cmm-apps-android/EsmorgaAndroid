@@ -1,4 +1,4 @@
-package cmm.apps.esmorga.view.createeventtype
+package cmm.apps.esmorga.view.create_event.createeventtype
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,9 +29,9 @@ import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.domain.event.model.EventType
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
-import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeHelper
-import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeScreenEffect
-import cmm.apps.esmorga.view.createeventtype.model.CreateEventTypeScreenUiState
+import cmm.apps.esmorga.view.create_event.createeventtype.model.CreateEventTypeHelper
+import cmm.apps.esmorga.view.create_event.createeventtype.model.CreateEventTypeScreenEffect
+import cmm.apps.esmorga.view.create_event.createeventtype.model.CreateEventTypeScreenUiState
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -107,7 +107,7 @@ fun CreateEventFormTypeView(
                 modifier = Modifier.padding(bottom = 15.dp)
             )
 
-            EventType.values().forEach { type ->
+            EventType.entries.forEach { type ->
                 EsmorgaRadioButton(
                     text = CreateEventTypeHelper.getUiTextRes(type, LocalContext.current),
                     selected = eventType == type,

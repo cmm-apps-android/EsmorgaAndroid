@@ -3,10 +3,13 @@ package cmm.apps.esmorga.view.viewmodel.createEventLocation
 import app.cash.turbine.test
 import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.view.R
-import cmm.apps.esmorga.view.createeventlocation.CreateEventFormLocationViewModel
-import cmm.apps.esmorga.view.createeventlocation.model.CreateEventFormLocationEffect
+import cmm.apps.esmorga.view.create_event.createeventlocation.CreateEventFormLocationViewModel
+import cmm.apps.esmorga.view.create_event.createeventlocation.model.CreateEventFormLocationEffect
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 

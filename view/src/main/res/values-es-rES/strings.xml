@@ -136,4 +136,11 @@
     <string name="toggle_current_password_visibility">Alternar la visibilidad de la contraseña actual</string>
     <string name="toggle_new_password_visibility">Alternar la visibilidad de la contraseña nueva</string>
     <string name="toggle_confirm_password_visibility">Alternar la visibilidad de la confirmación de contraseña</string>
+    <string name="field_title_event_image">Imagen del evento (opcional)</string>
+    <string name="placeholder_event_image">Introduce la URL de la imagen</string>
+    <string name="button_preview">Previsualizar</string>
+    <string name="button_delete">Borrar</string>
+    <string name="button_create_event">Crear evento</string>
+    <string name="inline_error_image_url_required">Introduzca una URL válida</string>
+    <string name="add_image_event_content_description">Imagen del evento</string>
 </resources>

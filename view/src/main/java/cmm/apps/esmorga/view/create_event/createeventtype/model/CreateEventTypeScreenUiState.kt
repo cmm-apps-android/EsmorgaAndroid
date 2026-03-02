@@ -1,4 +1,4 @@
-package cmm.apps.esmorga.view.createeventtype.model
+package cmm.apps.esmorga.view.create_event.createeventtype.model
 
 import android.content.Context
 import cmm.apps.esmorga.domain.event.model.EventType
