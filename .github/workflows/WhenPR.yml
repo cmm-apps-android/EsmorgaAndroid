@@ -66,6 +66,7 @@ jobs:
           path: |
             **/build/reports/paparazzi/
             **/build/reports/tests/
+            **/build/paparazzi/failures/
           if-no-files-found: ignore
 
       - name: Publish JUnit Report (on failure)
