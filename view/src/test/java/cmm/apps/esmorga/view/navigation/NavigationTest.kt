@@ -19,6 +19,7 @@ import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_TITLE
 import cmm.apps.designsystem.GuestErrorTestTags.GUEST_ERROR_PRIMARY_BUTTON
 import cmm.apps.esmorga.domain.account.ActivateAccountUseCase
 import cmm.apps.esmorga.domain.event.GetEventAttendeesUseCase
+import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.domain.event.GetEventsAndPollsUseCase
 import cmm.apps.esmorga.domain.event.GetMyEventListUseCase
 import cmm.apps.esmorga.domain.event.JoinEventUseCase
@@ -41,9 +42,11 @@ import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD
 import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD_NEW_PASS_INPUT
 import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD_REPEAT_PASS_INPUT
 import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD_SCREEN_TITLE
-import cmm.apps.esmorga.view.createevent.CreateEventFormTitleScreenTestTags
-import cmm.apps.esmorga.view.createeventdate.CreateEventDateScreenTestTags
-import cmm.apps.esmorga.view.createeventtype.CreateEventTypeScreenTestTags
+import cmm.apps.esmorga.view.createevent.createeventinfo.CreateEventFormTitleScreenTestTags
+import cmm.apps.esmorga.view.createevent.createeventdate.CreateEventDateScreenTestTags
+import cmm.apps.esmorga.view.createevent.createeventimage.CreateEventImageScreenTestTags
+import cmm.apps.esmorga.view.createevent.createeventlocation.CreateEventLocationScreenTestTags
+import cmm.apps.esmorga.view.createevent.createeventtype.CreateEventTypeScreenTestTags
 import cmm.apps.esmorga.view.di.ViewDIModule
 import cmm.apps.esmorga.view.eventattendees.EventAttendessScreenTestTags.EVENT_ATTENDEES_BACK_BUTTON
 import cmm.apps.esmorga.view.eventattendees.EventAttendessScreenTestTags.EVENT_ATTENDEES_TITLE
@@ -500,6 +503,7 @@ class NavigationTest {
         composeTestRule.onNodeWithTag(ERROR_TITLE).assertIsDisplayed()
     }
 
+    @Test
     fun `given user is in CreateEventFormTitleScreen when clicks next then navigates to CreateEventFormTypeScreen`() {
         setNavigationFromDestination(Navigation.CreateEventFormTitleScreen)
         composeTestRule.waitForIdle()
@@ -548,6 +552,52 @@ class NavigationTest {
         composeTestRule.waitForIdle()
 
         composeTestRule.onNodeWithTag(CreateEventTypeScreenTestTags.CREATE_EVENT_TYPE_TITLE).assertIsDisplayed()
+    }
+
+    @Test
+    fun `given create event form location screen, when user enters location and taps next, then image screen is shown`() {
+        val form = CreateEventForm(name = "Test Name", description = "Test Description", date = "2024-07-17T12:00:00.000Z")
+        setNavigationFromDestination(Navigation.CreateEventFormLocationScreen(form))
+        composeTestRule.waitForIdle()
+
+        composeTestRule.onNodeWithTag(CreateEventLocationScreenTestTags.CREATE_EVENT_LOCATION_TITLE).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(CreateEventLocationScreenTestTags.CREATE_EVENT_LOCATION_LOCATION_FIELD).performTextInput("Test Location")
+        composeTestRule.onNodeWithTag(CreateEventLocationScreenTestTags.CREATE_EVENT_LOCATION_NEXT_BUTTON).performClick()
+        composeTestRule.waitForIdle()
+
+        composeTestRule.onNodeWithTag(CreateEventImageScreenTestTags.CREATE_EVENT_IMAGE_TITLE).assertIsDisplayed()
+    }
+
+    @Test
+    fun `given create event form image screen, when user taps back, then location screen is shown`() {
+        val form = CreateEventForm(name = "Test Name", description = "Test Description", date = "2024-07-17T12:00:00.000Z")
+        setNavigationFromDestination(Navigation.CreateEventFormLocationScreen(form))
+        composeTestRule.waitForIdle()
+
+        composeTestRule.onNodeWithTag(CreateEventLocationScreenTestTags.CREATE_EVENT_LOCATION_TITLE).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(CreateEventLocationScreenTestTags.CREATE_EVENT_LOCATION_LOCATION_FIELD).performTextInput("Test Location")
+        composeTestRule.onNodeWithTag(CreateEventLocationScreenTestTags.CREATE_EVENT_LOCATION_NEXT_BUTTON).performClick()
+        composeTestRule.waitForIdle()
+
+        composeTestRule.onNodeWithTag(CreateEventImageScreenTestTags.CREATE_EVENT_IMAGE_TITLE).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(CreateEventImageScreenTestTags.CREATE_EVENT_IMAGE_BACK_BUTTON).performClick()
+        composeTestRule.waitForIdle()
+
+        composeTestRule.onNodeWithTag(CreateEventLocationScreenTestTags.CREATE_EVENT_LOCATION_TITLE).assertIsDisplayed()
+    }
+
+    @Test
+    fun `given create event form image screen, when user taps create event, then explore screen is shown`() {
+        val form = CreateEventForm(name = "Test Name", description = "Test Description", date = "2024-07-17T12:00:00.000Z")
+        setNavigationFromDestination(Navigation.CreateEventFormImageScreen(form))
+        composeTestRule.waitForIdle()
+
+
+        composeTestRule.onNodeWithTag(CreateEventImageScreenTestTags.CREATE_EVENT_IMAGE_TITLE).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(CreateEventImageScreenTestTags.CREATE_EVENT_IMAGE_CREATE_BUTTON).performClick()
+        composeTestRule.waitForIdle()
+
+        composeTestRule.onNodeWithTag(EXPLORE_TITLE).assertIsDisplayed()
     }
 
     private fun setNavigationFromAppLaunch() {

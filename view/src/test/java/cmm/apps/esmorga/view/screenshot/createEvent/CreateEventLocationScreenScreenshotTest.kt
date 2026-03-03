@@ -1,8 +1,8 @@
 package cmm.apps.esmorga.view.screenshot.createEvent
 
 import cmm.apps.esmorga.view.R
-import cmm.apps.esmorga.view.createeventlocation.CreateEventFormLocationView
-import cmm.apps.esmorga.view.createeventlocation.model.CreateEventFormLocationUiState
+import cmm.apps.esmorga.view.createevent.createeventlocation.CreateEventFormLocationView
+import cmm.apps.esmorga.view.createevent.createeventlocation.model.CreateEventFormLocationUiState
 import cmm.apps.esmorga.view.screenshot.BaseScreenshotTest
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import org.junit.Test

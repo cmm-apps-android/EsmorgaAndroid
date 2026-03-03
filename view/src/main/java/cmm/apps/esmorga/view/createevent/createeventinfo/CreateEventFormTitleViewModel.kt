@@ -1,10 +1,10 @@
-package cmm.apps.esmorga.view.createevent
+package cmm.apps.esmorga.view.createevent.createeventinfo
 
 import androidx.lifecycle.ViewModel
 import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.view.R
-import cmm.apps.esmorga.view.createevent.model.CreateEventFormEffect
-import cmm.apps.esmorga.view.createevent.model.CreateEventFormUiState
+import cmm.apps.esmorga.view.createevent.createeventinfo.model.CreateEventFormEffect
+import cmm.apps.esmorga.view.createevent.createeventinfo.model.CreateEventFormUiState
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +25,7 @@ class CreateEventFormTitleViewModel() : ViewModel() {
     var eventName = ""
     var eventDescription = ""
 
-    private val _uiState = MutableStateFlow(CreateEventFormUiState(eventName = eventName,eventDescription = eventDescription))
+    private val _uiState = MutableStateFlow(CreateEventFormUiState(eventName = eventName, eventDescription = eventDescription))
     val uiState: StateFlow<CreateEventFormUiState> = _uiState.asStateFlow()
 
     private val _effect = MutableSharedFlow<CreateEventFormEffect>(
@@ -58,7 +58,7 @@ class CreateEventFormTitleViewModel() : ViewModel() {
         }
     }
 
-    private fun validateEventName(){
+    private fun validateEventName() {
         val state = _uiState.value
         val name = state.eventName
 
@@ -77,7 +77,7 @@ class CreateEventFormTitleViewModel() : ViewModel() {
         }
     }
 
-    private fun validateEventDescription(){
+    private fun validateEventDescription() {
         val state = _uiState.value
         val description = state.eventDescription
 

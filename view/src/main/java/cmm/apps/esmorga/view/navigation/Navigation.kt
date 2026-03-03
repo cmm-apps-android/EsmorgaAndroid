@@ -15,10 +15,11 @@ import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.domain.poll.model.Poll
 import cmm.apps.esmorga.view.activateaccount.ActivateAccountScreen
 import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen
-import cmm.apps.esmorga.view.createevent.CreateEventFormScreen
-import cmm.apps.esmorga.view.createeventdate.CreateEventFormDateScreen
-import cmm.apps.esmorga.view.createeventlocation.CreateEventFormLocationScreen
-import cmm.apps.esmorga.view.createeventtype.CreateEventFormTypeScreen
+import cmm.apps.esmorga.view.createevent.createeventinfo.CreateEventFormScreen
+import cmm.apps.esmorga.view.createevent.createeventdate.CreateEventFormDateScreen
+import cmm.apps.esmorga.view.createevent.createeventimage.CreateEventFormImageScreen
+import cmm.apps.esmorga.view.createevent.createeventlocation.CreateEventFormLocationScreen
+import cmm.apps.esmorga.view.createevent.createeventtype.CreateEventFormTypeScreen
 import cmm.apps.esmorga.view.deeplink.DeeplinkManager.navigateFromDeeplink
 import cmm.apps.esmorga.view.errors.EsmorgaErrorScreen
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
@@ -92,6 +93,9 @@ sealed class Navigation {
 
     @Serializable
     data class CreateEventFormLocationScreen(val form: CreateEventForm) : Navigation()
+
+    @Serializable
+    data class CreateEventFormImageScreen(val form: CreateEventForm) : Navigation()
 }
 
 const val GOOGLE_MAPS_PACKAGE = "com.google.android.apps.maps"
@@ -317,7 +321,23 @@ private fun NavGraphBuilder.createEventFlow(navController: NavHostController) {
         CreateEventFormLocationScreen(
             eventForm = eventForm,
             onBackPressed = { navController.popBackStack() },
-            onNextClick = { updatedForm -> }
+            onNextClick = { updatedForm ->
+                navController.navigate(Navigation.CreateEventFormImageScreen(updatedForm))
+            }
+        )
+    }
+
+    composable<Navigation.CreateEventFormImageScreen>(
+        typeMap = mapOf(typeOf<CreateEventForm>() to serializableType<CreateEventForm>())
+    ) { backStackEntry ->
+        val eventForm = backStackEntry.toRoute<Navigation.CreateEventFormImageScreen>().form
+        CreateEventFormImageScreen(
+            eventForm = eventForm,
+            onBackPressed = { navController.popBackStack() },
+            onNextClick = {
+                navController.popBackStack(Navigation.CreateEventFormTitleScreen::class, inclusive = true)
+                navController.navigate(Navigation.ExploreScreen)
+            }
         )
     }
 }

@@ -2,11 +2,13 @@ package cmm.apps.esmorga.view.viewmodel.createEventForm
 
 import app.cash.turbine.test
 import cmm.apps.esmorga.view.R
-import cmm.apps.esmorga.view.createevent.CreateEventFormTitleViewModel
-import cmm.apps.esmorga.view.createevent.model.CreateEventFormEffect
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import cmm.apps.esmorga.view.createevent.createeventinfo.CreateEventFormTitleViewModel
+import cmm.apps.esmorga.view.createevent.createeventinfo.model.CreateEventFormEffect
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
@@ -18,8 +20,8 @@ class CreateEventFormTitleViewModelTest {
     fun setup() {
         viewModel = CreateEventFormTitleViewModel()
     }
-    @Test
 
+    @Test
     fun `given initial state when event name changes with invalid length then state updates with error`() = runTest {
         viewModel.uiState.test {
             awaitItem()

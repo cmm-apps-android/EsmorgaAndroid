@@ -1,4 +1,4 @@
-package cmm.apps.esmorga.view.createevent
+package cmm.apps.esmorga.view.createevent.createeventinfo
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -31,7 +31,7 @@ import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
-import cmm.apps.esmorga.view.createevent.model.CreateEventFormEffect
+import cmm.apps.esmorga.view.createevent.createeventinfo.model.CreateEventFormEffect
 import org.koin.androidx.compose.koinViewModel
 
 @Screen

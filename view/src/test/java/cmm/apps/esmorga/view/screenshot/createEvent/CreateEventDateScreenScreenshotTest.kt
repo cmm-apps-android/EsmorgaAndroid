@@ -3,7 +3,7 @@ package cmm.apps.esmorga.view.screenshot.createEvent
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SelectableDates
-import cmm.apps.esmorga.view.createeventdate.CreateEventFormDateView
+import cmm.apps.esmorga.view.createevent.createeventdate.CreateEventFormDateView
 import cmm.apps.esmorga.view.screenshot.BaseScreenshotTest
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import org.junit.Before

@@ -1,4 +1,4 @@
-package cmm.apps.esmorga.view.createeventlocation
+package cmm.apps.esmorga.view.createevent.createeventlocation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,8 +29,8 @@ import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
-import cmm.apps.esmorga.view.createeventlocation.model.CreateEventFormLocationEffect
-import cmm.apps.esmorga.view.createeventlocation.model.CreateEventFormLocationUiState
+import cmm.apps.esmorga.view.createevent.createeventlocation.model.CreateEventFormLocationEffect
+import cmm.apps.esmorga.view.createevent.createeventlocation.model.CreateEventFormLocationUiState
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf

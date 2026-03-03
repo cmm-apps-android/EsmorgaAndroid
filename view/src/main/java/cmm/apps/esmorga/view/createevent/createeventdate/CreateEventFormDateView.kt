@@ -1,4 +1,4 @@
-package cmm.apps.esmorga.view.createeventdate
+package cmm.apps.esmorga.view.createevent.createeventdate
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,11 +36,11 @@ import cmm.apps.designsystem.PossibleSelectableDates
 import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
-import cmm.apps.esmorga.view.createeventdate.CreateEventDateScreenTestTags.CREATE_EVENT_DATE_BACK_BUTTON
-import cmm.apps.esmorga.view.createeventdate.CreateEventDateScreenTestTags.CREATE_EVENT_DATE_NEXT_BUTTON
-import cmm.apps.esmorga.view.createeventdate.CreateEventDateScreenTestTags.CREATE_EVENT_DATE_TITLE
-import cmm.apps.esmorga.view.createeventdate.model.CreateEventFormDateEffect
-import cmm.apps.esmorga.view.createeventdate.model.CreateEventFormDateUiState
+import cmm.apps.esmorga.view.createevent.createeventdate.CreateEventDateScreenTestTags.CREATE_EVENT_DATE_BACK_BUTTON
+import cmm.apps.esmorga.view.createevent.createeventdate.CreateEventDateScreenTestTags.CREATE_EVENT_DATE_NEXT_BUTTON
+import cmm.apps.esmorga.view.createevent.createeventdate.CreateEventDateScreenTestTags.CREATE_EVENT_DATE_TITLE
+import cmm.apps.esmorga.view.createevent.createeventdate.model.CreateEventFormDateEffect
+import cmm.apps.esmorga.view.createevent.createeventdate.model.CreateEventFormDateUiState
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -116,7 +116,8 @@ fun CreateEventFormDateView(
             formattedTime = formattedTime,
             confirmButtonText = stringResource(R.string.confirm_button_dialog),
             dismissButtonText = stringResource(R.string.cancel_button_dialog),
-            timeState = timeState
+            timeState = timeState,
+            confirmButtonTestTag = CreateEventDateScreenTestTags.CREATE_EVENT_DATE_TIME_CONFIRM_BUTTON
         )
     }
 
@@ -164,7 +165,12 @@ fun CreateEventFormDateView(
 
             EsmorgaDatePicker(state = datePickerState)
 
-            EsmorgaRow(title = stringResource(R.string.step_3_screen_row_time), onClick = { shownDialog = true }, caption = timeSelected.take(5))
+            EsmorgaRow(
+                title = stringResource(R.string.step_3_screen_row_time),
+                onClick = { shownDialog = true },
+                caption = timeSelected.take(5),
+                modifier = Modifier.testTag(CreateEventDateScreenTestTags.CREATE_EVENT_DATE_TIME_ROW)
+            )
             EsmorgaButton(
                 text = stringResource(R.string.step_continue_button),
                 isEnabled = isButtonEnabled,
@@ -184,4 +190,6 @@ object CreateEventDateScreenTestTags {
     const val CREATE_EVENT_DATE_TITLE = "create_event_date_title"
     const val CREATE_EVENT_DATE_BACK_BUTTON = "create_event_date_back_button"
     const val CREATE_EVENT_DATE_NEXT_BUTTON = "create_event_date_next_button"
+    const val CREATE_EVENT_DATE_TIME_ROW = "create_event_date_time_row"
+    const val CREATE_EVENT_DATE_TIME_CONFIRM_BUTTON = "create_event_date_time_confirm_button"
 }

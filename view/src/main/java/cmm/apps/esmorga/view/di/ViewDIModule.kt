@@ -5,10 +5,11 @@ import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.domain.poll.model.Poll
 import cmm.apps.esmorga.view.activateaccount.ActivateAccountViewModel
 import cmm.apps.esmorga.view.changepassword.ChangePasswordViewModel
-import cmm.apps.esmorga.view.createevent.CreateEventFormTitleViewModel
-import cmm.apps.esmorga.view.createeventdate.CreateEventFormDateViewModel
-import cmm.apps.esmorga.view.createeventlocation.CreateEventFormLocationViewModel
-import cmm.apps.esmorga.view.createeventtype.CreateEventFormTypeViewModel
+import cmm.apps.esmorga.view.createevent.createeventinfo.CreateEventFormTitleViewModel
+import cmm.apps.esmorga.view.createevent.createeventdate.CreateEventFormDateViewModel
+import cmm.apps.esmorga.view.createevent.createeventimage.CreateEventFormImageViewModel
+import cmm.apps.esmorga.view.createevent.createeventlocation.CreateEventFormLocationViewModel
+import cmm.apps.esmorga.view.createevent.createeventtype.CreateEventFormTypeViewModel
 import cmm.apps.esmorga.view.dateformatting.DateFormatterImpl
 import cmm.apps.esmorga.view.dateformatting.EsmorgaDateTimeFormatter
 import cmm.apps.esmorga.view.eventattendees.EventAttendeesViewModel
@@ -78,6 +79,10 @@ object ViewDIModule {
 
         viewModel { (eventForm: CreateEventForm) ->
             CreateEventFormLocationViewModel(eventForm)
+        }
+
+        viewModel { (eventForm: CreateEventForm) ->
+            CreateEventFormImageViewModel(eventForm)
         }
 
         single<EsmorgaDateTimeFormatter> { DateFormatterImpl() }

@@ -16,6 +16,7 @@ import androidx.compose.material3.TimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 
@@ -29,7 +30,8 @@ fun EsmorgaTimePickerDialog(
     formattedTime: (Int, Int) -> String,
     confirmButtonText: String,
     dismissButtonText: String,
-    timeState: TimePickerState
+    timeState: TimePickerState,
+    confirmButtonTestTag: String? = null
 ) {
     Dialog(
         onDismissRequest = { onDismiss() },
@@ -66,7 +68,9 @@ fun EsmorgaTimePickerDialog(
                     Spacer(Modifier.width(12.dp))
                     EsmorgaButton(
                         text = confirmButtonText,
-                        modifier = modifier.weight(1F),
+                        modifier = modifier
+                            .weight(1F)
+                            .then(confirmButtonTestTag?.let { Modifier.testTag(it) } ?: Modifier),
                         onClick = {
                             onConfirm(formattedTime(timeState.hour, timeState.minute))
                         }
