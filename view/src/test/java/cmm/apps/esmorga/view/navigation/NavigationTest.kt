@@ -555,7 +555,7 @@ class NavigationTest {
     }
 
     @Test
-    fun `navigate from CreateEventFormLocationScreen to CreateEventFormImageScreen`() {
+    fun `given create event form location screen, when user enters location and taps next, then image screen is shown`() {
         val form = CreateEventForm(name = "Test Name", description = "Test Description", date = "2024-07-17T12:00:00.000Z")
         setNavigationFromDestination(Navigation.CreateEventFormLocationScreen(form))
         composeTestRule.waitForIdle()
@@ -569,7 +569,7 @@ class NavigationTest {
     }
 
     @Test
-    fun `navigate back from CreateEventFormImageScreen to CreateEventFormLocationScreen`() {
+    fun `given create event form image screen, when user taps back, then location screen is shown`() {
         val form = CreateEventForm(name = "Test Name", description = "Test Description", date = "2024-07-17T12:00:00.000Z")
         setNavigationFromDestination(Navigation.CreateEventFormLocationScreen(form))
         composeTestRule.waitForIdle()
@@ -587,7 +587,7 @@ class NavigationTest {
     }
 
     @Test
-    fun `navigate from CreateEventFormImageScreen to ExploreScreen when create event button is clicked`() {
+    fun `given create event form image screen, when user taps create event, then explore screen is shown`() {
         val form = CreateEventForm(name = "Test Name", description = "Test Description", date = "2024-07-17T12:00:00.000Z")
         setNavigationFromDestination(Navigation.CreateEventFormImageScreen(form))
         composeTestRule.waitForIdle()
