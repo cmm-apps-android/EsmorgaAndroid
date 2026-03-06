@@ -2,6 +2,8 @@ package cmm.apps.esmorga.domain.di
 
 import cmm.apps.esmorga.domain.account.ActivateAccountUseCase
 import cmm.apps.esmorga.domain.account.ActivateAccountUseCaseImpl
+import cmm.apps.esmorga.domain.event.CreateEventUseCase
+import cmm.apps.esmorga.domain.event.CreateEventUseCaseImpl
 import cmm.apps.esmorga.domain.event.GetEventAttendeesUseCase
 import cmm.apps.esmorga.domain.event.GetEventAttendeesUseCaseImpl
 import cmm.apps.esmorga.domain.event.GetEventDetailsUseCase
@@ -57,5 +59,6 @@ object DomainDIModule {
         factory<PerformResetPasswordUseCase> { PerformResetPasswordUseCaseImpl(get()) }
         factory<PerformChangePasswordUseCase> { PerformChangePasswordUseCaseImpl(get()) }
         factory<VotePollUseCase> { VotePollUseCaseImpl(get()) }
+        factory<CreateEventUseCase> { CreateEventUseCaseImpl(get()) }
     }
 }

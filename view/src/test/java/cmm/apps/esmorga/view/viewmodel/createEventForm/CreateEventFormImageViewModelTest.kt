@@ -1,10 +1,12 @@
 package cmm.apps.esmorga.view.viewmodel.createEventForm
 
 import app.cash.turbine.test
+import cmm.apps.esmorga.domain.event.CreateEventUseCase
 import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.createevent.createeventimage.CreateEventFormImageViewModel
 import cmm.apps.esmorga.view.createevent.createeventimage.model.CreateEventFormImageEffect
+import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -17,10 +19,11 @@ class CreateEventFormImageViewModelTest {
 
     private lateinit var viewModel: CreateEventFormImageViewModel
     private val eventForm = CreateEventForm(name = "Test Event")
+    private val mockCreateEventUseCase = mockk<CreateEventUseCase>(relaxed = true)
 
     @Before
     fun setup() {
-        viewModel = CreateEventFormImageViewModel(eventForm)
+        viewModel = CreateEventFormImageViewModel(eventForm, mockCreateEventUseCase)
     }
 
     @Test
@@ -355,7 +358,7 @@ class CreateEventFormImageViewModelTest {
     }
 
     @Test
-    fun `given preview shown when create event clicked then emits navigate next with updated form`() = runTest {
+    fun `given preview shown when delete clicked then removes preview and image url`() = runTest {
         viewModel.uiState.test {
             awaitItem()
 
@@ -365,40 +368,12 @@ class CreateEventFormImageViewModelTest {
             viewModel.onPreviewClick()
             awaitItem()
 
-            viewModel.effect.test {
-                viewModel.onCreateEventClick()
+            viewModel.onDeleteImageClick()
 
-                val effect = awaitItem()
-                assertTrue(effect is CreateEventFormImageEffect.NavigateNext)
-                val navigateEffect = effect as CreateEventFormImageEffect.NavigateNext
-                assertEquals("https://example.com/image.jpg", navigateEffect.eventForm.imageUrl)
-                assertEquals("Test Event", navigateEffect.eventForm.name)
-
-                cancelAndIgnoreRemainingEvents()
-            }
-
-            cancelAndIgnoreRemainingEvents()
-        }
-    }
-
-    @Test
-    fun `given preview not shown when create event clicked then emits navigate next with null image url`() = runTest {
-        viewModel.uiState.test {
-            awaitItem()
-
-            viewModel.onImageUrlChanged("https://example.com/image.jpg")
-            awaitItem()
-
-            viewModel.effect.test {
-                viewModel.onCreateEventClick()
-
-                val effect = awaitItem()
-                assertTrue(effect is CreateEventFormImageEffect.NavigateNext)
-                val navigateEffect = effect as CreateEventFormImageEffect.NavigateNext
-                assertNull(navigateEffect.eventForm.imageUrl)
-
-                cancelAndIgnoreRemainingEvents()
-            }
+            val state = awaitItem()
+            assertEquals("", state.imageUrl)
+            assertFalse(state.showPreview)
+            assertNull(state.imageError)
 
             cancelAndIgnoreRemainingEvents()
         }

@@ -65,6 +65,7 @@ fun ExploreScreen(vm: ExploreViewModel = koinViewModel(), onEventClick: (event: 
     val uiState: ExploreUiState by vm.uiState.collectAsStateWithLifecycle()
 
     val noInternetMessage = stringResource(R.string.snackbar_no_internet)
+    val eventCreatedMessage = stringResource(R.string.snackbar_event_created)
     val snackbarHostState = remember { SnackbarHostState() }
     val localCoroutineScope = rememberCoroutineScope()
     val lifecycle = LocalLifecycleOwner.current.lifecycle
@@ -78,7 +79,11 @@ fun ExploreScreen(vm: ExploreViewModel = koinViewModel(), onEventClick: (event: 
                         snackbarHostState.showSnackbar(message = noInternetMessage)
                     }
                 }
-
+                is ExploreEffect.ShowEventCreatedSnackbar -> {
+                    localCoroutineScope.launch {
+                        snackbarHostState.showSnackbar(message = eventCreatedMessage)
+                    }
+                }
                 is ExploreEffect.NavigateToEventDetail -> onEventClick(eff.event)
 
                 is ExploreEffect.NavigateToPollDetail -> onPollClick(eff.poll)

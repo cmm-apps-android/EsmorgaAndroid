@@ -337,6 +337,16 @@ private fun NavGraphBuilder.createEventFlow(navController: NavHostController) {
             onNextClick = {
                 navController.popBackStack(Navigation.CreateEventFormTitleScreen::class, inclusive = true)
                 navController.navigate(Navigation.ExploreScreen)
+            },
+            onCreationSuccess = {
+                navController.popBackStack(Navigation.CreateEventFormTitleScreen::class, inclusive = true)
+                navController.navigate(Navigation.ExploreScreen)
+            },
+            onCreationError = { errorArguments ->
+                navController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = errorArguments))
+            },
+            onNoNetworkError = { errorArguments ->
+                navController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = errorArguments))
             }
         )
     }

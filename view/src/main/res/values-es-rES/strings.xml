@@ -113,6 +113,7 @@
     <string name="screen_no_connection_title">No hay conexión</string>
     <string name="screen_registration_title">Regístrate</string>
     <string name="snackbar_event_full">El evento ya ha alcanzado el aforo máximo.</string>
+    <string name="snackbar_event_created">Evento creado correctamente</string>
     <string name="snackbar_event_joined">Bravo! Te has unido al evento!</string>
     <string name="snackbar_event_left">Buuuuu! Rajao!</string>
     <string name="snackbar_no_internet">No hay conexión a internet.</string>

@@ -82,7 +82,7 @@ object ViewDIModule {
         }
 
         viewModel { (eventForm: CreateEventForm) ->
-            CreateEventFormImageViewModel(eventForm)
+            CreateEventFormImageViewModel(eventForm, get())
         }
 
         single<EsmorgaDateTimeFormatter> { DateFormatterImpl() }
