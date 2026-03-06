@@ -20,6 +20,7 @@ data class ListCardUiModel(
 
 sealed class ExploreEffect {
     data object ShowNoNetworkPrompt : ExploreEffect()
+    data object ShowEventCreatedSnackbar : ExploreEffect()
     data class NavigateToEventDetail(val event: Event) : ExploreEffect()
     data class NavigateToPollDetail(val poll: Poll) : ExploreEffect()
 }

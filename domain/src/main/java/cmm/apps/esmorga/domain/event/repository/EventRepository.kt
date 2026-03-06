@@ -2,6 +2,7 @@ package cmm.apps.esmorga.domain.event.repository
 
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.domain.event.model.EventAttendee
+import cmm.apps.esmorga.domain.event.model.CreateEventForm
 
 
 interface EventRepository {
@@ -11,4 +12,5 @@ interface EventRepository {
     suspend fun joinEvent(event: Event)
     suspend fun leaveEvent(event: Event)
     suspend fun updateEventAttendee(eventAttendee: EventAttendee)
+    suspend fun createEvent(eventForm: CreateEventForm)
 }

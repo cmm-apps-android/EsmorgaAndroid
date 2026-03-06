@@ -25,4 +25,7 @@ interface EsmorgaEventAuthenticatedApi {
     @HTTP(method = "DELETE", path = "account/events", hasBody = true)
     suspend fun leaveEvent(@Body body: Map<String, String>)
 
+    @POST("events")
+    suspend fun createEvent(@Body body: Map<String, Any>)
+
 }
