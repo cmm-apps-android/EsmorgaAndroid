@@ -50,7 +50,6 @@ fun CreateEventFormImageScreen(
     eventForm: CreateEventForm,
     viewModel: CreateEventFormImageViewModel = koinViewModel(parameters = { parametersOf(eventForm) }),
     onBackPressed: () -> Unit,
-    onNextClick: (CreateEventForm) -> Unit,
     onCreationSuccess: (String) -> Unit,
     onCreationError: (EsmorgaErrorScreenArguments) -> Unit,
     onNoNetworkError: (EsmorgaErrorScreenArguments) -> Unit
@@ -60,7 +59,6 @@ fun CreateEventFormImageScreen(
     LaunchedEffect(Unit) {
         viewModel.effect.collect { eff ->
             when (eff) {
-                is CreateEventFormImageEffect.NavigateNext -> onNextClick(eff.eventForm)
                 is CreateEventFormImageEffect.NavigateBack -> onBackPressed()
                 is CreateEventFormImageEffect.ShowCreationSuccess -> onCreationSuccess(eff.message)
                 is CreateEventFormImageEffect.ShowCreationError -> onCreationError(eff.esmorgaErrorScreenArguments)

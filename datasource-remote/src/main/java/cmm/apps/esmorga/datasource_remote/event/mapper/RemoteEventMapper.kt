@@ -3,8 +3,10 @@ package cmm.apps.esmorga.datasource_remote.event.mapper
 import cmm.apps.esmorga.data.event.model.EventDataModel
 import cmm.apps.esmorga.data.event.model.EventLocationDataModel
 import cmm.apps.esmorga.datasource_remote.dateformatting.EsmorgaRemoteDateFormatter
+import cmm.apps.esmorga.datasource_remote.event.model.CreateEventRemoteModel
 import cmm.apps.esmorga.datasource_remote.event.model.EventLocationRemoteModel
 import cmm.apps.esmorga.datasource_remote.event.model.EventRemoteModel
+import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.domain.event.model.EventType
 import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
@@ -45,3 +47,21 @@ fun EventLocationRemoteModel.toEventLocationDataModel(): EventLocationDataModel 
     lat = this.remoteLat,
     long = this.remoteLong
 )
+
+fun CreateEventForm.toCreateEventRemoteModel(): CreateEventRemoteModel {
+    return CreateEventRemoteModel(
+        remoteName = name.requiredFormField("event name"),
+        remoteDate = date.requiredFormField("event date"),
+        remoteDescription = description.requiredFormField("event description"),
+        remoteType = type.requiredFormField("event type").name.lowercase().replaceFirstChar { it.titlecase() },
+        remoteLocation = location.requiredFormField("event location").let {
+            EventLocationRemoteModel(remoteLocationName = it.name, remoteLat = it.lat, remoteLong = it.long)
+        },
+        remoteImageUrl = imageUrl?.takeIf { it.isNotBlank() },
+        remoteMaxCapacity = maxCapacity
+    )
+}
+
+private fun <T> T?.requiredFormField(fieldName: String): T =
+    this ?: throw EsmorgaException("Missing $fieldName", Source.LOCAL, ErrorCodes.PARSE_ERROR)
+

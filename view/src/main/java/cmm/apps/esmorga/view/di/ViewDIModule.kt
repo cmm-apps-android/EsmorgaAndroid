@@ -29,8 +29,8 @@ import org.koin.dsl.module
 object ViewDIModule {
 
     val module = module {
-        viewModel {
-            ExploreViewModel(get())
+        viewModel { (showEventCreated: Boolean) ->
+            ExploreViewModel(get(), showEventCreated)
         }
         viewModel {
             MyEventListViewModel(get(), get())

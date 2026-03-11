@@ -284,7 +284,7 @@ class NavigationTest {
 
     @Test
     fun `given user logged, when explore screen visited and event is clicked, then event detail is shown`() {
-        setNavigationFromDestination(Navigation.ExploreScreen)
+        setNavigationFromDestination(Navigation.ExploreScreen())
 
         composeTestRule.onNodeWithTag("$EXPLORE_LIST_CARD_NAME - $eventName", true).performClick()
         composeTestRule.onNodeWithTag(EVENT_DETAILS_EVENT_NAME).assertIsDisplayed()
@@ -292,7 +292,7 @@ class NavigationTest {
 
     @Test
     fun `given user logged, when visiting explore, details and back clicked, then explore is shown`() {
-        setNavigationFromDestination(Navigation.ExploreScreen)
+        setNavigationFromDestination(Navigation.ExploreScreen())
 
         composeTestRule.onNodeWithTag("$EXPLORE_LIST_CARD_NAME - $eventName", true).performClick()
         composeTestRule.onNodeWithTag(EVENT_DETAILS_BACK_BUTTON).performClick()

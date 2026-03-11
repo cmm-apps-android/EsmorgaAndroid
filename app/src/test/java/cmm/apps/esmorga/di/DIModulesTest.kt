@@ -32,6 +32,7 @@ class DIModulesTest {
         koinApplication {
             MockProvider.register { clazz ->
                 when (clazz) {
+                    Boolean::class -> false
                     Event::class -> EventMock.provideEventModel("Event Name")
                     Poll::class -> PollMock.providePollModel()
                     CreateEventForm::class -> CreateEventFormModelMock.provide("Test Event", "Description")
