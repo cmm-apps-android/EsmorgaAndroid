@@ -22,7 +22,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class ExploreViewModel(
-    private val getEventListUseCase: GetEventsAndPollsUseCase
+    private val getEventListUseCase: GetEventsAndPollsUseCase,
+    private val showEventCreated: Boolean = false
 ) : ViewModel(), DefaultLifecycleObserver {
 
     private val _uiState = MutableStateFlow(ExploreUiState())
@@ -33,16 +34,17 @@ class ExploreViewModel(
 
     private var events: List<Event> = emptyList()
     private var polls: List<Poll> = emptyList()
+    private var eventCreatedHandled = false
 
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
-        loadEventsAndPolls()
+        loadEventsAndPolls(forceRefresh = showEventCreated && !eventCreatedHandled)
     }
 
-    fun loadEventsAndPolls() {
+    fun loadEventsAndPolls(forceRefresh: Boolean = false) {
         _uiState.value = ExploreUiState(loading = true)
         viewModelScope.launch {
-            val result = getEventListUseCase()
+            val result = getEventListUseCase(forceRefresh)
             result.onSuccess { success ->
                 events = success.first
                 polls = success.second
@@ -50,6 +52,10 @@ class ExploreViewModel(
                     eventList = events.eventListToCardUiList(),
                     pollList = polls.pollListToCardUiList()
                 )
+                if (showEventCreated && !eventCreatedHandled) {
+                    _effect.tryEmit(ExploreEffect.ShowEventCreatedSnackbar)
+                    eventCreatedHandled = true
+                }
             }.onFailure { error ->
                 _uiState.value = ExploreUiState(error = "${error.source} error: ${error.message}")
             }.onNoConnectionError {

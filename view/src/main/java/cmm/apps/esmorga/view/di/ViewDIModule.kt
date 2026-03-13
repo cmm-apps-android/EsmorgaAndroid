@@ -29,8 +29,8 @@ import org.koin.dsl.module
 object ViewDIModule {
 
     val module = module {
-        viewModel {
-            ExploreViewModel(get())
+        viewModel { (showEventCreated: Boolean) ->
+            ExploreViewModel(get(), showEventCreated)
         }
         viewModel {
             MyEventListViewModel(get(), get())
@@ -82,7 +82,7 @@ object ViewDIModule {
         }
 
         viewModel { (eventForm: CreateEventForm) ->
-            CreateEventFormImageViewModel(eventForm)
+            CreateEventFormImageViewModel(eventForm, get())
         }
 
         single<EsmorgaDateTimeFormatter> { DateFormatterImpl() }

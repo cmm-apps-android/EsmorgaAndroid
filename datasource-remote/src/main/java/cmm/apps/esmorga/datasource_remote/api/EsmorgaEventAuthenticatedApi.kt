@@ -1,5 +1,6 @@
 package cmm.apps.esmorga.datasource_remote.api
 
+import cmm.apps.esmorga.datasource_remote.event.model.CreateEventRemoteModel
 import cmm.apps.esmorga.datasource_remote.event.model.EventAttendeeWrapperRemoteModel
 import cmm.apps.esmorga.datasource_remote.event.model.EventListWrapperRemoteModel
 import retrofit2.http.Body
@@ -24,5 +25,8 @@ interface EsmorgaEventAuthenticatedApi {
     // https://github.com/square/retrofit/issues/458
     @HTTP(method = "DELETE", path = "account/events", hasBody = true)
     suspend fun leaveEvent(@Body body: Map<String, String>)
+
+    @POST("events")
+    suspend fun createEvent(@Body body: CreateEventRemoteModel)
 
 }

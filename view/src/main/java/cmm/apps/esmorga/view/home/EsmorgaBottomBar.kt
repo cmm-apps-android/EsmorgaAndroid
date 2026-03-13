@@ -69,5 +69,5 @@ sealed class BottomNavItem(val route: BottomNavItemRoute, val icon: Int, val lab
 }
 
 enum class BottomNavItemRoute(val screen: String, val navigation: Navigation) {
-    EXPLORE("ExploreScreen", Navigation.ExploreScreen), MY_EVENTS("MyEventsScreen", Navigation.MyEventsScreen), PROFILE("ProfileScreen", Navigation.ProfileScreen)
+    EXPLORE("ExploreScreen", Navigation.ExploreScreen()), MY_EVENTS("MyEventsScreen", Navigation.MyEventsScreen), PROFILE("ProfileScreen", Navigation.ProfileScreen)
 }

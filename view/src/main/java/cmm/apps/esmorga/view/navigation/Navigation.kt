@@ -41,7 +41,7 @@ import kotlin.reflect.typeOf
 sealed class Navigation {
 
     @Serializable
-    data object ExploreScreen : Navigation()
+    data class ExploreScreen(val showEventCreatedSnackbar: Boolean = false) : Navigation()
 
     @Serializable
     data class EventDetailScreen(val event: Event) : Navigation()
@@ -105,7 +105,7 @@ fun EsmorgaNavigationGraph(navigationController: NavHostController, deeplinkPath
     val startDestination = if (deeplinkPath != null) {
         navigateFromDeeplink(deeplinkPath)
     } else {
-        Navigation.ExploreScreen
+        Navigation.ExploreScreen()
     }
     EsmorgaNavHost(navigationController, startDestination)
 }
@@ -126,12 +126,15 @@ internal fun EsmorgaNavHost(navigationController: NavHostController, startDestin
 }
 
 private fun NavGraphBuilder.homeFlow(navigationController: NavHostController) {
-    composable<Navigation.ExploreScreen> {
-        ExploreScreen(onEventClick = { event ->
-            navigationController.navigate(Navigation.EventDetailScreen(event))
-        }, onPollClick = { poll ->
-            navigationController.navigate(Navigation.PollDetailScreen(poll))
-        })
+    composable<Navigation.ExploreScreen> { backStackEntry ->
+        val showEventCreatedSnackbar = backStackEntry.toRoute<Navigation.ExploreScreen>().showEventCreatedSnackbar
+        ExploreScreen(
+            showEventCreatedSnackbar = showEventCreatedSnackbar,
+            onEventClick = { event ->
+                navigationController.navigate(Navigation.EventDetailScreen(event))
+            }, onPollClick = { poll ->
+                navigationController.navigate(Navigation.PollDetailScreen(poll))
+            })
     }
     composable<Navigation.EventDetailScreen>(
         typeMap = mapOf(typeOf<Event>() to serializableType<Event>())
@@ -211,7 +214,7 @@ private fun NavGraphBuilder.loginFlow(navigationController: NavHostController) {
                 navigationController.navigate(Navigation.RecoverPasswordScreen)
             },
             onLoginSuccess = {
-                navigationController.navigate(Navigation.ExploreScreen) {
+                navigationController.navigate(Navigation.ExploreScreen()) {
                     popUpTo(0) {
                         inclusive = true
                     }
@@ -250,7 +253,7 @@ private fun NavGraphBuilder.loginFlow(navigationController: NavHostController) {
         ActivateAccountScreen(
             backStackEntry.toRoute<Navigation.ActivateAccountScreen>().verificationCode,
             onContinueClick = {
-                navigationController.navigate(Navigation.ExploreScreen) {
+                navigationController.navigate(Navigation.ExploreScreen()) {
                     popUpTo(0) {
                         inclusive = true
                     }
@@ -334,9 +337,16 @@ private fun NavGraphBuilder.createEventFlow(navController: NavHostController) {
         CreateEventFormImageScreen(
             eventForm = eventForm,
             onBackPressed = { navController.popBackStack() },
-            onNextClick = {
-                navController.popBackStack(Navigation.CreateEventFormTitleScreen::class, inclusive = true)
-                navController.navigate(Navigation.ExploreScreen)
+            onCreationSuccess = {
+                navController.navigate(Navigation.ExploreScreen(showEventCreatedSnackbar = true)) {
+                    popUpTo(0) { inclusive = true }
+                }
+            },
+            onCreationError = { errorArguments ->
+                navController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = errorArguments))
+            },
+            onNoNetworkError = { errorArguments ->
+                navController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = errorArguments))
             }
         )
     }

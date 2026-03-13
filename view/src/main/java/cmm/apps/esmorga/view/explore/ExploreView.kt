@@ -57,14 +57,21 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 import cmm.apps.designsystem.R as DesignSystem
 
 @Screen
 @Composable
-fun ExploreScreen(vm: ExploreViewModel = koinViewModel(), onEventClick: (event: Event) -> Unit, onPollClick: (poll: Poll) -> Unit) {
+fun ExploreScreen(
+    showEventCreatedSnackbar: Boolean = false,
+    vm: ExploreViewModel = koinViewModel(parameters = { parametersOf(showEventCreatedSnackbar) }),
+    onEventClick: (event: Event) -> Unit,
+    onPollClick: (poll: Poll) -> Unit
+) {
     val uiState: ExploreUiState by vm.uiState.collectAsStateWithLifecycle()
 
     val noInternetMessage = stringResource(R.string.snackbar_no_internet)
+    val eventCreatedMessage = stringResource(R.string.snackbar_event_created)
     val snackbarHostState = remember { SnackbarHostState() }
     val localCoroutineScope = rememberCoroutineScope()
     val lifecycle = LocalLifecycleOwner.current.lifecycle
@@ -78,7 +85,11 @@ fun ExploreScreen(vm: ExploreViewModel = koinViewModel(), onEventClick: (event: 
                         snackbarHostState.showSnackbar(message = noInternetMessage)
                     }
                 }
-
+                is ExploreEffect.ShowEventCreatedSnackbar -> {
+                    localCoroutineScope.launch {
+                        snackbarHostState.showSnackbar(message = eventCreatedMessage)
+                    }
+                }
                 is ExploreEffect.NavigateToEventDetail -> onEventClick(eff.event)
 
                 is ExploreEffect.NavigateToPollDetail -> onPollClick(eff.poll)

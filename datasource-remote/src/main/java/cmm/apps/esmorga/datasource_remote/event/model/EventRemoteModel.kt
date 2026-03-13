@@ -26,3 +26,14 @@ data class EventLocationRemoteModel(
     @SerializedName("lat") val remoteLat: Double? = null,
     @SerializedName("long") val remoteLong: Double? = null
 )
+
+data class CreateEventRemoteModel(
+    @SerializedName("eventName") val remoteName: String,
+    @SerializedName("eventDate") val remoteDate: String,
+    @SerializedName("description") val remoteDescription: String,
+    @SerializedName("eventType") val remoteType: String,
+    @SerializedName("location") val remoteLocation: EventLocationRemoteModel,
+    @SerializedName("imageUrl") val remoteImageUrl: String? = null,
+    @SerializedName("maxCapacity") val remoteMaxCapacity: Int? = null
+)
+

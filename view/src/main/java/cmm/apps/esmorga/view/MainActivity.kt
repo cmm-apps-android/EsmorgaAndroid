@@ -66,7 +66,7 @@ fun HomeView(bottomNavItems: List<BottomNavItem>, navigationController: NavHostC
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
             val navBackStackEntry by navigationController.currentBackStackEntryAsState()
-            val currentRoute = navBackStackEntry?.destination?.hierarchy?.first()?.route?.substringAfterLast(".")
+            val currentRoute = navBackStackEntry?.destination?.hierarchy?.first()?.route?.substringAfterLast(".")?.substringBefore("?")
             val route = bottomNavItems.find { currentRoute == it.route.screen }?.route
 
             val visibility = route != null

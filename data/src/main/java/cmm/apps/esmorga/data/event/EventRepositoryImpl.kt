@@ -10,6 +10,7 @@ import cmm.apps.esmorga.data.event.mapper.toEventList
 import cmm.apps.esmorga.data.event.model.EventDataModel
 import cmm.apps.esmorga.data.user.datasource.UserDatasource
 import cmm.apps.esmorga.data.user.model.UserDataModel
+import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.domain.event.model.EventAttendee
 import cmm.apps.esmorga.domain.event.repository.EventRepository
@@ -64,6 +65,10 @@ class EventRepositoryImpl(
 
     override suspend fun updateEventAttendee(eventAttendee: EventAttendee) {
         localEventDs.updateAttendee(eventAttendee.toEventAttendeeDataModel())
+    }
+
+    override suspend fun createEvent(eventForm: CreateEventForm) {
+        remoteEventDs.createEvent(eventForm)
     }
 
     private suspend fun getEventsFromRemote(): List<EventDataModel> {

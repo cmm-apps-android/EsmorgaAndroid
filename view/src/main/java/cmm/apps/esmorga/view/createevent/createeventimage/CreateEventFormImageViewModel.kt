@@ -1,10 +1,14 @@
 package cmm.apps.esmorga.view.createevent.createeventimage
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import cmm.apps.esmorga.domain.event.CreateEventUseCase
 import cmm.apps.esmorga.domain.event.model.CreateEventForm
+import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.createevent.createeventimage.model.CreateEventFormImageEffect
 import cmm.apps.esmorga.view.createevent.createeventimage.model.CreateEventFormImageUiState
+import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArgumentsHelper
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,9 +17,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class CreateEventFormImageViewModel(
-    private val eventForm: CreateEventForm
+    private val eventForm: CreateEventForm,
+    private val createEventUseCase: CreateEventUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CreateEventFormImageUiState())
@@ -62,12 +68,24 @@ class CreateEventFormImageViewModel(
     }
 
     fun onCreateEventClick() {
-        val state = _uiState.value
-        val updatedForm = eventForm.copy(
-            imageUrl = if (state.showPreview) state.imageUrl else null
-        )
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
 
-        _effect.tryEmit(CreateEventFormImageEffect.NavigateNext(updatedForm))
+            val updatedForm = eventForm.copy(
+                imageUrl = if (_uiState.value.showPreview) _uiState.value.imageUrl else null
+            )
+
+            createEventUseCase(updatedForm).onSuccess {
+                _effect.tryEmit(CreateEventFormImageEffect.ShowCreationSuccess(""))
+            }.onFailure { error ->
+                if (error.code == ErrorCodes.NO_CONNECTION) {
+                    _effect.tryEmit(CreateEventFormImageEffect.ShowNoInternetError(EsmorgaErrorScreenArgumentsHelper.getEsmorgaNoNetworkScreenArguments()))
+                } else {
+                    _effect.tryEmit(CreateEventFormImageEffect.ShowCreationError(EsmorgaErrorScreenArgumentsHelper.getEsmorgaDefaultErrorScreenArguments()))
+                }
+                _uiState.update { it.copy(isLoading = false) }
+            }
+        }
     }
 
     private fun isValidImageUrl(url: String): Boolean {

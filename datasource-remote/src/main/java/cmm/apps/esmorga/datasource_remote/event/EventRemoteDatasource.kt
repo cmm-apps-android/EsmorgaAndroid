@@ -7,8 +7,10 @@ import cmm.apps.esmorga.datasource_remote.api.EsmorgaEventAuthenticatedApi
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaEventOpenApi
 import cmm.apps.esmorga.datasource_remote.api.ExceptionHandler.manageApiException
 import cmm.apps.esmorga.datasource_remote.dateformatting.EsmorgaRemoteDateFormatter
+import cmm.apps.esmorga.datasource_remote.event.mapper.toCreateEventRemoteModel
 import cmm.apps.esmorga.datasource_remote.event.mapper.toEventAttendeeDataModelList
 import cmm.apps.esmorga.datasource_remote.event.mapper.toEventDataModelList
+import cmm.apps.esmorga.domain.event.model.CreateEventForm
 
 
 class EventRemoteDatasourceImpl(private val eventApi: EsmorgaEventAuthenticatedApi, private val publicEventApi: EsmorgaEventOpenApi, private val dateFormatter: EsmorgaRemoteDateFormatter) : EventDatasource {
@@ -53,6 +55,14 @@ class EventRemoteDatasourceImpl(private val eventApi: EsmorgaEventAuthenticatedA
         try {
             val eventBody = mapOf("eventId" to event.dataId)
             eventApi.leaveEvent(eventBody)
+        } catch (e: Exception) {
+            throw manageApiException(e)
+        }
+    }
+
+    override suspend fun createEvent(eventForm: CreateEventForm) {
+        try {
+            eventApi.createEvent(eventForm.toCreateEventRemoteModel())
         } catch (e: Exception) {
             throw manageApiException(e)
         }

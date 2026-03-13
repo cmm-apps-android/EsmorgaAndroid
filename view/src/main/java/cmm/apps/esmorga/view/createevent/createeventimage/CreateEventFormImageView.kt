@@ -38,6 +38,7 @@ import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.createevent.createeventimage.model.CreateEventFormImageEffect
 import cmm.apps.esmorga.view.createevent.createeventimage.model.CreateEventFormImageUiState
+import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
@@ -49,15 +50,19 @@ fun CreateEventFormImageScreen(
     eventForm: CreateEventForm,
     viewModel: CreateEventFormImageViewModel = koinViewModel(parameters = { parametersOf(eventForm) }),
     onBackPressed: () -> Unit,
-    onNextClick: (CreateEventForm) -> Unit
+    onCreationSuccess: (String) -> Unit,
+    onCreationError: (EsmorgaErrorScreenArguments) -> Unit,
+    onNoNetworkError: (EsmorgaErrorScreenArguments) -> Unit
 ) {
     val uiState: CreateEventFormImageUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { eff ->
             when (eff) {
-                is CreateEventFormImageEffect.NavigateNext -> onNextClick(eff.eventForm)
                 is CreateEventFormImageEffect.NavigateBack -> onBackPressed()
+                is CreateEventFormImageEffect.ShowCreationSuccess -> onCreationSuccess(eff.message)
+                is CreateEventFormImageEffect.ShowCreationError -> onCreationError(eff.esmorgaErrorScreenArguments)
+                is CreateEventFormImageEffect.ShowNoInternetError -> onNoNetworkError(eff.esmorgaErrorScreenArguments)
             }
         }
     }
@@ -65,10 +70,10 @@ fun CreateEventFormImageScreen(
     EsmorgaTheme {
         CreateEventFormImageView(
             uiState = uiState,
-            onBackPressed = { viewModel.onBackClick() },
+            onBackPressed = { if (!uiState.isLoading) viewModel.onBackClick() },
             onImageUrlChange = viewModel::onImageUrlChanged,
-            onPreviewClick = viewModel::onPreviewClick,
-            onDeleteClick = viewModel::onDeleteImageClick,
+            onPreviewClick = { if (!uiState.isLoading) viewModel.onPreviewClick() },
+            onDeleteClick = { if (!uiState.isLoading) viewModel.onDeleteImageClick() },
             onCreateEventClick = viewModel::onCreateEventClick
         )
     }
@@ -138,6 +143,7 @@ fun CreateEventFormImageView(
                         if (uiState.showPreview) R.string.button_delete else R.string.button_preview
                     ),
                     primary = false,
+                    isEnabled = !uiState.isLoading,
                     onClick = {
                         if (uiState.showPreview) onDeleteClick() else onPreviewClick()
                     },
@@ -163,6 +169,8 @@ fun CreateEventFormImageView(
 
             EsmorgaButton(
                 text = stringResource(R.string.button_create_event),
+                isLoading = uiState.isLoading,
+                isEnabled = !uiState.isLoading,
                 onClick = onCreateEventClick,
                 modifier = Modifier
                     .fillMaxWidth()

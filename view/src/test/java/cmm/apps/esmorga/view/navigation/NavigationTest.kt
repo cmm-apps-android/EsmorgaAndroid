@@ -18,6 +18,7 @@ import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_SUBTITLE
 import cmm.apps.designsystem.ErrorScreenTestTags.ERROR_TITLE
 import cmm.apps.designsystem.GuestErrorTestTags.GUEST_ERROR_PRIMARY_BUTTON
 import cmm.apps.esmorga.domain.account.ActivateAccountUseCase
+import cmm.apps.esmorga.domain.event.CreateEventUseCase
 import cmm.apps.esmorga.domain.event.GetEventAttendeesUseCase
 import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.domain.event.GetEventsAndPollsUseCase
@@ -176,6 +177,10 @@ class NavigationTest {
         coEvery { useCase(any(), any()) } returns EsmorgaResult.success(Unit)
     }
 
+    private val createEventUseCase = mockk<CreateEventUseCase>(relaxed = true).also { useCase ->
+        coEvery { useCase(any()) } returns EsmorgaResult.success(Unit)
+    }
+
     @Before
     @Throws(Exception::class)
     fun setUp() {
@@ -202,6 +207,7 @@ class NavigationTest {
                     factory<ActivateAccountUseCase> { activateAccountUseCase }
                     factory<PerformResetPasswordUseCase> { performResetPasswordUseCase }
                     factory<PerformChangePasswordUseCase> { performChangePasswordUseCase }
+                    factory<CreateEventUseCase> { createEventUseCase }
                 }
             )
         }
@@ -278,7 +284,7 @@ class NavigationTest {
 
     @Test
     fun `given user logged, when explore screen visited and event is clicked, then event detail is shown`() {
-        setNavigationFromDestination(Navigation.ExploreScreen)
+        setNavigationFromDestination(Navigation.ExploreScreen())
 
         composeTestRule.onNodeWithTag("$EXPLORE_LIST_CARD_NAME - $eventName", true).performClick()
         composeTestRule.onNodeWithTag(EVENT_DETAILS_EVENT_NAME).assertIsDisplayed()
@@ -286,7 +292,7 @@ class NavigationTest {
 
     @Test
     fun `given user logged, when visiting explore, details and back clicked, then explore is shown`() {
-        setNavigationFromDestination(Navigation.ExploreScreen)
+        setNavigationFromDestination(Navigation.ExploreScreen())
 
         composeTestRule.onNodeWithTag("$EXPLORE_LIST_CARD_NAME - $eventName", true).performClick()
         composeTestRule.onNodeWithTag(EVENT_DETAILS_BACK_BUTTON).performClick()

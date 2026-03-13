@@ -113,6 +113,7 @@
     <string name="screen_no_connection_title">No network connection</string>
     <string name="screen_registration_title">Register</string>
     <string name="snackbar_event_full">The event has already reached its maximum capacity.</string>
+    <string name="snackbar_event_created">Event created successfully</string>
     <string name="snackbar_event_joined">Bravo! You have joined the event!</string>
     <string name="snackbar_event_left">Booooo! quitter!</string>
     <string name="snackbar_no_internet">No internet connection.</string>
