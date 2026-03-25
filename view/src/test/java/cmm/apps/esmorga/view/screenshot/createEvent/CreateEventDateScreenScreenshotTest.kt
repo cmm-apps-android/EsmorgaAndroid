@@ -4,6 +4,7 @@ import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SelectableDates
 import cmm.apps.esmorga.view.createevent.createeventdate.CreateEventFormDateView
+import cmm.apps.esmorga.view.createevent.createeventdate.model.CreateEventFormDateUiState
 import cmm.apps.esmorga.view.screenshot.BaseScreenshotTest
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import org.junit.Before
@@ -29,9 +30,20 @@ class CreateEventFormDateScreenScreenshotTest : BaseScreenshotTest() {
         }
     }
 
+    private val fixedDeadlineSelectableDates = object : SelectableDates {
+        override fun isSelectableDate(utcTimeMillis: Long): Boolean =
+            utcTimeMillis in fixedMillis..fixedMillis
+    }
+
     private val fixedDatePickerState = DatePickerState(
         initialSelectedDateMillis = fixedMillis,
         selectableDates = fixedSelectableDates,
+        locale = Locale.US
+    )
+
+    private val fixedDeadlineDatePickerState = DatePickerState(
+        initialSelectedDateMillis = fixedMillis,
+        selectableDates = fixedDeadlineSelectableDates,
         locale = Locale.US
     )
 
@@ -47,37 +59,33 @@ class CreateEventFormDateScreenScreenshotTest : BaseScreenshotTest() {
     //The first recorded test always produces a DatePicker where weekday names are shown with 3 letters. Then the following tests produce a picker with 1 letter names instead.
 //    @Test
 //    fun a_sacrificial_warmup_test_that_produces_an_invalid_output() {
-//        snapshotWithState(
-//            isButtonEnabled = false
-//        )
+//        snapshotWithState(CreateEventFormDateUiState(isButtonEnabled = false))
 //    }
 
     @Test
     fun createEventDate_lightTheme_button_disabled() {
-        snapshotWithState(
-            isButtonEnabled = false
-        )
+        snapshotWithState(CreateEventFormDateUiState(isButtonEnabled = false))
     }
 
     @Test
     fun createEventDate_lightTheme_button_enabled() {
-        snapshotWithState(
-            isButtonEnabled = true
-        )
+        snapshotWithState(CreateEventFormDateUiState(isButtonEnabled = true))
     }
 
-    private fun snapshotWithState(
-        isButtonEnabled: Boolean = false
-    ) {
+    private fun snapshotWithState(uiState: CreateEventFormDateUiState) {
         paparazzi.snapshot {
             EsmorgaTheme(darkTheme = false) {
                 CreateEventFormDateView(
-                    isButtonEnabled = isButtonEnabled,
+                    uiState = uiState,
                     datePickerState = fixedDatePickerState,
+                    deadlineDatePickerState = fixedDeadlineDatePickerState,
                     onBackPressed = {},
-                    onNextClick = { _, _ -> },
-                    onTimeSelected = { _ -> },
-                    formattedTime = { _, _ -> "12:00:00" }
+                    onNextClick = { _, _, _, _ -> },
+                    onTimeSelected = {},
+                    formattedTime = { _, _ -> "12:00:00" },
+                    onToggleChanged = {},
+                    onDeadlineTimeSelected = { _, _ -> },
+                    onDeadlineDateChanged = {}
                 )
             }
         }

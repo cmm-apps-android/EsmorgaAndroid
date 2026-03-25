@@ -1,7 +1,9 @@
 package cmm.apps.esmorga.view.createevent.createeventdate
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -11,7 +13,10 @@ import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
@@ -21,11 +26,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import cmm.apps.designsystem.DeadlineSelectableDates
 import cmm.apps.designsystem.EsmorgaButton
 import cmm.apps.designsystem.EsmorgaDatePicker
 import cmm.apps.designsystem.EsmorgaRow
@@ -46,7 +53,7 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import java.time.LocalDate
 import java.time.LocalTime
-import java.time.ZoneId
+import java.time.ZoneOffset
 import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -69,19 +76,39 @@ fun CreateEventFormDateScreen(
         }
     }
 
+    val startOfToday = remember {
+        LocalDate.now().atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
+    }
+
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = System.currentTimeMillis(),
-        selectableDates = PossibleSelectableDates(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli())
+        selectableDates = PossibleSelectableDates(startOfToday)
+    )
+
+    val deadlineDatePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = datePickerState.selectedDateMillis ?: System.currentTimeMillis(),
+        selectableDates = DeadlineSelectableDates(
+            startOfToday = startOfToday,
+            eventDateMidnightMillis = datePickerState.selectedDateMillis ?: Long.MAX_VALUE
+        )
     )
 
     EsmorgaTheme {
         CreateEventFormDateView(
-            onBackPressed = { viewModel.onBackClick() },
+            uiState = uiState,
+            onBackPressed = viewModel::onBackClick,
             datePickerState = datePickerState,
-            isButtonEnabled = uiState.isButtonEnabled,
-            onTimeSelected = { viewModel.onTimeSelected(it) },
-            formattedTime = { hour, minute -> viewModel.formattedTime(hour, minute) },
-            onNextClick = { date, time -> viewModel.onNextClick(date, time) }
+            deadlineDatePickerState = deadlineDatePickerState,
+            onTimeSelected = viewModel::onTimeSelected,
+            formattedTime = viewModel::formattedTime,
+            onToggleChanged = viewModel::onDeadlineToggleChanged,
+            onDeadlineTimeSelected = { deadlineDateMillis, time ->
+                viewModel.onDeadlineTimeSelected(datePickerState.selectedDateMillis, deadlineDateMillis, time)
+            },
+            onDeadlineDateChanged = { deadlineDateMillis ->
+                viewModel.onDeadlineDateChanged(datePickerState.selectedDateMillis, deadlineDateMillis)
+            },
+            onNextClick = viewModel::onNextClick
         )
     }
 }
@@ -89,35 +116,65 @@ fun CreateEventFormDateScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateEventFormDateView(
+    uiState: CreateEventFormDateUiState,
     onBackPressed: () -> Unit,
     datePickerState: DatePickerState,
-    isButtonEnabled: Boolean,
+    deadlineDatePickerState: DatePickerState,
     onTimeSelected: (String) -> Unit,
     formattedTime: (Int, Int) -> String,
-    onNextClick: (Date, String) -> Unit
+    onToggleChanged: (Boolean) -> Unit,
+    onDeadlineTimeSelected: (Long?, String) -> Unit,
+    onDeadlineDateChanged: (Long?) -> Unit,
+    onNextClick: (Date, String, Long?, String) -> Unit
 ) {
-    var shownDialog by remember { mutableStateOf(false) }
+    var shownEventTimeDialog by remember { mutableStateOf(false) }
     var timeSelected by remember { mutableStateOf("") }
 
-    val timeState = rememberTimePickerState(
+    var shownDeadlineTimeDialog by remember { mutableStateOf(false) }
+    var deadlineTimeSelected by remember { mutableStateOf("") }
+
+    val eventTimeState = rememberTimePickerState(
         initialHour = LocalTime.now().hour,
         initialMinute = LocalTime.now().minute
     )
 
-    if (shownDialog) {
+    val deadlineTimeState = rememberTimePickerState(initialHour = 23, initialMinute = 59)
+
+    LaunchedEffect(deadlineDatePickerState.selectedDateMillis) {
+        onDeadlineDateChanged(deadlineDatePickerState.selectedDateMillis)
+    }
+
+    if (shownEventTimeDialog) {
         EsmorgaTimePickerDialog(
             modifier = Modifier,
-            onDismiss = { shownDialog = false },
+            onDismiss = { shownEventTimeDialog = false },
             onConfirm = { time ->
-                shownDialog = false
+                shownEventTimeDialog = false
                 timeSelected = time
                 onTimeSelected(time)
             },
             formattedTime = formattedTime,
             confirmButtonText = stringResource(R.string.confirm_button_dialog),
             dismissButtonText = stringResource(R.string.cancel_button_dialog),
-            timeState = timeState,
+            timeState = eventTimeState,
             confirmButtonTestTag = CreateEventDateScreenTestTags.CREATE_EVENT_DATE_TIME_CONFIRM_BUTTON
+        )
+    }
+
+    if (shownDeadlineTimeDialog) {
+        EsmorgaTimePickerDialog(
+            modifier = Modifier,
+            onDismiss = { shownDeadlineTimeDialog = false },
+            onConfirm = { time ->
+                shownDeadlineTimeDialog = false
+                deadlineTimeSelected = time
+                onDeadlineTimeSelected(deadlineDatePickerState.selectedDateMillis, time)
+            },
+            formattedTime = formattedTime,
+            confirmButtonText = stringResource(R.string.confirm_button_dialog),
+            dismissButtonText = stringResource(R.string.cancel_button_dialog),
+            timeState = deadlineTimeState,
+            confirmButtonTestTag = CreateEventDateScreenTestTags.CREATE_EVENT_DATE_DEADLINE_TIME_CONFIRM_BUTTON
         )
     }
 
@@ -128,9 +185,7 @@ fun CreateEventFormDateView(
                 title = {},
                 navigationIcon = {
                     IconButton(
-                        onClick = {
-                            onBackPressed()
-                        },
+                        onClick = onBackPressed,
                         modifier = Modifier.testTag(CREATE_EVENT_DATE_BACK_BUTTON)
                     ) {
                         Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.content_description_back_icon))
@@ -167,22 +222,62 @@ fun CreateEventFormDateView(
 
             EsmorgaRow(
                 title = stringResource(R.string.step_3_screen_row_time),
-                onClick = { shownDialog = true },
+                onClick = { shownEventTimeDialog = true },
                 caption = timeSelected.take(5),
                 modifier = Modifier.testTag(CreateEventDateScreenTestTags.CREATE_EVENT_DATE_TIME_ROW)
             )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                EsmorgaText(
+                    text = stringResource(R.string.field_title_join_deadline),
+                    style = EsmorgaTextStyle.HEADING_2,
+                    modifier = Modifier
+                        .weight(1f)
+                        .testTag(CreateEventDateScreenTestTags.CREATE_EVENT_DATE_DEADLINE_TOGGLE_LABEL)
+                )
+                Switch(
+                    checked = uiState.isDeadlineToggleOn,
+                    onCheckedChange = onToggleChanged,
+                    modifier = Modifier.testTag(CreateEventDateScreenTestTags.CREATE_EVENT_DATE_DEADLINE_TOGGLE)
+                )
+            }
+
+            if (uiState.isDeadlineToggleOn) {
+                EsmorgaDatePicker(state = deadlineDatePickerState)
+
+                uiState.deadlineErrorRes?.let { errorRes ->
+                    Text(
+                        text = stringResource(errorRes),
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.labelSmall,
+                        modifier = Modifier.padding(vertical = 4.dp)
+                    )
+                }
+
+                EsmorgaRow(
+                    title = stringResource(R.string.field_title_join_deadline_time),
+                    onClick = { shownDeadlineTimeDialog = true },
+                    caption = deadlineTimeSelected.take(5),
+                    modifier = Modifier.testTag(CreateEventDateScreenTestTags.CREATE_EVENT_DATE_DEADLINE_TIME_ROW)
+                )
+            }
+
             EsmorgaButton(
                 text = stringResource(R.string.step_continue_button),
-                isEnabled = isButtonEnabled,
+                isEnabled = uiState.isButtonEnabled,
                 modifier = Modifier
                     .padding(top = 32.dp, bottom = 16.dp)
                     .testTag(CREATE_EVENT_DATE_NEXT_BUTTON),
             ) {
                 val date = Date(datePickerState.selectedDateMillis ?: 0)
-                onNextClick(date, timeSelected)
+                onNextClick(date, timeSelected, deadlineDatePickerState.selectedDateMillis, deadlineTimeSelected)
             }
         }
-
     }
 }
 
@@ -192,4 +287,8 @@ object CreateEventDateScreenTestTags {
     const val CREATE_EVENT_DATE_NEXT_BUTTON = "create_event_date_next_button"
     const val CREATE_EVENT_DATE_TIME_ROW = "create_event_date_time_row"
     const val CREATE_EVENT_DATE_TIME_CONFIRM_BUTTON = "create_event_date_time_confirm_button"
+    const val CREATE_EVENT_DATE_DEADLINE_TOGGLE = "create_event_date_deadline_toggle"
+    const val CREATE_EVENT_DATE_DEADLINE_TOGGLE_LABEL = "create_event_date_deadline_toggle_label"
+    const val CREATE_EVENT_DATE_DEADLINE_TIME_ROW = "create_event_date_deadline_time_row"
+    const val CREATE_EVENT_DATE_DEADLINE_TIME_CONFIRM_BUTTON = "create_event_date_deadline_time_confirm_button"
 }
