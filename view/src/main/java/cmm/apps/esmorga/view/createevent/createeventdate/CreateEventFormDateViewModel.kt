@@ -83,10 +83,10 @@ class CreateEventFormDateViewModel(
         return esmorgaDateTimeFormatter.formatTimeWithMillisUtcSuffix(hour, minute)
     }
 
-    fun onNextClick(date: Date, time: String, deadlineDateMillis: Long?, deadlineTimeArg: String) {
+    fun onNextClick(date: Date, time: String, deadLineDate: Date?, deadlineTimeArg: String) {
         val dateTime = esmorgaDateTimeFormatter.formatIsoDateTime(date, time)
-        val joinDeadline = if (_uiState.value.isDeadlineToggleOn && deadlineTimeArg.isNotEmpty() && deadlineDateMillis != null) {
-            esmorgaDateTimeFormatter.formatIsoDateTime(Date(deadlineDateMillis), deadlineTimeArg)
+        val joinDeadline = if (_uiState.value.isDeadlineToggleOn && deadlineTimeArg.isNotEmpty() && deadLineDate != null) {
+            esmorgaDateTimeFormatter.formatIsoDateTime(deadLineDate, deadlineTimeArg)
         } else {
             null
         }

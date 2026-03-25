@@ -125,7 +125,7 @@ fun CreateEventFormDateView(
     onToggleChanged: (Boolean) -> Unit,
     onDeadlineTimeSelected: (Long?, String) -> Unit,
     onDeadlineDateChanged: (Long?) -> Unit,
-    onNextClick: (Date, String, Long?, String) -> Unit
+    onNextClick: (Date, String, Date?, String) -> Unit
 ) {
     var shownEventTimeDialog by remember { mutableStateOf(false) }
     var timeSelected by remember { mutableStateOf("") }
@@ -275,7 +275,8 @@ fun CreateEventFormDateView(
                     .testTag(CREATE_EVENT_DATE_NEXT_BUTTON),
             ) {
                 val date = Date(datePickerState.selectedDateMillis ?: 0)
-                onNextClick(date, timeSelected, deadlineDatePickerState.selectedDateMillis, deadlineTimeSelected)
+                val joinDeadlineDate = Date(deadlineDatePickerState.selectedDateMillis ?: 0)
+                onNextClick(date, timeSelected, joinDeadlineDate, deadlineTimeSelected)
             }
         }
     }
