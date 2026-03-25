@@ -42,6 +42,8 @@
     <string name="field_title_event_location">Localización del evento</string>
     <string name="field_title_event_max_capacity">Aforo máximo (opcional)</string>
     <string name="field_title_event_name">Nombre de evento</string>
+    <string name="field_title_join_deadline">Fecha límite para apuntarse (opcional)</string>
+    <string name="field_title_join_deadline_time">Hora límite para apuntarse</string>
     <string name="field_title_last_name">Apellido</string>
     <string name="field_title_name">Nombre</string>
     <string name="field_title_password">Contraseña</string>
@@ -58,6 +60,7 @@
     <string name="inline_error_invalid_length_name">El texto debe tener entre 3 y 100 caracteres</string>
     <string name="inline_error_last_name">Sólo letras, espacios y \' -  están disponibles</string>
     <string name="inline_error_location_required">Debes introducir una localización (max %1$d letras)</string>
+    <string name="inline_error_event_date_deadline_exceeded">La fecha límite no puede ser posterior a la hora de inicio del evento</string>
     <string name="inline_error_max_capacity_invalid">La capacidad tiene que ser entre 1 y 5000</string>
     <string name="inline_error_name">Sólo letras, espacios y \' -  están disponibles</string>
     <string name="inline_error_password">Contraseña inválida</string>

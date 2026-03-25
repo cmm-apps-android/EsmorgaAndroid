@@ -8,6 +8,7 @@ data class CreateEventForm(
     val description: String? = null,
     val type: EventType? = null,
     val date: String? = null,
+    val joinDeadline: String? = null,
     val imageUrl: String? = null,
     val location: EventLocation? = null,
     val tags: List<String> = emptyList(),

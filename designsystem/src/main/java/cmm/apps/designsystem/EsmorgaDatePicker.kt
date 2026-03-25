@@ -10,8 +10,6 @@ import androidx.compose.material3.SelectableDates
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import java.time.LocalTime
-import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,5 +29,12 @@ fun EsmorgaDatePicker(state: DatePickerState) {
 class PossibleSelectableDates(private val startOfToday: Long) : SelectableDates {
     override fun isSelectableDate(utcTimeMillis: Long): Boolean {
         return utcTimeMillis >= startOfToday
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+class DeadlineSelectableDates(private val startOfToday: Long, private val eventDateMidnightMillis: Long) : SelectableDates {
+    override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+        return utcTimeMillis in startOfToday..eventDateMidnightMillis
     }
 }

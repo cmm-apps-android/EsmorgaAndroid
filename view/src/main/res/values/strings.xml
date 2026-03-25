@@ -42,6 +42,8 @@
     <string name="field_title_event_location">Event Location</string>
     <string name="field_title_event_max_capacity">Maximum Capacity (Optional)</string>
     <string name="field_title_event_name">Event Name</string>
+    <string name="field_title_join_deadline">Join deadline (optional)</string>
+    <string name="field_title_join_deadline_time">Join deadline time</string>
     <string name="field_title_last_name">Last name</string>
     <string name="field_title_name">Name</string>
     <string name="field_title_password">Password</string>
@@ -58,6 +60,7 @@
     <string name="inline_error_invalid_length_name">The text must be between 3 and 100 characters</string>
     <string name="inline_error_last_name">Only letters, spaces and \&apos; - are accepted</string>
     <string name="inline_error_location_required">You must enter a location (max %1$d letters)</string>
+    <string name="inline_error_event_date_deadline_exceeded">The deadline cannot be after the event start time</string>
     <string name="inline_error_max_capacity_invalid">The capacity must be between 1 and 5000</string>
     <string name="inline_error_name">Only letters, spaces and \&apos; - are accepted</string>
     <string name="inline_error_password">Invalid password</string>
