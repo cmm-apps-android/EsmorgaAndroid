@@ -3,6 +3,7 @@ package cmm.apps.esmorga.view.dateformatting
 import java.time.Instant
 import java.time.LocalTime
 import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -17,8 +18,8 @@ interface EsmorgaDateTimeFormatter {
 }
 
 class DateFormatterImpl : EsmorgaDateTimeFormatter {
-    private val TIME_FORMAT_WITH_MILLIS = DateTimeFormatter.ofPattern("HH:mm:ss.SSS'Z'")
-    private val ISO_DATE_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE
+    private val TIME_FORMAT_WITH_MILLIS = DateTimeFormatter.ofPattern("HH:mm:ss.SSS")
+    private val ISO_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 
     override fun formatTimeWithMillisUtcSuffix(hour: Int, minute: Int): String {
         val localTime = LocalTime.of(hour, minute)
@@ -26,13 +27,16 @@ class DateFormatterImpl : EsmorgaDateTimeFormatter {
     }
 
     override fun formatIsoDateTime(date: Date, time: String): String {
+        val zoneId = ZoneId.systemDefault()
         val localDateTime = date.toInstant()
-            .atZone(ZoneId.systemDefault())
-            .toLocalDateTime()
+            .atZone(zoneId)
+            .toLocalDate()
+            .atTime(LocalTime.parse(time, TIME_FORMAT_WITH_MILLIS))
 
-        val datePart = localDateTime.format(ISO_DATE_FORMAT)
-
-        return "${datePart}T${time}"
+        return localDateTime
+            .atZone(zoneId)
+            .withZoneSameInstant(ZoneOffset.UTC)
+            .format(ISO_DATE_TIME_FORMATTER)
     }
 
     override fun formatDateforView(epochMillis: Long): String {

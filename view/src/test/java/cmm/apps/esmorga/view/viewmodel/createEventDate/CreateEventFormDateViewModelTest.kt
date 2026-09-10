@@ -299,7 +299,7 @@ class CreateEventFormDateViewModelTest {
         }
 
         viewModel.effect.test {
-            viewModel.onNextClick(eventDate, eventTime, deadlineDateMillis, deadlineTime)
+            viewModel.onNextClick(eventDate, eventTime, deadlineCal.time, deadlineTime)
             val effect = awaitItem() as CreateEventFormDateEffect.NavigateNext
 
             assertEquals(expectedDeadline, effect.eventForm.joinDeadline)
