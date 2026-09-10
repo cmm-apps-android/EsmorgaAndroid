@@ -27,6 +27,7 @@ object DataDIModule {
             UserRepositoryImpl(
                 get(named(LOCAL_DATASOURCE_INSTANCE_NAME)),
                 get(named(REMOTE_DATASOURCE_INSTANCE_NAME)),
+                get(named(LOCAL_DATASOURCE_INSTANCE_NAME)),
                 get(named(LOCAL_DATASOURCE_INSTANCE_NAME))
             )
         }
