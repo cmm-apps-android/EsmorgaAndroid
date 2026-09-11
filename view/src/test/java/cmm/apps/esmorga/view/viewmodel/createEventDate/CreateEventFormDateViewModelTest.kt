@@ -8,6 +8,7 @@ import cmm.apps.esmorga.view.createevent.createeventdate.CreateEventFormDateView
 import cmm.apps.esmorga.view.createevent.createeventdate.model.CreateEventFormDateEffect
 import cmm.apps.esmorga.view.dateformatting.DateFormatterImpl
 import kotlinx.coroutines.test.runTest
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
@@ -16,19 +17,29 @@ import org.junit.Before
 import org.junit.Test
 import java.util.Calendar
 import java.util.Date
+import java.util.TimeZone
 
 class CreateEventFormDateViewModelTest {
     private lateinit var viewModel: CreateEventFormDateViewModel
     private lateinit var initialForm: CreateEventForm
+    private lateinit var dateFormatter: DateFormatterImpl
+    private val previousTimeZone: TimeZone = TimeZone.getDefault()
 
     @Before
     fun setup() {
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
         initialForm = CreateEventForm(
             name = "Initial Name",
             description = "Initial Description",
             type = EventType.PARTY
         )
-        viewModel = CreateEventFormDateViewModel(initialForm, DateFormatterImpl())
+        dateFormatter = DateFormatterImpl()
+        viewModel = CreateEventFormDateViewModel(initialForm, dateFormatter)
+    }
+
+    @After
+    fun tearDown() {
+        TimeZone.setDefault(previousTimeZone)
     }
 
     @Test
@@ -45,7 +56,7 @@ class CreateEventFormDateViewModelTest {
     fun `given create event form date screen, when event time is selected, then the button is enabled`() = runTest {
         viewModel.uiState.test {
             awaitItem()
-            viewModel.onTimeSelected("12:00:00.000Z")
+            viewModel.onTimeSelected(time(hour = 12, minute = 0))
             val updatedState = awaitItem()
 
             assertTrue(updatedState.isButtonEnabled)
@@ -58,8 +69,8 @@ class CreateEventFormDateViewModelTest {
         val cal = Calendar.getInstance()
         cal.set(2024, Calendar.JULY, 17)
         val date: Date = cal.time
-        val time = "12:00:00.000Z"
-        val expectedDateTime = "2024-07-17T${time}"
+        val time = time(hour = 12, minute = 0)
+        val expectedDateTime = dateFormatter.formatIsoDateTime(date, time)
 
         viewModel.effect.test {
             viewModel.onNextClick(date, time, null, "")
@@ -91,7 +102,7 @@ class CreateEventFormDateViewModelTest {
     fun `given create event date screen when clicked confirm dialog then return time formatted`() {
         val hour = 12
         val minute = 30
-        val formattedTime = "${hour}:${minute}:00.000Z"
+        val formattedTime = time(hour, minute)
 
         val time = viewModel.formattedTime(hour, minute)
         assertEquals(formattedTime, time)
@@ -101,7 +112,7 @@ class CreateEventFormDateViewModelTest {
     fun `given event time selected, when deadline toggle is turned on, then button is disabled`() = runTest {
         viewModel.uiState.test {
             awaitItem()
-            viewModel.onTimeSelected("12:00:00.000Z")
+            viewModel.onTimeSelected(time(hour = 12, minute = 0))
             awaitItem() // button enabled
             viewModel.onDeadlineToggleChanged(true)
             val state = awaitItem()
@@ -116,7 +127,7 @@ class CreateEventFormDateViewModelTest {
     fun `given deadline toggle on, when toggle is turned off, then button is enabled if event time was selected`() = runTest {
         viewModel.uiState.test {
             awaitItem()
-            viewModel.onTimeSelected("12:00:00.000Z")
+            viewModel.onTimeSelected(time(hour = 12, minute = 0))
             awaitItem()
             viewModel.onDeadlineToggleChanged(true)
             awaitItem()
@@ -141,11 +152,11 @@ class CreateEventFormDateViewModelTest {
 
         viewModel.uiState.test {
             awaitItem()
-            viewModel.onTimeSelected("17:00:00.000Z")
+            viewModel.onTimeSelected(time(hour = 17, minute = 0))
             awaitItem()
             viewModel.onDeadlineToggleChanged(true)
             awaitItem()
-            viewModel.onDeadlineTimeSelected(eventDateMillis, deadlineDateMillis, "10:00:00.000Z")
+            viewModel.onDeadlineTimeSelected(eventDateMillis, deadlineDateMillis, time(hour = 10, minute = 0))
             val state = awaitItem()
 
             assertTrue(state.isButtonEnabled)
@@ -166,11 +177,11 @@ class CreateEventFormDateViewModelTest {
 
         viewModel.uiState.test {
             awaitItem()
-            viewModel.onTimeSelected("12:00:00.000Z")
+            viewModel.onTimeSelected(time(hour = 12, minute = 0))
             awaitItem()
             viewModel.onDeadlineToggleChanged(true)
             awaitItem()
-            viewModel.onDeadlineTimeSelected(eventDateMillis, deadlineDateMillis, "10:00:00.000Z")
+            viewModel.onDeadlineTimeSelected(eventDateMillis, deadlineDateMillis, time(hour = 10, minute = 0))
             val state = awaitItem()
 
             assertFalse(state.isButtonEnabled)
@@ -195,11 +206,11 @@ class CreateEventFormDateViewModelTest {
 
         viewModel.uiState.test {
             awaitItem()
-            viewModel.onTimeSelected("12:00:00.000Z")
+            viewModel.onTimeSelected(time(hour = 12, minute = 0))
             awaitItem()
             viewModel.onDeadlineToggleChanged(true)
             awaitItem()
-            viewModel.onDeadlineTimeSelected(eventDateMillis, lateDateMillis, "10:00:00.000Z")
+            viewModel.onDeadlineTimeSelected(eventDateMillis, lateDateMillis, time(hour = 10, minute = 0))
             awaitItem() // error state
             viewModel.onDeadlineDateChanged(eventDateMillis, earlyDateMillis)
             val state = awaitItem()
@@ -218,11 +229,11 @@ class CreateEventFormDateViewModelTest {
 
         viewModel.uiState.test {
             awaitItem()
-            viewModel.onTimeSelected("17:00:00.000Z")
+            viewModel.onTimeSelected(time(hour = 17, minute = 0))
             awaitItem()
             viewModel.onDeadlineToggleChanged(true)
             awaitItem()
-            viewModel.onDeadlineTimeSelected(sameDateMillis, sameDateMillis, "10:00:00.000Z")
+            viewModel.onDeadlineTimeSelected(sameDateMillis, sameDateMillis, time(hour = 10, minute = 0))
             val state = awaitItem()
 
             assertTrue(state.isButtonEnabled)
@@ -239,11 +250,11 @@ class CreateEventFormDateViewModelTest {
 
         viewModel.uiState.test {
             awaitItem()
-            viewModel.onTimeSelected("17:00:00.000Z")
+            viewModel.onTimeSelected(time(hour = 17, minute = 0))
             awaitItem()
             viewModel.onDeadlineToggleChanged(true)
             awaitItem()
-            viewModel.onDeadlineTimeSelected(sameDateMillis, sameDateMillis, "17:00:00.000Z")
+            viewModel.onDeadlineTimeSelected(sameDateMillis, sameDateMillis, time(hour = 17, minute = 0))
             val state = awaitItem()
 
             assertTrue(state.isButtonEnabled)
@@ -260,11 +271,11 @@ class CreateEventFormDateViewModelTest {
 
         viewModel.uiState.test {
             awaitItem()
-            viewModel.onTimeSelected("10:00:00.000Z")
+            viewModel.onTimeSelected(time(hour = 10, minute = 0))
             awaitItem()
             viewModel.onDeadlineToggleChanged(true)
             awaitItem()
-            viewModel.onDeadlineTimeSelected(sameDateMillis, sameDateMillis, "17:00:00.000Z")
+            viewModel.onDeadlineTimeSelected(sameDateMillis, sameDateMillis, time(hour = 17, minute = 0))
             val state = awaitItem()
 
             assertFalse(state.isButtonEnabled)
@@ -279,13 +290,13 @@ class CreateEventFormDateViewModelTest {
         eventCal.set(2024, Calendar.JULY, 17)
         val eventDate = eventCal.time
         val eventDateMillis = eventCal.timeInMillis
-        val eventTime = "17:00:00.000Z"
+        val eventTime = time(hour = 17, minute = 0)
 
         val deadlineCal = Calendar.getInstance()
         deadlineCal.set(2024, Calendar.JULY, 10)
         val deadlineDateMillis = deadlineCal.timeInMillis
-        val deadlineTime = "23:59:00.000Z"
-        val expectedDeadline = "2024-07-10T${deadlineTime}"
+        val deadlineTime = time(hour = 23, minute = 59)
+        val expectedDeadline = dateFormatter.formatIsoDateTime(deadlineCal.time, deadlineTime)
 
         viewModel.uiState.test {
             awaitItem()
@@ -312,7 +323,7 @@ class CreateEventFormDateViewModelTest {
         val eventCal = Calendar.getInstance()
         eventCal.set(2024, Calendar.JULY, 17)
         val eventDate = eventCal.time
-        val eventTime = "17:00:00.000Z"
+        val eventTime = time(hour = 17, minute = 0)
 
         viewModel.effect.test {
             viewModel.onNextClick(eventDate, eventTime, null, "")
@@ -322,4 +333,6 @@ class CreateEventFormDateViewModelTest {
             cancelAndIgnoreRemainingEvents()
         }
     }
+
+    private fun time(hour: Int, minute: Int): String = String.format("%02d:%02d:00.000", hour, minute)
 }
