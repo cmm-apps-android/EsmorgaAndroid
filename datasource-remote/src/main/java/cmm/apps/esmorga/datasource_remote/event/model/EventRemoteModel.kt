@@ -30,7 +30,7 @@ data class EventLocationRemoteModel(
 data class CreateEventRemoteModel(
     @SerializedName("eventName") val remoteName: String,
     @SerializedName("eventDate") val remoteDate: String,
-    @SerializedName("joinDeadline") val remoteJoinDeadline: String,
+    @SerializedName("joinDeadline") val remoteJoinDeadline: String? = null,
     @SerializedName("description") val remoteDescription: String,
     @SerializedName("eventType") val remoteType: String,
     @SerializedName("location") val remoteLocation: EventLocationRemoteModel,

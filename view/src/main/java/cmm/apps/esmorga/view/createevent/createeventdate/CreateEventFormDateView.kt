@@ -25,6 +25,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -127,11 +128,11 @@ fun CreateEventFormDateView(
     onDeadlineDateChanged: (Long?) -> Unit,
     onNextClick: (Date, String, Date?, String) -> Unit
 ) {
-    var shownEventTimeDialog by remember { mutableStateOf(false) }
-    var timeSelected by remember { mutableStateOf("") }
+    var shownEventTimeDialog by rememberSaveable { mutableStateOf(false) }
+    var timeSelected by rememberSaveable { mutableStateOf("") }
 
-    var shownDeadlineTimeDialog by remember { mutableStateOf(false) }
-    var deadlineTimeSelected by remember { mutableStateOf("") }
+    var shownDeadlineTimeDialog by rememberSaveable { mutableStateOf(false) }
+    var deadlineTimeSelected by rememberSaveable { mutableStateOf("") }
 
     val eventTimeState = rememberTimePickerState(
         initialHour = LocalTime.now().hour,
