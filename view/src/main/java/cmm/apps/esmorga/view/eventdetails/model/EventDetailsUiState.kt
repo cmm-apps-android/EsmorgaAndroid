@@ -9,7 +9,7 @@ data class EventDetailsUiState(
     val id: String = "",
     val title: String = "",
     val date: String = "",
-    val description: String = "",
+    val description: String? = null,
     val image: String? = null,
     val locationName: String = "",
     val showNavigateButton: Boolean = false,

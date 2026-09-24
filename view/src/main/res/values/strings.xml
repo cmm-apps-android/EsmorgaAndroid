@@ -56,7 +56,7 @@
     <string name="inline_error_email_already_used">Email already in use</string>
     <string name="inline_error_empty_field">Required field</string>
     <string name="inline_error_image_url_required">Please enter a valid URL</string>
-    <string name="inline_error_invalid_length_description">The text must be between 4 and 5000 characters</string>
+    <string name="inline_error_invalid_length_description">The text must be between 20 and 5000 characters</string>
     <string name="inline_error_invalid_length_name">The text must be between 3 and 100 characters</string>
     <string name="inline_error_last_name">Only letters, spaces and \&apos; - are accepted</string>
     <string name="inline_error_location_required">You must enter a location (max %1$d letters)</string>

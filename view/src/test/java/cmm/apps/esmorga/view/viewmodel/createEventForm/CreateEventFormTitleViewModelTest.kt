@@ -28,7 +28,6 @@ class CreateEventFormTitleViewModelTest {
 
             viewModel.onEventNameChange("ab")
 
-            val stateAfterChange = awaitItem()
             val stateAfterValidation = awaitItem()
 
             assertEquals("ab", stateAfterValidation.eventName)
@@ -44,11 +43,11 @@ class CreateEventFormTitleViewModelTest {
         viewModel.uiState.test {
             awaitItem()
 
-            viewModel.onDescriptionChange("This is a good description")
+            viewModel.onDescriptionChange("This is a good description with more than 20 chars")
 
             val state = awaitItem()
 
-            assertEquals("This is a good description", state.eventDescription)
+            assertEquals("This is a good description with more than 20 chars", state.eventDescription)
             assertNull(state.descriptionError)
             assertFalse(state.isFormValid)
 
@@ -56,11 +55,48 @@ class CreateEventFormTitleViewModelTest {
         }
     }
 
+    @Test
+    fun `given valid name and empty description then form is valid`() = runTest {
+        viewModel.uiState.test {
+            awaitItem()
+
+            viewModel.onEventNameChange("Valid Name")
+
+            val state = awaitItem()
+
+            assertEquals("Valid Name", state.eventName)
+            assertNull(state.eventNameError)
+            assertNull(state.eventDescription)
+            assertNull(state.descriptionError)
+            assertTrue(state.isFormValid)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
 
     @Test
-    fun `given valid form when next clicked then emits navigate to next screen`() = runTest {
+    fun `given short description under 20 chars when description changes then state shows error`() = runTest {
+        viewModel.uiState.test {
+            awaitItem()
+
+            viewModel.onEventNameChange("Valid Name")
+            awaitItem()
+
+            viewModel.onDescriptionChange("Short description")
+            val state = awaitItem()
+
+            assertEquals("Short description", state.eventDescription)
+            assertEquals(R.string.inline_error_invalid_length_description, state.descriptionError)
+            assertFalse(state.isFormValid)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `given valid form with description when next clicked then emits navigate to next screen`() = runTest {
         viewModel.onEventNameChange("Valid Name")
-        viewModel.onDescriptionChange("Valid description")
+        viewModel.onDescriptionChange("Valid description with at least 20 chars")
 
         viewModel.effect.test {
             viewModel.onNextClick()
@@ -69,7 +105,24 @@ class CreateEventFormTitleViewModelTest {
             assertTrue(effect is CreateEventFormEffect.NavigateNext)
             val navigateEffect = effect as CreateEventFormEffect.NavigateNext
             assertEquals("Valid Name", navigateEffect.eventForm.name)
-            assertEquals("Valid description", navigateEffect.eventForm.description)
+            assertEquals("Valid description with at least 20 chars", navigateEffect.eventForm.description)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `given valid form without description when next clicked then emits navigate with null description`() = runTest {
+        viewModel.onEventNameChange("Valid Name")
+
+        viewModel.effect.test {
+            viewModel.onNextClick()
+
+            val effect = awaitItem()
+            assertTrue(effect is CreateEventFormEffect.NavigateNext)
+            val navigateEffect = effect as CreateEventFormEffect.NavigateNext
+            assertEquals("Valid Name", navigateEffect.eventForm.name)
+            assertNull(navigateEffect.eventForm.description)
 
             cancelAndIgnoreRemainingEvents()
         }
