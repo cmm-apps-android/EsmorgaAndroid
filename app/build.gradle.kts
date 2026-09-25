@@ -84,11 +84,13 @@ dependencies {
     implementation(project(":datasource-local"))
 
     implementation(libs.androidx.core.ktx)
+    implementation(libs.kotlinx.coroutines)
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.android)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.crashlytics)
+    implementation("com.onesignal:OneSignal:5.9.2")
 
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
