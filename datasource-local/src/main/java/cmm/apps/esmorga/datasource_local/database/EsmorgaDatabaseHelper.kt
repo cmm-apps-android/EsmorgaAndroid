@@ -9,11 +9,11 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 object EsmorgaDatabaseHelper {
 
     private const val DATABASE_NAME = "esmorga_database"
-    const val DATABASE_VERSION = 6
+    const val DATABASE_VERSION = 7
 
     fun getDatabase(context: Context) =
         Room.databaseBuilder(context, EsmorgaDatabase::class.java, DATABASE_NAME)
-            .addMigrations(MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
+            .addMigrations(MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7)
             .fallbackToDestructiveMigration(true)
             .build()
 
@@ -94,6 +94,34 @@ object EsmorgaDatabaseHelper {
                 `localVoteCount` INTEGER NOT NULL, 
                 `localUserSelected` INTEGER NOT NULL DEFAULT 0, 
                 PRIMARY KEY(`localPollId`, `localOptionId`)
+            )
+            """.trimIndent()
+            )
+        }
+    }
+
+    private val MIGRATION_6_7 = object : Migration(6, 7) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            //localDescription column changed to nullable in EventLocalModel DB table in version 7
+            db.execSQL("DROP TABLE IF EXISTS EventLocalModel")
+            db.execSQL(
+                """
+            CREATE TABLE IF NOT EXISTS EventLocalModel (
+                localId TEXT NOT NULL PRIMARY KEY,
+                localName TEXT NOT NULL,
+                localDate INTEGER NOT NULL,
+                localDescription TEXT,
+                localType TEXT NOT NULL,
+                localImageUrl TEXT,
+                localLocationName TEXT NOT NULL,
+                localLocationLat REAL,
+                localLocationLong REAL,
+                localTags TEXT NOT NULL,
+                localCreationTime INTEGER NOT NULL,
+                localUserJoined INTEGER NOT NULL DEFAULT 0,
+                localCurrentAttendeeCount INTEGER NOT NULL DEFAULT 0,
+                localMaxCapacity INTEGER,
+                localJoinDeadline INTEGER NOT NULL DEFAULT 0
             )
             """.trimIndent()
             )

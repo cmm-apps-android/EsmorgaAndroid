@@ -530,7 +530,7 @@ class NavigationTest {
         composeTestRule.waitForIdle()
 
         composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_NAME).performTextInput("Test Name")
-        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_DESCRIPTION).performTextInput("Test Description")
+        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_DESCRIPTION).performTextInput("Test Description with 20+ chars")
         composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_NEXT_BUTTON).performClick()
 
         composeTestRule.onNodeWithTag(CreateEventTypeScreenTestTags.CREATE_EVENT_TYPE_TITLE).assertIsDisplayed()
@@ -547,7 +547,7 @@ class NavigationTest {
         composeTestRule.waitForIdle()
 
         composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_NAME).performTextInput("Test Name")
-        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_DESCRIPTION).performTextInput("Test Description")
+        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_DESCRIPTION).performTextInput("Test Description with 20+ chars")
         composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_NEXT_BUTTON).performClick()
 
         composeTestRule.onNodeWithTag(CreateEventTypeScreenTestTags.CREATE_EVENT_TYPE_TITLE).assertIsDisplayed()

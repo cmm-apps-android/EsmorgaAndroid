@@ -73,7 +73,7 @@ fun CreateEventFormTitleScreenContent(
     eventName: String,
     onEventNameChange: (String) -> Unit,
     eventNameError: Int?,
-    description: String,
+    description: String?,
     onDescriptionChange: (String) -> Unit,
     descriptionError: Int?,
     isFormValid: Boolean,
@@ -121,7 +121,7 @@ fun CreateEventFormTitleScreenContent(
             Spacer(modifier = Modifier.height(16.dp))
 
             EsmorgaTextField(
-                value = description,
+                value = description.orEmpty(),
                 onValueChange = onDescriptionChange,
                 title = R.string.field_title_event_description,
                 modifier = Modifier

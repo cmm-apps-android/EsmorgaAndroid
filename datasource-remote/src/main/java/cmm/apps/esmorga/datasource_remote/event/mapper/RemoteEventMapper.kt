@@ -53,7 +53,7 @@ fun CreateEventForm.toCreateEventRemoteModel(): CreateEventRemoteModel {
         remoteName = name.requiredFormField("event name"),
         remoteDate = date.requiredFormField("event date"),
         remoteJoinDeadline = joinDeadline,
-        remoteDescription = description.requiredFormField("event description"),
+        remoteDescription = description?.takeIf { it.isNotBlank() },
         remoteType = type.requiredFormField("event type").name.lowercase().replaceFirstChar { it.titlecase() },
         remoteLocation = location.requiredFormField("event location").let {
             EventLocationRemoteModel(remoteLocationName = it.name, remoteLat = it.lat, remoteLong = it.long)

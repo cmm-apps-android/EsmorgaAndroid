@@ -14,16 +14,16 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class CreateEventFormTitleViewModel() : ViewModel() {
+class CreateEventFormTitleViewModel : ViewModel() {
     companion object {
         private const val EVENT_NAME_MIN_LENGTH = 3
         private const val EVENT_NAME_MAX_LENGTH = 100
-        private const val DESCRIPTION_MIN_LENGTH = 4
+        private const val DESCRIPTION_MIN_LENGTH = 20
         private const val DESCRIPTION_MAX_LENGTH = 5000
     }
 
     var eventName = ""
-    var eventDescription = ""
+    var eventDescription: String? = null
 
     private val _uiState = MutableStateFlow(CreateEventFormUiState(eventName = eventName, eventDescription = eventDescription))
     val uiState: StateFlow<CreateEventFormUiState> = _uiState.asStateFlow()
@@ -35,18 +35,14 @@ class CreateEventFormTitleViewModel() : ViewModel() {
     val effect: SharedFlow<CreateEventFormEffect> = _effect.asSharedFlow()
 
     fun onEventNameChange(newValue: String) {
-        _uiState.update { it.copy(eventName = newValue) }
         eventName = newValue
         validateEventName()
     }
 
     fun onDescriptionChange(newValue: String) {
-        _uiState.update { it.copy(eventDescription = newValue) }
-        eventDescription = newValue
+        eventDescription = newValue.ifEmpty { null }
         validateEventDescription()
-
     }
-
 
     fun onBackClick() {
         _effect.tryEmit(CreateEventFormEffect.NavigateBack)
@@ -54,23 +50,30 @@ class CreateEventFormTitleViewModel() : ViewModel() {
 
     fun onNextClick() {
         if (_uiState.value.isFormValid) {
-            _effect.tryEmit(CreateEventFormEffect.NavigateNext(eventForm = CreateEventForm(name = eventName, description = eventDescription)))
+            _effect.tryEmit(
+                CreateEventFormEffect.NavigateNext(
+                    eventForm = CreateEventForm(
+                        name = eventName,
+                        description = eventDescription?.takeIf { it.isNotBlank() }
+                    )
+                )
+            )
         }
     }
 
     private fun validateEventName() {
-        val state = _uiState.value
-        val name = state.eventName
+        val name = eventName
 
         val nameError = when {
             name.isBlank() -> R.string.inline_error_empty_field
-            name.length < EVENT_NAME_MIN_LENGTH || name.length > EVENT_NAME_MAX_LENGTH -> R.string.inline_error_invalid_length_name
+            name.length !in EVENT_NAME_MIN_LENGTH..EVENT_NAME_MAX_LENGTH -> R.string.inline_error_invalid_length_name
             else -> null
         }
 
-        val isValid = nameError == null && eventDescription.isNotBlank()
+        val isValid = nameError == null && _uiState.value.descriptionError == null
         _uiState.update {
             it.copy(
+                eventName = name,
                 eventNameError = nameError,
                 isFormValid = isValid
             )
@@ -78,18 +81,20 @@ class CreateEventFormTitleViewModel() : ViewModel() {
     }
 
     private fun validateEventDescription() {
-        val state = _uiState.value
-        val description = state.eventDescription
+        val description = eventDescription
 
         val descriptionError = when {
-            description.isBlank() -> R.string.inline_error_empty_field
-            description.length < DESCRIPTION_MIN_LENGTH || description.length > DESCRIPTION_MAX_LENGTH -> R.string.inline_error_invalid_length_description
+            description.isNullOrBlank() -> null
+            description.length !in DESCRIPTION_MIN_LENGTH..DESCRIPTION_MAX_LENGTH -> R.string.inline_error_invalid_length_description
             else -> null
         }
 
-        val isValid = descriptionError == null && eventName.isNotBlank()
+        val name = eventName
+        val isNameValid = name.isNotBlank() && name.length >= EVENT_NAME_MIN_LENGTH && name.length <= EVENT_NAME_MAX_LENGTH
+        val isValid = descriptionError == null && isNameValid
         _uiState.update {
             it.copy(
+                eventDescription = description,
                 descriptionError = descriptionError,
                 isFormValid = isValid
             )

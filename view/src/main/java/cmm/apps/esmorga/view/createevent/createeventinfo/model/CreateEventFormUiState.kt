@@ -4,7 +4,7 @@ import cmm.apps.esmorga.domain.event.model.CreateEventForm
 
 data class CreateEventFormUiState(
     val eventName: String,
-    val eventDescription: String,
+    val eventDescription: String? = null,
     val eventNameError: Int? = null,
     val descriptionError: Int? = null,
     val isFormValid: Boolean = false

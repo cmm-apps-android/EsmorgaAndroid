@@ -1,7 +1,10 @@
 package cmm.apps.esmorga.view.details
 
+
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -14,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.esmorga.view.R
-import cmm.apps.esmorga.view.eventdetails.EventDetailsScreenTestTags
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import cmm.apps.designsystem.R as DesignSystem
@@ -48,17 +50,21 @@ fun DetailsHeaderSection(image: String?, title: String, date: String, titleTestT
 }
 
 @Composable
-fun DetailsDescriptionSection(description: String, locationName: String? = null) {
-    EsmorgaText(
-        text = stringResource(id = R.string.title_info),
-        style = EsmorgaTextStyle.HEADING_1,
-        modifier = Modifier.padding(16.dp)
-    )
-    EsmorgaText(
-        text = description,
-        style = EsmorgaTextStyle.BODY_1,
-        modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 32.dp)
-    )
+fun DetailsDescriptionSection(description: String?, locationName: String? = null) {
+    if (!description.isNullOrBlank()) {
+        EsmorgaText(
+            text = stringResource(id = R.string.title_info),
+            style = EsmorgaTextStyle.HEADING_1,
+            modifier = Modifier.padding(16.dp)
+        )
+        EsmorgaText(
+            text = description,
+            style = EsmorgaTextStyle.BODY_1,
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+        )
+    }
+
+    Spacer(modifier = Modifier.height(16.dp))
 
     locationName?.let {
         EsmorgaText(

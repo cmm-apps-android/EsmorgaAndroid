@@ -9,7 +9,7 @@ data class EventLocalModel(
     @PrimaryKey val localId: String,
     val localName: String,
     val localDate: Long,
-    val localDescription: String,
+    val localDescription: String? = null,
     val localType: String,
     val localImageUrl: String? = null,
     val localLocationName: String,
