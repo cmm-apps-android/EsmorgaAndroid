@@ -5,6 +5,8 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import app.cash.turbine.test
 import cmm.apps.esmorga.domain.event.GetEventsAndPollsUseCase
+import cmm.apps.esmorga.domain.notifications.ObserveNotificationClickUseCase
+import cmm.apps.esmorga.domain.notifications.model.NotificationPayload
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.EsmorgaResult
 import cmm.apps.esmorga.domain.result.Source
@@ -17,7 +19,9 @@ import cmm.apps.esmorga.view.viewmodel.mock.EventViewMock
 import cmm.apps.esmorga.view.viewmodel.mock.PollViewMock
 import cmm.apps.esmorga.view.viewmodel.util.MainDispatcherRule
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert
@@ -37,10 +41,12 @@ class ExploreViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     private lateinit var mockContext: Context
+    private val observeNotificationClickUseCase = mockk<ObserveNotificationClickUseCase>()
 
     @Before
     fun init() {
         mockContext = ApplicationProvider.getApplicationContext()
+        coEvery { observeNotificationClickUseCase() } returns MutableSharedFlow()
         startKoin {
             androidContext(mockContext)
             modules(module {
@@ -62,7 +68,7 @@ class ExploreViewModelTest {
         val useCase = mockk<GetEventsAndPollsUseCase>(relaxed = true)
         coEvery { useCase() } returns EsmorgaResult.success(Pair(EventViewMock.provideEventList(listOf(domainEventName)), PollViewMock.providePollList(listOf(domainPollName))))
 
-        val sut = ExploreViewModel(useCase)
+        val sut = ExploreViewModel(useCase, observeNotificationClickUseCase)
         sut.loadEventsAndPolls()
 
         val uiState = sut.uiState.value
@@ -75,7 +81,7 @@ class ExploreViewModelTest {
         val useCase = mockk<GetEventsAndPollsUseCase>(relaxed = true)
         coEvery { useCase() } returns EsmorgaResult.failure(EsmorgaException(message = "Test Exception", source = Source.REMOTE, code = 500))
 
-        val sut = ExploreViewModel(useCase)
+        val sut = ExploreViewModel(useCase, observeNotificationClickUseCase)
         sut.loadEventsAndPolls()
 
         val uiState = sut.uiState.value
@@ -95,7 +101,7 @@ class ExploreViewModelTest {
             )
         )
 
-        val sut = ExploreViewModel(useCase)
+        val sut = ExploreViewModel(useCase, observeNotificationClickUseCase)
 
         sut.effect.test {
             sut.loadEventsAndPolls()
@@ -117,7 +123,7 @@ class ExploreViewModelTest {
         val useCase = mockk<GetEventsAndPollsUseCase>()
         coEvery { useCase() } returns EsmorgaResult.success(Pair(listOf(EventViewMock.provideEvent(name = eventName, id = eventId)), PollViewMock.providePollList(listOf())))
 
-        val viewModel = ExploreViewModel(useCase)
+        val viewModel = ExploreViewModel(useCase, observeNotificationClickUseCase)
         viewModel.loadEventsAndPolls()
 
         val clickedUiEvent = ListCardUiModel(
@@ -149,7 +155,7 @@ class ExploreViewModelTest {
         val useCase = mockk<GetEventsAndPollsUseCase>()
         coEvery { useCase() } returns EsmorgaResult.success(Pair(listOf(), listOf(PollViewMock.providePoll(id = pollId, name = pollName))))
 
-        val viewModel = ExploreViewModel(useCase)
+        val viewModel = ExploreViewModel(useCase, observeNotificationClickUseCase)
         viewModel.loadEventsAndPolls()
 
         val clickedUiEvent = ListCardUiModel(
@@ -170,5 +176,49 @@ class ExploreViewModelTest {
 
             cancelAndIgnoreRemainingEvents()
         }
+    }
+
+    @Test
+    fun `given a notification click event when observed then events are reloaded with force refresh`() = runTest {
+        val domainEventName = "DomainEvent"
+        val getEventsUseCase = mockk<GetEventsAndPollsUseCase>(relaxed = true)
+        coEvery { getEventsUseCase(any()) } returns EsmorgaResult.success(
+            Pair(EventViewMock.provideEventList(listOf(domainEventName)), emptyList())
+        )
+
+        val notificationFlow = MutableSharedFlow<NotificationPayload>(extraBufferCapacity = 1)
+        val observeNotificationClickUseCase = mockk<ObserveNotificationClickUseCase>()
+        coEvery { observeNotificationClickUseCase() } returns notificationFlow
+
+        ExploreViewModel(
+            getEventListUseCase = getEventsUseCase,
+            observeNotificationClickUseCase = observeNotificationClickUseCase
+        )
+
+        notificationFlow.emit(NotificationPayload(type = "event-created", eventId = "123"))
+
+        coVerify { getEventsUseCase(forceRefresh = true) }
+    }
+
+    @Test
+    fun `given a notification click emitted before the ViewModel subscribes when it starts then events are reloaded with force refresh`() = runTest {
+        val getEventsUseCase = mockk<GetEventsAndPollsUseCase>(relaxed = true)
+        coEvery { getEventsUseCase(any()) } returns EsmorgaResult.success(Pair(emptyList(), emptyList()))
+
+        val notificationFlow = MutableSharedFlow<NotificationPayload>(
+            replay = 1,
+            extraBufferCapacity = 1
+        )
+        notificationFlow.tryEmit(NotificationPayload(type = "event-created", eventId = "123"))
+
+        val observeNotificationClickUseCase = mockk<ObserveNotificationClickUseCase>()
+        coEvery { observeNotificationClickUseCase() } returns notificationFlow
+
+        ExploreViewModel(
+            getEventListUseCase = getEventsUseCase,
+            observeNotificationClickUseCase = observeNotificationClickUseCase
+        )
+
+        coVerify { getEventsUseCase(forceRefresh = true) }
     }
 }

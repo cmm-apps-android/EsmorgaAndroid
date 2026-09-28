@@ -1,6 +1,11 @@
 package cmm.apps.esmorga.notifications
 
+import cmm.apps.esmorga.notifications.model.toNotificationPayload
+import io.mockk.every
+import io.mockk.mockk
+import org.json.JSONObject
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Test
 
 class OneSignalManagerTest {
@@ -25,5 +30,29 @@ class OneSignalManagerTest {
             ),
             createOneSignalDeviceTags(flavor = "qa", versionName = "1.2.0")
         )
+    }
+
+    @Test
+    fun `Given a valid notification json object When parsing payload Then it should populate fields correctly`() {
+        val jsonObject = mockk<JSONObject>()
+        every { jsonObject.optString("type") } returns "event-created"
+        every { jsonObject.optString("eventId") } returns "test-event-id"
+        every { jsonObject.optString("eventDate") } returns "2026-10-04T14:15:00.000Z"
+
+        val payload = jsonObject.toNotificationPayload()
+
+        assertEquals("event-created", payload.type)
+        assertEquals("test-event-id", payload.eventId)
+        assertEquals("2026-10-04T14:15:00.000Z", payload.eventDate)
+    }
+
+    @Test
+    fun `Given a null json object When parsing payload Then fields should be null`() {
+        val jsonObject: JSONObject? = null
+        val payload = jsonObject.toNotificationPayload()
+
+        assertNull(payload.type)
+        assertNull(payload.eventId)
+        assertNull(payload.eventDate)
     }
 }
