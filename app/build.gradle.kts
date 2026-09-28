@@ -90,7 +90,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.crashlytics)
-    implementation("com.onesignal:OneSignal:5.9.2")
+    implementation(libs.onesignal)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockk)

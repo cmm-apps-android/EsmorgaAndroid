@@ -26,7 +26,7 @@ class EsmorgaApp : Application(), LifecycleObserver {
         }
 
         OneSignalManager.initialize(
-            application = this,
+            context = this,
             appId = "0115e97b-297b-4eec-bd1a-130fe1e6a960"
         )
     }
