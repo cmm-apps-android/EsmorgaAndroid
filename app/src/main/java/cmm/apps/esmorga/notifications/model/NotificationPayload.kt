@@ -5,8 +5,6 @@ import org.json.JSONObject
 
 internal fun JSONObject?.toNotificationPayload(): NotificationPayload {
     return NotificationPayload(
-        type = this?.optString("type"),
-        eventId = this?.optString("eventId"),
-        eventDate = this?.optString("eventDate")
+        type = this?.optString("type")
     )
 }
