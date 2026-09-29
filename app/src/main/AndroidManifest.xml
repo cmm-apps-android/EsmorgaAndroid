@@ -23,6 +23,9 @@
         <meta-data
             android:name="firebase_crashlytics_collection_enabled"
             android:value="true" />
+        <meta-data
+            android:name="com.onesignal.NotificationServiceExtension"
+            android:value="cmm.apps.esmorga.notifications.OneSignalNotificationServiceExtension" />
 
     </application>
 

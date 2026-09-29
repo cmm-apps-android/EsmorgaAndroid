@@ -34,8 +34,9 @@ class OneSignalManagerTest {
 
     @Test
     fun `Given a valid notification json object When parsing payload Then it should populate fields correctly`() {
-        val jsonObject = mockk<JSONObject>()
+        val jsonObject = mockk<JSONObject>(relaxed = true)
         every { jsonObject.optString("type") } returns "event-created"
+        every { jsonObject.optString("eventDate") } returns "2026-10-04T14:15:00.000Z"
 
         val payload = jsonObject.toNotificationPayload()
 

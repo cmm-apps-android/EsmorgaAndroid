@@ -107,4 +107,12 @@ class EventDateTimeFormatterTest {
         assertEquals(3, parts.size)
         assertTrue(parts[0].lowercase().isNotEmpty())
     }
+
+    @Test
+    fun `given epoch millis when formatted for notification date in Spanish locale then returns day short month comma and short time`() {
+        Locale.setDefault(Locale.forLanguageTag("es-ES"))
+        val octEpoch = ZonedDateTime.of(2026, 10, 4, 16, 15, 0, 0, ZoneId.of("UTC")).toInstant().toEpochMilli()
+        val result = sut.formatNotificationDate(octEpoch)
+        assertEquals("4 oct, 16:15", result)
+    }
 }

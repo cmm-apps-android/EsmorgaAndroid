@@ -195,7 +195,7 @@ class ExploreViewModelTest {
             observeNotificationClickUseCase = observeNotificationClickUseCase
         )
 
-        notificationFlow.emit(NotificationPayload(type = "event-created", eventId = "123"))
+        notificationFlow.emit(NotificationPayload(type = "event-created"))
 
         coVerify { getEventsUseCase(forceRefresh = true) }
     }
@@ -209,7 +209,7 @@ class ExploreViewModelTest {
             replay = 1,
             extraBufferCapacity = 1
         )
-        notificationFlow.tryEmit(NotificationPayload(type = "event-created", eventId = "123"))
+        notificationFlow.tryEmit(NotificationPayload(type = "event-created"))
 
         val observeNotificationClickUseCase = mockk<ObserveNotificationClickUseCase>()
         coEvery { observeNotificationClickUseCase() } returns notificationFlow
