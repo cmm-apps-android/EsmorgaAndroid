@@ -11,10 +11,8 @@ class OneSignalNotificationServiceExtension(
 ) : INotificationServiceExtension {
 
     override fun onNotificationReceived(event: INotificationReceivedEvent) {
-        val notification = event.notification
-        val additionalData = notification.additionalData
-        val eventDateIso = additionalData?.optString("eventDate")
-        val originalBody = notification.body
+        val eventDateIso = event.notification.additionalData?.optString("eventDate")
+        val originalBody = event.notification.body
 
         if (!eventDateIso.isNullOrBlank()) {
             val formattedBody = formatNotificationBody(
@@ -22,7 +20,7 @@ class OneSignalNotificationServiceExtension(
                 eventDateIso = eventDateIso
             )
             if (formattedBody != originalBody) {
-                notification.setExtender { builder ->
+                event.notification.setExtender { builder ->
                     builder.setContentText(formattedBody)
                 }
             }
