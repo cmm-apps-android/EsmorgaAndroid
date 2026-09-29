@@ -13,6 +13,7 @@ import java.util.Locale
 
 interface EsmorgaDateTimeFormatter {
     fun formatDateforView(epochMillis: Long): String
+    fun formatNotificationDate(epochMillis: Long): String
     fun formatTimeWithMillisUtcSuffix(hour: Int, minute: Int): String
     fun formatIsoDateTime(date: Date, time: String): String
 }
@@ -20,6 +21,7 @@ interface EsmorgaDateTimeFormatter {
 class DateFormatterImpl : EsmorgaDateTimeFormatter {
     private val TIME_FORMAT_WITH_MILLIS = DateTimeFormatter.ofPattern("HH:mm:ss.SSS")
     private val ISO_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    private val TIME_FORMAT_24H = DateTimeFormatter.ofPattern("HH:mm")
 
     override fun formatTimeWithMillisUtcSuffix(hour: Int, minute: Int): String {
         val localTime = LocalTime.of(hour, minute)
@@ -52,6 +54,21 @@ class DateFormatterImpl : EsmorgaDateTimeFormatter {
             val mediumDate = zonedDateTime.format(mediumDateFormatter)
             val shortTime = zonedDateTime.format(shortTimeFormatter)
             return "$dayOfWeek, $mediumDate, $shortTime"
+        } catch (_: Exception) {
+            return Instant.ofEpochMilli(epochMillis).toString()
+        }
+    }
+
+    override fun formatNotificationDate(epochMillis: Long): String {
+        try {
+            val locale: Locale = Locale.getDefault()
+            val zoneId: ZoneId = ZoneId.systemDefault()
+            val zonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(epochMillis), zoneId)
+
+            val monthName = zonedDateTime.month.getDisplayName(TextStyle.SHORT, locale).lowercase().trimEnd('.')
+            val shortTime = zonedDateTime.format(TIME_FORMAT_24H)
+
+            return "${zonedDateTime.dayOfMonth} $monthName, $shortTime"
         } catch (_: Exception) {
             return Instant.ofEpochMilli(epochMillis).toString()
         }

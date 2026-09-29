@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cmm.apps.esmorga.domain.event.GetEventsAndPollsUseCase
 import cmm.apps.esmorga.domain.event.model.Event
+import cmm.apps.esmorga.domain.notifications.ObserveNotificationClickUseCase
 import cmm.apps.esmorga.domain.poll.model.Poll
 import cmm.apps.esmorga.view.explore.mapper.ExploreUiMapper.eventListToCardUiList
 import cmm.apps.esmorga.view.explore.mapper.ExploreUiMapper.pollListToCardUiList
@@ -23,6 +24,7 @@ import kotlinx.coroutines.launch
 
 class ExploreViewModel(
     private val getEventListUseCase: GetEventsAndPollsUseCase,
+    private val observeNotificationClickUseCase: ObserveNotificationClickUseCase,
     private val showEventCreated: Boolean = false
 ) : ViewModel(), DefaultLifecycleObserver {
 
@@ -35,6 +37,14 @@ class ExploreViewModel(
     private var events: List<Event> = emptyList()
     private var polls: List<Poll> = emptyList()
     private var eventCreatedHandled = false
+
+    init {
+        viewModelScope.launch {
+            observeNotificationClickUseCase().collect {
+                loadEventsAndPolls(forceRefresh = true)
+            }
+        }
+    }
 
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
