@@ -6,12 +6,14 @@ import com.onesignal.notifications.INotificationReceivedEvent
 import com.onesignal.notifications.INotificationServiceExtension
 import java.time.Instant
 
+private const val EVENT_DATE = "eventDate"
+
 class OneSignalNotificationServiceExtension(
     private val dateTimeFormatter: EsmorgaDateTimeFormatter = DateFormatterImpl()
 ) : INotificationServiceExtension {
 
     override fun onNotificationReceived(event: INotificationReceivedEvent) {
-        val eventDateIso = event.notification.additionalData?.optString("eventDate")
+        val eventDateIso = event.notification.additionalData?.optString(EVENT_DATE)
         val originalBody = event.notification.body
 
         if (!eventDateIso.isNullOrBlank()) {
