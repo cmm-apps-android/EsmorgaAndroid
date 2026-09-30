@@ -45,6 +45,7 @@ class CreateEventFormDateViewModel(
     }
 
     fun onBackClick() {
+        persistDateSelection()
         _effect.tryEmit(CreateEventFormDateEffect.NavigateBack)
     }
 
@@ -145,13 +146,35 @@ class CreateEventFormDateViewModel(
     }
 
     fun onNextClick(date: Date, time: String, deadLineDate: Date?, deadlineTimeArg: String) {
-        val dateTime = esmorgaDateTimeFormatter.formatIsoDateTime(date, time)
-        val joinDeadline = if (_uiState.value.isDeadlineToggleOn && deadlineTimeArg.isNotEmpty() && deadLineDate != null) {
-            esmorgaDateTimeFormatter.formatIsoDateTime(deadLineDate, deadlineTimeArg)
+        persistDateSelection(
+            fallbackEventDate = date,
+            fallbackEventTime = time,
+            fallbackDeadlineDate = deadLineDate,
+            fallbackDeadlineTime = deadlineTimeArg
+        )
+        _effect.tryEmit(CreateEventFormDateEffect.NavigateNext)
+    }
+
+    private fun persistDateSelection(
+        fallbackEventDate: Date? = null,
+        fallbackEventTime: String? = null,
+        fallbackDeadlineDate: Date? = null,
+        fallbackDeadlineTime: String? = null
+    ) {
+        val state = _uiState.value
+        val eventTime = state.eventTime.ifEmpty { fallbackEventTime.orEmpty() }
+        if (eventTime.isEmpty()) return
+
+        val eventDate = state.selectedDateMillis?.let(::Date) ?: fallbackEventDate ?: return
+        val dateTime = esmorgaDateTimeFormatter.formatIsoDateTime(eventDate, eventTime)
+        val deadlineTime = state.deadlineTime.ifEmpty { fallbackDeadlineTime.orEmpty() }
+        val joinDeadline = if (state.isDeadlineToggleOn && deadlineTime.isNotEmpty()) {
+            val deadlineDate = state.selectedDeadlineDateMillis?.let(::Date) ?: fallbackDeadlineDate
+                ?: return
+            esmorgaDateTimeFormatter.formatIsoDateTime(deadlineDate, deadlineTime)
         } else {
             null
         }
         createEventFlowSession.updateDate(date = dateTime, joinDeadline = joinDeadline)
-        _effect.tryEmit(CreateEventFormDateEffect.NavigateNext)
     }
 }

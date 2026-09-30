@@ -106,12 +106,47 @@ class CreateEventFormDateViewModelTest {
 
     @Test
     fun `given create event date screen when back clicked then navigate to previous screen`() = runTest {
+        val eventDateMillis = 1790726400000L
+        val deadlineDateMillis = 1790121600000L
+        val eventTime = time(hour = 12, minute = 0)
+        val deadlineTime = time(hour = 10, minute = 0)
+
+        viewModel.onDateSelected(eventDateMillis)
+        viewModel.onTimeSelected(eventTime)
+        viewModel.onDeadlineToggleChanged(true)
+        viewModel.onDeadlineTimeSelected(eventDateMillis, deadlineDateMillis, deadlineTime)
+
         viewModel.effect.test {
             viewModel.onBackClick()
             val effect = awaitItem()
             assertEquals(CreateEventFormDateEffect.NavigateBack, effect)
+            assertEquals(dateFormatter.formatIsoDateTime(Date(eventDateMillis), eventTime), flowViewModel.eventForm.value.date)
+            assertEquals(dateFormatter.formatIsoDateTime(Date(deadlineDateMillis), deadlineTime), flowViewModel.eventForm.value.joinDeadline)
             cancelAndIgnoreRemainingEvents()
         }
+    }
+
+    @Test
+    fun `given date data persisted on back when viewModel recreated then state is restored`() {
+        val eventDateMillis = 1790726400000L
+        val deadlineDateMillis = 1790121600000L
+        val eventTime = time(hour = 12, minute = 0)
+        val deadlineTime = time(hour = 10, minute = 0)
+
+        viewModel.onDateSelected(eventDateMillis)
+        viewModel.onTimeSelected(eventTime)
+        viewModel.onDeadlineToggleChanged(true)
+        viewModel.onDeadlineTimeSelected(eventDateMillis, deadlineDateMillis, deadlineTime)
+        viewModel.onBackClick()
+
+        val restoredViewModel = CreateEventFormDateViewModel(flowViewModel, dateFormatter)
+        val state = restoredViewModel.uiState.value
+
+        assertEquals(eventDateMillis, state.selectedDateMillis)
+        assertEquals(deadlineDateMillis, state.selectedDeadlineDateMillis)
+        assertEquals(eventTime, state.eventTime)
+        assertEquals(deadlineTime, state.deadlineTime)
+        assertTrue(state.isDeadlineToggleOn)
     }
 
     @Test

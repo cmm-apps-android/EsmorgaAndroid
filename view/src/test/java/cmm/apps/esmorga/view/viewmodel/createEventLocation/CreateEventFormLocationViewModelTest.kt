@@ -110,9 +110,18 @@ class CreateEventFormLocationViewModelTest {
 
     @Test
     fun `given location screen when back clicked then emits navigate back`() = runTest {
+        viewModel.onLocationChanged("A Coruna")
+        viewModel.onCoordinatesChanged("43.3623, -8.4115")
+        viewModel.onMaxCapacityChanged("250")
+
         viewModel.effect.test {
             viewModel.onBackClick()
             assertEquals(CreateEventFormLocationEffect.NavigateBack, awaitItem())
+            val form = flowViewModel.eventForm.value
+            assertEquals("A Coruna", form.location?.name)
+            assertEquals(43.3623, form.location?.lat)
+            assertEquals(-8.4115, form.location?.long)
+            assertEquals(250, form.maxCapacity)
         }
     }
 
@@ -185,6 +194,22 @@ class CreateEventFormLocationViewModelTest {
         assertEquals("Bilbao", state.localizationName)
         assertEquals("43.263, -2.935", state.localizationCoordinates)
         assertEquals("200", state.eventMaxCapacity)
+        assertTrue(state.isButtonEnabled)
+    }
+
+    @Test
+    fun `given location data persisted on back when viewModel recreated then state is restored`() {
+        viewModel.onLocationChanged("Vigo")
+        viewModel.onCoordinatesChanged("42.2406, -8.7207")
+        viewModel.onMaxCapacityChanged("400")
+        viewModel.onBackClick()
+
+        val restoredViewModel = CreateEventFormLocationViewModel(flowViewModel)
+        val state = restoredViewModel.uiState.value
+
+        assertEquals("Vigo", state.localizationName)
+        assertEquals("42.2406, -8.7207", state.localizationCoordinates)
+        assertEquals("400", state.eventMaxCapacity)
         assertTrue(state.isButtonEnabled)
     }
 }

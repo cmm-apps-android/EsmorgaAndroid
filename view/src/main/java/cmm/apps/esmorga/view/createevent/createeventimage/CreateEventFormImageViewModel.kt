@@ -48,6 +48,7 @@ class CreateEventFormImageViewModel(
     }
 
     fun onBackClick() {
+        persistImageSelection()
         _effect.tryEmit(CreateEventFormImageEffect.NavigateBack)
     }
 
@@ -97,6 +98,12 @@ class CreateEventFormImageViewModel(
                 _uiState.update { it.copy(isLoading = false) }
             }
         }
+    }
+
+    private fun persistImageSelection() {
+        val state = _uiState.value
+        val flowImageUrl = if (state.showPreview) state.imageUrl.ifBlank { null } else null
+        createEventFlowSession.updateImage(flowImageUrl)
     }
 
     private fun updateUiState(function: (CreateEventFormImageUiState) -> CreateEventFormImageUiState) {

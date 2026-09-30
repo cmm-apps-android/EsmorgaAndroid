@@ -451,4 +451,21 @@ class CreateEventFormImageViewModelTest {
             cancelAndIgnoreRemainingEvents()
         }
     }
+
+    @Test
+    fun `given image preview persisted on back when viewModel recreated then state is restored`() = runTest {
+        viewModel.onImageUrlChanged("https://example.com/restored-on-back.jpg")
+        viewModel.onPreviewClick()
+        viewModel.onBackClick()
+
+        val restoredViewModel = CreateEventFormImageViewModel(flowViewModel, mockCreateEventUseCase)
+
+        restoredViewModel.uiState.test {
+            val state = awaitItem()
+            assertEquals("https://example.com/restored-on-back.jpg", state.imageUrl)
+            assertTrue(state.showPreview)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
 }

@@ -55,6 +55,7 @@ class CreateEventFormLocationViewModel(
     }
 
     fun onBackClick() {
+        persistLocationSelection()
         _effect.tryEmit(CreateEventFormLocationEffect.NavigateBack)
     }
 
@@ -117,6 +118,12 @@ class CreateEventFormLocationViewModel(
         val state = _uiState.value
         if (!validateForm(state)) return
 
+        persistLocationSelection()
+        _effect.tryEmit(CreateEventFormLocationEffect.NavigateNext)
+    }
+
+    private fun persistLocationSelection() {
+        val state = _uiState.value
         val coordsParts = state.localizationCoordinates.split(",").map { it.trim().toDoubleOrNull() }
         val location = EventLocation(
             name = state.localizationName,
@@ -128,6 +135,5 @@ class CreateEventFormLocationViewModel(
             location = location,
             maxCapacity = state.eventMaxCapacity.toIntOrNull()
         )
-        _effect.tryEmit(CreateEventFormLocationEffect.NavigateNext)
     }
 }
