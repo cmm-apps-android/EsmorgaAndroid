@@ -33,7 +33,6 @@ import cmm.apps.designsystem.EsmorgaButton
 import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextField
 import cmm.apps.designsystem.EsmorgaTextStyle
-import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.createevent.createeventimage.model.CreateEventFormImageEffect
@@ -41,14 +40,12 @@ import cmm.apps.esmorga.view.createevent.createeventimage.model.CreateEventFormI
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import coil.compose.AsyncImage
-import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
+import org.koin.compose.viewmodel.koinViewModel
 
 @Screen
 @Composable
 fun CreateEventFormImageScreen(
-    eventForm: CreateEventForm,
-    viewModel: CreateEventFormImageViewModel = koinViewModel(parameters = { parametersOf(eventForm) }),
+    viewModel: CreateEventFormImageViewModel = koinViewModel(),
     onBackPressed: () -> Unit,
     onCreationSuccess: (String) -> Unit,
     onCreationError: (EsmorgaErrorScreenArguments) -> Unit,

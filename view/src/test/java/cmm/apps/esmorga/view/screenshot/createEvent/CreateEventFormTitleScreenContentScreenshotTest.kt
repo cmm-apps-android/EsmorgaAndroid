@@ -2,6 +2,7 @@ package cmm.apps.esmorga.view.screenshot.createEvent
 
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.createevent.createeventinfo.CreateEventFormTitleScreenContent
+import cmm.apps.esmorga.view.createevent.createeventinfo.model.CreateEventFormUiState
 import cmm.apps.esmorga.view.screenshot.BaseScreenshotTest
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import org.junit.Test
@@ -13,7 +14,7 @@ class CreateEventFormTitleScreenContentScreenshotTest : BaseScreenshotTest() {
         snapshotWithState(
             eventName = "",
             eventNameError = null,
-            description = "",
+            description = null,
             descriptionError = null,
             isFormValid = false
         )
@@ -55,20 +56,22 @@ class CreateEventFormTitleScreenContentScreenshotTest : BaseScreenshotTest() {
     private fun snapshotWithState(
         eventName: String,
         eventNameError: Int?,
-        description: String,
+        description: String?,
         descriptionError: Int?,
         isFormValid: Boolean
     ) {
         paparazzi.snapshot {
             EsmorgaTheme(darkTheme = false) {
                 CreateEventFormTitleScreenContent(
-                    eventName = eventName,
+                    uiState = CreateEventFormUiState(
+                        eventName = eventName,
+                        eventDescription = description,
+                        eventNameError = eventNameError,
+                        descriptionError = descriptionError,
+                        isFormValid = isFormValid
+                    ),
                     onEventNameChange = {},
-                    eventNameError = eventNameError,
-                    description = description,
                     onDescriptionChange = {},
-                    descriptionError = descriptionError,
-                    isFormValid = isFormValid,
                     onBackClick = {},
                     onNextClick = {}
                 )

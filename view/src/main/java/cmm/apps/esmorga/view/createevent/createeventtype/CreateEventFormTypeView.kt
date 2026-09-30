@@ -25,7 +25,6 @@ import cmm.apps.designsystem.EsmorgaButton
 import cmm.apps.designsystem.EsmorgaRadioButton
 import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextStyle
-import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.domain.event.model.EventType
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
@@ -33,16 +32,14 @@ import cmm.apps.esmorga.view.createevent.createeventtype.model.CreateEventTypeHe
 import cmm.apps.esmorga.view.createevent.createeventtype.model.CreateEventTypeScreenEffect
 import cmm.apps.esmorga.view.createevent.createeventtype.model.CreateEventTypeScreenUiState
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
-import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
+import org.koin.compose.viewmodel.koinViewModel
 
 @Screen
 @Composable
 fun CreateEventFormTypeScreen(
-    eventForm: CreateEventForm,
-    createEventviewModel: CreateEventFormTypeViewModel = koinViewModel(parameters = { parametersOf(eventForm) }),
+    createEventviewModel: CreateEventFormTypeViewModel = koinViewModel(),
     onBackClick: () -> Unit,
-    onNextClick: (CreateEventForm) -> Unit
+    onNextClick: () -> Unit
 ) {
     val uiState: CreateEventTypeScreenUiState by createEventviewModel.uiState.collectAsStateWithLifecycle()
 
@@ -50,7 +47,7 @@ fun CreateEventFormTypeScreen(
         createEventviewModel.effect.collect { eff ->
             when (eff) {
                 is CreateEventTypeScreenEffect.NavigateBack -> onBackClick()
-                is CreateEventTypeScreenEffect.NavigateNext -> onNextClick(eff.eventForm)
+                is CreateEventTypeScreenEffect.NavigateNext -> onNextClick()
             }
         }
     }

@@ -9,8 +9,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navigation
 import androidx.navigation.toRoute
-import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.domain.poll.model.Poll
 import cmm.apps.esmorga.view.activateaccount.ActivateAccountScreen
@@ -36,6 +36,7 @@ import cmm.apps.esmorga.view.registration.RegistrationConfirmationScreen
 import cmm.apps.esmorga.view.registration.RegistrationScreen
 import kotlinx.serialization.Serializable
 import org.jetbrains.annotations.VisibleForTesting
+import org.koin.compose.koinInject
 import kotlin.reflect.typeOf
 
 sealed class Navigation {
@@ -86,16 +87,19 @@ sealed class Navigation {
     data object CreateEventFormTitleScreen : Navigation()
 
     @Serializable
-    data class CreateEventFormTypeScreen(val form: CreateEventForm) : Navigation()
+    data object CreateEventFlow : Navigation()
 
     @Serializable
-    data class CreateEventFormDateScreen(val form: CreateEventForm) : Navigation()
+    data object CreateEventFormTypeScreen : Navigation()
 
     @Serializable
-    data class CreateEventFormLocationScreen(val form: CreateEventForm) : Navigation()
+    data object CreateEventFormDateScreen : Navigation()
 
     @Serializable
-    data class CreateEventFormImageScreen(val form: CreateEventForm) : Navigation()
+    data object CreateEventFormLocationScreen : Navigation()
+
+    @Serializable
+    data object CreateEventFormImageScreen : Navigation()
 }
 
 const val GOOGLE_MAPS_PACKAGE = "com.google.android.apps.maps"
@@ -284,59 +288,47 @@ private fun NavGraphBuilder.loginFlow(navigationController: NavHostController) {
 private fun NavGraphBuilder.createEventFlow(navController: NavHostController) {
     composable<Navigation.CreateEventFormTitleScreen> {
         CreateEventFormScreen(
-            onBack = { navController.popBackStack() },
-            onNext = { form ->
-                navController.navigate(Navigation.CreateEventFormTypeScreen(form))
+            onBack = {
+                navController.popBackStack()
+            },
+            onNext = {
+                navController.navigate(Navigation.CreateEventFormTypeScreen)
             }
         )
     }
 
-    composable<Navigation.CreateEventFormTypeScreen>(
-        typeMap = mapOf(typeOf<CreateEventForm>() to serializableType<CreateEventForm>())
-    ) { backStackEntry ->
-        val form = backStackEntry.toRoute<Navigation.CreateEventFormTypeScreen>().form
+    composable<Navigation.CreateEventFormTypeScreen> { _ ->
         CreateEventFormTypeScreen(
-            eventForm = form,
             onBackClick = { navController.popBackStack() },
-            onNextClick = { updatedForm ->
-                navController.navigate(Navigation.CreateEventFormDateScreen(updatedForm))
+            onNextClick = {
+                navController.navigate(Navigation.CreateEventFormDateScreen)
             }
         )
     }
 
-    composable<Navigation.CreateEventFormDateScreen>(
-        typeMap = mapOf(typeOf<CreateEventForm>() to serializableType<CreateEventForm>())
-    ) { backStackEntry ->
-        val eventForm = backStackEntry.toRoute<Navigation.CreateEventFormDateScreen>().form
+    composable<Navigation.CreateEventFormDateScreen> {
         CreateEventFormDateScreen(
-            eventForm = eventForm,
             onBackPressed = { navController.popBackStack() },
-            onNextClick = { updatedForm ->
-                navController.navigate(Navigation.CreateEventFormLocationScreen(updatedForm))
+            onNextClick = {
+                navController.navigate(Navigation.CreateEventFormLocationScreen)
             }
         )
     }
 
-    composable<Navigation.CreateEventFormLocationScreen>(
-        typeMap = mapOf(typeOf<CreateEventForm>() to serializableType<CreateEventForm>())
-    ) { backStackEntry ->
-        val eventForm = backStackEntry.toRoute<Navigation.CreateEventFormLocationScreen>().form
+    composable<Navigation.CreateEventFormLocationScreen> { _ ->
         CreateEventFormLocationScreen(
-            eventForm = eventForm,
             onBackPressed = { navController.popBackStack() },
-            onNextClick = { updatedForm ->
-                navController.navigate(Navigation.CreateEventFormImageScreen(updatedForm))
+            onNextClick = {
+                navController.navigate(Navigation.CreateEventFormImageScreen)
             }
         )
     }
 
-    composable<Navigation.CreateEventFormImageScreen>(
-        typeMap = mapOf(typeOf<CreateEventForm>() to serializableType<CreateEventForm>())
-    ) { backStackEntry ->
-        val eventForm = backStackEntry.toRoute<Navigation.CreateEventFormImageScreen>().form
+    composable<Navigation.CreateEventFormImageScreen> { _ ->
         CreateEventFormImageScreen(
-            eventForm = eventForm,
-            onBackPressed = { navController.popBackStack() },
+            onBackPressed = {
+                navController.popBackStack()
+            },
             onCreationSuccess = {
                 navController.navigate(Navigation.ExploreScreen(showEventCreatedSnackbar = true)) {
                     popUpTo(0) { inclusive = true }

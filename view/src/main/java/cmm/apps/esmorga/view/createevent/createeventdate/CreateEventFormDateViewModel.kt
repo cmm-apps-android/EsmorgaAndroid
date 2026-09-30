@@ -1,7 +1,7 @@
 package cmm.apps.esmorga.view.createevent.createeventdate
 
 import androidx.lifecycle.ViewModel
-import cmm.apps.esmorga.domain.event.model.CreateEventForm
+import cmm.apps.esmorga.view.createevent.CreateEventFlowSession
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.createevent.createeventdate.model.CreateEventFormDateEffect
 import cmm.apps.esmorga.view.createevent.createeventdate.model.CreateEventFormDateUiState
@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import java.util.Date
 
 class CreateEventFormDateViewModel(
-    private val eventForm: CreateEventForm,
+    private val createEventFlowSession: CreateEventFlowSession,
     private val esmorgaDateTimeFormatter: EsmorgaDateTimeFormatter
 ) : ViewModel() {
 
@@ -26,57 +26,119 @@ class CreateEventFormDateViewModel(
     private val _effect = MutableSharedFlow<CreateEventFormDateEffect>(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val effect: SharedFlow<CreateEventFormDateEffect> = _effect.asSharedFlow()
 
-    private var eventTime: String = ""
-    private var deadlineTime: String = ""
+    init {
+        restoreFromFlow()
+    }
+
+    private fun restoreFromFlow() {
+        val form = createEventFlowSession.eventForm.value
+        updateUiState(
+            _uiState.value.copy(
+                selectedDateMillis = form.date?.let(esmorgaDateTimeFormatter::toLocalDateEpochMillis),
+                selectedDeadlineDateMillis = form.joinDeadline?.let(esmorgaDateTimeFormatter::toLocalDateEpochMillis),
+                eventTime = form.date?.let(esmorgaDateTimeFormatter::extractLocalTime).orEmpty(),
+                deadlineTime = form.joinDeadline?.let(esmorgaDateTimeFormatter::extractLocalTime).orEmpty(),
+                isDeadlineToggleOn = form.joinDeadline != null,
+                deadlineErrorRes = null
+            )
+        )
+    }
 
     fun onBackClick() {
+        persistDateSelection()
         _effect.tryEmit(CreateEventFormDateEffect.NavigateBack)
     }
 
+    fun onDateSelected(dateMillis: Long?) {
+        val currentState = _uiState.value
+        val newDeadlineError = computeDeadlineError(
+            eventDateMillis = dateMillis,
+            deadlineDateMillis = currentState.selectedDeadlineDateMillis,
+            time = currentState.deadlineTime
+        )
+        updateUiState(
+            currentState.copy(
+                selectedDateMillis = dateMillis,
+                deadlineErrorRes = newDeadlineError
+            )
+        )
+    }
+
     fun onTimeSelected(selectedTime: String) {
-        eventTime = selectedTime
-        val deadlineValid = computeDeadlineValid(_uiState.value.isDeadlineToggleOn, _uiState.value.deadlineErrorRes)
-        _uiState.value = _uiState.value.copy(isButtonEnabled = eventTime.isNotEmpty() && deadlineValid)
+        val currentState = _uiState.value
+        val newDeadlineError = computeDeadlineError(
+            eventDateMillis = currentState.selectedDateMillis,
+            deadlineDateMillis = currentState.selectedDeadlineDateMillis,
+            time = currentState.deadlineTime,
+            eventTime = selectedTime
+        )
+        updateUiState(
+            currentState.copy(
+                eventTime = selectedTime,
+                deadlineErrorRes = newDeadlineError
+            )
+        )
     }
 
     fun onDeadlineToggleChanged(isEnabled: Boolean) {
-        val deadlineValid = computeDeadlineValid(isEnabled, _uiState.value.deadlineErrorRes)
-        _uiState.value = _uiState.value.copy(
-            isDeadlineToggleOn = isEnabled,
-            deadlineErrorRes = if (isEnabled) _uiState.value.deadlineErrorRes else null,
-            isButtonEnabled = eventTime.isNotEmpty() && deadlineValid
+        val currentState = _uiState.value
+        val newDeadlineError = if (isEnabled) {
+            computeDeadlineError(
+                eventDateMillis = currentState.selectedDateMillis,
+                deadlineDateMillis = currentState.selectedDeadlineDateMillis,
+                time = currentState.deadlineTime
+            )
+        } else {
+            null
+        }
+        updateUiState(
+            currentState.copy(
+                isDeadlineToggleOn = isEnabled,
+                deadlineErrorRes = newDeadlineError
+            )
         )
     }
 
     fun onDeadlineTimeSelected(eventDateMillis: Long?, deadlineDateMillis: Long?, time: String) {
-        deadlineTime = time
-        val errorRes = computeDeadlineError(eventDateMillis, deadlineDateMillis, time)
-        val deadlineValid = computeDeadlineValid(isToggleOn = true, deadlineErrorRes = errorRes)
-        _uiState.value = _uiState.value.copy(
-            deadlineErrorRes = errorRes,
-            isButtonEnabled = eventTime.isNotEmpty() && deadlineValid
+        updateUiState(
+            _uiState.value.copy(
+                selectedDateMillis = eventDateMillis,
+                selectedDeadlineDateMillis = deadlineDateMillis,
+                deadlineTime = time,
+                deadlineErrorRes = computeDeadlineError(eventDateMillis, deadlineDateMillis, time)
+            )
         )
     }
 
     fun onDeadlineDateChanged(eventDateMillis: Long?, deadlineDateMillis: Long?) {
-        if (deadlineTime.isEmpty() || !_uiState.value.isDeadlineToggleOn) return
-        val errorRes = computeDeadlineError(eventDateMillis, deadlineDateMillis, deadlineTime)
-        val deadlineValid = computeDeadlineValid(isToggleOn = true, deadlineErrorRes = errorRes)
-        _uiState.value = _uiState.value.copy(
-            deadlineErrorRes = errorRes,
-            isButtonEnabled = eventTime.isNotEmpty() && deadlineValid
+        val state = _uiState.value
+        val newDeadlineError = computeDeadlineError(eventDateMillis, deadlineDateMillis, state.deadlineTime)
+        updateUiState(
+            state.copy(
+                selectedDateMillis = eventDateMillis,
+                selectedDeadlineDateMillis = deadlineDateMillis,
+                deadlineErrorRes = if (state.isDeadlineToggleOn && state.deadlineTime.isNotEmpty()) newDeadlineError else state.deadlineErrorRes
+            )
         )
     }
 
-    private fun computeDeadlineError(eventDateMillis: Long?, deadlineDateMillis: Long?, time: String): Int? {
+    private fun computeDeadlineError(
+        eventDateMillis: Long?,
+        deadlineDateMillis: Long?,
+        time: String,
+        eventTime: String = _uiState.value.eventTime
+    ): Int? {
         if (time.isEmpty() || eventTime.isEmpty() || eventDateMillis == null || deadlineDateMillis == null) return null
         val deadlineDateTime = esmorgaDateTimeFormatter.formatIsoDateTime(Date(deadlineDateMillis), time)
         val eventDateTime = esmorgaDateTimeFormatter.formatIsoDateTime(Date(eventDateMillis), eventTime)
         return if (deadlineDateTime > eventDateTime) R.string.inline_error_event_date_deadline_exceeded else null
     }
 
-    private fun computeDeadlineValid(isToggleOn: Boolean, deadlineErrorRes: Int?): Boolean {
-        return if (isToggleOn) deadlineTime.isNotEmpty() && deadlineErrorRes == null else true
+    private fun updateUiState(state: CreateEventFormDateUiState) {
+        _uiState.value = state.copy(
+            isButtonEnabled = state.eventTime.isNotEmpty() &&
+                if (state.isDeadlineToggleOn) state.deadlineTime.isNotEmpty() && state.deadlineErrorRes == null else true
+        )
     }
 
     fun formattedTime(hour: Int, minute: Int): String {
@@ -84,13 +146,35 @@ class CreateEventFormDateViewModel(
     }
 
     fun onNextClick(date: Date, time: String, deadLineDate: Date?, deadlineTimeArg: String) {
-        val dateTime = esmorgaDateTimeFormatter.formatIsoDateTime(date, time)
-        val joinDeadline = if (_uiState.value.isDeadlineToggleOn && deadlineTimeArg.isNotEmpty() && deadLineDate != null) {
-            esmorgaDateTimeFormatter.formatIsoDateTime(deadLineDate, deadlineTimeArg)
+        persistDateSelection(
+            fallbackEventDate = date,
+            fallbackEventTime = time,
+            fallbackDeadlineDate = deadLineDate,
+            fallbackDeadlineTime = deadlineTimeArg
+        )
+        _effect.tryEmit(CreateEventFormDateEffect.NavigateNext)
+    }
+
+    private fun persistDateSelection(
+        fallbackEventDate: Date? = null,
+        fallbackEventTime: String? = null,
+        fallbackDeadlineDate: Date? = null,
+        fallbackDeadlineTime: String? = null
+    ) {
+        val state = _uiState.value
+        val eventTime = state.eventTime.ifEmpty { fallbackEventTime.orEmpty() }
+        if (eventTime.isEmpty()) return
+
+        val eventDate = state.selectedDateMillis?.let(::Date) ?: fallbackEventDate ?: return
+        val dateTime = esmorgaDateTimeFormatter.formatIsoDateTime(eventDate, eventTime)
+        val deadlineTime = state.deadlineTime.ifEmpty { fallbackDeadlineTime.orEmpty() }
+        val joinDeadline = if (state.isDeadlineToggleOn && deadlineTime.isNotEmpty()) {
+            val deadlineDate = state.selectedDeadlineDateMillis?.let(::Date) ?: fallbackDeadlineDate
+                ?: return
+            esmorgaDateTimeFormatter.formatIsoDateTime(deadlineDate, deadlineTime)
         } else {
             null
         }
-        val updatedForm = eventForm.copy(date = dateTime, joinDeadline = joinDeadline)
-        _effect.tryEmit(CreateEventFormDateEffect.NavigateNext(updatedForm))
+        createEventFlowSession.updateDate(date = dateTime, joinDeadline = joinDeadline)
     }
 }

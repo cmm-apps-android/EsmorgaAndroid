@@ -26,29 +26,26 @@ import cmm.apps.designsystem.EsmorgaButton
 import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextField
 import cmm.apps.designsystem.EsmorgaTextStyle
-import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.createevent.createeventlocation.model.CreateEventFormLocationEffect
 import cmm.apps.esmorga.view.createevent.createeventlocation.model.CreateEventFormLocationUiState
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
-import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
+import org.koin.compose.viewmodel.koinViewModel
 
 @Screen
 @Composable
 fun CreateEventFormLocationScreen(
-    eventForm: CreateEventForm,
-    viewModel: CreateEventFormLocationViewModel = koinViewModel(parameters = { parametersOf(eventForm) }),
+    viewModel: CreateEventFormLocationViewModel = koinViewModel(),
     onBackPressed: () -> Unit,
-    onNextClick: (CreateEventForm) -> Unit
+    onNextClick: () -> Unit
 ) {
     val uiState: CreateEventFormLocationUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { eff ->
             when (eff) {
-                is CreateEventFormLocationEffect.NavigateNext -> onNextClick(eff.eventForm)
+                is CreateEventFormLocationEffect.NavigateNext -> onNextClick()
                 is CreateEventFormLocationEffect.NavigateBack -> onBackPressed()
             }
         }
@@ -57,7 +54,7 @@ fun CreateEventFormLocationScreen(
     EsmorgaTheme {
         CreateEventFormLocationView(
             uiState = uiState,
-            onBackPressed = { viewModel.onBackClick() },
+            onBackPressed = viewModel::onBackClick,
             onLocationChange = viewModel::onLocationChanged,
             onCoordinatesChange = viewModel::onCoordinatesChanged,
             onMaxCapacityChange = viewModel::onMaxCapacityChanged,

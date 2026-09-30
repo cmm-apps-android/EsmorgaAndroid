@@ -1,10 +1,10 @@
 package cmm.apps.esmorga.view.di
 
-import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.domain.poll.model.Poll
 import cmm.apps.esmorga.view.activateaccount.ActivateAccountViewModel
 import cmm.apps.esmorga.view.changepassword.ChangePasswordViewModel
+import cmm.apps.esmorga.view.createevent.CreateEventFlowSession
 import cmm.apps.esmorga.view.createevent.createeventinfo.CreateEventFormTitleViewModel
 import cmm.apps.esmorga.view.createevent.createeventdate.CreateEventFormDateViewModel
 import cmm.apps.esmorga.view.createevent.createeventimage.CreateEventFormImageViewModel
@@ -67,23 +67,17 @@ object ViewDIModule {
 
         viewModel { ChangePasswordViewModel(get()) }
 
-        viewModel { CreateEventFormTitleViewModel() }
+        single { CreateEventFlowSession() }
 
-        viewModel { (eventForm: CreateEventForm) ->
-            CreateEventFormTypeViewModel(eventForm)
-        }
+        viewModel { CreateEventFormTitleViewModel(get()) }
 
-        viewModel { (eventForm: CreateEventForm) ->
-            CreateEventFormDateViewModel(eventForm, get())
-        }
+        viewModel { CreateEventFormTypeViewModel(get()) }
 
-        viewModel { (eventForm: CreateEventForm) ->
-            CreateEventFormLocationViewModel(eventForm)
-        }
+        viewModel { CreateEventFormDateViewModel(get(), get()) }
 
-        viewModel { (eventForm: CreateEventForm) ->
-            CreateEventFormImageViewModel(eventForm, get())
-        }
+        viewModel { CreateEventFormLocationViewModel(get()) }
+
+        viewModel { CreateEventFormImageViewModel(get(), get()) }
 
         single<EsmorgaDateTimeFormatter> { DateFormatterImpl() }
     }

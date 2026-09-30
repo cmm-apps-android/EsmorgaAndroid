@@ -1,7 +1,7 @@
 package cmm.apps.esmorga.view.viewmodel.createEventLocation
 
 import app.cash.turbine.test
-import cmm.apps.esmorga.domain.event.model.CreateEventForm
+import cmm.apps.esmorga.view.createevent.CreateEventFlowSession
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.createevent.createeventlocation.CreateEventFormLocationViewModel
 import cmm.apps.esmorga.view.createevent.createeventlocation.model.CreateEventFormLocationEffect
@@ -16,12 +16,12 @@ import org.junit.Test
 class CreateEventFormLocationViewModelTest {
 
     private lateinit var viewModel: CreateEventFormLocationViewModel
+    private lateinit var flowViewModel: CreateEventFlowSession
 
     @Before
     fun setup() {
-        viewModel = CreateEventFormLocationViewModel(
-            eventForm = CreateEventForm()
-        )
+        flowViewModel = CreateEventFlowSession()
+        viewModel = CreateEventFormLocationViewModel(flowViewModel)
     }
 
     @Test
@@ -99,11 +99,8 @@ class CreateEventFormLocationViewModelTest {
             viewModel.onNextClick()
 
             val effect = awaitItem()
-            assertTrue(effect is CreateEventFormLocationEffect.NavigateNext)
-
-            val navigateEffect = effect as CreateEventFormLocationEffect.NavigateNext
-            val form = navigateEffect.eventForm
-
+            assertEquals(CreateEventFormLocationEffect.NavigateNext, effect)
+            val form = flowViewModel.eventForm.value
             assertEquals(expectedLocation, form.location?.name)
             assertEquals(expectedLat, form.location?.lat)
             assertEquals(expectedLong, form.location?.long)
@@ -113,9 +110,18 @@ class CreateEventFormLocationViewModelTest {
 
     @Test
     fun `given location screen when back clicked then emits navigate back`() = runTest {
+        viewModel.onLocationChanged("A Coruna")
+        viewModel.onCoordinatesChanged("43.3623, -8.4115")
+        viewModel.onMaxCapacityChanged("250")
+
         viewModel.effect.test {
             viewModel.onBackClick()
             assertEquals(CreateEventFormLocationEffect.NavigateBack, awaitItem())
+            val form = flowViewModel.eventForm.value
+            assertEquals("A Coruna", form.location?.name)
+            assertEquals(43.3623, form.location?.lat)
+            assertEquals(-8.4115, form.location?.long)
+            assertEquals(250, form.maxCapacity)
         }
     }
 
@@ -169,5 +175,41 @@ class CreateEventFormLocationViewModelTest {
         val state = viewModel.uiState.value
         assertEquals(R.string.inline_error_coordinates_invalid, state.coordinatesError)
         assertFalse(state.isButtonEnabled)
+    }
+
+    @Test
+    fun `given persisted location data when initialized then state is restored from shared flow`() {
+        flowViewModel.updateLocation(
+            location = cmm.apps.esmorga.domain.event.model.EventLocation(
+                name = "Bilbao",
+                lat = 43.2630,
+                long = -2.9350
+            ),
+            maxCapacity = 200
+        )
+
+        viewModel = CreateEventFormLocationViewModel(flowViewModel)
+
+        val state = viewModel.uiState.value
+        assertEquals("Bilbao", state.localizationName)
+        assertEquals("43.263, -2.935", state.localizationCoordinates)
+        assertEquals("200", state.eventMaxCapacity)
+        assertTrue(state.isButtonEnabled)
+    }
+
+    @Test
+    fun `given location data persisted on back when viewModel recreated then state is restored`() {
+        viewModel.onLocationChanged("Vigo")
+        viewModel.onCoordinatesChanged("42.2406, -8.7207")
+        viewModel.onMaxCapacityChanged("400")
+        viewModel.onBackClick()
+
+        val restoredViewModel = CreateEventFormLocationViewModel(flowViewModel)
+        val state = restoredViewModel.uiState.value
+
+        assertEquals("Vigo", state.localizationName)
+        assertEquals("42.2406, -8.7207", state.localizationCoordinates)
+        assertEquals("400", state.eventMaxCapacity)
+        assertTrue(state.isButtonEnabled)
     }
 }

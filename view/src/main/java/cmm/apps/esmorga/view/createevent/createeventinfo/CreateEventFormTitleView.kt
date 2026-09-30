@@ -18,65 +18,59 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmm.apps.designsystem.EsmorgaButton
 import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextField
 import cmm.apps.designsystem.EsmorgaTextStyle
-import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.createevent.createeventinfo.model.CreateEventFormEffect
-import org.koin.androidx.compose.koinViewModel
+import cmm.apps.esmorga.view.createevent.createeventinfo.model.CreateEventFormUiState
+import cmm.apps.esmorga.view.theme.EsmorgaTheme
+import org.koin.compose.viewmodel.koinViewModel
 
 @Screen
 @Composable
 fun CreateEventFormScreen(
     viewModel: CreateEventFormTitleViewModel = koinViewModel(),
     onBack: () -> Unit,
-    onNext: (CreateEventForm) -> Unit
+    onNext: () -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState: CreateEventFormUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
                 is CreateEventFormEffect.NavigateBack -> onBack()
-                is CreateEventFormEffect.NavigateNext -> onNext(effect.eventForm)
+                is CreateEventFormEffect.NavigateNext -> onNext()
             }
         }
     }
 
-
-    CreateEventFormTitleScreenContent(
-        eventName = uiState.eventName,
-        onEventNameChange = viewModel::onEventNameChange,
-        eventNameError = uiState.eventNameError,
-        description = uiState.eventDescription,
-        onDescriptionChange = viewModel::onDescriptionChange,
-        descriptionError = uiState.descriptionError,
-        isFormValid = uiState.isFormValid,
-        onBackClick = { viewModel.onBackClick() },
-        onNextClick = { viewModel.onNextClick() }
-    )
+    EsmorgaTheme {
+        CreateEventFormTitleScreenContent(
+            uiState = uiState,
+            onEventNameChange = viewModel::onEventNameChange,
+            onDescriptionChange = viewModel::onDescriptionChange,
+            onBackClick = viewModel::onBackClick,
+            onNextClick = viewModel::onNextClick
+        )
+    }
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateEventFormTitleScreenContent(
-    eventName: String,
+    uiState: CreateEventFormUiState,
     onEventNameChange: (String) -> Unit,
-    eventNameError: Int?,
-    description: String?,
     onDescriptionChange: (String) -> Unit,
-    descriptionError: Int?,
-    isFormValid: Boolean,
     onBackClick: () -> Unit,
     onNextClick: () -> Unit,
 ) {
@@ -108,20 +102,20 @@ fun CreateEventFormTitleScreenContent(
             )
 
             EsmorgaTextField(
-                value = eventName,
+                value = uiState.eventName,
                 onValueChange = onEventNameChange,
                 title = R.string.field_title_event_name,
                 placeholder = R.string.placeholder_event_name,
                 modifier = Modifier
                     .fillMaxWidth()
                     .testTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_NAME),
-                errorText = eventNameError?.let { stringResource(it) }
+                errorText = uiState.eventNameError?.let { stringResource(it) }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             EsmorgaTextField(
-                value = description.orEmpty(),
+                value = uiState.eventDescription.orEmpty(),
                 onValueChange = onDescriptionChange,
                 title = R.string.field_title_event_description,
                 modifier = Modifier
@@ -131,12 +125,12 @@ fun CreateEventFormTitleScreenContent(
                 singleLine = false,
                 maxChars = 5000,
                 placeholder = R.string.placeholder_event_description,
-                errorText = descriptionError?.let { stringResource(it) }
+                errorText = uiState.descriptionError?.let { stringResource(it) }
             )
 
             EsmorgaButton(
                 text = stringResource(id = R.string.step_continue_button),
-                isEnabled = isFormValid,
+                isEnabled = uiState.isFormValid,
                 onClick = onNextClick,
                 modifier = Modifier
                     .fillMaxWidth()

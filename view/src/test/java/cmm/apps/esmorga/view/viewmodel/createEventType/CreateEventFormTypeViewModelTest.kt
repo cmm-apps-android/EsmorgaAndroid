@@ -1,28 +1,23 @@
 package cmm.apps.esmorga.view.viewmodel.createEventType
 
 import app.cash.turbine.test
-import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.domain.event.model.EventType
+import cmm.apps.esmorga.view.createevent.CreateEventFlowSession
 import cmm.apps.esmorga.view.createevent.createeventtype.CreateEventFormTypeViewModel
 import cmm.apps.esmorga.view.createevent.createeventtype.model.CreateEventTypeScreenEffect
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
 class CreateEventFormTypeViewModelTest {
     private lateinit var viewModel: CreateEventFormTypeViewModel
-    private lateinit var initialForm: CreateEventForm
+    private lateinit var flowViewModel: CreateEventFlowSession
 
     @Before
     fun setup() {
-        initialForm = CreateEventForm(
-            name = "Initial Name",
-            description = "Initial Description",
-            type = EventType.PARTY
-        )
-        viewModel = CreateEventFormTypeViewModel(initialForm)
+        flowViewModel = CreateEventFlowSession().apply { updateType(EventType.PARTY) }
+        viewModel = CreateEventFormTypeViewModel(flowViewModel)
     }
 
     @Test
@@ -33,6 +28,20 @@ class CreateEventFormTypeViewModelTest {
             cancelAndIgnoreRemainingEvents()
         }
     }
+
+    @Test
+    fun `given initial form with existing type when screen started then existing type is selected`() = runTest {
+        val flowViewModel = CreateEventFlowSession().apply { updateType(EventType.CHARITY) }
+        val viewModel = CreateEventFormTypeViewModel(flowViewModel)
+
+        viewModel.uiState.test {
+            val state = awaitItem()
+            assertEquals(EventType.CHARITY, state.type)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+
 
     @Test
     fun `given initial state when event type selected then updates selected event type`() = runTest {
@@ -54,9 +63,11 @@ class CreateEventFormTypeViewModelTest {
     @Test
     fun `given create event type screen when back clicked then navigate to previous screen`() = runTest {
         viewModel.effect.test {
+            viewModel.onEventTypeSelected(EventType.FOOD)
             viewModel.onBackClick()
             val effect = awaitItem()
             assertEquals(CreateEventTypeScreenEffect.NavigateBack, effect)
+            assertEquals(EventType.FOOD, flowViewModel.eventForm.value.type)
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -68,12 +79,8 @@ class CreateEventFormTypeViewModelTest {
         viewModel.effect.test {
             viewModel.onNextClick()
             val effect = awaitItem()
-            assertTrue(effect is CreateEventTypeScreenEffect.NavigateNext)
-            val navigateNext = effect as CreateEventTypeScreenEffect.NavigateNext
-
-            assertEquals(initialForm.name, navigateNext.eventForm.name)
-            assertEquals(initialForm.description, navigateNext.eventForm.description)
-            assertEquals(EventType.GAMES, navigateNext.eventForm.type)
+            assertEquals(CreateEventTypeScreenEffect.NavigateNext, effect)
+            assertEquals(EventType.GAMES, flowViewModel.eventForm.value.type)
 
             cancelAndIgnoreRemainingEvents()
         }

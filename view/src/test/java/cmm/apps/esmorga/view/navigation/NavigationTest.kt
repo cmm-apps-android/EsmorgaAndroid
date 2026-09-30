@@ -20,7 +20,6 @@ import cmm.apps.designsystem.GuestErrorTestTags.GUEST_ERROR_PRIMARY_BUTTON
 import cmm.apps.esmorga.domain.account.ActivateAccountUseCase
 import cmm.apps.esmorga.domain.event.CreateEventUseCase
 import cmm.apps.esmorga.domain.event.GetEventAttendeesUseCase
-import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.domain.event.GetEventsAndPollsUseCase
 import cmm.apps.esmorga.domain.event.GetMyEventListUseCase
 import cmm.apps.esmorga.domain.event.JoinEventUseCase
@@ -32,6 +31,8 @@ import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.EsmorgaResult
 import cmm.apps.esmorga.domain.result.Source
+import cmm.apps.esmorga.domain.event.model.EventLocation
+import cmm.apps.esmorga.domain.event.model.EventType
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.domain.user.LogOutUseCase
 import cmm.apps.esmorga.domain.user.PerformChangePasswordUseCase
@@ -40,14 +41,15 @@ import cmm.apps.esmorga.domain.user.PerformRecoverPasswordUseCase
 import cmm.apps.esmorga.domain.user.PerformRegistrationConfirmationUseCase
 import cmm.apps.esmorga.domain.user.PerformRegistrationUserCase
 import cmm.apps.esmorga.domain.user.repository.PerformResetPasswordUseCase
+import cmm.apps.esmorga.view.createevent.CreateEventFlowSession
 import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD_BUTTON
 import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD_CURRENT_PASS_INPUT
 import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD_NEW_PASS_INPUT
 import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD_REPEAT_PASS_INPUT
 import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD_SCREEN_TITLE
-import cmm.apps.esmorga.view.createevent.createeventinfo.CreateEventFormTitleScreenTestTags
 import cmm.apps.esmorga.view.createevent.createeventdate.CreateEventDateScreenTestTags
 import cmm.apps.esmorga.view.createevent.createeventimage.CreateEventImageScreenTestTags
+import cmm.apps.esmorga.view.createevent.createeventinfo.CreateEventFormTitleScreenTestTags
 import cmm.apps.esmorga.view.createevent.createeventlocation.CreateEventLocationScreenTestTags
 import cmm.apps.esmorga.view.createevent.createeventtype.CreateEventTypeScreenTestTags
 import cmm.apps.esmorga.view.di.ViewDIModule
@@ -216,6 +218,7 @@ class NavigationTest {
                     factory<PerformChangePasswordUseCase> { performChangePasswordUseCase }
                     factory<CreateEventUseCase> { createEventUseCase }
                     factory<ObserveNotificationClickUseCase> { observeNotificationClickUseCase }
+                    single { CreateEventFlowSession() }
                 }
             )
         }
@@ -570,8 +573,7 @@ class NavigationTest {
 
     @Test
     fun `given create event form location screen, when user enters location and taps next, then image screen is shown`() {
-        val form = CreateEventForm(name = "Test Name", description = "Test Description", date = "2024-07-17T12:00:00.000Z")
-        setNavigationFromDestination(Navigation.CreateEventFormLocationScreen(form))
+        setNavigationFromDestination(Navigation.CreateEventFormLocationScreen)
         composeTestRule.waitForIdle()
 
         composeTestRule.onNodeWithTag(CreateEventLocationScreenTestTags.CREATE_EVENT_LOCATION_TITLE).assertIsDisplayed()
@@ -584,8 +586,7 @@ class NavigationTest {
 
     @Test
     fun `given create event form image screen, when user taps back, then location screen is shown`() {
-        val form = CreateEventForm(name = "Test Name", description = "Test Description", date = "2024-07-17T12:00:00.000Z")
-        setNavigationFromDestination(Navigation.CreateEventFormLocationScreen(form))
+        setNavigationFromDestination(Navigation.CreateEventFormLocationScreen)
         composeTestRule.waitForIdle()
 
         composeTestRule.onNodeWithTag(CreateEventLocationScreenTestTags.CREATE_EVENT_LOCATION_TITLE).assertIsDisplayed()
@@ -602,10 +603,8 @@ class NavigationTest {
 
     @Test
     fun `given create event form image screen, when user taps create event, then explore screen is shown`() {
-        val form = CreateEventForm(name = "Test Name", description = "Test Description", date = "2024-07-17T12:00:00.000Z")
-        setNavigationFromDestination(Navigation.CreateEventFormImageScreen(form))
+        setNavigationFromDestination(Navigation.CreateEventFormImageScreen)
         composeTestRule.waitForIdle()
-
 
         composeTestRule.onNodeWithTag(CreateEventImageScreenTestTags.CREATE_EVENT_IMAGE_TITLE).assertIsDisplayed()
         composeTestRule.onNodeWithTag(CreateEventImageScreenTestTags.CREATE_EVENT_IMAGE_CREATE_BUTTON).performClick()
@@ -640,4 +639,3 @@ class NavigationTest {
         }
     }
 }
-

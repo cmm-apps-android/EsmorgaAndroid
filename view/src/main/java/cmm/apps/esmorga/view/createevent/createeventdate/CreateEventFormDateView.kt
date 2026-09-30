@@ -23,6 +23,7 @@ import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -41,7 +42,6 @@ import cmm.apps.designsystem.EsmorgaText
 import cmm.apps.designsystem.EsmorgaTextStyle
 import cmm.apps.designsystem.EsmorgaTimePickerDialog
 import cmm.apps.designsystem.PossibleSelectableDates
-import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.createevent.createeventdate.CreateEventDateScreenTestTags.CREATE_EVENT_DATE_BACK_BUTTON
@@ -50,10 +50,8 @@ import cmm.apps.esmorga.view.createevent.createeventdate.CreateEventDateScreenTe
 import cmm.apps.esmorga.view.createevent.createeventdate.model.CreateEventFormDateEffect
 import cmm.apps.esmorga.view.createevent.createeventdate.model.CreateEventFormDateUiState
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
-import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
+import org.koin.compose.viewmodel.koinViewModel
 import java.time.LocalDate
-import java.time.LocalTime
 import java.time.ZoneOffset
 import java.util.Date
 
@@ -61,17 +59,16 @@ import java.util.Date
 @Screen
 @Composable
 fun CreateEventFormDateScreen(
-    eventForm: CreateEventForm,
-    viewModel: CreateEventFormDateViewModel = koinViewModel(parameters = { parametersOf(eventForm) }),
+    viewModel: CreateEventFormDateViewModel = koinViewModel(),
     onBackPressed: () -> Unit,
-    onNextClick: (CreateEventForm) -> Unit
+    onNextClick: () -> Unit
 ) {
     val uiState: CreateEventFormDateUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { eff ->
             when (eff) {
-                is CreateEventFormDateEffect.NavigateNext -> onNextClick(eff.eventForm)
+                is CreateEventFormDateEffect.NavigateNext -> onNextClick()
                 is CreateEventFormDateEffect.NavigateBack -> onBackPressed()
             }
         }
@@ -82,17 +79,47 @@ fun CreateEventFormDateScreen(
     }
 
     val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = System.currentTimeMillis(),
+        initialSelectedDateMillis = uiState.selectedDateMillis ?: System.currentTimeMillis(),
         selectableDates = PossibleSelectableDates(startOfToday)
     )
 
     val deadlineDatePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = datePickerState.selectedDateMillis ?: System.currentTimeMillis(),
+        initialSelectedDateMillis = uiState.selectedDeadlineDateMillis
+            ?: datePickerState.selectedDateMillis
+            ?: System.currentTimeMillis(),
         selectableDates = DeadlineSelectableDates(
             startOfToday = startOfToday,
             eventDateMidnightMillis = datePickerState.selectedDateMillis ?: Long.MAX_VALUE
         )
     )
+
+    LaunchedEffect(datePickerState.selectedDateMillis) {
+        if (datePickerState.selectedDateMillis != null && uiState.selectedDateMillis != datePickerState.selectedDateMillis) {
+            viewModel.onDateSelected(datePickerState.selectedDateMillis)
+        }
+    }
+
+    LaunchedEffect(uiState.selectedDateMillis) {
+        val currentMillis = datePickerState.selectedDateMillis
+        val targetMillis = uiState.selectedDateMillis
+        if (targetMillis != null && currentMillis != targetMillis) {
+            datePickerState.selectedDateMillis = targetMillis
+        }
+    }
+
+    LaunchedEffect(deadlineDatePickerState.selectedDateMillis) {
+        if (uiState.selectedDeadlineDateMillis != deadlineDatePickerState.selectedDateMillis) {
+            viewModel.onDeadlineDateChanged(datePickerState.selectedDateMillis, deadlineDatePickerState.selectedDateMillis)
+        }
+    }
+
+    LaunchedEffect(uiState.selectedDeadlineDateMillis) {
+        val currentMillis = deadlineDatePickerState.selectedDateMillis
+        val targetMillis = uiState.selectedDeadlineDateMillis
+        if (targetMillis != null && currentMillis != targetMillis) {
+            deadlineDatePickerState.selectedDateMillis = targetMillis
+        }
+    }
 
     EsmorgaTheme {
         CreateEventFormDateView(
@@ -129,17 +156,24 @@ fun CreateEventFormDateView(
     onNextClick: (Date, String, Date?, String) -> Unit
 ) {
     var shownEventTimeDialog by rememberSaveable { mutableStateOf(false) }
-    var timeSelected by rememberSaveable { mutableStateOf("") }
-
     var shownDeadlineTimeDialog by rememberSaveable { mutableStateOf(false) }
-    var deadlineTimeSelected by rememberSaveable { mutableStateOf("") }
 
-    val eventTimeState = rememberTimePickerState(
-        initialHour = LocalTime.now().hour,
-        initialMinute = LocalTime.now().minute
-    )
+    val eventTimeParts = remember(uiState.eventTime) { uiState.eventTime.parseTimeParts() }
+    val deadlineTimeParts = remember(uiState.deadlineTime) { uiState.deadlineTime.parseTimeParts(defaultHour = 23, defaultMinute = 59) }
 
-    val deadlineTimeState = rememberTimePickerState(initialHour = 23, initialMinute = 59)
+    val eventTimeState = key(eventTimeParts) {
+        rememberTimePickerState(
+            initialHour = eventTimeParts.first,
+            initialMinute = eventTimeParts.second
+        )
+    }
+
+    val deadlineTimeState = key(deadlineTimeParts) {
+        rememberTimePickerState(
+            initialHour = deadlineTimeParts.first,
+            initialMinute = deadlineTimeParts.second
+        )
+    }
 
     LaunchedEffect(deadlineDatePickerState.selectedDateMillis) {
         onDeadlineDateChanged(deadlineDatePickerState.selectedDateMillis)
@@ -151,7 +185,6 @@ fun CreateEventFormDateView(
             onDismiss = { shownEventTimeDialog = false },
             onConfirm = { time ->
                 shownEventTimeDialog = false
-                timeSelected = time
                 onTimeSelected(time)
             },
             formattedTime = formattedTime,
@@ -168,7 +201,6 @@ fun CreateEventFormDateView(
             onDismiss = { shownDeadlineTimeDialog = false },
             onConfirm = { time ->
                 shownDeadlineTimeDialog = false
-                deadlineTimeSelected = time
                 onDeadlineTimeSelected(deadlineDatePickerState.selectedDateMillis, time)
             },
             formattedTime = formattedTime,
@@ -224,7 +256,7 @@ fun CreateEventFormDateView(
             EsmorgaRow(
                 title = stringResource(R.string.step_3_screen_row_time),
                 onClick = { shownEventTimeDialog = true },
-                caption = timeSelected.take(5),
+                caption = uiState.eventTime.take(5),
                 modifier = Modifier.testTag(CreateEventDateScreenTestTags.CREATE_EVENT_DATE_TIME_ROW)
             )
 
@@ -263,7 +295,7 @@ fun CreateEventFormDateView(
                 EsmorgaRow(
                     title = stringResource(R.string.field_title_join_deadline_time),
                     onClick = { shownDeadlineTimeDialog = true },
-                    caption = deadlineTimeSelected.take(5),
+                    caption = uiState.deadlineTime.take(5),
                     modifier = Modifier.testTag(CreateEventDateScreenTestTags.CREATE_EVENT_DATE_DEADLINE_TIME_ROW)
                 )
             }
@@ -275,9 +307,9 @@ fun CreateEventFormDateView(
                     .padding(top = 32.dp, bottom = 16.dp)
                     .testTag(CREATE_EVENT_DATE_NEXT_BUTTON),
             ) {
-                val date = Date(datePickerState.selectedDateMillis ?: 0)
-                val joinDeadlineDate = Date(deadlineDatePickerState.selectedDateMillis ?: 0)
-                onNextClick(date, timeSelected, joinDeadlineDate, deadlineTimeSelected)
+                val date = Date(datePickerState.selectedDateMillis ?: uiState.selectedDateMillis ?: System.currentTimeMillis())
+                val joinDeadlineDate = Date(deadlineDatePickerState.selectedDateMillis ?: uiState.selectedDeadlineDateMillis ?: System.currentTimeMillis())
+                onNextClick(date, uiState.eventTime, joinDeadlineDate, uiState.deadlineTime)
             }
         }
     }
@@ -293,4 +325,12 @@ object CreateEventDateScreenTestTags {
     const val CREATE_EVENT_DATE_DEADLINE_TOGGLE_LABEL = "create_event_date_deadline_toggle_label"
     const val CREATE_EVENT_DATE_DEADLINE_TIME_ROW = "create_event_date_deadline_time_row"
     const val CREATE_EVENT_DATE_DEADLINE_TIME_CONFIRM_BUTTON = "create_event_date_deadline_time_confirm_button"
+}
+
+private fun String.parseTimeParts(defaultHour: Int = 0, defaultMinute: Int = 0): Pair<Int, Int> {
+    if (isBlank()) return defaultHour to defaultMinute
+    val parts = split(":")
+    val hour = parts.getOrNull(0)?.toIntOrNull() ?: defaultHour
+    val minute = parts.getOrNull(1)?.toIntOrNull() ?: defaultMinute
+    return hour to minute
 }

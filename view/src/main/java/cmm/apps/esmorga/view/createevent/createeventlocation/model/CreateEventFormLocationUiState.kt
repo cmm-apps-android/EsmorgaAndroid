@@ -1,7 +1,5 @@
 package cmm.apps.esmorga.view.createevent.createeventlocation.model
 
-import cmm.apps.esmorga.domain.event.model.CreateEventForm
-
 data class CreateEventFormLocationUiState(
     val localizationName: String = "",
     val localizationCoordinates: String = "",
@@ -13,6 +11,6 @@ data class CreateEventFormLocationUiState(
 )
 
 sealed class CreateEventFormLocationEffect{
-    data class NavigateNext(val eventForm: CreateEventForm) : CreateEventFormLocationEffect()
+    data object NavigateNext : CreateEventFormLocationEffect()
     data object NavigateBack : CreateEventFormLocationEffect()
 }
