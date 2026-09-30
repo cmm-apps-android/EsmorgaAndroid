@@ -31,6 +31,8 @@ import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.EsmorgaResult
 import cmm.apps.esmorga.domain.result.Source
+import cmm.apps.esmorga.domain.event.model.EventLocation
+import cmm.apps.esmorga.domain.event.model.EventType
 import cmm.apps.esmorga.domain.user.GetSavedUserUseCase
 import cmm.apps.esmorga.domain.user.LogOutUseCase
 import cmm.apps.esmorga.domain.user.PerformChangePasswordUseCase
@@ -39,15 +41,15 @@ import cmm.apps.esmorga.domain.user.PerformRecoverPasswordUseCase
 import cmm.apps.esmorga.domain.user.PerformRegistrationConfirmationUseCase
 import cmm.apps.esmorga.domain.user.PerformRegistrationUserCase
 import cmm.apps.esmorga.domain.user.repository.PerformResetPasswordUseCase
+import cmm.apps.esmorga.view.createevent.CreateEventFlowSession
 import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD_BUTTON
 import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD_CURRENT_PASS_INPUT
 import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD_NEW_PASS_INPUT
 import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD_REPEAT_PASS_INPUT
 import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD_SCREEN_TITLE
-import cmm.apps.esmorga.view.createevent.createeventinfo.CreateEventFormTitleScreenTestTags
-import cmm.apps.esmorga.view.createevent.CreateEventFlowSession
 import cmm.apps.esmorga.view.createevent.createeventdate.CreateEventDateScreenTestTags
 import cmm.apps.esmorga.view.createevent.createeventimage.CreateEventImageScreenTestTags
+import cmm.apps.esmorga.view.createevent.createeventinfo.CreateEventFormTitleScreenTestTags
 import cmm.apps.esmorga.view.createevent.createeventlocation.CreateEventLocationScreenTestTags
 import cmm.apps.esmorga.view.createevent.createeventtype.CreateEventTypeScreenTestTags
 import cmm.apps.esmorga.view.di.ViewDIModule
@@ -103,7 +105,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.android.ext.koin.androidContext
 import org.koin.compose.KoinContext
-import org.koin.core.context.GlobalContext
 import org.koin.core.context.loadKoinModules
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
@@ -217,6 +218,7 @@ class NavigationTest {
                     factory<PerformChangePasswordUseCase> { performChangePasswordUseCase }
                     factory<CreateEventUseCase> { createEventUseCase }
                     factory<ObserveNotificationClickUseCase> { observeNotificationClickUseCase }
+                    single { CreateEventFlowSession() }
                 }
             )
         }
@@ -520,7 +522,7 @@ class NavigationTest {
 
     @Test
     fun `given user is in CreateEventFormTitleScreen when clicks next then navigates to CreateEventFormTypeScreen`() {
-        setNavigationFromDestination(Navigation.CreateEventFlow)
+        setNavigationFromDestination(Navigation.CreateEventFormTitleScreen)
         composeTestRule.waitForIdle()
 
         composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_TITLE).assertIsDisplayed()
@@ -535,7 +537,7 @@ class NavigationTest {
 
     @Test
     fun `navigate back from CreateEventFormTypeScreen to CreateEventFormScreen`() {
-        setNavigationFromDestination(Navigation.CreateEventFlow)
+        setNavigationFromDestination(Navigation.CreateEventFormTitleScreen)
         composeTestRule.waitForIdle()
 
         composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_NAME).performTextInput("Test Name")
@@ -552,7 +554,7 @@ class NavigationTest {
 
     @Test
     fun `navigate back from CreateEventFormDateScreen to CreateEventFormScreen`() {
-        setNavigationFromDestination(Navigation.CreateEventFlow)
+        setNavigationFromDestination(Navigation.CreateEventFormTitleScreen)
         composeTestRule.waitForIdle()
 
         composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_NAME).performTextInput("Test Name")
@@ -571,18 +573,7 @@ class NavigationTest {
 
     @Test
     fun `given create event form location screen, when user enters location and taps next, then image screen is shown`() {
-        seedCreateEventFlow()
-        setNavigationFromDestination(Navigation.CreateEventFlow)
-        composeTestRule.waitForIdle()
-
-        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_NAME).performTextInput("Test Name")
-        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_DESCRIPTION).performTextInput("Test Description with 20+ chars")
-        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_NEXT_BUTTON).performClick()
-        composeTestRule.onNodeWithTag(CreateEventTypeScreenTestTags.CREATE_EVENT_TYPE_NEXT_BUTTON).performClick()
-        composeTestRule.onNodeWithTag(CreateEventDateScreenTestTags.CREATE_EVENT_DATE_TIME_ROW).performClick()
-        composeTestRule.onNodeWithTag(CreateEventDateScreenTestTags.CREATE_EVENT_DATE_TIME_CONFIRM_BUTTON).performClick()
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag(CreateEventDateScreenTestTags.CREATE_EVENT_DATE_NEXT_BUTTON).performClick()
+        setNavigationFromDestination(Navigation.CreateEventFormLocationScreen)
         composeTestRule.waitForIdle()
 
         composeTestRule.onNodeWithTag(CreateEventLocationScreenTestTags.CREATE_EVENT_LOCATION_TITLE).assertIsDisplayed()
@@ -595,18 +586,7 @@ class NavigationTest {
 
     @Test
     fun `given create event form image screen, when user taps back, then location screen is shown`() {
-        seedCreateEventFlow()
-        setNavigationFromDestination(Navigation.CreateEventFlow)
-        composeTestRule.waitForIdle()
-
-        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_NAME).performTextInput("Test Name")
-        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_DESCRIPTION).performTextInput("Test Description with 20+ chars")
-        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_NEXT_BUTTON).performClick()
-        composeTestRule.onNodeWithTag(CreateEventTypeScreenTestTags.CREATE_EVENT_TYPE_NEXT_BUTTON).performClick()
-        composeTestRule.onNodeWithTag(CreateEventDateScreenTestTags.CREATE_EVENT_DATE_TIME_ROW).performClick()
-        composeTestRule.onNodeWithTag(CreateEventDateScreenTestTags.CREATE_EVENT_DATE_TIME_CONFIRM_BUTTON).performClick()
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag(CreateEventDateScreenTestTags.CREATE_EVENT_DATE_NEXT_BUTTON).performClick()
+        setNavigationFromDestination(Navigation.CreateEventFormLocationScreen)
         composeTestRule.waitForIdle()
 
         composeTestRule.onNodeWithTag(CreateEventLocationScreenTestTags.CREATE_EVENT_LOCATION_TITLE).assertIsDisplayed()
@@ -623,22 +603,8 @@ class NavigationTest {
 
     @Test
     fun `given create event form image screen, when user taps create event, then explore screen is shown`() {
-        seedCreateEventFlow()
-        setNavigationFromDestination(Navigation.CreateEventFlow)
+        setNavigationFromDestination(Navigation.CreateEventFormImageScreen)
         composeTestRule.waitForIdle()
-
-        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_NAME).performTextInput("Test Name")
-        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_DESCRIPTION).performTextInput("Test Description with 20+ chars")
-        composeTestRule.onNodeWithTag(CreateEventFormTitleScreenTestTags.CREATE_EVENT_FORM_NEXT_BUTTON).performClick()
-        composeTestRule.onNodeWithTag(CreateEventTypeScreenTestTags.CREATE_EVENT_TYPE_NEXT_BUTTON).performClick()
-        composeTestRule.onNodeWithTag(CreateEventDateScreenTestTags.CREATE_EVENT_DATE_TIME_ROW).performClick()
-        composeTestRule.onNodeWithTag(CreateEventDateScreenTestTags.CREATE_EVENT_DATE_TIME_CONFIRM_BUTTON).performClick()
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag(CreateEventDateScreenTestTags.CREATE_EVENT_DATE_NEXT_BUTTON).performClick()
-        composeTestRule.waitForIdle()
-
-        composeTestRule.onNodeWithTag(CreateEventLocationScreenTestTags.CREATE_EVENT_LOCATION_LOCATION_FIELD).performTextInput("Test Location")
-        composeTestRule.onNodeWithTag(CreateEventLocationScreenTestTags.CREATE_EVENT_LOCATION_NEXT_BUTTON).performClick()
 
         composeTestRule.onNodeWithTag(CreateEventImageScreenTestTags.CREATE_EVENT_IMAGE_TITLE).assertIsDisplayed()
         composeTestRule.onNodeWithTag(CreateEventImageScreenTestTags.CREATE_EVENT_IMAGE_CREATE_BUTTON).performClick()
@@ -662,15 +628,6 @@ class NavigationTest {
                 navController = rememberNavController()
                 EsmorgaNavHost(navigationController = navController, startDestination = startDestination)
             }
-        }
-    }
-
-    private fun seedCreateEventFlow() {
-        GlobalContext.get().get<CreateEventFlowSession>().apply {
-            reset()
-            updateTitle(name = "Test Name", description = "Test Description with 20+ chars")
-            updateType(cmm.apps.esmorga.domain.event.model.EventType.PARTY)
-            updateDate(date = "2026-10-15T12:00:00.000Z", joinDeadline = null)
         }
     }
 

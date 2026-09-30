@@ -16,15 +16,9 @@ import cmm.apps.esmorga.domain.poll.model.Poll
 import cmm.apps.esmorga.view.activateaccount.ActivateAccountScreen
 import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen
 import cmm.apps.esmorga.view.createevent.createeventinfo.CreateEventFormScreen
-import cmm.apps.esmorga.view.createevent.createeventinfo.CreateEventFormTitleViewModel
-import cmm.apps.esmorga.view.createevent.CreateEventFlowSession
-import cmm.apps.esmorga.view.createevent.createeventdate.CreateEventFormDateViewModel
 import cmm.apps.esmorga.view.createevent.createeventdate.CreateEventFormDateScreen
-import cmm.apps.esmorga.view.createevent.createeventimage.CreateEventFormImageViewModel
 import cmm.apps.esmorga.view.createevent.createeventimage.CreateEventFormImageScreen
-import cmm.apps.esmorga.view.createevent.createeventlocation.CreateEventFormLocationViewModel
 import cmm.apps.esmorga.view.createevent.createeventlocation.CreateEventFormLocationScreen
-import cmm.apps.esmorga.view.createevent.createeventtype.CreateEventFormTypeViewModel
 import cmm.apps.esmorga.view.createevent.createeventtype.CreateEventFormTypeScreen
 import cmm.apps.esmorga.view.deeplink.DeeplinkManager.navigateFromDeeplink
 import cmm.apps.esmorga.view.errors.EsmorgaErrorScreen
