@@ -1,7 +1,7 @@
 package cmm.apps.esmorga.view.createevent.createeventinfo
 
 import androidx.lifecycle.ViewModel
-import cmm.apps.esmorga.view.createevent.CreateEventFlowViewModel
+import cmm.apps.esmorga.view.createevent.CreateEventFlowSession
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.createevent.createeventinfo.model.CreateEventFormEffect
 import cmm.apps.esmorga.view.createevent.createeventinfo.model.CreateEventFormUiState
@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 class CreateEventFormTitleViewModel(
-    private val createEventFlowViewModel: CreateEventFlowViewModel
+    private val createEventFlowSession: CreateEventFlowSession
 ) : ViewModel() {
     companion object {
         private const val EVENT_NAME_MIN_LENGTH = 3
@@ -43,13 +43,14 @@ class CreateEventFormTitleViewModel(
     }
 
     fun onBackClick() {
+        createEventFlowSession.reset()
         _effect.tryEmit(CreateEventFormEffect.NavigateBack)
     }
 
     fun onNextClick() {
         val state = _uiState.value
         if (state.isFormValid) {
-            createEventFlowViewModel.updateTitle(
+            createEventFlowSession.updateTitle(
                 name = state.eventName,
                 description = state.eventDescription
             )

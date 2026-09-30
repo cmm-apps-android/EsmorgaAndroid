@@ -1,6 +1,5 @@
 package cmm.apps.esmorga.view.createevent
 
-import androidx.lifecycle.ViewModel
 import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.domain.event.model.EventLocation
 import cmm.apps.esmorga.domain.event.model.EventType
@@ -9,7 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class CreateEventFlowViewModel : ViewModel() {
+class CreateEventFlowSession {
 
     private val _eventForm = MutableStateFlow(CreateEventForm())
     val eventForm: StateFlow<CreateEventForm> = _eventForm.asStateFlow()

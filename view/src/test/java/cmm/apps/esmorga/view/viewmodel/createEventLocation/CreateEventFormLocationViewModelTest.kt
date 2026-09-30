@@ -1,7 +1,7 @@
 package cmm.apps.esmorga.view.viewmodel.createEventLocation
 
 import app.cash.turbine.test
-import cmm.apps.esmorga.view.createevent.CreateEventFlowViewModel
+import cmm.apps.esmorga.view.createevent.CreateEventFlowSession
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.createevent.createeventlocation.CreateEventFormLocationViewModel
 import cmm.apps.esmorga.view.createevent.createeventlocation.model.CreateEventFormLocationEffect
@@ -16,11 +16,11 @@ import org.junit.Test
 class CreateEventFormLocationViewModelTest {
 
     private lateinit var viewModel: CreateEventFormLocationViewModel
-    private lateinit var flowViewModel: CreateEventFlowViewModel
+    private lateinit var flowViewModel: CreateEventFlowSession
 
     @Before
     fun setup() {
-        flowViewModel = CreateEventFlowViewModel()
+        flowViewModel = CreateEventFlowSession()
         viewModel = CreateEventFormLocationViewModel(flowViewModel)
     }
 

@@ -20,7 +20,6 @@ import cmm.apps.designsystem.GuestErrorTestTags.GUEST_ERROR_PRIMARY_BUTTON
 import cmm.apps.esmorga.domain.account.ActivateAccountUseCase
 import cmm.apps.esmorga.domain.event.CreateEventUseCase
 import cmm.apps.esmorga.domain.event.GetEventAttendeesUseCase
-import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.domain.event.GetEventsAndPollsUseCase
 import cmm.apps.esmorga.domain.event.GetMyEventListUseCase
 import cmm.apps.esmorga.domain.event.JoinEventUseCase
@@ -46,7 +45,7 @@ import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD
 import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD_REPEAT_PASS_INPUT
 import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen.CHANGE_PASSWORD_SCREEN_TITLE
 import cmm.apps.esmorga.view.createevent.createeventinfo.CreateEventFormTitleScreenTestTags
-import cmm.apps.esmorga.view.createevent.CreateEventFlowViewModel
+import cmm.apps.esmorga.view.createevent.CreateEventFlowSession
 import cmm.apps.esmorga.view.createevent.createeventdate.CreateEventDateScreenTestTags
 import cmm.apps.esmorga.view.createevent.createeventimage.CreateEventImageScreenTestTags
 import cmm.apps.esmorga.view.createevent.createeventlocation.CreateEventLocationScreenTestTags
@@ -667,7 +666,7 @@ class NavigationTest {
     }
 
     private fun seedCreateEventFlow() {
-        GlobalContext.get().get<CreateEventFlowViewModel>().apply {
+        GlobalContext.get().get<CreateEventFlowSession>().apply {
             reset()
             updateTitle(name = "Test Name", description = "Test Description with 20+ chars")
             updateType(cmm.apps.esmorga.domain.event.model.EventType.PARTY)

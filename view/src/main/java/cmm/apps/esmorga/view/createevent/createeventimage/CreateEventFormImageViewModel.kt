@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cmm.apps.esmorga.domain.event.CreateEventUseCase
 import cmm.apps.esmorga.domain.result.ErrorCodes
-import cmm.apps.esmorga.view.createevent.CreateEventFlowViewModel
+import cmm.apps.esmorga.view.createevent.CreateEventFlowSession
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.createevent.createeventimage.model.CreateEventFormImageEffect
 import cmm.apps.esmorga.view.createevent.createeventimage.model.CreateEventFormImageUiState
@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class CreateEventFormImageViewModel(
-    private val createEventFlowViewModel: CreateEventFlowViewModel,
+    private val createEventFlowSession: CreateEventFlowSession,
     private val createEventUseCase: CreateEventUseCase
 ) : ViewModel() {
 
@@ -40,7 +40,7 @@ class CreateEventFormImageViewModel(
     }
 
     private fun restoreFromFlow() {
-        val imageUrl = createEventFlowViewModel.eventForm.value.imageUrl.orEmpty()
+        val imageUrl = createEventFlowSession.eventForm.value.imageUrl.orEmpty()
         _uiState.value = _uiState.value.copy(
             imageUrl = imageUrl,
             showPreview = imageUrl.isNotBlank()
@@ -83,10 +83,10 @@ class CreateEventFormImageViewModel(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
 
-            val updatedForm = createEventFlowViewModel.eventForm.value
+            val updatedForm = createEventFlowSession.eventForm.value
 
             createEventUseCase(updatedForm).onSuccess {
-                createEventFlowViewModel.reset()
+                createEventFlowSession.reset()
                 _effect.tryEmit(CreateEventFormImageEffect.ShowCreationSuccess(""))
             }.onFailure { error ->
                 if (error.code == ErrorCodes.NO_CONNECTION) {
@@ -103,7 +103,7 @@ class CreateEventFormImageViewModel(
         _uiState.update { currentState ->
             val newState = function(currentState)
             val flowImageUrl = if (newState.showPreview) newState.imageUrl.ifBlank { null } else null
-            createEventFlowViewModel.updateImage(flowImageUrl)
+            createEventFlowSession.updateImage(flowImageUrl)
             newState
         }
     }

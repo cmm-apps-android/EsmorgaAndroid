@@ -1,11 +1,10 @@
 package cmm.apps.esmorga.view.di
 
-import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.domain.poll.model.Poll
 import cmm.apps.esmorga.view.activateaccount.ActivateAccountViewModel
 import cmm.apps.esmorga.view.changepassword.ChangePasswordViewModel
-import cmm.apps.esmorga.view.createevent.CreateEventFlowViewModel
+import cmm.apps.esmorga.view.createevent.CreateEventFlowSession
 import cmm.apps.esmorga.view.createevent.createeventinfo.CreateEventFormTitleViewModel
 import cmm.apps.esmorga.view.createevent.createeventdate.CreateEventFormDateViewModel
 import cmm.apps.esmorga.view.createevent.createeventimage.CreateEventFormImageViewModel
@@ -68,27 +67,17 @@ object ViewDIModule {
 
         viewModel { ChangePasswordViewModel(get()) }
 
-        single { CreateEventFlowViewModel() }
+        single { CreateEventFlowSession() }
 
-        viewModel { (flowViewModel: CreateEventFlowViewModel) ->
-            CreateEventFormTitleViewModel(flowViewModel)
-        }
+        viewModel { CreateEventFormTitleViewModel(get()) }
 
-        viewModel { (flowViewModel: CreateEventFlowViewModel) ->
-            CreateEventFormTypeViewModel(flowViewModel)
-        }
+        viewModel { CreateEventFormTypeViewModel(get()) }
 
-        viewModel { (flowViewModel: CreateEventFlowViewModel) ->
-            CreateEventFormDateViewModel(flowViewModel, get())
-        }
+        viewModel { CreateEventFormDateViewModel(get(), get()) }
 
-        viewModel { (flowViewModel: CreateEventFlowViewModel) ->
-            CreateEventFormLocationViewModel(flowViewModel)
-        }
+        viewModel { CreateEventFormLocationViewModel(get()) }
 
-        viewModel { (flowViewModel: CreateEventFlowViewModel) ->
-            CreateEventFormImageViewModel(flowViewModel, get())
-        }
+        viewModel { CreateEventFormImageViewModel(get(), get()) }
 
         single<EsmorgaDateTimeFormatter> { DateFormatterImpl() }
     }

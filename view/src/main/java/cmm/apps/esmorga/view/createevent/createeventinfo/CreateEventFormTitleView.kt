@@ -33,11 +33,12 @@ import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.createevent.createeventinfo.model.CreateEventFormEffect
 import cmm.apps.esmorga.view.createevent.createeventinfo.model.CreateEventFormUiState
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
+import org.koin.compose.viewmodel.koinViewModel
 
 @Screen
 @Composable
 fun CreateEventFormScreen(
-    viewModel: CreateEventFormTitleViewModel,
+    viewModel: CreateEventFormTitleViewModel = koinViewModel(),
     onBack: () -> Unit,
     onNext: () -> Unit
 ) {

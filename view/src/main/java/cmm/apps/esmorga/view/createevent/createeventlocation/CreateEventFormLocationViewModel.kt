@@ -3,7 +3,7 @@ package cmm.apps.esmorga.view.createevent.createeventlocation
 import androidx.lifecycle.ViewModel
 import cmm.apps.esmorga.domain.event.model.EventLocation
 import cmm.apps.esmorga.view.R
-import cmm.apps.esmorga.view.createevent.CreateEventFlowViewModel
+import cmm.apps.esmorga.view.createevent.CreateEventFlowSession
 import cmm.apps.esmorga.view.createevent.createeventlocation.model.CreateEventFormLocationEffect
 import cmm.apps.esmorga.view.createevent.createeventlocation.model.CreateEventFormLocationUiState
 import kotlinx.coroutines.channels.BufferOverflow
@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class CreateEventFormLocationViewModel(
-    private val createEventFlowViewModel: CreateEventFlowViewModel
+    private val createEventFlowSession: CreateEventFlowSession
 ) : ViewModel() {
 
     companion object {
@@ -39,7 +39,7 @@ class CreateEventFormLocationViewModel(
     }
 
     private fun restoreFromFlow() {
-        val form = createEventFlowViewModel.eventForm.value
+        val form = createEventFlowSession.eventForm.value
         val location = form.location
         val coordinates = if (location?.lat != null && location.long != null) {
             "${location.lat}, ${location.long}"
@@ -124,7 +124,7 @@ class CreateEventFormLocationViewModel(
             long = coordsParts.getOrNull(1)
         )
 
-        createEventFlowViewModel.updateLocation(
+        createEventFlowSession.updateLocation(
             location = location,
             maxCapacity = state.eventMaxCapacity.toIntOrNull()
         )

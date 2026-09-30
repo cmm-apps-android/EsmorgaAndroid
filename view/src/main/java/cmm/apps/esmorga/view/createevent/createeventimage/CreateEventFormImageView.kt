@@ -40,11 +40,12 @@ import cmm.apps.esmorga.view.createevent.createeventimage.model.CreateEventFormI
 import cmm.apps.esmorga.view.errors.model.EsmorgaErrorScreenArguments
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
 import coil.compose.AsyncImage
+import org.koin.compose.viewmodel.koinViewModel
 
 @Screen
 @Composable
 fun CreateEventFormImageScreen(
-    viewModel: CreateEventFormImageViewModel,
+    viewModel: CreateEventFormImageViewModel = koinViewModel(),
     onBackPressed: () -> Unit,
     onCreationSuccess: (String) -> Unit,
     onCreationError: (EsmorgaErrorScreenArguments) -> Unit,

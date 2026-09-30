@@ -50,6 +50,7 @@ import cmm.apps.esmorga.view.createevent.createeventdate.CreateEventDateScreenTe
 import cmm.apps.esmorga.view.createevent.createeventdate.model.CreateEventFormDateEffect
 import cmm.apps.esmorga.view.createevent.createeventdate.model.CreateEventFormDateUiState
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
+import org.koin.compose.viewmodel.koinViewModel
 import java.time.LocalDate
 import java.time.ZoneOffset
 import java.util.Date
@@ -58,7 +59,7 @@ import java.util.Date
 @Screen
 @Composable
 fun CreateEventFormDateScreen(
-    viewModel: CreateEventFormDateViewModel,
+    viewModel: CreateEventFormDateViewModel = koinViewModel(),
     onBackPressed: () -> Unit,
     onNextClick: () -> Unit
 ) {

@@ -32,11 +32,12 @@ import cmm.apps.esmorga.view.createevent.createeventtype.model.CreateEventTypeHe
 import cmm.apps.esmorga.view.createevent.createeventtype.model.CreateEventTypeScreenEffect
 import cmm.apps.esmorga.view.createevent.createeventtype.model.CreateEventTypeScreenUiState
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
+import org.koin.compose.viewmodel.koinViewModel
 
 @Screen
 @Composable
 fun CreateEventFormTypeScreen(
-    createEventviewModel: CreateEventFormTypeViewModel,
+    createEventviewModel: CreateEventFormTypeViewModel = koinViewModel(),
     onBackClick: () -> Unit,
     onNextClick: () -> Unit
 ) {

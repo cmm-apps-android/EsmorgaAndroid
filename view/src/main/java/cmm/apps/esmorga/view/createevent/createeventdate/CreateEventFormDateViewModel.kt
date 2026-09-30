@@ -1,7 +1,7 @@
 package cmm.apps.esmorga.view.createevent.createeventdate
 
 import androidx.lifecycle.ViewModel
-import cmm.apps.esmorga.view.createevent.CreateEventFlowViewModel
+import cmm.apps.esmorga.view.createevent.CreateEventFlowSession
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.createevent.createeventdate.model.CreateEventFormDateEffect
 import cmm.apps.esmorga.view.createevent.createeventdate.model.CreateEventFormDateUiState
@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import java.util.Date
 
 class CreateEventFormDateViewModel(
-    private val createEventFlowViewModel: CreateEventFlowViewModel,
+    private val createEventFlowSession: CreateEventFlowSession,
     private val esmorgaDateTimeFormatter: EsmorgaDateTimeFormatter
 ) : ViewModel() {
 
@@ -31,7 +31,7 @@ class CreateEventFormDateViewModel(
     }
 
     private fun restoreFromFlow() {
-        val form = createEventFlowViewModel.eventForm.value
+        val form = createEventFlowSession.eventForm.value
         updateUiState(
             _uiState.value.copy(
                 selectedDateMillis = form.date?.let(esmorgaDateTimeFormatter::toLocalDateEpochMillis),
@@ -151,7 +151,7 @@ class CreateEventFormDateViewModel(
         } else {
             null
         }
-        createEventFlowViewModel.updateDate(date = dateTime, joinDeadline = joinDeadline)
+        createEventFlowSession.updateDate(date = dateTime, joinDeadline = joinDeadline)
         _effect.tryEmit(CreateEventFormDateEffect.NavigateNext)
     }
 }

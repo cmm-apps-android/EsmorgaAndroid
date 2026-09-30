@@ -31,11 +31,12 @@ import cmm.apps.esmorga.view.Screen
 import cmm.apps.esmorga.view.createevent.createeventlocation.model.CreateEventFormLocationEffect
 import cmm.apps.esmorga.view.createevent.createeventlocation.model.CreateEventFormLocationUiState
 import cmm.apps.esmorga.view.theme.EsmorgaTheme
+import org.koin.compose.viewmodel.koinViewModel
 
 @Screen
 @Composable
 fun CreateEventFormLocationScreen(
-    viewModel: CreateEventFormLocationViewModel,
+    viewModel: CreateEventFormLocationViewModel = koinViewModel(),
     onBackPressed: () -> Unit,
     onNextClick: () -> Unit
 ) {

@@ -2,7 +2,7 @@ package cmm.apps.esmorga.view.viewmodel.createEventDate
 
 import app.cash.turbine.test
 import cmm.apps.esmorga.domain.event.model.EventType
-import cmm.apps.esmorga.view.createevent.CreateEventFlowViewModel
+import cmm.apps.esmorga.view.createevent.CreateEventFlowSession
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.createevent.createeventdate.CreateEventFormDateViewModel
 import cmm.apps.esmorga.view.createevent.createeventdate.model.CreateEventFormDateEffect
@@ -21,14 +21,14 @@ import java.util.TimeZone
 
 class CreateEventFormDateViewModelTest {
     private lateinit var viewModel: CreateEventFormDateViewModel
-    private lateinit var flowViewModel: CreateEventFlowViewModel
+    private lateinit var flowViewModel: CreateEventFlowSession
     private lateinit var dateFormatter: DateFormatterImpl
     private val previousTimeZone: TimeZone = TimeZone.getDefault()
 
     @Before
     fun setup() {
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
-        flowViewModel = CreateEventFlowViewModel().apply {
+        flowViewModel = CreateEventFlowSession().apply {
             updateTitle(name = "Initial Name", description = "Initial Description")
             updateType(EventType.PARTY)
         }
