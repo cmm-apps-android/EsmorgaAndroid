@@ -1,6 +1,7 @@
 package cmm.apps.esmorga.view.viewmodel.createEventForm
 
 import app.cash.turbine.test
+import cmm.apps.esmorga.view.createevent.CreateEventFlowViewModel
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.createevent.createeventinfo.CreateEventFormTitleViewModel
 import cmm.apps.esmorga.view.createevent.createeventinfo.model.CreateEventFormEffect
@@ -15,10 +16,12 @@ import org.junit.Test
 class CreateEventFormTitleViewModelTest {
 
     private lateinit var viewModel: CreateEventFormTitleViewModel
+    private lateinit var flowViewModel: CreateEventFlowViewModel
 
     @Before
     fun setup() {
-        viewModel = CreateEventFormTitleViewModel()
+        flowViewModel = CreateEventFlowViewModel()
+        viewModel = CreateEventFormTitleViewModel(flowViewModel)
     }
 
     @Test
@@ -103,9 +106,8 @@ class CreateEventFormTitleViewModelTest {
 
             val effect = awaitItem()
             assertTrue(effect is CreateEventFormEffect.NavigateNext)
-            val navigateEffect = effect as CreateEventFormEffect.NavigateNext
-            assertEquals("Valid Name", navigateEffect.eventForm.name)
-            assertEquals("Valid description with at least 20 chars", navigateEffect.eventForm.description)
+            assertEquals("Valid Name", flowViewModel.eventForm.value.name)
+            assertEquals("Valid description with at least 20 chars", flowViewModel.eventForm.value.description)
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -120,13 +122,14 @@ class CreateEventFormTitleViewModelTest {
 
             val effect = awaitItem()
             assertTrue(effect is CreateEventFormEffect.NavigateNext)
-            val navigateEffect = effect as CreateEventFormEffect.NavigateNext
-            assertEquals("Valid Name", navigateEffect.eventForm.name)
-            assertNull(navigateEffect.eventForm.description)
+            assertEquals("Valid Name", flowViewModel.eventForm.value.name)
+            assertNull(flowViewModel.eventForm.value.description)
 
             cancelAndIgnoreRemainingEvents()
         }
     }
+
+
 
     @Test
     fun `given invalid form when next clicked then does not emit navigate to next screen`() = runTest {

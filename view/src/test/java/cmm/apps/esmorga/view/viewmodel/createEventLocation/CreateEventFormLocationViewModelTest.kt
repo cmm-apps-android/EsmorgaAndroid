@@ -1,7 +1,7 @@
 package cmm.apps.esmorga.view.viewmodel.createEventLocation
 
 import app.cash.turbine.test
-import cmm.apps.esmorga.domain.event.model.CreateEventForm
+import cmm.apps.esmorga.view.createevent.CreateEventFlowViewModel
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.createevent.createeventlocation.CreateEventFormLocationViewModel
 import cmm.apps.esmorga.view.createevent.createeventlocation.model.CreateEventFormLocationEffect
@@ -16,12 +16,12 @@ import org.junit.Test
 class CreateEventFormLocationViewModelTest {
 
     private lateinit var viewModel: CreateEventFormLocationViewModel
+    private lateinit var flowViewModel: CreateEventFlowViewModel
 
     @Before
     fun setup() {
-        viewModel = CreateEventFormLocationViewModel(
-            eventForm = CreateEventForm()
-        )
+        flowViewModel = CreateEventFlowViewModel()
+        viewModel = CreateEventFormLocationViewModel(flowViewModel)
     }
 
     @Test
@@ -99,11 +99,8 @@ class CreateEventFormLocationViewModelTest {
             viewModel.onNextClick()
 
             val effect = awaitItem()
-            assertTrue(effect is CreateEventFormLocationEffect.NavigateNext)
-
-            val navigateEffect = effect as CreateEventFormLocationEffect.NavigateNext
-            val form = navigateEffect.eventForm
-
+            assertEquals(CreateEventFormLocationEffect.NavigateNext, effect)
+            val form = flowViewModel.eventForm.value
             assertEquals(expectedLocation, form.location?.name)
             assertEquals(expectedLat, form.location?.lat)
             assertEquals(expectedLong, form.location?.long)
@@ -169,5 +166,25 @@ class CreateEventFormLocationViewModelTest {
         val state = viewModel.uiState.value
         assertEquals(R.string.inline_error_coordinates_invalid, state.coordinatesError)
         assertFalse(state.isButtonEnabled)
+    }
+
+    @Test
+    fun `given persisted location data when initialized then state is restored from shared flow`() {
+        flowViewModel.updateLocation(
+            location = cmm.apps.esmorga.domain.event.model.EventLocation(
+                name = "Bilbao",
+                lat = 43.2630,
+                long = -2.9350
+            ),
+            maxCapacity = 200
+        )
+
+        viewModel = CreateEventFormLocationViewModel(flowViewModel)
+
+        val state = viewModel.uiState.value
+        assertEquals("Bilbao", state.localizationName)
+        assertEquals("43.263, -2.935", state.localizationCoordinates)
+        assertEquals("200", state.eventMaxCapacity)
+        assertTrue(state.isButtonEnabled)
     }
 }

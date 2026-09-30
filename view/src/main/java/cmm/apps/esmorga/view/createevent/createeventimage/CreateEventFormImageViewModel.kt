@@ -3,8 +3,8 @@ package cmm.apps.esmorga.view.createevent.createeventimage
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cmm.apps.esmorga.domain.event.CreateEventUseCase
-import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.domain.result.ErrorCodes
+import cmm.apps.esmorga.view.createevent.CreateEventFlowViewModel
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.createevent.createeventimage.model.CreateEventFormImageEffect
 import cmm.apps.esmorga.view.createevent.createeventimage.model.CreateEventFormImageUiState
@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class CreateEventFormImageViewModel(
-    private val eventForm: CreateEventForm,
+    private val createEventFlowViewModel: CreateEventFlowViewModel,
     private val createEventUseCase: CreateEventUseCase
 ) : ViewModel() {
 
@@ -35,12 +35,24 @@ class CreateEventFormImageViewModel(
 
     private val urlRegex = Regex("""^https?://.+\.(jpe?g|png|gif|webp)(?:\?.*)?$""", RegexOption.IGNORE_CASE)
 
+    init {
+        restoreFromFlow()
+    }
+
+    private fun restoreFromFlow() {
+        val imageUrl = createEventFlowViewModel.eventForm.value.imageUrl.orEmpty()
+        _uiState.value = _uiState.value.copy(
+            imageUrl = imageUrl,
+            showPreview = imageUrl.isNotBlank()
+        )
+    }
+
     fun onBackClick() {
         _effect.tryEmit(CreateEventFormImageEffect.NavigateBack)
     }
 
     fun onImageUrlChanged(text: String) {
-        _uiState.update { state ->
+        updateUiState { state ->
             state.copy(imageUrl = text, imageError = null)
         }
     }
@@ -49,20 +61,20 @@ class CreateEventFormImageViewModel(
         val url = _uiState.value.imageUrl.trim()
 
         if (url.isBlank()) {
-            _uiState.update { it.copy(imageError = R.string.inline_error_image_url_required) }
+            updateUiState { it.copy(imageError = R.string.inline_error_image_url_required) }
             return
         }
 
         if (!isValidImageUrl(url)) {
-            _uiState.update { it.copy(imageError = R.string.inline_error_image_url_required) }
+            updateUiState { it.copy(imageError = R.string.inline_error_image_url_required) }
             return
         }
 
-        _uiState.update { it.copy(showPreview = true, imageError = null) }
+        updateUiState { it.copy(showPreview = true, imageError = null) }
     }
 
     fun onDeleteImageClick() {
-        _uiState.update { state ->
+        updateUiState { state ->
             state.copy(imageUrl = "", showPreview = false, imageError = null)
         }
     }
@@ -71,11 +83,10 @@ class CreateEventFormImageViewModel(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
 
-            val updatedForm = eventForm.copy(
-                imageUrl = if (_uiState.value.showPreview) _uiState.value.imageUrl else null
-            )
+            val updatedForm = createEventFlowViewModel.eventForm.value
 
             createEventUseCase(updatedForm).onSuccess {
+                createEventFlowViewModel.reset()
                 _effect.tryEmit(CreateEventFormImageEffect.ShowCreationSuccess(""))
             }.onFailure { error ->
                 if (error.code == ErrorCodes.NO_CONNECTION) {
@@ -85,6 +96,15 @@ class CreateEventFormImageViewModel(
                 }
                 _uiState.update { it.copy(isLoading = false) }
             }
+        }
+    }
+
+    private fun updateUiState(function: (CreateEventFormImageUiState) -> CreateEventFormImageUiState) {
+        _uiState.update { currentState ->
+            val newState = function(currentState)
+            val flowImageUrl = if (newState.showPreview) newState.imageUrl.ifBlank { null } else null
+            createEventFlowViewModel.updateImage(flowImageUrl)
+            newState
         }
     }
 

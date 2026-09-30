@@ -64,6 +64,7 @@ dependencies {
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
+    implementation(libs.koin.androidx.compose.navigation)
     implementation(libs.coil)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.gson)

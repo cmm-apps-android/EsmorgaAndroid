@@ -1,8 +1,8 @@
 package cmm.apps.esmorga.view.viewmodel.createEventDate
 
 import app.cash.turbine.test
-import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.domain.event.model.EventType
+import cmm.apps.esmorga.view.createevent.CreateEventFlowViewModel
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.createevent.createeventdate.CreateEventFormDateViewModel
 import cmm.apps.esmorga.view.createevent.createeventdate.model.CreateEventFormDateEffect
@@ -21,20 +21,19 @@ import java.util.TimeZone
 
 class CreateEventFormDateViewModelTest {
     private lateinit var viewModel: CreateEventFormDateViewModel
-    private lateinit var initialForm: CreateEventForm
+    private lateinit var flowViewModel: CreateEventFlowViewModel
     private lateinit var dateFormatter: DateFormatterImpl
     private val previousTimeZone: TimeZone = TimeZone.getDefault()
 
     @Before
     fun setup() {
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
-        initialForm = CreateEventForm(
-            name = "Initial Name",
-            description = "Initial Description",
-            type = EventType.PARTY
-        )
+        flowViewModel = CreateEventFlowViewModel().apply {
+            updateTitle(name = "Initial Name", description = "Initial Description")
+            updateType(EventType.PARTY)
+        }
         dateFormatter = DateFormatterImpl()
-        viewModel = CreateEventFormDateViewModel(initialForm, dateFormatter)
+        viewModel = CreateEventFormDateViewModel(flowViewModel, dateFormatter)
     }
 
     @After
@@ -50,6 +49,25 @@ class CreateEventFormDateViewModelTest {
             assertFalse(state.isButtonEnabled)
             cancelAndIgnoreRemainingEvents()
         }
+    }
+
+    @Test
+    fun `given persisted date data when viewModel created then state is restored from shared flow`() {
+        flowViewModel.updateDate(
+            date = "2024-07-17T12:30:00.000Z",
+            joinDeadline = "2024-07-10T10:00:00.000Z"
+        )
+
+        val restoredViewModel = CreateEventFormDateViewModel(flowViewModel, dateFormatter)
+
+        val state = restoredViewModel.uiState.value
+        assertEquals(dateFormatter.toLocalDateEpochMillis("2024-07-17T12:30:00.000Z"), state.selectedDateMillis)
+        assertEquals(dateFormatter.toLocalDateEpochMillis("2024-07-10T10:00:00.000Z"), state.selectedDeadlineDateMillis)
+        assertEquals(dateFormatter.extractLocalTime("2024-07-17T12:30:00.000Z"), state.eventTime)
+        assertEquals(dateFormatter.extractLocalTime("2024-07-10T10:00:00.000Z"), state.deadlineTime)
+        assertTrue(state.isDeadlineToggleOn)
+        assertTrue(state.isButtonEnabled)
+        assertNull(state.deadlineErrorRes)
     }
 
     @Test
@@ -75,14 +93,12 @@ class CreateEventFormDateViewModelTest {
         viewModel.effect.test {
             viewModel.onNextClick(date, time, null, "")
             val effect = awaitItem()
-            assertTrue(effect is CreateEventFormDateEffect.NavigateNext)
-            val navigateNext = effect as CreateEventFormDateEffect.NavigateNext
-
-            assertEquals(initialForm.name, navigateNext.eventForm.name)
-            assertEquals(initialForm.description, navigateNext.eventForm.description)
-            assertEquals(initialForm.type, navigateNext.eventForm.type)
-            assertEquals(expectedDateTime, navigateNext.eventForm.date)
-            assertNull(navigateNext.eventForm.joinDeadline)
+            assertEquals(CreateEventFormDateEffect.NavigateNext, effect)
+            assertEquals("Initial Name", flowViewModel.eventForm.value.name)
+            assertEquals("Initial Description", flowViewModel.eventForm.value.description)
+            assertEquals(EventType.PARTY, flowViewModel.eventForm.value.type)
+            assertEquals(expectedDateTime, flowViewModel.eventForm.value.date)
+            assertNull(flowViewModel.eventForm.value.joinDeadline)
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -311,9 +327,8 @@ class CreateEventFormDateViewModelTest {
 
         viewModel.effect.test {
             viewModel.onNextClick(eventDate, eventTime, deadlineCal.time, deadlineTime)
-            val effect = awaitItem() as CreateEventFormDateEffect.NavigateNext
-
-            assertEquals(expectedDeadline, effect.eventForm.joinDeadline)
+            assertEquals(CreateEventFormDateEffect.NavigateNext, awaitItem())
+            assertEquals(expectedDeadline, flowViewModel.eventForm.value.joinDeadline)
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -327,9 +342,20 @@ class CreateEventFormDateViewModelTest {
 
         viewModel.effect.test {
             viewModel.onNextClick(eventDate, eventTime, null, "")
-            val effect = awaitItem() as CreateEventFormDateEffect.NavigateNext
+            assertEquals(CreateEventFormDateEffect.NavigateNext, awaitItem())
+            assertNull(flowViewModel.eventForm.value.joinDeadline)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
 
-            assertNull(effect.eventForm.joinDeadline)
+    @Test
+    fun `when date is selected then uiState is updated with selectedDateMillis`() = runTest {
+        viewModel.uiState.test {
+            awaitItem()
+            val millis = 1790726400000L
+            viewModel.onDateSelected(millis)
+            val state = awaitItem()
+            assertEquals(millis, state.selectedDateMillis)
             cancelAndIgnoreRemainingEvents()
         }
     }

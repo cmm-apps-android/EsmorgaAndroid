@@ -107,4 +107,20 @@ class EventDateTimeFormatterTest {
         assertEquals(3, parts.size)
         assertTrue(parts[0].lowercase().isNotEmpty())
     }
+
+    @Test
+    fun `given datepicker date in negative timezone when formatted and restored then date is preserved`() {
+        TimeZone.setDefault(TimeZone.getTimeZone("America/New_York"))
+
+        val datePickerMillis = ZonedDateTime.of(2026, 9, 30, 0, 0, 0, 0, ZoneId.of("UTC")).toInstant().toEpochMilli()
+        val datePickerDate = Date(datePickerMillis)
+        val selectedTime = "14:30:00.000"
+
+        val formattedIso = sut.formatIsoDateTime(datePickerDate, selectedTime)
+        val restoredMillis = sut.toLocalDateEpochMillis(formattedIso)
+        val restoredTime = sut.extractLocalTime(formattedIso)
+
+        assertEquals(datePickerMillis, restoredMillis)
+        assertEquals(selectedTime, restoredTime)
+    }
 }

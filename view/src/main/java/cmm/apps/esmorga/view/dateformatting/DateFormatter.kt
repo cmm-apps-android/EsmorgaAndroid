@@ -15,6 +15,8 @@ interface EsmorgaDateTimeFormatter {
     fun formatDateforView(epochMillis: Long): String
     fun formatTimeWithMillisUtcSuffix(hour: Int, minute: Int): String
     fun formatIsoDateTime(date: Date, time: String): String
+    fun toLocalDateEpochMillis(isoDateTime: String): Long
+    fun extractLocalTime(isoDateTime: String): String
 }
 
 class DateFormatterImpl : EsmorgaDateTimeFormatter {
@@ -28,10 +30,10 @@ class DateFormatterImpl : EsmorgaDateTimeFormatter {
 
     override fun formatIsoDateTime(date: Date, time: String): String {
         val zoneId = ZoneId.systemDefault()
-        val localDateTime = date.toInstant()
-            .atZone(zoneId)
+        val localDate = date.toInstant()
+            .atZone(ZoneOffset.UTC)
             .toLocalDate()
-            .atTime(LocalTime.parse(time, TIME_FORMAT_WITH_MILLIS))
+        val localDateTime = localDate.atTime(LocalTime.parse(time, TIME_FORMAT_WITH_MILLIS))
 
         return localDateTime
             .atZone(zoneId)
@@ -55,5 +57,22 @@ class DateFormatterImpl : EsmorgaDateTimeFormatter {
         } catch (_: Exception) {
             return Instant.ofEpochMilli(epochMillis).toString()
         }
+    }
+
+    override fun toLocalDateEpochMillis(isoDateTime: String): Long {
+        val zoneId = ZoneId.systemDefault()
+        return Instant.parse(isoDateTime)
+            .atZone(zoneId)
+            .toLocalDate()
+            .atStartOfDay(ZoneOffset.UTC)
+            .toInstant()
+            .toEpochMilli()
+    }
+
+    override fun extractLocalTime(isoDateTime: String): String {
+        return Instant.parse(isoDateTime)
+            .atZone(ZoneId.systemDefault())
+            .toLocalTime()
+            .format(TIME_FORMAT_WITH_MILLIS)
     }
 }

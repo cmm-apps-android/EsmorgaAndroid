@@ -1,7 +1,5 @@
 package cmm.apps.esmorga.view.createevent.createeventinfo.model
 
-import cmm.apps.esmorga.domain.event.model.CreateEventForm
-
 data class CreateEventFormUiState(
     val eventName: String,
     val eventDescription: String? = null,
@@ -11,6 +9,6 @@ data class CreateEventFormUiState(
 )
 
 sealed class CreateEventFormEffect {
-    data class NavigateNext(val eventForm: CreateEventForm) : CreateEventFormEffect()
+    data object NavigateNext : CreateEventFormEffect()
     data object NavigateBack : CreateEventFormEffect()
 }

@@ -3,15 +3,14 @@ package cmm.apps.esmorga.view.createevent.createeventtype.model
 import android.content.Context
 import cmm.apps.esmorga.domain.event.model.EventType
 import cmm.apps.esmorga.view.R
-import cmm.apps.esmorga.domain.event.model.CreateEventForm
 
 data class CreateEventTypeScreenUiState(
     val type: EventType,
 )
 
 sealed class CreateEventTypeScreenEffect {
-    object NavigateBack : CreateEventTypeScreenEffect()
-    data class NavigateNext(val eventForm: CreateEventForm) : CreateEventTypeScreenEffect()
+    data object NavigateBack : CreateEventTypeScreenEffect()
+    data object NavigateNext : CreateEventTypeScreenEffect()
 }
 
 object CreateEventTypeHelper {

@@ -5,20 +5,30 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.lifecycle.ViewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.get
+import androidx.navigation.navigation
 import androidx.navigation.toRoute
-import cmm.apps.esmorga.domain.event.model.CreateEventForm
 import cmm.apps.esmorga.domain.event.model.Event
 import cmm.apps.esmorga.domain.poll.model.Poll
 import cmm.apps.esmorga.view.activateaccount.ActivateAccountScreen
 import cmm.apps.esmorga.view.changepassword.ChangePasswordScreen
 import cmm.apps.esmorga.view.createevent.createeventinfo.CreateEventFormScreen
+import cmm.apps.esmorga.view.createevent.createeventinfo.CreateEventFormTitleViewModel
+import cmm.apps.esmorga.view.createevent.CreateEventFlowViewModel
+import cmm.apps.esmorga.view.createevent.createeventdate.CreateEventFormDateViewModel
 import cmm.apps.esmorga.view.createevent.createeventdate.CreateEventFormDateScreen
+import cmm.apps.esmorga.view.createevent.createeventimage.CreateEventFormImageViewModel
 import cmm.apps.esmorga.view.createevent.createeventimage.CreateEventFormImageScreen
+import cmm.apps.esmorga.view.createevent.createeventlocation.CreateEventFormLocationViewModel
 import cmm.apps.esmorga.view.createevent.createeventlocation.CreateEventFormLocationScreen
+import cmm.apps.esmorga.view.createevent.createeventtype.CreateEventFormTypeViewModel
 import cmm.apps.esmorga.view.createevent.createeventtype.CreateEventFormTypeScreen
 import cmm.apps.esmorga.view.deeplink.DeeplinkManager.navigateFromDeeplink
 import cmm.apps.esmorga.view.errors.EsmorgaErrorScreen
@@ -36,6 +46,9 @@ import cmm.apps.esmorga.view.registration.RegistrationConfirmationScreen
 import cmm.apps.esmorga.view.registration.RegistrationScreen
 import kotlinx.serialization.Serializable
 import org.jetbrains.annotations.VisibleForTesting
+import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
+import org.koin.core.parameter.parametersOf
 import kotlin.reflect.typeOf
 
 sealed class Navigation {
@@ -86,16 +99,19 @@ sealed class Navigation {
     data object CreateEventFormTitleScreen : Navigation()
 
     @Serializable
-    data class CreateEventFormTypeScreen(val form: CreateEventForm) : Navigation()
+    data object CreateEventFlow : Navigation()
 
     @Serializable
-    data class CreateEventFormDateScreen(val form: CreateEventForm) : Navigation()
+    data object CreateEventFormTypeScreen : Navigation()
 
     @Serializable
-    data class CreateEventFormLocationScreen(val form: CreateEventForm) : Navigation()
+    data object CreateEventFormDateScreen : Navigation()
 
     @Serializable
-    data class CreateEventFormImageScreen(val form: CreateEventForm) : Navigation()
+    data object CreateEventFormLocationScreen : Navigation()
+
+    @Serializable
+    data object CreateEventFormImageScreen : Navigation()
 }
 
 const val GOOGLE_MAPS_PACKAGE = "com.google.android.apps.maps"
@@ -282,74 +298,96 @@ private fun NavGraphBuilder.loginFlow(navigationController: NavHostController) {
 }
 
 private fun NavGraphBuilder.createEventFlow(navController: NavHostController) {
-    composable<Navigation.CreateEventFormTitleScreen> {
-        CreateEventFormScreen(
-            onBack = { navController.popBackStack() },
-            onNext = { form ->
-                navController.navigate(Navigation.CreateEventFormTypeScreen(form))
-            }
-        )
-    }
+    navigation<Navigation.CreateEventFlow>(startDestination = Navigation.CreateEventFormTitleScreen) {
+        composable<Navigation.CreateEventFormTitleScreen> { backStackEntry ->
+            val viewModel = createEventStepViewModel<CreateEventFormTitleViewModel>(navController, backStackEntry)
 
-    composable<Navigation.CreateEventFormTypeScreen>(
-        typeMap = mapOf(typeOf<CreateEventForm>() to serializableType<CreateEventForm>())
-    ) { backStackEntry ->
-        val form = backStackEntry.toRoute<Navigation.CreateEventFormTypeScreen>().form
-        CreateEventFormTypeScreen(
-            eventForm = form,
-            onBackClick = { navController.popBackStack() },
-            onNextClick = { updatedForm ->
-                navController.navigate(Navigation.CreateEventFormDateScreen(updatedForm))
-            }
-        )
-    }
-
-    composable<Navigation.CreateEventFormDateScreen>(
-        typeMap = mapOf(typeOf<CreateEventForm>() to serializableType<CreateEventForm>())
-    ) { backStackEntry ->
-        val eventForm = backStackEntry.toRoute<Navigation.CreateEventFormDateScreen>().form
-        CreateEventFormDateScreen(
-            eventForm = eventForm,
-            onBackPressed = { navController.popBackStack() },
-            onNextClick = { updatedForm ->
-                navController.navigate(Navigation.CreateEventFormLocationScreen(updatedForm))
-            }
-        )
-    }
-
-    composable<Navigation.CreateEventFormLocationScreen>(
-        typeMap = mapOf(typeOf<CreateEventForm>() to serializableType<CreateEventForm>())
-    ) { backStackEntry ->
-        val eventForm = backStackEntry.toRoute<Navigation.CreateEventFormLocationScreen>().form
-        CreateEventFormLocationScreen(
-            eventForm = eventForm,
-            onBackPressed = { navController.popBackStack() },
-            onNextClick = { updatedForm ->
-                navController.navigate(Navigation.CreateEventFormImageScreen(updatedForm))
-            }
-        )
-    }
-
-    composable<Navigation.CreateEventFormImageScreen>(
-        typeMap = mapOf(typeOf<CreateEventForm>() to serializableType<CreateEventForm>())
-    ) { backStackEntry ->
-        val eventForm = backStackEntry.toRoute<Navigation.CreateEventFormImageScreen>().form
-        CreateEventFormImageScreen(
-            eventForm = eventForm,
-            onBackPressed = { navController.popBackStack() },
-            onCreationSuccess = {
-                navController.navigate(Navigation.ExploreScreen(showEventCreatedSnackbar = true)) {
-                    popUpTo(0) { inclusive = true }
+            CreateEventFormScreen(
+                viewModel = viewModel,
+                onBack = { navController.popBackStack() },
+                onNext = {
+                    navController.navigate(Navigation.CreateEventFormTypeScreen)
                 }
-            },
-            onCreationError = { errorArguments ->
-                navController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = errorArguments))
-            },
-            onNoNetworkError = { errorArguments ->
-                navController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = errorArguments))
-            }
-        )
+            )
+        }
+
+        composable<Navigation.CreateEventFormTypeScreen> { backStackEntry ->
+            val viewModel = createEventStepViewModel<CreateEventFormTypeViewModel>(navController, backStackEntry)
+
+            CreateEventFormTypeScreen(
+                createEventviewModel = viewModel,
+                onBackClick = { navController.popBackStack() },
+                onNextClick = {
+                    navController.navigate(Navigation.CreateEventFormDateScreen)
+                }
+            )
+        }
+
+        composable<Navigation.CreateEventFormDateScreen> { backStackEntry ->
+            val viewModel = createEventStepViewModel<CreateEventFormDateViewModel>(navController, backStackEntry)
+
+            CreateEventFormDateScreen(
+                viewModel = viewModel,
+                onBackPressed = { navController.popBackStack() },
+                onNextClick = {
+                    navController.navigate(Navigation.CreateEventFormLocationScreen)
+                }
+            )
+        }
+
+        composable<Navigation.CreateEventFormLocationScreen> { backStackEntry ->
+            val viewModel = createEventStepViewModel<CreateEventFormLocationViewModel>(navController, backStackEntry)
+
+            CreateEventFormLocationScreen(
+                viewModel = viewModel,
+                onBackPressed = { navController.popBackStack() },
+                onNextClick = {
+                    navController.navigate(Navigation.CreateEventFormImageScreen)
+                }
+            )
+        }
+
+        composable<Navigation.CreateEventFormImageScreen> { backStackEntry ->
+            val viewModel = createEventStepViewModel<CreateEventFormImageViewModel>(navController, backStackEntry)
+
+            CreateEventFormImageScreen(
+                viewModel = viewModel,
+                onBackPressed = { navController.popBackStack() },
+                onCreationSuccess = {
+                    navController.navigate(Navigation.ExploreScreen(showEventCreatedSnackbar = true)) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                },
+                onCreationError = { errorArguments ->
+                    navController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = errorArguments))
+                },
+                onNoNetworkError = { errorArguments ->
+                    navController.navigate(Navigation.FullScreenError(esmorgaErrorScreenArguments = errorArguments))
+                }
+            )
+        }
     }
+}
+
+@Composable
+private inline fun <reified VM : ViewModel> createEventStepViewModel(
+    navController: NavHostController,
+    backStackEntry: NavBackStackEntry
+): VM {
+    val parentEntry = rememberCreateEventFlowParentEntry(navController, backStackEntry)
+    val flowViewModel: CreateEventFlowViewModel = koinInject()
+    return koinViewModel(
+        viewModelStoreOwner = parentEntry,
+        parameters = { parametersOf(flowViewModel) }
+    )
+}
+
+@Composable
+private fun rememberCreateEventFlowParentEntry(
+    navController: NavHostController,
+    backStackEntry: NavBackStackEntry
+) = remember(backStackEntry) {
+    navController.getBackStackEntry(Navigation.CreateEventFlow)
 }
 
 private fun NavGraphBuilder.resetPasswordFlow(navigationController: NavHostController) {

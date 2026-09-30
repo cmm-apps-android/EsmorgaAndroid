@@ -1,7 +1,7 @@
 package cmm.apps.esmorga.view.createevent.createeventinfo
 
 import androidx.lifecycle.ViewModel
-import cmm.apps.esmorga.domain.event.model.CreateEventForm
+import cmm.apps.esmorga.view.createevent.CreateEventFlowViewModel
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.createevent.createeventinfo.model.CreateEventFormEffect
 import cmm.apps.esmorga.view.createevent.createeventinfo.model.CreateEventFormUiState
@@ -14,7 +14,9 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class CreateEventFormTitleViewModel : ViewModel() {
+class CreateEventFormTitleViewModel(
+    private val createEventFlowViewModel: CreateEventFlowViewModel
+) : ViewModel() {
     companion object {
         private const val EVENT_NAME_MIN_LENGTH = 3
         private const val EVENT_NAME_MAX_LENGTH = 100
@@ -31,6 +33,7 @@ class CreateEventFormTitleViewModel : ViewModel() {
     )
     val effect: SharedFlow<CreateEventFormEffect> = _effect.asSharedFlow()
 
+
     fun onEventNameChange(newValue: String) {
         updateFormState(eventName = newValue)
     }
@@ -46,13 +49,12 @@ class CreateEventFormTitleViewModel : ViewModel() {
     fun onNextClick() {
         val state = _uiState.value
         if (state.isFormValid) {
+            createEventFlowViewModel.updateTitle(
+                name = state.eventName,
+                description = state.eventDescription
+            )
             _effect.tryEmit(
-                CreateEventFormEffect.NavigateNext(
-                    eventForm = CreateEventForm(
-                        name = state.eventName,
-                        description = state.eventDescription
-                    )
-                )
+                CreateEventFormEffect.NavigateNext
             )
         }
     }

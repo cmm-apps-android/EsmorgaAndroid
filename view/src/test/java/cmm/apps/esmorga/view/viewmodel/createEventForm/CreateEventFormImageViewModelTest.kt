@@ -2,7 +2,7 @@ package cmm.apps.esmorga.view.viewmodel.createEventForm
 
 import app.cash.turbine.test
 import cmm.apps.esmorga.domain.event.CreateEventUseCase
-import cmm.apps.esmorga.domain.event.model.CreateEventForm
+import cmm.apps.esmorga.view.createevent.CreateEventFlowViewModel
 import cmm.apps.esmorga.view.R
 import cmm.apps.esmorga.view.createevent.createeventimage.CreateEventFormImageViewModel
 import cmm.apps.esmorga.view.createevent.createeventimage.model.CreateEventFormImageEffect
@@ -18,12 +18,15 @@ import org.junit.Test
 class CreateEventFormImageViewModelTest {
 
     private lateinit var viewModel: CreateEventFormImageViewModel
-    private val eventForm = CreateEventForm(name = "Test Event")
+    private lateinit var flowViewModel: CreateEventFlowViewModel
     private val mockCreateEventUseCase = mockk<CreateEventUseCase>(relaxed = true)
 
     @Before
     fun setup() {
-        viewModel = CreateEventFormImageViewModel(eventForm, mockCreateEventUseCase)
+        flowViewModel = CreateEventFlowViewModel().apply {
+            updateTitle(name = "Test Event", description = null)
+        }
+        viewModel = CreateEventFormImageViewModel(flowViewModel, mockCreateEventUseCase)
     }
 
     @Test
@@ -410,6 +413,40 @@ class CreateEventFormImageViewModelTest {
             val state = awaitItem()
             assertTrue(state.showPreview)
             assertNull(state.imageError)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `given valid image url when preview clicked then flowViewModel is updated with image url`() = runTest {
+        viewModel.onImageUrlChanged("https://example.com/image.jpg")
+        viewModel.onPreviewClick()
+
+        assertEquals("https://example.com/image.jpg", flowViewModel.eventForm.value.imageUrl)
+    }
+
+    @Test
+    fun `given image in preview when delete clicked then flowViewModel image url is updated to null`() = runTest {
+        viewModel.onImageUrlChanged("https://example.com/image.jpg")
+        viewModel.onPreviewClick()
+
+        viewModel.onDeleteImageClick()
+
+        assertNull(flowViewModel.eventForm.value.imageUrl)
+    }
+
+    @Test
+    fun `given image url stored in flowViewModel when viewModel created then restores image url and showPreview`() = runTest {
+        val flowViewModelWithImage = CreateEventFlowViewModel().apply {
+            updateImage("https://example.com/restored.jpg")
+        }
+        val restoredViewModel = CreateEventFormImageViewModel(flowViewModelWithImage, mockCreateEventUseCase)
+
+        restoredViewModel.uiState.test {
+            val state = awaitItem()
+            assertEquals("https://example.com/restored.jpg", state.imageUrl)
+            assertTrue(state.showPreview)
 
             cancelAndIgnoreRemainingEvents()
         }
