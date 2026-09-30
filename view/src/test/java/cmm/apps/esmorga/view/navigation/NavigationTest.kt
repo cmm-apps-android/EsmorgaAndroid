@@ -26,6 +26,8 @@ import cmm.apps.esmorga.domain.event.GetMyEventListUseCase
 import cmm.apps.esmorga.domain.event.JoinEventUseCase
 import cmm.apps.esmorga.domain.event.LeaveEventUseCase
 import cmm.apps.esmorga.domain.event.UpdateEventAttendeeUseCase
+import cmm.apps.esmorga.domain.notifications.ObserveNotificationClickUseCase
+import cmm.apps.esmorga.domain.notifications.model.NotificationPayload
 import cmm.apps.esmorga.domain.result.ErrorCodes
 import cmm.apps.esmorga.domain.result.EsmorgaException
 import cmm.apps.esmorga.domain.result.EsmorgaResult
@@ -94,6 +96,7 @@ import cmm.apps.esmorga.view.viewmodel.mock.LoginViewMock
 import cmm.apps.esmorga.view.viewmodel.mock.PollViewMock
 import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.flow.MutableSharedFlow
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -183,6 +186,10 @@ class NavigationTest {
         coEvery { useCase(any()) } returns EsmorgaResult.success(Unit)
     }
 
+    private val observeNotificationClickUseCase = mockk<ObserveNotificationClickUseCase>(relaxed = true).also { useCase ->
+        coEvery { useCase() } returns MutableSharedFlow<NotificationPayload>()
+    }
+
     @Before
     @Throws(Exception::class)
     fun setUp() {
@@ -210,6 +217,7 @@ class NavigationTest {
                     factory<PerformResetPasswordUseCase> { performResetPasswordUseCase }
                     factory<PerformChangePasswordUseCase> { performChangePasswordUseCase }
                     factory<CreateEventUseCase> { createEventUseCase }
+                    factory<ObserveNotificationClickUseCase> { observeNotificationClickUseCase }
                 }
             )
         }

@@ -6,6 +6,8 @@ import cmm.apps.esmorga.datasource_local.di.LocalDIModule
 import cmm.apps.esmorga.datasource_remote.di.RemoteDIModule
 import cmm.apps.esmorga.domain.buildConfig.EsmorgaBuildConfig
 import cmm.apps.esmorga.domain.di.DomainDIModule
+import cmm.apps.esmorga.domain.notifications.repository.NotificationRepository
+import cmm.apps.esmorga.notifications.OneSignalManager
 import cmm.apps.esmorga.view.di.ViewDIModule
 import org.koin.dsl.module
 
@@ -21,5 +23,6 @@ object AppDIModules {
             LocalDIModule.module
         )
         single<EsmorgaBuildConfig> { EsmorgaBuildConfigImpl }
+        single<NotificationRepository> { OneSignalManager }
     }
 }

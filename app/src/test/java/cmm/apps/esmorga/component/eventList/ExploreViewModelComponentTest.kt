@@ -11,6 +11,7 @@ import cmm.apps.esmorga.datasource_local.database.EsmorgaDatabase
 import cmm.apps.esmorga.datasource_remote.api.EsmorgaEventOpenApi
 import cmm.apps.esmorga.di.AppDIModules
 import cmm.apps.esmorga.domain.event.GetEventsAndPollsUseCase
+import cmm.apps.esmorga.domain.notifications.ObserveNotificationClickUseCase
 import cmm.apps.esmorga.view.explore.ExploreViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.asExecutor
@@ -80,7 +81,8 @@ class ExploreViewModelComponentTest : KoinTest {
         startDI()
 
         val useCase: GetEventsAndPollsUseCase by inject()
-        val sut = ExploreViewModel(useCase)
+        val observeNotificationClickUseCase: ObserveNotificationClickUseCase by inject()
+        val sut = ExploreViewModel(useCase, observeNotificationClickUseCase)
 
         sut.loadEventsAndPolls()
 

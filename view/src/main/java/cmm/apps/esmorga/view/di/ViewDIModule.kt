@@ -31,7 +31,7 @@ object ViewDIModule {
 
     val module = module {
         viewModel { (showEventCreated: Boolean) ->
-            ExploreViewModel(get(), showEventCreated)
+            ExploreViewModel(get(), get(), showEventCreated)
         }
         viewModel {
             MyEventListViewModel(get(), get())

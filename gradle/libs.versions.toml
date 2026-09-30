@@ -6,6 +6,7 @@ kotlin = "2.2.20"
 kotlinxCoroutines = "1.10.2"
 coreKtx = "1.17.0"
 junit = "4.13.2"
+onesignal = "5.10.2"
 testExtJunit = "1.3.0"
 mockk = "1.14.6"
 lifecycleRuntime = "2.9.4"
@@ -42,6 +43,7 @@ firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "fir
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 google-firebase-crashlytics-ktx = { group = "com.google.firebase", name = "firebase-crashlytics-ktx", version.ref = "firebaseCrashlyticsKtxVersion" }
 play-services-measurement-api = { group = "com.google.android.gms", name = "play-services-measurement-api", version.ref = "playServicesMeasurementApi" }
+onesignal = { module = "com.onesignal:OneSignal", version.ref = "onesignal" }
 
 #Kotlin Core
 kotlinx-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
